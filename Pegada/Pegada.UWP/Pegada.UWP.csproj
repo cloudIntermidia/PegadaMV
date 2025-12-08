@@ -184,6 +184,7 @@
     <Content Include="info.png" />
     <Content Include="inserir.png" />
     <EmbeddedResource Include="logo_clienteE.png" />
+    <Content Include="LoginPadrao.png" />
     <Content Include="login_background.jpeg" />
     <EmbeddedResource Include="logo_cliente.png" />
     <Content Include="logo_mobilivendas_black.png" />

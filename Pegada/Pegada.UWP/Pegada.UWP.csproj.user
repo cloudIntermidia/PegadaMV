@@ -5,15 +5,15 @@
     <AppxShowAllApps>True</AppxShowAllApps>
     <AppxBuildConfigurationSelection>x86|x64</AppxBuildConfigurationSelection>
     <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
-    <Source>C:\Users\Intermidia\Desktop\Icon.png</Source>
-    <SmallTileSource>C:\Users\Intermidia\Desktop\Icon.png</SmallTileSource>
-    <MediumTileSource>C:\Users\Intermidia\Desktop\Icon.png</MediumTileSource>
-    <WideTileSource>C:\Users\Intermidia\Desktop\Icon.png</WideTileSource>
-    <LargeTileSource>C:\Users\Intermidia\Desktop\Icon.png</LargeTileSource>
-    <AppIconSource>C:\Users\Intermidia\Desktop\Icon.png</AppIconSource>
-    <SplashScreenSource>C:\Users\Intermidia\Desktop\Icon.png</SplashScreenSource>
-    <BadgeLogoSource>C:\Users\Intermidia\Desktop\Icon.png</BadgeLogoSource>
-    <PackageLogoSource>C:\Users\Intermidia\Desktop\Icon.png</PackageLogoSource>
+    <Source>C:\Users\Intermidia\Desktop\1024.png</Source>
+    <SmallTileSource>C:\Users\Intermidia\Desktop\1024.png</SmallTileSource>
+    <MediumTileSource>C:\Users\Intermidia\Desktop\1024.png</MediumTileSource>
+    <WideTileSource>C:\Users\Intermidia\Desktop\1024.png</WideTileSource>
+    <LargeTileSource>C:\Users\Intermidia\Desktop\1024.png</LargeTileSource>
+    <AppIconSource>C:\Users\Intermidia\Desktop\1024.png</AppIconSource>
+    <SplashScreenSource>C:\Users\Intermidia\Desktop\1024.png</SplashScreenSource>
+    <BadgeLogoSource>C:\Users\Intermidia\Desktop\1024.png</BadgeLogoSource>
+    <PackageLogoSource>C:\Users\Intermidia\Desktop\1024.png</PackageLogoSource>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <UseSimulator>false</UseSimulator>
