@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:MobiliVendas.Core.CustomView.Controls;assembly=MobiliVendas.Core"
+             xmlns:behavior="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
+             x:Class="Pegada.Core.Views.Carrinho.CarrinhoFechamentoView"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             x:Name="this">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="LabelFechamentoTESTE" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="HorizontalTextAlignment" Value="Start"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <AbsoluteLayout>
+            <AbsoluteLayout IsVisible="True"  
+                            BackgroundColor="#000" 
+                            Opacity="0.3"
+                            AbsoluteLayout.LayoutFlags="All" 
+                            AbsoluteLayout.LayoutBounds="1,1,1,1">
+
+                <AbsoluteLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BindingContext.CancelarFechamentoCommand,Source={x:Reference this}}"/>
+                </AbsoluteLayout.GestureRecognizers>
+            </AbsoluteLayout>
+
+            <Frame BackgroundColor="{StaticResource corBackGroundPopover}"
+                   AbsoluteLayout.LayoutBounds="0.5,0.5,0.7,600"
+                   AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" 
+                   Padding="2"
+                   HasShadow="True"
+                   >
+
+                <StackLayout Spacing="0">
+                    <Grid Padding="30,20" 
+                      BackgroundColor="{StaticResource corCabecalhoPopover}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Row="0" Grid.Column="0" 
+                            FontFamily="{StaticResource RobotoNormalFont}" 
+                            Text="Voltar" 
+                            BackgroundColor="Transparent" 
+                            TextColor="{StaticResource corButtonBackPopover}" 
+                            HorizontalOptions="Start" 
+                            Command="{Binding BindingContext.CancelarFechamentoCommand,Source={x:Reference this}}"/>
+
+                        <Label  Grid.Row="0" Grid.Column="1" 
+                            FontFamily="{StaticResource RobotoNormalFont}"
+                             Style="{StaticResource LabelFechamentoTESTE}"
+                            Text="Edição de Carrinho" 
+                            FontAttributes="Bold" 
+                            TextColor="Black" 
+                            HorizontalOptions="FillAndExpand" 
+                            HorizontalTextAlignment="Center" 
+                            VerticalTextAlignment="Center"/>
+
+                        <Button Grid.Row="0" Grid.Column="2" 
+                            FontFamily="{StaticResource RobotoNormalFont}" 
+                            Text="Salvar" 
+                            BackgroundColor="Transparent" 
+                            TextColor="{StaticResource corButtonBackPopover}" 
+                            HorizontalOptions="End" 
+                            Command="{Binding BindingContext.SalvarFechamentoCommand, Source={x:Reference this}}"/>
+
+                    </Grid>
+
+                    <Grid Margin="20,10" 
+                      RowSpacing="2" 
+                      BackgroundColor="Transparent" 
+                      VerticalOptions="FillAndExpand">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--INICIO - GRID DE DADOS-->
+                        <Grid Grid.Row="0"
+                              Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <custom:BotaoComVisualDropView
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Label="Condição de Pagamento"
+                                    Descricao="{Binding BindingContext.CondicaoPagamento.Descricao,Source={x:Reference this}}"
+                                    Command="{Binding BindingContext.SelecionarCondicaoPagamentoCommand, Source={x:Reference this}}"/>
+
+                            <StackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                <Label Text="Aplicação de C."/>
+                                <Editor Placeholder="Aplição de Comissão"
+                                        Keyboard="Numeric"
+                                        Text="{Binding BindingContext.AplicacaoComissao, Source={x:Reference this}}"/>
+                            </StackLayout>
+
+
+
+                            <custom:BotaoComVisualDropView Grid.Row="2" 
+                                Grid.Column="0" Grid.ColumnSpan="2"
+                                Label="Previsão entrega"
+                                Descricao="{Binding BindingContext.DataEntrega,Source={x:Reference this}, StringFormat='{0:dd-MM-yyyy}'}"
+                                Command="{Binding BindingContext.SelecionarDataEntregaCommand, Source={x:Reference this}}"/>
+
+                            <custom:BotaoComVisualDropView
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan=" 2"
+                                    Label="Tipo de Pedido"
+                                    Descricao="{Binding BindingContext.PedidoSelecionado.TipoPedido, Source={x:Reference this}}"
+                                    Command="{Binding BindingContext.SelecionarTipoPedidoCommand, Source={x:Reference this}}"/>
+
+                            <StackLayout Grid.Row="4" Grid.Column="0">
+                                <Label Text="% Desconto"/>
+                                <Editor x:Name="EdtDesconto"
+                                        Placeholder="% Desconto"
+                                        Keyboard="Telephone"
+                                        Text="{Binding BindingContext.PedidoSelecionado.PercentualDesconto, Source={x:Reference this}}"
+                                        TextChanged="Editor_TextChanged"/>
+                            </StackLayout>
+
+                            <!-- FLAGS -->
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center"
+                                 Grid.Row="4"
+                                 Grid.Column="1">
+
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" Margin="0,0,10,0">
+
+                                    <ffimageloading:CachedImage Aspect="AspectFit" 
+                                                    Source="{Binding BindingContext.IsFatParcial, Source={x:Reference this}, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" 
+                                                    HeightRequest="20">
+                                        <ffimageloading:CachedImage.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.AceitaFatParcialCommand, Source={x:Reference this}}"/>
+                                        </ffimageloading:CachedImage.GestureRecognizers>
+                                    </ffimageloading:CachedImage>
+
+                                    <Label Text="Aceita Fat. Parcial" 
+                                           FontAttributes="Bold" 
+                                           TextColor="#5A5A5A" 
+                                           VerticalTextAlignment="Center" 
+                                           HorizontalTextAlignment="Start" 
+                                           FontSize="12" />
+                                </StackLayout>
+
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" Margin="10,0,10,0">
+
+                                    <ffimageloading:CachedImage Aspect="AspectFit" 
+                                                    Source="{Binding BindingContext.IsFatAntecipado, Source={x:Reference this}, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" 
+                                                    HeightRequest="20">
+                                        <ffimageloading:CachedImage.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.AceitaFatAntCommand, Source={x:Reference this}}"/>
+                                        </ffimageloading:CachedImage.GestureRecognizers>
+                                    </ffimageloading:CachedImage>
+
+                                    <Label Text="Aceita Fat. Antecipado" 
+                                           FontAttributes="Bold" 
+                                           TextColor="#5A5A5A" 
+                                           VerticalTextAlignment="Center" 
+                                           HorizontalTextAlignment="Start" 
+                                           FontSize="12" />
+                                </StackLayout>
+
+                                <StackLayout Orientation="Horizontal" 
+                                 HorizontalOptions="EndAndExpand"
+                                 IsVisible="{Binding BindingContext.MostraFlagPedidoMae, Source={x:Reference this}}"
+                                 Margin="20,0,0,0"
+                                 >
+
+                                    <ffimageloading:CachedImage Aspect="AspectFit" 
+                                                    Source="{Binding BindingContext.IsPedidoMae, Source={x:Reference this}, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" 
+                                                    HeightRequest="20">
+                                        <ffimageloading:CachedImage.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.AplicaPedidoMaeCommand, Source={x:Reference this}}"/>
+                                        </ffimageloading:CachedImage.GestureRecognizers>
+                                    </ffimageloading:CachedImage>
+
+                                    <Label Text="Pedido Mãe" 
+                                           FontAttributes="Bold" 
+                                           TextColor="#5A5A5A" 
+                                           VerticalTextAlignment="Center" 
+                                           HorizontalTextAlignment="Start" 
+                                           FontSize="12" />
+
+                                </StackLayout>
+                            </StackLayout>
+                            <!-- FIM FLAGS-->
+
+                            <Editor Grid.Row="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="FillAndExpand"
+                                Placeholder="Observação do pedido"
+                                Text="{Binding BindingContext.Observacoes, Source={x:Reference this}}"
+                                IsVisible="{Binding BindingContext.MostraObservacoes, Source={x:Reference this}}"/>
+
+                        </Grid>
+                        <!--FIM - GRID DE DADOS-->
+                    </Grid>
+                </StackLayout>
+            </Frame>
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

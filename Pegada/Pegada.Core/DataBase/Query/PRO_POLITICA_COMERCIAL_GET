@@ -1,0 +1,13 @@
+﻿SELECT *
+FROM TBT_POLITICA_COMERCIAL PC
+WHERE strftime('%Y-%m-%dT%H:%M:%S', VigenciaInicial) <= strftime('%Y-%m-%dT%H:%M:%S', datetime('now'))
+AND strftime('%Y-%m-%dT%H:%M:%S', datetime('now')) <= strftime('%Y-%m-%dT%H:%M:%S', VigenciaFinal)
+AND EXISTS(
+	SELECT * FROM TBT_POLITICA_TABELA_PRECO
+	INNER JOIN TBT_ITEM_TABELA_PRECO ON TBT_POLITICA_TABELA_PRECO.CodTabelaPreco = TBT_ITEM_TABELA_PRECO.CodTabelaPreco
+	INNER JOIN TBT_ITEM_PRONTA_ENTREGA ON TBT_ITEM_TABELA_PRECO.CodProduto = TBT_ITEM_PRONTA_ENTREGA.CodProduto
+	WHERE TBT_POLITICA_TABELA_PRECO.CodPoliticaComercial = PC.CodPoliticaComercial
+	AND TBT_ITEM_PRONTA_ENTREGA.Quantidade > 0 
+)
+GROUP BY PC.Descricao
+ORDER BY PC.Descricao;

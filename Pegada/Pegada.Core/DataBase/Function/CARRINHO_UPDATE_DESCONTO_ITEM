@@ -1,0 +1,7 @@
+﻿
+UPDATE TBT_ITEM_CARRINHO
+SET 
+    PercDesc = '@Desconto'
+WHERE CodCarrinho = '@CodCarrinho'
+AND CodItemCarrinho = '@CodItemCarrinho'
+AND StatusFilho IS NULL;

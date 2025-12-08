@@ -1,0 +1,11 @@
+﻿SELECT C.CodCarrinho FROM TBT_CARRINHO C
+INNER JOIN TBT_ITEM_CARRINHO IC ON IC.CodCarrinho = C.CodCarrinho
+WHERE C.CodSituacaoPedido = '1'
+AND C.CodAtendimento = '@CodAtendimento'
+AND C.CodPessoaCliente = '@CodPessoaCliente'
+AND C.CodPessoaRepresentante = '@CodPessoaRepresentante'
+AND C.CodMarca = '@CodMarca'
+AND C.CodTipoPedido = '@CodTipoPedido'
+AND C.CodDeposito = '@CodDeposito'
+AND C.IndBloqueado = 0
+AND C.PedidoMae ISNULL;

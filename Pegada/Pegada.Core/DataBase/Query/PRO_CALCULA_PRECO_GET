@@ -1,0 +1,8 @@
+﻿SELECT ITP.CodTabelaPreco,
+	   ITP.Preco,
+	   ITP.PrecoSugestao,
+	   ITP.Markup,
+	   ITP.IndPromocional
+FROM TBT_ITEM_TABELA_PRECO ITP
+WHERE ITP.CodTabelaPreco = '@CodTabelaPreco' 
+AND ITP.CodProduto = '@CodProduto';

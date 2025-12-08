@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shared="clr-namespace:MobiliVendas.Core.Views.Tablet.Shared;assembly=MobiliVendas.Core"
+             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:controls="clr-namespace:Flex.Controls;assembly=Flex"
+             xmlns:wrapLayout="clr-namespace:MobiliVendas.Core.CustomView.Layouts.WrapLayout;assembly=MobiliVendas.Core"
+             xmlns:session="clr-namespace:MobiliVendas.Core;assembly=MobiliVendas.Core"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="Pegada.Core.Views.Carrinho.CarrinhoPage"
+             x:Name="this">
+    <AbsoluteLayout BackgroundColor="White">
+
+        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,0.9"
+                AbsoluteLayout.LayoutFlags="All">
+
+            <shared:CabecalhoView x:Name="cabecalho"/>
+
+            <!--INICIO Grid de Pedidos -->
+            <Grid ColumnSpacing="1" 
+                  RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="130" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="1.25*"/>
+                    <ColumnDefinition Width="1.25*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+
+
+                <!--Header-->
+                <StackLayout Grid.Row="0"
+                             Grid.Column="0" 
+                             BackgroundColor="{StaticResource corHeaderGrid}"
+                             VerticalOptions="FillAndExpand">
+
+                    <forms:CachedImage Aspect="AspectFit"
+                                       HeightRequest="25"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Center"
+                                       Source="{Binding TodosCarrinhosChecados, Converter={StaticResource BoleanoParaImagem}}">
+                        <forms:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Path=BindingContext.MarcarCarrinhosCommand, Source={x:Reference Name=this}}"/>
+                        </forms:CachedImage.GestureRecognizers>
+                    </forms:CachedImage>
+                </StackLayout>
+
+
+
+                <Label Style="{StaticResource labelGridHeader}" Text="Pedido AFV"   Grid.Row="0" Grid.Column="1"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Cliente"      Grid.Row="0" Grid.Column="2"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="% Desc."        Grid.Row="0" Grid.Column="3"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Cond. Pgto"   Grid.Row="0" Grid.Column="4"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Tipo Pedido"  Grid.Row="0" Grid.Column="5"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Mãe"  Grid.Row="0" Grid.Column="6"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Fat Antec."  Grid.Row="0" Grid.Column="7"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Fat Parc."   Grid.Row="0" Grid.Column="8"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Situação"     Grid.Row="0" Grid.Column="9"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Emissão"      Grid.Row="0" Grid.Column="10"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Data de Faturamento"      Grid.Row="0" Grid.Column="11"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="QTD"          Grid.Row="0" Grid.Column="12"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total Líq"  Grid.Row="0" Grid.Column="13"/>
+                <!--Header-->
+
+                <ListView Grid.Row="1" 
+                          Grid.Column="0" 
+                          Grid.ColumnSpan="14"
+                          HeightRequest="350"
+                          SeparatorVisibility="Default"
+                          ItemsSource="{Binding Pedidos}">
+
+                    <ListView.Behaviors>
+                        <behaviors:EventToCommandBehavior EventName="ItemTapped" 
+                                                  Command="{Binding PedidoTappedCommand}"
+                                                  EventArgsParameterPath="Item" />
+                    </ListView.Behaviors>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid BackgroundColor="{Binding IndBloqueado, Converter={StaticResource BoleanoParaCor},ConverterParameter='Red,White'}"
+                                      VerticalOptions="Center"
+                                      HeightRequest="30">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="40" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="1.5*" />
+                                        <ColumnDefinition Width="1.5*" />
+                                        <ColumnDefinition Width="0.5*" />
+                                        <ColumnDefinition Width="0.8*" />
+                                        <ColumnDefinition Width="0.8*" />
+                                        <ColumnDefinition Width="1.5*" />
+                                        <ColumnDefinition Width="1.25*"/>
+                                        <ColumnDefinition Width="1.25*"/>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackLayout Grid.Row="0" Grid.Column="0" 
+                                                 BackgroundColor="Transparent"
+                                                 VerticalOptions="FillAndExpand">
+
+                                        <forms:CachedImage Aspect="AspectFit"
+                                                           HeightRequest="25"
+                                                           VerticalOptions="CenterAndExpand"
+                                                           HorizontalOptions="Center"
+                                                           Source="{Binding CarrinhoChecado, Converter={StaticResource BoleanoParaImagem}}">
+                                            <forms:CachedImage.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Path=BindingContext.MarcarCarrinhoCommand, Source={x:Reference Name=this}}" CommandParameter="{Binding .}"/>
+                                            </forms:CachedImage.GestureRecognizers>
+                                        </forms:CachedImage>
+                                    </StackLayout>
+
+
+
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodCarrinho}" Grid.Row="0" Grid.Column="1" />
+                                    <Label Style="{StaticResource labelGridItem}" FontSize="10"
+                                           Grid.Row="0" Grid.Column="2">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding RazaoSocial}" />
+                                                <Span Text=" - " />
+                                                <Span Text="{Binding CNPJ}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DescontoUI}"  Grid.Row="0" Grid.Column="3"/>
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CondicaoPagamento}"  Grid.Row="0" Grid.Column="4"/>
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding TipoPedido}" Grid.Row="0" Grid.Column="5" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding IndPedidoMaeUI}" Grid.Row="0" Grid.Column="6" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding AceitaFaturamentoAntecipadoUI}" Grid.Row="0" Grid.Column="7" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding AceitaFaturamentoParcialUI}" Grid.Row="0" Grid.Column="8" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}" Grid.Row="0" Grid.Column="9" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEmissao, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="10" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="11" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="12" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="13" />
+
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+            <!-- FIM Grid de Pedidos -->
+
+            <!--INICIO GRID DE AÇÕES PEDIDO-->
+            <Grid Padding="5"
+                ColumnSpacing="11"
+                HorizontalOptions="End"
+                Margin="10,0"
+                >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="0"
+                            Text="CANCELAR"
+                            ClickedCommand="{Binding CancelarCommand}"
+                            Style="{StaticResource flexButtonAction}"/>
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="1"
+                            Text="IMPRIMIR"
+                            ClickedCommand="{Binding ImprimirCommand}"
+                            Style="{StaticResource flexButtonAction}"/>
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="2"
+                            Text="COPIAR"
+                            ClickedCommand="{Binding CopiarCommand}"
+                            Style="{StaticResource flexButtonAction}"/>
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="3"
+                            Text="BLOQUEAR/DESBLOQUEAR"
+                            ClickedCommand="{Binding BloquearCommand}"
+                            Style="{StaticResource flexButtonAction}"/>
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="4"
+                            Text="AGRUPAR"
+                            ClickedCommand="{Binding AgruparCommand}"
+                            Style="{StaticResource flexButtonAction}"/>
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="5"
+                            Text="FINALIZAR"
+                            ClickedCommand="{Binding EditarCommand}"
+                            Style="{StaticResource flexButtonAction}"/>
+
+                <controls:FlexButton
+                                Grid.Row="0" Grid.Column="6"
+                                Text="TRANSMITIR"
+                                ClickedCommand="{Binding TransmitirCommand}"
+                                Style="{StaticResource flexButtonAction}"/>
+
+
+            </Grid>
+            <!--FIM GRID DE AÇÕES PEDIDO-->
+
+            <!--Grid de itens-->
+            <Grid ColumnSpacing="1" RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="4*" />
+                </Grid.ColumnDefinitions>
+
+
+                <!--Header-->
+                <StackLayout Grid.Row="0" Grid.Column="0"
+                             BackgroundColor="{StaticResource corHeaderGrid}"
+                             VerticalOptions="FillAndExpand"
+                             >
+                    <forms:CachedImage 
+                                            Aspect="AspectFit"
+                                            HeightRequest="25"
+                                            VerticalOptions="CenterAndExpand"
+                                            HorizontalOptions="Center"
+                                            Source="{Binding TodosItensChecados, Converter={StaticResource BoleanoParaImagem}}">
+                        <forms:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Path=BindingContext.MarcarItensCommand, Source={x:Reference Name=this}}"/>
+                        </forms:CachedImage.GestureRecognizers>
+                    </forms:CachedImage>
+                </StackLayout>
+                <Label Style="{StaticResource labelGridHeader}" Text="Item"             Grid.Row="0" Grid.Column="1"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Descrição"        Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Qtd"        Grid.Row="0" Grid.Column="4" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Estoque"        Grid.Row="0" Grid.Column="5" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Valor Unit."      Grid.Row="0" Grid.Column="6"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="% Desc."            Grid.Row="0" Grid.Column="7"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Valor Unit. Liq." Grid.Row="0" Grid.Column="8"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total Líq"      Grid.Row="0" Grid.Column="9" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Foto"             Grid.Row="0" Grid.Column="10"/>
+                <!--Header-->
+
+
+                <ListView Grid.Row="1" 
+                          Grid.Column="0" 
+                          Grid.ColumnSpan="10"
+                          HeightRequest="350"
+                          SeparatorVisibility="Default"
+                          ItemsSource="{Binding PedidoSelecionado.Itens}">
+
+                    <ListView.Behaviors>
+                        <behaviors:EventToCommandBehavior EventName="ItemTapped" 
+                                                  Command="{Binding ItemTappedCommand}"
+                                                  EventArgsParameterPath="Item" />
+                    </ListView.Behaviors>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid VerticalOptions="Center" Padding="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="45" />
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="3.9*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackLayout Grid.Row="0"
+                                                 Grid.Column="0" 
+                                                 BackgroundColor="Transparent"
+                                                 VerticalOptions="FillAndExpand">
+                                        <forms:CachedImage 
+                                                Aspect="AspectFit"
+                                                HeightRequest="25"
+                                                VerticalOptions="CenterAndExpand"
+                                                HorizontalOptions="Center"
+                                                Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}}">
+                                            <forms:CachedImage.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Path=BindingContext.MarcarItemCommand, Source={x:Reference Name=this}}" CommandParameter="{Binding .}"/>
+                                            </forms:CachedImage.GestureRecognizers>
+                                        </forms:CachedImage>
+                                    </StackLayout>
+
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodItemCarrinho}"                                                   Grid.Row="0" Grid.Column="1" />
+                                    <StackLayout                                                                                                                      Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2">
+                                        <Label Style="{StaticResource labelGridItem}" HorizontalTextAlignment="Start"  Text="{Binding Descricao}"/>
+                                    </StackLayout>
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}"                                                          Grid.Row="0" Grid.Column="4" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodDeposito, Converter={StaticResource FormatDataQuinzena}}"      Grid.Row="0" Grid.Column="5" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCusto,  Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="6" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DescontoUI}"                                                          Grid.Row="0" Grid.Column="7" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCustoComDesconto, Converter={StaticResource ValorParaMoeda}}"  Grid.Row="0" Grid.Column="8" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="9" />
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Grid Grid.Row="1" 
+                      Grid.Column="10" 
+                      BackgroundColor="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <forms:CachedImage 
+                                       DownsampleToViewSize="True"  
+                                       Source="{Binding ItemSelecionado.Imagem, Converter={StaticResource Base64ParaImagem}}" Grid.Row="0"
+                                       Grid.Column="0" 
+                                       HeightRequest="200" 
+                                       HorizontalOptions="FillAndExpand"/>
+
+                    <Label Style="{StaticResource labelGridHeader}"
+                          FontAttributes="Bold"
+                           Text="GRADE" 
+                           Grid.Row="1"
+                           Grid.Column="0"/>
+
+                    <wrapLayout:WrapLayout Grid.Row="2" Grid.Column="0"
+                             ItemsSource="{Binding ItemSelecionado.Grades}">
+                        <wrapLayout:WrapLayout.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout VerticalOptions="StartAndExpand">
+
+                                        <Label Text="{Binding CodDerivacao}"
+                                               FontSize="Micro"
+                                               Style="{StaticResource labelGridHeader}" 
+                                               />
+
+                                        <Label Text="{Binding Qtd}"
+                                               FontSize="Micro"
+                                               Style="{StaticResource labelGridItem}" 
+                                               >
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label"
+                                                             Binding="{Binding Source={x:Static session:ConfiguracaoVisual.ExibeQtdNaGrade}}"
+                                                             Value="True">
+
+                                                    <Setter Property="Text" Value="{Binding QtdNaGrade}"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </wrapLayout:WrapLayout.ItemTemplate>
+                    </wrapLayout:WrapLayout>
+                </Grid>
+            </Grid>
+
+            <!--ACOES SOBRE OS ITENS-->
+            <Grid Padding="5"
+                ColumnSpacing="10"
+                HorizontalOptions="End"
+                Margin="10,0"
+                >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
+
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="0"
+                            Text="EXCLUIR"
+                            ClickedCommand="{Binding ExcluirItemCommand}"
+                            Style="{StaticResource flexButtonAction}"
+                               />
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="1"
+                            Text="EDITAR"
+                            ClickedCommand="{Binding EditarItemCommand}"
+                            Style="{StaticResource flexButtonAction}"
+                               />
+
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="2"
+                            Text="DESMEMBRAR"
+                            ClickedCommand="{Binding DesmembrarItemCommand}"
+                            Style="{StaticResource flexButtonAction}"
+                            IsVisible="{Binding BindingContext.OcultaBtnDesmembramento, Source={x:Reference this}}"
+                               />
+            </Grid>
+
+
+        </StackLayout>
+
+
+        <shared:NavegacaoBottomView x:Name="navegacao" PageValue="CARRINHO" AbsoluteLayout.LayoutBounds="0,1,1,0.08" AbsoluteLayout.LayoutFlags="All"/>
+
+    </AbsoluteLayout>
+</ContentPage>

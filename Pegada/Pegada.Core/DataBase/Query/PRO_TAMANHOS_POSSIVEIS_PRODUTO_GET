@@ -1,0 +1,12 @@
+﻿SELECT D.CodDerivacao,
+		D.CodGrade,
+		MIN(D.Ordem)
+FROM TBT_PRODUTO_GRADE PG
+INNER JOIN TBT_PRODUTO P ON PG.CodProduto = P.CodProduto
+INNER JOIN TBT_GRADE G ON PG.CodGrade = G.CodGrade
+INNER JOIN TBT_DERIVACAO_GRADE D ON PG.CodGrade = D.CodGrade
+INNER JOIN TBT_MODELO M ON P.CodModelo = M.CodModelo
+LEFT JOIN TBT_ITEM_PRONTA_ENTREGA IPE ON IPE.CodProduto = P.CodProduto
+WHERE ( P.CodModelo = '@CodModelo')
+GROUP BY D.CodDerivacao
+ORDER BY D.ORDEM;

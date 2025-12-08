@@ -1,0 +1,12 @@
+﻿SELECT 
+	CodCarrinho
+	, M.MinimoFobClienteNovo
+	, M.MinimoFob
+	, M.MinimoCIF
+	, E.Cidade
+	, C.CifFob
+FROM TBT_CARRINHO C
+INNER JOIN TBT_CLIENTE CLI ON CLI.CodPessoaCliente = C.CodPessoaCliente 
+LEFT JOIN TBT_ENDERECO_CLIENTE E ON CLI.CodPessoaCliente = E.CodPessoaCliente AND E.IndEntrega = 1
+LEFT JOIN TBT_MUNICIPIO M ON E.Cidade = M.NomeMunicipio AND M.UF = E.UF
+WHERE CodCarrinho = '@CodCarrinho';

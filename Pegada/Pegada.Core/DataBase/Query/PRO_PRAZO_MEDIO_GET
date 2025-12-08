@@ -1,0 +1,12 @@
+﻿SELECT 
+	DiasPrazoMedio AS Codigo,
+    Descricao AS Descricao
+FROM TBT_PRAZO
+WHERE EXISTS (
+	SELECT 1 FROM TBT_PESSOA_TABELA_PRECO PTP
+	INNER JOIN TBT_ITEM_TABELA_PRECO ITP
+	WHERE PTP.CodPessoa = '@CodPessoaVendedor'
+	AND PTP.CodTabelaPreco = ITP.CodTabelaPreco
+	AND TBT_PRAZO.DiasPrazoMedio = ITP.CodPrazo
+)
+ORDER BY CAST(DiasPrazoMedio AS integer);

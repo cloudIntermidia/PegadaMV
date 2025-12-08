@@ -1,0 +1,7 @@
+﻿SELECT DISTINCT
+	CodDeposito AS Codigo,
+    Deposito AS Descricao
+FROM TBT_PESSOA_DEPOSITO_FATURAMENTO 
+WHERE CodPessoa = '@CodPessoa'
+AND ('@CodDeposito' = '-1' OR '@CodDeposito' = CodDeposito)
+ORDER BY Deposito;

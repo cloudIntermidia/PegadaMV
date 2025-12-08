@@ -1,0 +1,1488 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Syncfusion.Buttons.XForms.UWP</name>
+    </assembly>
+    <members>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.pointerEnteredColor">
+            <summary>
+            Represents the pointer entered color
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.pointerPressedColor">
+            <summary>
+            Represents the pointer pressed color
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.defaultScaleValue">
+            <summary>
+            Represents the default scale value
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.defaultPressedColor">
+            <summary>
+            Represents the default pressed color
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.defaultPointerOverColor">
+            <summary>
+            Represents the default pointer over color
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.defaultReleasedColor">
+            <summary>
+            Represents the default released color
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.pressedScaleValue">
+            <summary>
+            Represents the pressed scale value
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.nativeTouchView">
+            <summary>
+            The native touch view.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.formsTouchView">
+            <summary>
+            The forms touch view.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.sfButton">
+            <summary>
+            The button.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.XForms.Buttons.TouchEffect})">
+            <summary>
+            Method used to customize the appearance and behavior of Xamarin.Forms controls.
+            </summary>
+            <param name="e">EventArgs.</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.TouchEffectRenderer_Tapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Tapped event fot TouchEffect view
+            </summary>
+            <param name="sender">sender as TouchEffect</param>
+            <param name="e">Tapped event argruments</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.GetConvertedWindowsColor(Xamarin.Forms.Color)">
+            <summary>
+            Get the windows color  
+            </summary>
+            <param name="formsColor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.TouchEffectRenderer_PointerExited(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Pointer Exited event
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">pointer event arguments</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.TouchEffectRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Pointer Released Event
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">pointer event arguments</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.TouchEffectRenderer_PointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Pointer Pressed Event
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">pointer event arguments</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.NativeTouchView_PointerEntered(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Pointer Entered Event
+            </summary>
+            <param name="sender">sender object</param>
+            <param name="e">pointer event arguments</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Method that is called when a element property has changed.
+            </summary>
+            <param name="sender">The object.</param>
+            <param name="e"><see cref="T:System.ComponentModel.PropertyChangedEventArgs"/>.</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.Dispose(System.Boolean)">
+            <summary>
+            Dispose the specified disposing.
+            </summary>
+            <param name="disposing">If set to <c>true</c> disposing.</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.OnIsCheckedChanged">
+            <summary>
+            The is checked property changed we have to change the color of the control.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.TriggerInternalMethod(System.Type,System.Object,System.String,System.Object[])">
+            <summary>
+            Triggers the internal method.
+            </summary>
+            <returns>The internal method.</returns>
+            <param name="type">Type.</param>
+            <param name="obj">Object.</param>
+            <param name="methodName">Method name.</param>
+            <param name="args">Arguments.</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.TriggerChecked">
+            <summary>
+            Triggers the checked.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.TriggerUnChecked">
+            <summary>
+            Triggers the un checked.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.ChangeVisualState(System.String)">
+            <summary>
+            Changes the state of the visual.
+            </summary>
+            <param name="state">The touched State.</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.TouchEffectRenderer.IsTouchInsideCloseButton(Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            The touch inside the close button
+            </summary>
+            <returns><c>true</c>, if close button pressed was ised, <c>false</c> otherwise.</returns>
+            <param name="e">E.</param>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SegmentDisplayMode">
+            <summary>
+            Describes the possible values for the display type of headers in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SegmentDisplayMode.Image">
+            <summary>
+            Specifies the image type for header in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SegmentDisplayMode.Text">
+            <summary>
+            Specifies the text type for header in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SegmentDisplayMode.ImageWithText">
+            <summary>
+            Specifies both image as well as text for the header in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorPosition">
+            <summary>
+            Describes the possible values for the position of selection strip in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View,
+            selection indicator is to indicate the selected index in the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorPosition.Top">
+            <summary>
+            Specifies the top location for the selection indicator in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorPosition.Bottom">
+            <summary>
+            Specifies the bottom location for the selection indicator in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorPosition.Fill">
+            <summary>
+            Specifies the fill region for the selection indicator in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+            <remarks>Selection color of <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/> should be varied with the strip color when set this value. /></remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorPosition.Border">
+            <summary>
+            Specifies the border to cover the outer region of the selected item in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+            <remarks>Selection color of <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/> should be varied with the strip color when set this value. /></remarks>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.FormsHelper">
+            <summary>
+            Forms helper class. it is used to convert native objects from Forms object
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.FormsHelper.ConvertToNativeColor(Xamarin.Forms.Color)">
+            <summary>
+            Convert native brush color from forms color
+            </summary>
+            <param name="color"> it is Xamarin.Forms.Color </param>
+            <returns> it is return SolidColorBrush </returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.FormsHelper.ConvertFormsToNative(Xamarin.Forms.View,Syncfusion.XForms.Buttons.SfSegmentedControl)">
+            <summary>
+            Convert native FrameworkElement from Forms View
+            </summary>
+            <param name="view"> it is Xamarin.Froms.View </param>
+            <param name="button"> it is SegmentedControl objects </param>
+            <param name="width"> width value it has double type </param>
+            <param name="height"> height value it has double type </param>
+            <returns> it is return FrameworkElement </returns>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings">
+            <inheritdoc />
+            <summary>
+            Provides set of properties to be customized for selection indicator in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>,
+            selection indicator is strip which is to indicate the selected index in the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> View.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.color">
+            <summary>
+            color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.position">
+            <summary>
+            position field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.strokeThickness">
+            <summary>
+            stroke thickness field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.cornerRadius">
+            <summary>
+            corner radius field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.segmentControl">
+            <summary>
+            It holds <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.Color">
+            <summary>
+            Gets or sets the value for the color of selection indicator.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.Position">
+            <summary>
+            Gets or sets the value for the position of selection indicator.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.StrokeThickness">
+            <summary>
+            Gets or sets the value for the thickness of selection indicator.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.CornerRadius">
+            <summary>
+            Gets or sets the corner radius value for the border of selection indicator.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.UpdateFormsSettings(Syncfusion.XForms.Buttons.SelectionIndicatorSettings,Syncfusion.XForms.UWP.Buttons.SfSegmentedControl)">
+            <summary>
+            Hooked property changed of SelectionIndicatorSettings objects
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.FormSettingsOnPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Call set native property method when change form SelectionIndicatorSettings property change 
+            </summary>
+            <param name="sender"></param>
+            <param name="propertyChangedEventArgs"></param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.SetEquivalentValues(Syncfusion.XForms.Buttons.SelectionIndicatorSettings)">
+            <summary>
+            Set the native SelectedIndicatorSettings properties from forms properties
+            </summary>
+            <param name="formSettings"> It is SelectionIndicatorSettings </param>
+        </member>
+        <member name="E:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.PropertyChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SelectionIndicatorSettings.RaiseOnPropertyChanged(System.String)">
+            <summary>
+            This method is called by the Set accessor of each property.
+            The CallerMemberName attribute that is applied to the optional propertyName
+            parameter causes the property name of the caller to be substituted as an argument.
+            </summary>
+            <param name="propertyName">String type</param>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl">
+            <summary>
+            SegmentedControl View lets users explore and switch among different views.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectedIndexProperty">
+            <summary>
+            Identifies the SelectedIndex <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.DisplayModeProperty">
+            <summary>
+            Identifies the DisplayMode <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.VisibleSegmentsCountProperty">
+            <summary>
+            Identifies the VisibleSegmentsCount <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionIndicatorSettingsProperty">
+            <summary>
+            Identifies the SelectionIndicatorSettings <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.BorderThicknessProperty">
+            <summary>
+            Identifies the BorderThickness <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentBorderThicknessProperty">
+            <summary>
+            Identifies the SegmentBorderThickness <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.BackgroundProperty">
+            <summary>
+            Identifies the Background <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.CornerRadiusProperty">
+            <summary>
+            Identifies the CornerRadius <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentPaddingProperty">
+            <summary>
+            Identifies the SegmentPadding <see cref="T:Xamarin.Forms.BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="T:Xamarin.Forms.BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.isViewLoaded">
+            <summary>
+            It holds the whether view load or not
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.controlWidth">
+            <summary>
+            variable which hold the width assigned to the control.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.controlHeight">
+            <summary>
+            variable which hold the height assigned to the control.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.formsSegmentedView">
+            <summary>
+            Forms segmented object
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.outerSegmentBorder">
+            <summary>
+            Border view field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.headerScrollviewer">
+            <summary>
+            Scroll viewer field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.previousIndex">
+            <summary>
+            Previous index field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.selectionStrip">
+            <summary>
+            Selection strip border field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.segmentHeight">
+            <summary>
+            Segment height field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.segmentWidth">
+            <summary>
+            Segment width field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.segmentCornerRadius">
+            <summary>
+            Corner Radius for parent layout
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.segmentBorderColor">
+            <summary>
+            Segmented item border color
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.selectionColor">
+            <summary>
+            Selection color of the segments
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.titleFontStyle">
+            <summary>
+            Text font style field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.titleFontSize">
+            <summary>
+            Text font size field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.titleFontColor">
+            <summary>
+            title font color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.fontIconStyle">
+            <summary>
+            Font icon style field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.fontIconFontSize">
+            <summary>
+            Font icon font size field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.selectionAnimationDuration">
+            <summary>
+            selection animation duration field 
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.fontIconFontColor">
+            <summary>
+            Text font icon font color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.selectionTextColor">
+            <summary>
+            Selection text color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.disabledTextColor">
+            <summary>
+            Disabled text color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.disabledTextBackground">
+            <summary>
+            Disabled text color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.segmentBackgroundColor">
+            <summary>
+            Segmented item background color
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.selectionChangedEventArgs">
+            <summary>
+            Selection changed event args object
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> class.
+            </summary>
+        </member>
+        <member name="E:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionChanged">
+            <summary>
+            Occurs when index changed.
+            </summary>
+        </member>
+        <member name="E:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.PropertyChanged">
+            <inheritdoc />
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.DisplayMode">
+            <summary>
+            Gets or sets the value to define the type of segment. By default, it will display title from <see cref="T:Syncfusion.XForms.Buttons.SfSegmentItem"/> or the string value.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.VisibleSegmentsCount">
+            <summary>
+            Gets or sets the value to show the segments in the available space in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>. As it overrides to segment width property, other segments can be viewed by scrolling.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionIndicatorSettings">
+            <summary>
+            Gets or sets value to configure the attributes of <see cref="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionIndicatorSettings"/>,
+            Selection indicator is a strip which is used to indicate the selected index of <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.BorderThickness">
+            <summary>
+            Gets or sets the value to define the border thickness of segment.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentBorderThickness">
+            <summary>
+            Gets or sets the value to define the border thickness of SfSegmentedItem
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentPadding">
+            <summary>
+            Gets or sets the value to define the padding of SfSegmentedItem
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.Background">
+            <summary>
+            Gets or sets the value to define the background of SfSegmentedControl
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.CornerRadius">
+            <summary>
+            Gets or sets the corner radius value for the border of <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentHeight">
+            <summary>
+            Gets or sets the value for the height of the segment in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentWidth">
+            <summary>
+            Gets or sets the value for the width of the segment in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.DisabledTextColor">
+            <summary>
+            Gets or sets the text color of disabled segment items in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.DisabledTextBackground">
+            <summary>
+            Gets or sets the background color of disabled segment items in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionTextColor">
+            <summary>
+            Gets or sets the text color of the selected segment in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionBackgroundColor">
+            <summary>
+            Gets or sets the background color of the selected segment in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentBorderColor">
+            <summary>
+            Gets or sets the border color of SfSegmentItem.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentBackgroundColor">
+            <summary>
+            Gets or sets the background color of SfSegmentItem.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SegmentCornerRadius">
+            <summary>
+            Gets or sets the corner radius value for the segment items available in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionAnimationDuration">
+            <summary>
+            Gets or sets the selection animation duration.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.TitleFontStyle">
+            <summary>
+            Gets or sets the value for the font representation of text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.TitleFontSize">
+            <summary>
+            Gets or sets the value for the font size of text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.TitleFontColor">
+            <summary>
+            Gets or sets the value for the color of text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.FontIconStyle">
+            <summary>
+            Gets or sets the value for the font family of icon font text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.FontIconFontSize">
+            <summary>
+            Gets or sets the value for the font size of icon font text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.FontIconFontColor">
+            <summary>
+            Gets or sets the value for the color of font icon text for a segment item.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.OnApplyTemplate">
+            <summary>
+            Apply template to SfsegmentView
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.MeasureOverride(Windows.Foundation.Size)">
+            <summary>
+            On measure the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>
+            </summary>
+            <param name="availableSize"> parent size. </param>
+            <returns> It returns available size of SfSegmentedControl </returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.OnVisibleSegmentCountChanged(Windows.UI.Xaml.DependencyObject,Windows.UI.Xaml.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Call measurement when change the VisibleSegmentCount.
+            </summary>
+            <param name="d"> d is a <see cref="T:Windows.UI.Xaml.DependencyObject"/> </param>
+            <param name="e"> e is <see cref="T:Windows.UI.Xaml.DependencyPropertyChangedEventArgs"/></param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.OnSelectedIndexChanged(Windows.UI.Xaml.DependencyObject,Windows.UI.Xaml.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Gets fired when change the SelectedIndex property
+            </summary>
+            <param name="d"> d is object </param>
+            <param name="e"> e is DependencyPropertyChangedEventArgs </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionAnimation_Completed(System.Object,System.Object)">
+            <summary>
+            Update selection state when animation completed
+            </summary>
+            <param name="sender"> sender as <see cref="T:Windows.UI.Xaml.Media.Animation.Storyboard"/> </param>
+            <param name="e"> e is a object </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.OnSelectedIndexChanged(Windows.UI.Xaml.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Update the Selection states
+            </summary>
+            <param name="e"> e as DependencyPropertyChangedEventArgs </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateScrollPosition">
+            <summary>
+            Update the <see cref="T:Windows.UI.Xaml.Controls.ScrollViewer"/> position.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.ArrangeSegmentItems">
+            <summary>
+            Arrange segmented items
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateSegmentedItemsBorder">
+            <summary>
+            Update the all segment items border
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateSelectionStrip(System.Boolean)">
+            <summary>
+            Update selection strips placement
+            </summary>
+            <param name="allowAnimation"> boolean type </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateSelectionStripSettings">
+            <summary>
+            Update the selection strips settings
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.GetSegmentWidth">
+            <summary>
+            Get the required segmented item width.
+            </summary>
+            <returns> double type </returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.RaisePropertyChanged(System.String)">
+            <summary>
+            Its fires when change <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> properties
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.CanTriggerSelectionChangedEvent">
+            <summary>
+            To check Whether the selection changed event triggered or not.
+            </summary>
+            <returns>return value</returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.RaiseSelectionChanged(Syncfusion.XForms.UWP.Buttons.SelectionChangedEventArgs)">
+            <summary>
+            Invoke event with the updated index value.
+            </summary>
+            <param name="args">event args</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateSegmentedViewProperties(System.String,Syncfusion.XForms.Buttons.SfSegmentedControl,Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer)">
+            <summary>
+            Mapping the forms properties to native properties
+            </summary>
+            <param name="propertyName"> Name of property it accepts string type </param>
+            <param name="formsSegmentedView"> Object of forms segmented view it accepts Syncfusion.XForms.Buttons.SfSegmentedControl </param>
+            <param name="SegmentedViewRenderer"> Object of forms SegmentedViewRenderer view it accepts Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateBackground(Xamarin.Forms.Color)">
+            <summary>
+            Update Background color
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.CheckIndex(System.Int32)">
+            <summary>
+            Check whether selected index valid or not
+            </summary>
+            <param name="selectedIndex"> current index</param>
+            <returns> boolean value </returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.ItemsOnCollectionChanged(System.Object,System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+            <summary>
+            Gets fired when change the ItemsSource collection
+            </summary>
+            <param name="sender"> Sender as object </param>
+            <param name="notifyCollectionChangedEventArgs"></param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SetNativeItems(Syncfusion.XForms.Buttons.SfSegmentedControl,System.Collections.IList)">
+            <summary>
+            Set native view from forms view
+            </summary>
+            <param name="formsSegmentedView"> Object of forms segmented view it accepts Syncfusion.XForms.Buttons.SfSegmentedControl </param>
+            <param name="items"> Collection of objects it accepts IEnumerable type </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.AddItem(System.Object,System.Int32,Syncfusion.XForms.Buttons.SfSegmentedControl)">
+            <summary>
+            Add items to <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>
+            </summary>
+            <param name="item"> It is <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/> object </param>
+            <param name="index"> Index of item </param>
+            <param name="formsSegmentedView"> It is a <see cref="T:Syncfusion.XForms.Buttons.SfSegmentedControl"/> </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.CustomViewTapped(System.Object)">
+            <summary>
+            Change the <see cref="P:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectedIndex"/> of <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/>
+            </summary>
+            <param name="view"> It holds tapped view </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SelectionIndexUpdate(System.Int32,System.Boolean)">
+            <summary>
+            Selected index item gets update when add or remove new item
+            </summary>
+            <param name="index"> affected index </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.CreateNativeSegmentItem(Syncfusion.XForms.Buttons.SfSegmentItem,System.Int32)">
+            <summary>
+            Create native <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/> from Forms <see cref="T:Syncfusion.XForms.Buttons.SfSegmentItem"/>.
+            </summary>
+            <param name="sfSegmentItem"> It is a <see cref="T:Syncfusion.XForms.Buttons.SfSegmentItem"/> </param>
+            <param name="index"> Idex of item </param>
+            <returns></returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateItemProperties(Syncfusion.XForms.Buttons.SfSegmentItem,Syncfusion.XForms.UWP.Buttons.SfSegmentItem,Syncfusion.XForms.Buttons.SfSegmentedControl)">
+            <summary>
+            Assign the <see cref="T:Syncfusion.XForms.Buttons.SfSegmentItem"/> properties to native <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/> properties
+            </summary>
+            <param name="sfSegmentItem"> It holds <see cref="T:Syncfusion.XForms.Buttons.SfSegmentItem"/> </param>
+            <param name="nativeItem"> It holds <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/></param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateItemFontProperties(Syncfusion.XForms.Buttons.SfSegmentItem,Syncfusion.XForms.UWP.Buttons.SfSegmentItem,Syncfusion.XForms.Buttons.SfSegmentedControl)">
+            <summary>
+            Update native view Font property based on form SfSegmentedItem Font property change
+            </summary>
+            <param name="sfSegmentItem"> It holds <see cref="T:Syncfusion.XForms.Buttons.SfSegmentItem"/> </param>
+            <param name="nativeItem"> It holds <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/> </param>
+            <param name="segmentcontrol"> It holds <see cref="T:Syncfusion.XForms.Buttons.SfSegmentedControl"/> </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.SfSegmentedItem_PropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Update native view property based on form SfSegmentedItem property change
+            </summary>
+            <param name="sender"> sender as <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem" /> </param>
+            <param name="e"> e as <see cref="T:System.ComponentModel.PropertyChangedEventArgs" /></param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.CreateNativeSegmentItem(System.Object,System.Int32,Syncfusion.XForms.Buttons.SfSegmentedControl)">
+            <summary>
+            Create native <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/> from objects.
+            </summary>
+            <param name="sfSegmentObject"> It is a object of <see cref="T:Syncfusion.XForms.Buttons.SfSegmentItem"/> </param>
+            <param name="index"> Index of items </param>
+            <returns></returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.UpdateParentFontPropertiesToChildFontProperties(Syncfusion.XForms.Buttons.SfSegmentedControl)">
+            <summary>
+            Update Font properties of each <see cref="!:SegmentView"/>
+            </summary>
+            <param name="formsSegmentedView"> It holds the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl"/> </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl.Dispose">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SelectionChangedEventArgs">
+            <inheritdoc />
+            <summary>
+            Contains data for the event which is raised selected index changed.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SelectionChangedEventArgs.Index">
+            <summary>
+            Gets the value of selected index.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem">
+            <summary>
+            Represents a single element in <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControl" /> View.
+            It contains the properties to configure title and content region.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TextProperty">
+            <summary>
+            Identifies the Text <see cref="!:BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="!:BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.IconFontProperty">
+            <summary>
+            Identifies the IconFont <see cref="!:BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="!:BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.FontIconFontFamilyProperty">
+            <summary>
+            Identifies the FontIconFontFamily <see cref="!:BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="!:BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TitleFontAttributesProperty">
+            <summary>
+            Identifies the FontAttributes <see cref="!:BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="!:BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TitleFontWeightProperty">
+            <summary>
+            Identifies the TitleFontWeight <see cref="!:BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="!:BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TitleFontFamilyProperty">
+            <summary>
+            Identifies the TitleFontFamily <see cref="!:BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="!:BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.IsSelectedProperty">
+            <summary>
+            Identifies the IsSelected <see cref="!:BindableProperty"/>.
+            </summary>
+            <remarks>This <see cref="!:BindableProperty"/> is read-only.</remarks>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.formsSegmentItem">
+            <summary>
+            It is hold Forms SfSegmentedItem
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.outerBorder">
+            <summary>
+            It holds outer grid field
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.text">
+            <summary>
+            It holds text TextBlock field
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.icon">
+            <summary>
+            It holds font icon TextBlock field
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.nativeSegmentedView">
+            <summary>
+            It holds native SfSegmentedControl field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.titleFontSize">
+            <summary>
+            It holds font size field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.titleFontColor">
+            <summary>
+            It holds font color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.fontIconFontSize">
+            <summary>
+            It holds font icon font size field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.selectionTextColor">
+            <summary>
+            It holds selection text color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.selectionBackgroundColor">
+            <summary>
+            It holds selection background color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.isEnabled">
+            <summary>
+            It holds enabled field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.fontIconFontColor">
+            <summary>
+            It holds font icon font color field.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.backgroundColor">
+            <summary>
+            It holds selection background color field.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.Text">
+            <summary>
+            Gets or sets the value for the text of Segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.IconFont">
+            <summary>
+            Gets or sets the value for the font icon text for a Segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TitleFontFamily">
+            <summary>
+            Gets or sets the value for the font representation of text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TitleFontAttributes">
+            <summary>
+            Gets or sets the value for the font representation of title font text for a tab header.
+            </summary>
+            <remarks>It is not applicable for most of the font icons.</remarks>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.FontIconFontFamily">
+            <summary>
+            Gets or sets the value for the font family of icon font text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TitleFontWeight">
+            <summary>
+            Gets or sets the value for the font representation of icon font text for a tab header.
+            </summary>
+            <remarks>It is not applicable for most of the font icons.</remarks>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.IsSelected">
+            <summary>
+            Gets or sets isselected of SfSegmentedItem
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.FormsSegmentItem">
+            <summary>
+            Gets or sets the forms Segment item.
+            </summary>
+            <value>The forms Segment item.</value>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TitleFontSize">
+            <summary>
+            Gets or sets the value for the font size of text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TitleFontColor">
+            <summary>
+            Gets or sets the value for the color of text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.FontIconFontSize">
+            <summary>
+            Gets or sets the value for the font size of icon font text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.FontIconFontColor">
+            <summary>
+            Gets or sets the value for the color of font icon text for a segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.SelectionTextColor">
+            <summary>
+            Gets or sets the color value for the selection text of segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.SelectionBackgroundColor">
+            <summary>
+            Gets or sets the background color value for the selected segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.IsEnabled">
+            <summary>
+            Gets or sets the value to choose whether the segment item is enabled or not.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.BackgroundColor">
+            <summary>
+            Gets or sets the background color value for the segment item.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.OuterBorder">
+            <summary>
+            Gets or sets the outer grid.
+            </summary>
+            <value>The outer grid of SfSegmentItem.</value>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.TextView">
+            <summary>
+            Gets or sets the text view.
+            </summary>
+            <value>The text TextBlock. </value>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.IconView">
+            <summary>
+            Gets or sets the icon view.
+            </summary>
+            <value> The font icon TextBlock.</value>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.NativeSegmentView">
+            <summary>
+            Gets or sets the SfSegmentedControl object.
+            </summary>
+            <value> The native SfSegmentedControl object. </value>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.OnApplyTemplate">
+            <summary>
+            Apply template to SfSegmentItem
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.OnTapped(Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+             On tapped event args
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.MeasureOverride(Windows.Foundation.Size)">
+            <summary>
+            On measure the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfSegmentItem"/>
+            </summary>
+            <param name="availableSize"> available size of segment item. </param>
+            <returns> It returns available size of SfSegment item </returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.OnIsSelectedChanged(Windows.UI.Xaml.DependencyObject,Windows.UI.Xaml.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Update the selection states while IsSelected property changed
+            </summary>
+            <param name="d"> d as SfSegmentItem </param>
+            <param name="e"> e is DependencyPropertyChangedEventArgs </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.UpdateBorder">
+            <summary>
+            Update SfSegmentItem border.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.UpdateUnselectionState(Syncfusion.XForms.UWP.Buttons.SfSegmentItem)">
+            <summary>
+            Update the un selection customization of SfSegmentItem
+            </summary>
+            <param name="item"> item is a SfSegmentItem object </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.UpdateSelectionState(Syncfusion.XForms.UWP.Buttons.SfSegmentItem)">
+            <summary>
+            Update the selection customization of SfSegmetItem
+            </summary>
+            <param name="item"> item is a SfSegmentItem object </param>
+        </member>
+        <member name="E:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.PropertyChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.RaiseOnPropertyChanged(System.String)">
+            <summary>
+            This method is called by the Set accessor of each property.
+            The CallerMemberName attribute that is applied to the optional propertyName
+            parameter causes the property name of the caller to be substituted as an argument.
+            </summary>
+            <param name="propertyName">String type</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentItem.Dispose">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton">
+            <summary>
+            Represents the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/> class.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfRadioButton.xFormsSfRadioButton">
+            <summary>
+            Represents forms masked edit.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButton.#ctor(Syncfusion.XForms.Buttons.SfRadioButton)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/> class.
+            </summary>
+            <param name="radioButton"><see cref="T:Syncfusion.XForms.Buttons.SfCheckBox"/> control</param>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfRadioButton.CheckedColor">
+            <summary>
+            Sets the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/> checked state fill color
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfRadioButton.ForegroundColor">
+            <summary>
+            Sets the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/> Text color
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfRadioButton.UncheckedColor">
+            <summary>
+            Sets the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/> unchecked state stroke color
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButton.OnToggle">
+            <summary>
+            Triggered while changing the state of the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/>
+            </summary>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfRadioButtonMapping">
+            <summary>
+            Represents properties mapping class for <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/>
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButtonMapping.#ctor">
+            <summary>
+            Prevents a default instance of the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButtonMapping"/> class from being created.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButtonMapping.OnSfRadioButtonPropertiesChanged(System.String,Syncfusion.XForms.Buttons.SfRadioButton,Syncfusion.XForms.UWP.Buttons.SfRadioButton)">
+            <summary>
+            Raises the masked Edit properties changed event.
+            </summary>
+            <param name="propertyName">Property name.</param>
+            <param name="formsSfRadioButton"><see cref="T:Syncfusion.XForms.Buttons.SfRadioButton"/>.</param>
+            <param name="nativeSfRadioButton"><see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/>.</param>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfCheckBoxMapping">
+            <summary>
+            Represents properties mapping class for <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/>
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxMapping.#ctor">
+            <summary>
+            Prevents a default instance of the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBoxMapping"/> class from being created.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxMapping.OnSfCheckBoxPropertiesChanged(System.String,Syncfusion.XForms.Buttons.SfCheckBox,Syncfusion.XForms.UWP.Buttons.SfCheckBox)">
+            <summary>
+            Raises the masked Edit properties changed event.
+            </summary>
+            <param name="propertyName">Property name.</param>
+            <param name="formsSfCheckBox"><see cref="T:Syncfusion.XForms.Buttons.SfCheckBox"/>.</param>
+            <param name="nativeSfCheckBox"><see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/>.</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxMapping.UpdateFontAttributes(Syncfusion.XForms.Buttons.SfCheckBox,Syncfusion.XForms.UWP.Buttons.SfCheckBox)">
+            <summary>
+            Updates the font attribute values
+            </summary>
+            <param name="formsSfCheckBox"><see cref="T:Syncfusion.XForms.Buttons.SfCheckBox"/>.</param>
+            <param name="nativeSfCheckBox"><see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/>.</param>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox">
+            <summary>
+            Represents the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/> class.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfCheckBox.CornerRadiusProperty">
+            <summary>
+            Using a DependencyProperty as the backing store for CornerRadius.  This enables animation, styling, binding, etc...
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfCheckBox.xFormsSfCheckBox">
+            <summary>
+            Represents forms masked edit.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfCheckBox.rectangle">
+            <summary>
+            Represents the checkbox rectangle shape
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfCheckBox.fontIcon">
+            <summary>
+            Represents the inner glyph font icon
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBox.#ctor(Syncfusion.XForms.Buttons.SfCheckBox)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/> class.
+            </summary>
+            <param name="checkBox"><see cref="T:Syncfusion.XForms.Buttons.SfCheckBox"/> control</param>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfCheckBox.CornerRadius">
+            <summary>
+            Gets or sets the degree to which the corners of a <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/> rectangle is rounded
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfCheckBox.CheckedColor">
+            <summary>
+            Sets the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/> checked state fill color
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfCheckBox.ForegroundColor">
+            <summary>
+            Sets the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/> Text color
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfCheckBox.UncheckedColor">
+            <summary>
+            Sets the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/> unchecked state stroke color
+            </summary>
+        </member>
+        <member name="P:Syncfusion.XForms.UWP.Buttons.SfCheckBox.TickColor">
+            <summary>
+            Sets the tick color of a <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/>.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBox.OnApplyTemplate">
+            <summary>
+            Initializes all the child elements of <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/> control
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBox.OnToggle">
+            <summary>
+            Triggered while changing the state of the checkbox
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBox.OnCornerRadiusChanged(Windows.UI.Xaml.DependencyObject,Windows.UI.Xaml.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Handles corner radius changed value
+            </summary>
+            <param name="d">Current dependency object</param>
+            <param name="e">Current dependency property changed event argument</param>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer">
+            <summary>
+            Represents custom android renderer for the class <see cref="T:Syncfusion.XForms.Buttons.SfRadioButton"/>
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer.formsSfRadioButton">
+            <summary>
+            Represents the <see cref="N:Xamarin.Forms"/> <see cref="T:Syncfusion.XForms.Buttons.SfCheckBox"/> control
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer.nativeSfRadioButton">
+            <summary>
+            Represents the <see cref="T:Windows.UI.Xaml.Controls.RadioButton"/> controls
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer.Init">
+            <summary>
+            Initialize the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfRadioButton"/> custom renderer
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer.GetPropertiesChanged(System.Type,System.Object)">
+            <summary>
+            Get the list of property name
+            </summary>
+            <param name="type">property value.</param>
+            <param name="value">the value.</param>
+            <returns>returns the list of properties name.</returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer.GetWindowsColor(Xamarin.Forms.Color)">
+            <summary>
+            Get windows color from forms color
+            </summary>
+            <param name="formsColor">the native color</param>
+            <returns>it returns the native color.</returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.XForms.Buttons.SfRadioButton})">
+            <summary>
+            Raises the on element changed event.
+            </summary>
+            <param name="eventArgs">Changed event argument</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Raises the element property changed event.
+            </summary>
+            <param name="sender">the Sender.</param>
+            <param name="eventArgs">the changed event.</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfRadioButtonRenderer.MeasureOverride(Windows.Foundation.Size)">
+            <summary>
+            To set the size for the control.
+            </summary>
+            <param name="availableSize">Available size.</param>
+            <returns>Measured value</returns>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer">
+            <summary>
+            Represents custom android renderer for the class <see cref="T:Syncfusion.XForms.Buttons.SfCheckBox"/>
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer.formsSfCheckBox">
+            <summary>
+            Represents the <see cref="N:Xamarin.Forms"/> <see cref="T:Syncfusion.XForms.Buttons.SfCheckBox"/> control
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer.nativeSfCheckBox">
+            <summary>
+            Represents the <see cref="T:Windows.UI.Xaml.Controls.CheckBox"/> controls
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer.Init">
+            <summary>
+            Initialize the <see cref="T:Syncfusion.XForms.UWP.Buttons.SfCheckBox"/> custom renderer
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer.GetPropertiesChanged(System.Type,System.Object)">
+            <summary>
+            Get the list of property name
+            </summary>
+            <param name="type">property value.</param>
+            <param name="value">the value.</param>
+            <returns>returns the list of properties name.</returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer.GetWindowsColor(Xamarin.Forms.Color)">
+            <summary>
+            Get windows color from forms color
+            </summary>
+            <param name="formsColor">the native color</param>
+            <returns>it returns the native color.</returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.XForms.Buttons.SfCheckBox})">
+            <summary>
+            Raises the on element changed event.
+            </summary>
+            <param name="eventArgs">Changed event argument</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Raises the element property changed event.
+            </summary>
+            <param name="sender">the Sender.</param>
+            <param name="eventArgs">the changed event.</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfCheckBoxRenderer.MeasureOverride(Windows.Foundation.Size)">
+            <summary>
+            To set the size for the control.
+            </summary>
+            <param name="availableSize">Available size.</param>
+            <returns>Measured value</returns>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer">
+            <summary>
+            SfSegmentedControlRenderer renderer for UWP
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.nativeSegmentedView">
+            <summary>
+            It hold native SfSegmentedControl instance
+            </summary>
+        </member>
+        <member name="F:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.formsSegmentedView">
+            <summary>
+            It hold form SfSegmentedControl instance
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.XForms.Buttons.SfSegmentedControl})">
+            <summary>
+            Methods gets called when any property of the SfSegmentedControlRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.NativeSegmentedView_SelectionChanged(System.Object,Syncfusion.XForms.UWP.Buttons.SelectionChangedEventArgs)">
+            <summary>
+            Trigger the forms SelectionChanged event with SelectionChangedEventArgs
+            </summary>
+            <param name="sender"> sender as SfSegmentedControl </param>
+            <param name="e"> e as SelectionChangedEventArgs </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.TriggerInternalMethod(System.Type,System.String,System.Object[])">
+            <summary>
+            Invoke internal method from SfSegmentedControlRenderer class
+            </summary>
+            <param name="type"> It is type of SfSegmentedControl </param>
+            <param name="methodName"> It is the internal method name </param>
+            <param name="args"> It is SelectionChangedEventArgs object </param>
+            <returns> It is object </returns>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            This method used to update all the SfSegmentedControl properties.
+            </summary>
+            <param name="sender"> sender as SfSegmentedControlRenderer</param>
+            <param name="e"> e as PropertyChangedEventArgs </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.UpdateProperties">
+            <summary>
+            Update the all public properties
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfSegmentedControlRenderer.Init">
+            <summary>
+            Initialize the SfSegmentedControlRenderer
+            </summary>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfButtonRenderer">
+            <summary>
+            Represents custom android renderer for the class <see cref="T:Syncfusion.XForms.Buttons.SfButton"/>
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfButtonRenderer.Init">
+            <summary>
+            Initialize the <see cref="T:Syncfusion.XForms.Buttons.SfButton"/> custom renderer
+            </summary>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfChipGroupRenderer">
+            <summary>
+            Represents custom uwp renderer for the class <see cref="T:Syncfusion.XForms.Buttons.SfChipGroup"/>
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfChipGroupRenderer.Init">
+            <summary>
+            Initialize the <see cref="!:SfChipGroup"/> custom renderer
+            </summary>
+        </member>
+        <member name="T:Syncfusion.XForms.UWP.Buttons.SfChipRenderer">
+            <summary>
+            Represents custom uwp renderer for the class <see cref="T:Syncfusion.XForms.Buttons.SfChip"/>
+            </summary>
+        </member>
+        <member name="M:Syncfusion.XForms.UWP.Buttons.SfChipRenderer.Init">
+            <summary>
+            Initialize the <see cref="!:SfChip"/> custom renderer
+            </summary>
+        </member>
+        <member name="T:Syncfusion.Buttons.XForms.UWP.Syncfusion_Buttons_XForms_UWP_XamlTypeInfo.XamlMetaDataProvider">
+            <summary>
+            Main class for providing metadata for the app or library
+            </summary>
+        </member>
+        <member name="M:Syncfusion.Buttons.XForms.UWP.Syncfusion_Buttons_XForms_UWP_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.Type)">
+            <summary>
+            GetXamlType(Type)
+            </summary>
+        </member>
+        <member name="M:Syncfusion.Buttons.XForms.UWP.Syncfusion_Buttons_XForms_UWP_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.String)">
+            <summary>
+            GetXamlType(String)
+            </summary>
+        </member>
+        <member name="M:Syncfusion.Buttons.XForms.UWP.Syncfusion_Buttons_XForms_UWP_XamlTypeInfo.XamlMetaDataProvider.GetXmlnsDefinitions">
+            <summary>
+            GetXmlnsDefinitions()
+            </summary>
+        </member>
+    </members>
+</doc>

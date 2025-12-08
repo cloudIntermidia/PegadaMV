@@ -1,0 +1,605 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
+             xmlns:converters="clr-namespace:MobiliVendas.Core.Utils.Converters;assembly=MobiliVendas.Core"
+             xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+             xmlns:dataTemplate="clr-namespace:MobiliVendas.Core.Utils.DataTemplates;assembly=MobiliVendas.Core"
+             x:Class="Pegada.Core.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!--FONTS DA APLICAÇÃO-->
+            <OnPlatform x:TypeArguments="x:String" x:Key="RobotoNormalFont">
+                <On Platform="Android" Value="Roboto-Regular.ttf#Roboto" />
+                <On Platform="UWP" Value="/Assets/Fonts/Roboto-Regular.ttf#Roboto" />
+                <On Platform="iOS" Value="Roboto-Regular" />
+            </OnPlatform>
+
+            <OnPlatform x:TypeArguments="x:String" x:Key="RobotoBoldFont">
+                <On Platform="Android" Value="Roboto-Bold.ttf#Roboto" />
+                <On Platform="UWP" Value="/Assets/Fonts/Roboto-Bold.ttf#Roboto" />
+                <On Platform="iOS" Value="Roboto-Bold" />
+            </OnPlatform>
+
+            <!-- Cores da aplicação -->
+            <!--INICIO CORES FILTRO NIVEIS-->
+            <Color x:Key="BackColor">#000000</Color>
+            <Color x:Key="OptionColor">#835324</Color> <!--COR HOVEREFFECT-->
+            <Color x:Key="ItemColor">#352C2D</Color>
+            <Color x:Key="FontItemColor">#FFFFFF</Color>
+            <!--FIM CORES FILTRO NIVEIS-->
+            
+            
+            <Color x:Key="corBackGroundButtonLogin">#835324</Color>
+            <Color x:Key="corBackGroundLogin">#E31837</Color>
+            <Color x:Key="corPrimaria">#FFFFFF</Color>
+            <Color x:Key="corNavegacaoBottom">#FFFFFF</Color>
+            <Color x:Key="corPrimariaClara">#CC0000</Color>
+            <Color x:Key="corDestaque">#d5d7de</Color>
+            <Color x:Key="itemNivel">#835324</Color>
+            <Color x:Key="corButtonNiveis">#000000</Color>
+            <Color x:Key="corFontButtonNiveis">#FFFFFF</Color>
+            <Color x:Key="corFontCabecalho">#000000</Color>
+
+            <Color x:Key="corBackGroundPopover">#e6eaf0</Color>
+            <Color x:Key="corCabecalhoPopover">#f5f5f5</Color>
+            <Color x:Key="corButtonBackPopover">#6589eb</Color>
+
+            <Color x:Key="corBackFiltros">#d5d7de</Color>
+            <Color x:Key="corDefaultFiltros">#f5f5f5</Color>
+            <Color x:Key="corHeaderGrid">#D8D8D8</Color>
+            <Color x:Key="corItemGrid">Transparent</Color>
+
+
+            <!-- Converters da aplicação -->
+            <converters:SeNuloUsaParametro x:Key="SeNuloUsaParametro"/>
+            <converters:TipoExibicaoParaBoleano x:Key="TipoExibicaoParaBoleano"/>
+            <converters:TipoExibicaoParaImagem x:Key="TipoExibicaoParaImagem"/>
+            <converters:EsconderEstoqueConverter x:Key="EsconderEstoqueConverter"/>
+            <converters:TextSubText x:Key="TextSubText"/>
+            <converters:AddStringConverter x:Key="AddStringConverter"/>
+            <converters:NuloParaString x:Key="NuloParaString"/>
+            <converters:InverterValoresParaBoleano x:Key="InverterValoresParaBoleano"/>
+            <converters:StringUpperCase x:Key="StringUpperCase"/>
+            <converters:StringParaBool x:Key="StringParaBool"/>
+            <converters:IntToBoolConverter x:Key="IntToBoolConverter"/>
+            <converters:FormatarCnpj x:Key="FormatarCnpj"/>
+            <converters:BitParaImagem x:Key="BitParaImagem"/>
+            <converters:BoleanoParaCor x:Key="BoleanoParaCor"/>
+            <converters:CompareValoresParaBoleano x:Key="CompareValoresParaBoleano"/>
+            <converters:ValorParaMoeda x:Key="ValorParaMoeda"/>
+            <converters:Base64ParaImagem x:Key="Base64ParaImagem"/>
+            <converters:ByteArrayParaImagem x:Key="ByteArrayParaImagem"/>
+            <converters:ColecaoNaoTemDados x:Key="ColecaoNaoTemDados"/>
+            <converters:ColecaoTemDados x:Key="ColecaoTemDados"/>
+            <converters:LabelNextValue x:Key="LabelNextValue"/>
+            <converters:BoleanoParaImagem x:Key="BoleanoParaImagem"/>
+            <converters:StringFiltroParaImagem x:Key="StringFiltroParaImagem"/>
+            <converters:ConverterExcMoeda x:Key="ConverterExcMoeda"/>
+            <converters:FormatDataQuinzena x:Key="FormatDataQuinzena"/>
+            
+
+
+            <Style x:Key="CatalogoStyle" TargetType="flv:FlowListView">
+                <Setter Property="Margin" Value="0,0"/>
+            </Style>
+
+            <!--ESTILOS LABELS INICIO-->
+            <Style x:Key="LabelFechamento" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="HorizontalTextAlignment" Value="Start"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+            </Style>
+
+            <Style x:Key="labelGridHeader" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource corHeaderGrid}"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            </Style>
+
+            <Style x:Key="labelGridItem" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource corItemGrid}"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            </Style>
+
+            <Style x:Key="labelGridItemSmall" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource corItemGrid}"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            </Style>
+
+            <Style x:Key="labelDestaque" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="HorizontalTextAlignment" Value="Start"/>
+                <Setter Property="HorizontalOptions" Value="Start"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+            <!--ESTILOS LABELS FIM-->
+
+            <!--ESTILOS BUTTONS INICIO-->
+            <Style x:Key="buttonActions" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+                <Setter Property="BorderColor" Value="Black" />
+                <Setter Property="BorderRadius" Value="5" />
+                <Setter Property="BorderWidth" Value="0.5" />
+                <Setter Property="WidthRequest" Value="200" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="TextColor" Value="#5A5A5A" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="BackgroundColor" Value="#EFEFEF" />
+                <Setter Property="FontSize" Value="12"/>
+            </Style>
+
+
+            <Style x:Key="buttonCalculadora" TargetType="Button">
+                <Setter Property="BorderColor" Value="Black" />
+                <Setter Property="BorderRadius" Value="28" />
+                <Setter Property="BorderWidth" Value="0.3" />
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="buttonCalculadoraTxt" TargetType="Button">
+                <Setter Property="BorderColor" Value="Black" />
+                <Setter Property="BorderRadius" Value="28" />
+                <Setter Property="BorderWidth" Value="0.3" />
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="9"/>
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
+
+            <Style x:Key="buttonNavegacao" TargetType="Button">
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="TextColor" Value="White"/>
+            </Style>
+            <!--ESTILOS BUTTONS FIM-->
+
+            <Style x:Key="flexButtonAction" TargetType="flex:FlexButton">
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="ForegroundColor"  Value="{StaticResource corFontButtonNiveis}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="CornerRadius" Value="3" />
+                <Setter Property="HighlightBorderColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HighlightForegroundColor"  Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HighlightBackgroundColor"  Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="150"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+
+            <Style x:Key="flexButtonNiveis" TargetType="flex:FlexButton">
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="ForegroundColor"  Value="{StaticResource corFontButtonNiveis}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="CornerRadius" Value="3" />
+                <Setter Property="HighlightBorderColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HighlightForegroundColor"  Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HighlightBackgroundColor"  Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="150"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+
+            <Style x:Key="flexButtonFiltros" TargetType="flex:FlexButton">
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="ForegroundColor"  Value="#ffffff" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="CornerRadius" Value="3" />
+                <Setter Property="HighlightBorderColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HighlightForegroundColor"  Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HighlightBackgroundColor"  Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource corButtonNiveis}" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="150"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+
+
+            <Style x:Key="flexButtonFormulario" TargetType="flex:FlexButton">
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="ForegroundColor"  Value="Black" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderColor" Value="White" />
+                <Setter Property="CornerRadius" Value="3" />
+                <Setter Property="HighlightBorderColor" Value="White" />
+                <Setter Property="HighlightForegroundColor"  Value="White" />
+                <Setter Property="HighlightBackgroundColor"  Value="White" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="WidthRequest" Value="150"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+
+
+            <DataTemplate x:Key="CatalogoTemplate">
+                <StackLayout HeightRequest="235"
+                             BackgroundColor="Silver">
+                    <Grid BackgroundColor="White"
+                          RowSpacing="3"
+                          Margin="1"
+                          HorizontalOptions="FillAndExpand"
+                          VerticalOptions="FillAndExpand"
+                      >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="125"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+
+                        <StackLayout Grid.Row="0" 
+                                     Grid.Column="0"
+                                     Orientation="Horizontal"
+                                     VerticalOptions="FillAndExpand"
+                                     HorizontalOptions="End">
+                            <ffimageloading:CachedImage 
+                                                Grid.Row="0" 
+                                                Grid.Column="0"
+                                                DownsampleToViewSize="False" 
+                                                Source="{Binding ItemEstaNoCarrinho, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',carrinho.png'}" 
+                                                LoadingPlaceholder="NaoDisp.png"
+                                                Aspect="AspectFit" 
+                                                HorizontalOptions="End"
+                                                HeightRequest="35"
+                                                WidthRequest="35"
+                                                Margin="10,0"
+                                                />
+
+                            <ffimageloading:CachedImage 
+                                                Grid.Row="0" 
+                                                Grid.Column="1"
+                                                DownsampleToViewSize="False" 
+                                                Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='wish_unchecked.png,wish_checked.png'}" 
+                                                LoadingPlaceholder="NaoDisp.png"
+                                                Aspect="AspectFit" 
+                                                HorizontalOptions="End"
+                                                HeightRequest="35"
+                                                WidthRequest="35"
+                                                Margin="10,0"
+                                                >
+                                <ffimageloading:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" 
+                                                  CommandParameter="{Binding .}"/>
+                                </ffimageloading:CachedImage.GestureRecognizers>
+                            </ffimageloading:CachedImage>
+                        </StackLayout>
+
+
+                        <ffimageloading:CachedImage Grid.Row="1" 
+                                                Grid.Column="0"
+                                                HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
+                                                DownsampleToViewSize="False" 
+                                                Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}" 
+                                                LoadingPlaceholder="NaoDisp.png"
+                                                Aspect="AspectFit" />
+
+
+                        <Label Grid.Row="2" Grid.Column="0" Margin="3,0,3,0"
+                               HorizontalTextAlignment="Center" 
+                               Text="{Binding DescricaoProdutoModelo}" 
+                               FontSize="12"
+                               FontFamily="{StaticResource RobotoNormalFont}" />
+
+                        <Grid Grid.Row="3" Grid.Column="0"
+                              BackgroundColor="White"
+                              IsVisible="{Binding ExibirPreco}" 
+                              RowSpacing="0"
+                              HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand">
+                            
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="2"
+                               HorizontalTextAlignment="Center" 
+                               IsVisible="{Binding IsMostraPrecoNormal}" 
+                               Text="{Binding PrecoVenda, Converter={StaticResource ValorParaMoeda}}"  
+                               FontSize="13" 
+                               FontFamily="{StaticResource RobotoNormalFont}"   
+                             />
+
+                            <Label Grid.Row="0" Grid.Column="2"
+                               HorizontalTextAlignment="Center" 
+                               IsVisible="{Binding IsMostraPrecoDesconto}" 
+                               Text="{Binding PrecoVenda, Converter={StaticResource ValorParaMoeda}}"  
+                               FontSize="13" 
+                               TextDecorations="Strikethrough"
+                               FontFamily="{StaticResource RobotoNormalFont}"   
+                             />
+
+                            <Label Grid.Row="0" Grid.Column="3"
+                               HorizontalTextAlignment="Start" 
+                               IsVisible="False" 
+                               Text="{Binding DescontoUI}"  
+                               FontSize="13" 
+                               TextColor="Red"
+                               FontFamily="{StaticResource RobotoNormalFont}"   
+                             />
+
+                            <Label Grid.Row="0" Grid.Column="3"
+                               HorizontalTextAlignment="Center" 
+                               IsVisible="{Binding IsMostraPrecoDesconto}" 
+                               Text="{Binding PrecoDesconto, Converter={StaticResource ValorParaMoeda}}"  
+                               FontSize="13" 
+                               FontFamily="{StaticResource RobotoNormalFont}"   
+                            />
+
+                        </Grid>
+                        
+                    </Grid>
+                </StackLayout>
+            </DataTemplate>
+
+
+            <DataTemplate x:Key="ListaTemplate">
+                <StackLayout Spacing="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.75*"/>
+                            <ColumnDefinition Width="1.75*"/>
+                            <ColumnDefinition Width="1.75*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Style="{StaticResource labelGridItem}" Text="{Binding CodModelo}"  Grid.Row="0" Grid.Column="0"/>
+                        <Label Style="{StaticResource labelGridItem}" Text="{Binding Descricao}"  Grid.Row="0" Grid.Column="1"/>
+                        <Label Style="{StaticResource labelGridItem}" Text="{Binding DescricaoCor}"  Grid.Row="0" Grid.Column="2"/>
+                        <Label Style="{StaticResource labelGridItem}" Text="{Binding Estoque}"  Grid.Row="0" Grid.Column="3"/>
+                        <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega}"  Grid.Row="0" Grid.Column="4"/>
+                        <Label Style="{StaticResource labelGridItem}" Text="{Binding Origem}"  Grid.Row="0" Grid.Column="5"/>
+                        <StackLayout Grid.Row="0"
+                                 Grid.Column="6"
+                                 HorizontalOptions="Start"
+                                 Spacing="0"
+                                 >
+
+                            <ffimageloading:CachedImage 
+                                                DownsampleToViewSize="True"
+                                                BackgroundColor="Transparent"
+                                                Source="{Binding ItemEPromocao, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',promocao.png'}" 
+                                                HorizontalOptions="End"
+                                                VerticalOptions="Center"
+                                                HeightRequest="20"
+                                                Margin="3,0,0,0"
+                                                Aspect="AspectFit">
+                            </ffimageloading:CachedImage>
+
+                            <ffimageloading:CachedImage 
+                                                DownsampleToViewSize="True"
+                                                BackgroundColor="Transparent"
+                                                Source="{Binding ItemEProntaEntrega, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',pe.png'}" 
+                                                HorizontalOptions="End"
+                                                VerticalOptions="Center"
+                                                HeightRequest="20"
+                                                Margin="3,0,0,0"
+                                                Aspect="AspectFit">
+                            </ffimageloading:CachedImage>
+                        </StackLayout>
+
+                    </Grid>
+
+                    <BoxView HeightRequest="1.5" Color="Silver" HorizontalOptions="FillAndExpand"/>
+                </StackLayout>
+            </DataTemplate>
+
+            <DataTemplate x:Key="HeaderListaTemplate">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.75*"/>
+                            <ColumnDefinition Width="1.75*"/>
+                            <ColumnDefinition Width="1.75*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Style="{StaticResource labelGridHeader}" Text="Código"  Grid.Row="0" Grid.Column="0"/>
+                        <Label Style="{StaticResource labelGridHeader}" Text="Modelo"  Grid.Row="0" Grid.Column="1"/>
+                        <Label Style="{StaticResource labelGridHeader}" Text="Cor"  Grid.Row="0" Grid.Column="2"/>
+                        <Label Style="{StaticResource labelGridHeader}" Text="Qtd. Disponível"  Grid.Row="0" Grid.Column="3"/>
+                        <Label Style="{StaticResource labelGridHeader}" Text="Data de Entrega"  Grid.Row="0" Grid.Column="4"/>
+                        <Label Style="{StaticResource labelGridHeader}" Text="Org. Estoque"  Grid.Row="0" Grid.Column="5"/>
+                        <Label Style="{StaticResource labelGridHeader}" Text=""  Grid.Row="0" Grid.Column="6"/>
+
+                    </Grid>
+            </DataTemplate>
+
+
+
+            <dataTemplate:ModeloTemplateSelector x:Key="ModeloTemplateSelector"
+                                             CatalogoTemplate="{StaticResource CatalogoTemplate}"
+                                             ListaTemplate="{StaticResource ListaTemplate}"
+                                             />
+
+            <dataTemplate:HeaderModeloTemplateSelector x:Key="HeaderModeloTemplateSelector"
+                                                       HeaderListaTemplate="{StaticResource HeaderListaTemplate}"/>
+
+            <DataTemplate x:Key="ClienteSelecaoTemplate">
+                <ViewCell>
+                    <StackLayout>
+                        <Grid Margin="1"
+                              RowSpacing="0"
+                              HeightRequest="90">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="18" />
+                                <RowDefinition Height="18" />
+                                <RowDefinition Height="18" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   LineBreakMode="TailTruncation" 
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="{Binding FantasiaRazaoSocial}" 
+                                   FontSize="14"/>
+
+                            <Label Grid.Row="0" Grid.Column="1" 
+                                   LineBreakMode="TailTruncation" 
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="{Binding CodPessoaCliente, StringFormat='Cód: {0}'}" 
+                                   FontSize="14" 
+                                   HorizontalOptions="EndAndExpand"/>
+
+                            <ffimageloading:CachedImage  Grid.Row="0" 
+                                                         Grid.Column="2" 
+                                                         Grid.RowSpan="2" 
+                                                         BackgroundColor="Transparent"  
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         HeightRequest="30"
+                                                         Aspect="AspectFit"
+                                                         Source="info.png" 
+                                                         >
+                                <ffimageloading:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding InfoCommand}"  CommandParameter="{Binding .}"/>
+                                </ffimageloading:CachedImage.GestureRecognizers>
+                            </ffimageloading:CachedImage>
+
+
+                            <Label Grid.Row="1" 
+                                   Grid.Column="0" 
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="{Binding CNPJ, StringFormat='CNPJ :{0}'}" 
+                                   FontSize="12"/>
+
+                            <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                <Label  HorizontalTextAlignment="End"
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="Limite Crédito Disp.:" 
+                                   FontSize="11"/>
+                                <Label 
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="{Binding LimiteCredito, Converter={StaticResource ValorParaMoeda}}" 
+                                   FontSize="11"/>
+                            </StackLayout>
+
+                            <Label Grid.Row="2" 
+                                   Grid.Column="0"
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="{Binding EnderecoPrincipalCompleto}" 
+                                   FontSize="11" 
+                                   HorizontalOptions="StartAndExpand"/>
+
+                            <StackLayout Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                                <Label 
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="Limite Crédito Tot.:" 
+                                   FontSize="11"/>
+                                <Label HorizontalTextAlignment="End"
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="{Binding LimiteTotal, Converter={StaticResource ValorParaMoeda}}" 
+                                   FontSize="11"/>
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                <Label 
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="Limite Desconto:" 
+                                   FontSize="11"/>
+                                <Label HorizontalTextAlignment="End"
+                                   FontFamily="{StaticResource RobotoNormalFont}" 
+                                   Text="{Binding DescontoCliente}" 
+                                   FontSize="11"/>
+                            </StackLayout>
+
+                            
+
+                        </Grid>
+
+                        <BoxView  HeightRequest="0.5" 
+                                  HorizontalOptions="FillAndExpand"
+                                  Color="Black"/>
+
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout"
+                                         Binding="{Binding CodSituacaoCliente}" 
+                                         Value="2">
+
+                                <Setter Property="BackgroundColor" Value="Red"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+
+
+        </ResourceDictionary>
+    </Application.Resources>
+</prism:PrismApplication>

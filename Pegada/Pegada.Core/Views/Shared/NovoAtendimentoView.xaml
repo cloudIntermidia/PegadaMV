@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behavior="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
+             xmlns:custom="clr-namespace:MobiliVendas.Core.CustomView.Controls;assembly=MobiliVendas.Core"
+             x:Name="this"
+             x:Class="Pegada.Core.Views.Shared.NovoAtendimentoView">
+    <ContentView.Content>
+        <AbsoluteLayout>
+            <AbsoluteLayout IsVisible="True"  
+                            BackgroundColor="#000" 
+                            Opacity="0.3"
+                            AbsoluteLayout.LayoutFlags="All" 
+                            AbsoluteLayout.LayoutBounds="1,1,1,1">
+                <AbsoluteLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BindingContext.CancelarAtendimentoCommand, Source={x:Reference this}}"/>
+                </AbsoluteLayout.GestureRecognizers>
+            </AbsoluteLayout>
+
+            <Frame 
+                 AbsoluteLayout.LayoutBounds="0.5,0.5,0.5,450"
+                 AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" 
+                 BackgroundColor="{StaticResource corBackGroundPopover}"
+                 HorizontalOptions="Center"
+                 VerticalOptions="FillAndExpand"
+                 Padding="2"
+                 HasShadow="True"
+                 CornerRadius="8"
+                 >
+
+                <StackLayout Spacing="0"
+                             VerticalOptions="FillAndExpand"
+                             >
+                    <Grid Padding="30,20" 
+                      BackgroundColor="{StaticResource corCabecalhoPopover}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Row="0" Grid.Column="0" 
+                            FontFamily="{StaticResource RobotoNormalFont}" 
+                            Text="Cancelar" 
+                            BackgroundColor="Transparent" 
+                            TextColor="{StaticResource corButtonBackPopover}" 
+                            HorizontalOptions="Start" 
+                            Command="{Binding BindingContext.CancelarAtendimentoCommand, Source={x:Reference this}}"/>
+
+                        <Label  Grid.Row="0" Grid.Column="1" 
+                            FontFamily="{StaticResource RobotoNormalFont}" 
+                            Text="Novo Atendimento" 
+                            FontAttributes="Bold" 
+                            TextColor="Black" 
+                            HorizontalOptions="FillAndExpand" 
+                            HorizontalTextAlignment="Center" 
+                            VerticalTextAlignment="Center"/>
+
+                        <Button Grid.Row="0" Grid.Column="2" 
+                            FontFamily="{StaticResource RobotoNormalFont}" 
+                            Text="Salvar" 
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource corButtonBackPopover}" 
+                            HorizontalOptions="End" 
+                            Command="{Binding BindingContext.SalvarAtendimentoCommand, Source={x:Reference this}}"/>
+
+                    </Grid>
+
+                    <BoxView HeightRequest="2.5" Color="Silver" HorizontalOptions="FillAndExpand"/>
+
+                    <StackLayout Padding="20,20" Spacing="20">
+                        <custom:BotaoComVisualDropView Label="Cliente"
+                                                       Command="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"
+                                                       Descricao="{Binding BindingContext.ClienteSelecionado.RazaoSocial,Source={x:Reference this}}"/>
+
+                        <Label IsVisible="{Binding BindingContext.IsLicenciamento, Source={x:Reference this}}"
+                                FontFamily="{StaticResource RobotoNormalFont}" 
+                                Text="{Binding BindingContext.IsLicenciamento, Source={x:Reference this}}" 
+                                FontAttributes="Italic" 
+                                TextColor="DarkRed" 
+                                HorizontalOptions="FillAndExpand" 
+                                HorizontalTextAlignment="End" 
+                                VerticalTextAlignment="Center"/>
+
+                        <custom:BotaoComVisualDropView Label="Condição de Pagamento"
+                                                        Descricao="{Binding BindingContext.CarrinhoFechamento.CondicaoPagamento, Source={x:Reference this}}"
+                                                        Command="{Binding BindingContext.SelecionarCondicaoPagamentoCommand, Source={x:Reference this}}"/>
+
+                        <StackLayout >
+                            <Label Text="% Desconto"/>
+                            <Entry Placeholder="% Desconto"
+                                    IsEnabled="True"
+                                    HeightRequest="40"
+                                    VerticalOptions="End"
+                                    Text="{Binding BindingContext.CarrinhoFechamento.PercentualDesconto, Source={x:Reference this}}">
+                                <Entry.Behaviors>
+                                    <behavior:DiscountValidatorBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+
+                        <custom:BotaoComVisualDropView
+                            Label="Tipo de Pedido"
+                            Descricao="{Binding BindingContext.CarrinhoFechamento.TipoPedido,
+                                                Source={x:Reference this}}"
+                            Command="{Binding BindingContext.SelecionarTipoPedidoCommand, Source={x:Reference this}}"/>
+
+                    </StackLayout>
+
+                </StackLayout>
+            </Frame>
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

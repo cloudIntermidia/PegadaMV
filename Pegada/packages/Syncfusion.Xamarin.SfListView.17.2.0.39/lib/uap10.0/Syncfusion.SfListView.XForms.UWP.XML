@@ -1,0 +1,669 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Syncfusion.SfListView.XForms.UWP</name>
+    </assembly>
+    <members>
+        <member name="T:Syncfusion.ListView.XForms.UWP.LocalizeText">
+            <summary>
+            Helper class to get the localize text based current culture and pass it to portable class library.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.LocalizeText.GetLocalizeText">
+            <summary>
+            Get the localize text based on current culture.
+            </summary>
+            <returns>Returns the localize text based on current culture.</returns>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.SfListViewResources">
+            <summary>
+            Resource class for <see cref="T:Syncfusion.ListView.XForms.SfListView"/> control.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.SfListViewResources.ResourceManager">
+            <summary>
+            Gets or sets the instance of <see cref="P:Syncfusion.ListView.XForms.UWP.SfListViewResources.ResourceManager"/>
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.SfListViewResources.Culture">
+            <summary>
+            Gets the culture info.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.SfListViewResources.LoadMoreText">
+            <summary>
+            Gets the load more text
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewResources.GetString(System.Globalization.CultureInfo,System.String)">
+            <summary>
+            Gets localized string based on culture info for given text.
+            </summary>
+            <param name="culture">Contains culture info</param>
+            <param name="text">Contains static text</param>
+            <returns>returns culture</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewResources.SetResource">
+            <summary>
+            Sets resource manager
+            </summary>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.MeasureSize">
+            <summary>
+            Helper class to measure the ListView item size and return it to portable class library.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.MeasureSize.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.ListView.XForms.UWP.MeasureSize"/> class/>.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.MeasureSize.CalculateSize(Syncfusion.ListView.XForms.SfListView,Xamarin.Forms.View,Xamarin.Forms.Size)">
+            <summary>
+            Measure the item size based on view size
+            </summary>
+            <param name="listView">The instance of <see cref="T:Syncfusion.ListView.XForms.SfListView"/></param>
+            <param name="content">The loaded view of ListView item template.</param>
+            <param name="viewSize">The actual bounds of visual container.</param>
+            <returns>Returns the calculated item size based on view size.</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.MeasureSize.Convert(Xamarin.Forms.View,Xamarin.Forms.Element)">
+            <summary>
+            Convert portable class library view into native view and set the platform specific properties.
+            </summary>
+            <param name="view">portable class library view</param>
+            <param name="valid">The visual element of portable class library</param>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.ReflectionHelper">
+            <summary>
+            Helper class to reflect the internal methods, properties etc for UWP renderer project.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ReflectionHelper.InvokeMethod(System.Object,System.String,System.Object[])">
+            <summary>
+            Helper method to invoke an internal method using reflection.
+            </summary>
+            <param name="instance">Represents the instance to be reflected</param>
+            <param name="methodName">Represents the method name</param>
+            <param name="arguments">Represents the arguments to be passed</param>
+            <returns>Returns the method objects</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ReflectionHelper.GetProperty(System.Object,System.String)">
+            <summary>
+            Helper method to get the internal property information.
+            </summary>
+            <param name="instance">Represents the instance to be reflected</param>
+            <param name="propertyName">Represents the property name</param>
+            <returns>Returns the property name</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ReflectionHelper.GetPropertyValue(System.Object,System.String)">
+            <summary>
+            Helper method to get the values of the internal property.
+            </summary>
+            <param name="instance">Represents the instance to be reflected</param>
+            <param name="propertyName">Represents the property name</param>
+            <returns>Returns the property values</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ReflectionHelper.SetPropertyValue(System.Object,System.String,System.Object)">
+            <summary>
+            Helper method to set the value for the internal property.
+            </summary>
+            <param name="instance">Represents the instance to be reflected</param>
+            <param name="propertyName">Represents the property name</param>
+            <param name="value">Represents the value to be passed</param>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.RendererHelper">
+            <summary>
+            Helper class for UWP renderer project.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.RendererHelper.GetWindowsColor(Xamarin.Forms.Color)">
+            <summary>
+            Gets the native color for the given Xamarin.Forms.Color.
+            </summary>
+            <param name="xColor">Xamarin.Forms color.</param>
+            <returns>Returns the solid color brush.</returns>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.DragItemViewRenderer">
+            <summary>
+            Represents the render for <see cref="T:Syncfusion.ListView.XForms.DragItemView"/>.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.DragItemViewRenderer.border">
+            <summary>
+            Border element for load the portable class library view.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.DragItemViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Update the element properties when native element is changed based on portable class library element properties.
+            </summary>
+            <param name="sender">Indicates the native element.</param>
+            <param name="e">Indicates the information of properties of native element.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.DragItemViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.ListView.XForms.DragItemView})">
+            <summary>
+            Set the border element as native element.
+            </summary>
+            <param name="e">Indicates the information of native element.    </param>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer">
+            <summary>
+            Represents the render for <see cref="T:Syncfusion.ListView.XForms.DragIndicatorView"/>.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer.border">
+            <summary>
+            Border element for load the portable class library view.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer.ListView">
+            <summary>
+            Gets the instance of <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.ListView.XForms.DragIndicatorView})">
+            <summary>
+            Set the border element as native element.
+            </summary>
+            <param name="e">Indicates the information of native element.    </param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer.Dispose(System.Boolean)">
+            <summary>
+            Dispose the instances, if parameter is true.
+            </summary>
+            <param name="disposing">Represents the boolean value for disposing objects.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer.WireEvents">
+            <summary>
+            Hook the events.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer.DragIndicatorViewRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Helper method to handle the pointer operation on pointer released.
+            </summary>
+            <param name="sender">Indicates the instance of <see cref="T:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer"/>.</param>
+            <param name="e">Indicates the event information of pointer released.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer.DragIndicatorViewRenderer_PointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Helper method to handle the pointer operation on pointer pressed.
+            </summary>
+            <param name="sender">Indicates the instance of <see cref="T:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer"/>.</param>
+            <param name="e">Indicates the event information of pointer pressed.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.DragIndicatorViewRenderer.UnWireEvents">
+            <summary>
+            Unhook the events.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer">
+            <summary>
+            Renderer for <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.longPressTimer">
+            <summary>
+            It's used to indicates the timer to find the long press using mouse pointer.
+            </summary> 
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.dragStartLocation">
+            <summary>
+            It's used to indicates the long press point for perform drag and drop using mouse.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.isHoldingTriggered">
+            <summary>
+            It's used to indicates that whether holding operation is triggered or not through long press timer.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer"/> class.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ListViewItemInfo">
+            <summary>
+            Gets the instance of <see cref="T:Syncfusion.ListView.XForms.ListViewItemInfoBase"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ListView">
+            <summary>
+            Gets the instance of <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.VisualContainer">
+            <summary>
+            Gets the instance of <see cref="T:Syncfusion.ListView.XForms.VisualContainer"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.SwipeController">
+            <summary>
+            Gets the SwipeController of the ListView.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.ListView.XForms.ListViewItem})">
+            <summary>
+            Set the element for item border when native element changed.
+            </summary>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Update the element properties when native element is changed based on portable class library element properties.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.Dispose(System.Boolean)">
+            <summary>
+            Dispose the instances, if parameter is true.
+            </summary>
+            <param name="disposing">Represents the boolean value for disposing objects.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.WireEvents">
+            <summary>
+            Hook the events.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.UnWireEvents">
+            <summary>
+            Unhook the events.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.StartLongPressTimer">
+            <summary>
+            Starts the <see cref="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.LongPressTimer_Tick(System.Object,System.Object)"/> event.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.StopLongPressTimer">
+            <summary>
+            Stop the <see cref="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.LongPressTimer_Tick(System.Object,System.Object)"/> event.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.LongPressTimer_Tick(System.Object,System.Object)">
+            <summary>
+            Raise when the element is long pressed by mouse.
+            </summary>
+            /// <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.RenderItemBorder(Xamarin.Forms.Thickness,Xamarin.Forms.Color)">
+            <summary>
+            Render the item border for ListViewItem
+            </summary>
+            <param name="thickness">Represents the thickness for border item.</param>
+            <param name="brushcolor">Represents the color for border item.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.SetSelection">
+            <summary>
+            Set the selection
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ResetSelection">
+            <summary>
+            Reset the selection.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_Holding(System.Object,Windows.UI.Xaml.Input.HoldingRoutedEventArgs)">
+            <summary>
+            Raises when the element is hold.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_DoubleTapped(System.Object,Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs)">
+            <summary>
+            Raises when the element is double tapped.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_Tapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Raises when the element is tapped.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_PointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Raises when the element is pressed.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_PointerMoved(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Raises when the element is moved.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Used to inform SwipeController to end the swipe. Because, sometimes Tapped event is not fired properly.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_ManipulationStarted(System.Object,Windows.UI.Xaml.Input.ManipulationStartedRoutedEventArgs)">
+            <summary>
+            Used to inform SwipeController about manipulation started.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_ManipulationCompleted(System.Object,Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs)">
+            <summary>
+            Occurs when a manipulation on the <see cref="T:Windows.UI.Xaml.UIElement"/> is complete.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ListViewItemRenderer.ItemRenderer_ManipulationDelta(System.Object,Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs)">
+            <summary>
+            Occurs when an input device begins a manipulation on the <see cref="T:Windows.UI.Xaml.UIElement"/>.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.Renderer.LoadMoreIndicatorRenderer">
+            <summary>
+            Represents the renderer class for a <see cref="T:Syncfusion.ListView.XForms.LoadMoreIndicator"/> control.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.Renderer.LoadMoreIndicatorRenderer.progressRing">
+            <summary>
+            Need to set LoadMoreIndicator as progress ring.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.Renderer.LoadMoreIndicatorRenderer.indicator">
+            <summary>
+            Need to set indicator.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.Renderer.LoadMoreIndicatorRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.ListView.XForms.LoadMoreIndicator})">
+            <summary>
+            Set the element when native control is changed.
+            </summary>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.Renderer.LoadMoreIndicatorRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Set properties to the LoadMoreIndicator.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.LoadMoreIndicator"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.Renderer.LoadMoreIndicatorRenderer.Dispose(System.Boolean)">
+            <summary>
+            Dispose the allocated resources.
+            </summary>
+            <param name="disposing">Assigns null value for disposing objects</param>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer">
+            <summary>
+            Renderer for <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.control">
+            <summary>
+            Need to load the native control.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.ListView">
+            <summary>
+            Gets the instance of the <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.Dispose(System.Boolean)">
+            <summary>
+            Dispose the instances, if parameter is true.
+            </summary>
+            <param name="disposing">Represents the boolean value for disposing objects</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.ListView.XForms.SfListView})">
+            <summary>
+            Set the element for item border when native element changed.
+            </summary>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Updates the <see cref="T:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer"/> when <see cref="T:Syncfusion.ListView.XForms.SfListView"/> properties are changed.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.</param>
+            <param name="e">Represents the property changed event arguments.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.CheckShiftKeyPressed">
+            <summary>
+            Helper method to identify whether the Shift key is pressed.
+            </summary>
+            <returns>Returns true if shift key is pressed otherwise false.</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.CheckControlKeyPressed">
+            <summary>
+            Helper method to identify whether the Control key is pressed.
+            </summary>
+            <returns>Returns true if control key is pressed otherwise false.</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.CheckAltKeyPressed">
+            <summary>
+            Helper method to identify whether the Alt key is pressed.
+            </summary>
+            <returns>Returns true if alt key is pressed otherwise false.</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.SfListViewControlRenderer_ManipulationCompleted(System.Object,Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs)">
+            <summary>
+            Helper method to handle the manipulation completed operation for <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+            <param name="sender">Indicates the native element of <see cref="T:Syncfusion.ListView.XForms.SfListView"/></param>
+            <param name="e">Indicates the event information for manipulation.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.SfListViewControlRenderer_ManipulationDelta(System.Object,Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs)">
+            <summary>
+            Helper method to handle the manipulation delta operation for <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+            <param name="sender">Indicates the native element of <see cref="T:Syncfusion.ListView.XForms.SfListView"/></param>
+            <param name="e">Indicates the event information for manipulation.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.SfListViewControlRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Helper method to handle the pointer release action on <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+            <param name="sender">Indicates the native element of <see cref="T:Syncfusion.ListView.XForms.SfListView"/></param>
+            <param name="e">Indicates the event information of pointer released.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.WireEvents">
+            <summary>
+            Helper method to hook the events.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.UnWireEvents">
+            <summary>
+            Helper method to unhook the events.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.SfListViewControlRenderer_PointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Raises when the pointer is pressed to the <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer"/>.</param>
+            <param name="e">Represents the <see cref="T:Windows.UI.Xaml.Input.PointerRoutedEventArgs"/>.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.SfListViewControlRenderer_KeyDown(System.Object,Windows.UI.Xaml.Input.KeyRoutedEventArgs)">
+            <summary>
+            Raises when the <see cref="T:Syncfusion.ListView.XForms.VirtualKey"/> is pressed in the view.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer"/>.</param>
+            <param name="e">Represents the <see cref="T:Windows.UI.Xaml.Input.KeyRoutedEventArgs"/>.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer.CheckActualVirtualKey(Syncfusion.ListView.XForms.VirtualKey,System.Boolean@)">
+            <summary>
+            Helper method used to get the actual pressed key in the keyboard.
+            </summary>
+            <param name="key">Represents the <see cref="T:Syncfusion.ListView.XForms.VirtualKey"/>.</param>
+            <param name="isSingleKeyPressed">Identifies whether only a single key is pressed.</param>
+            <returns>Returns true if single key is pressed, otherwise false.</returns>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.CustomControl">
+            <summary>
+            Used to set the native control to the <see cref="T:Syncfusion.ListView.XForms.UWP.SfListViewControlRenderer"/> for detecting the key down event and perform the key navigation.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.SfListViewRenderer">
+            <summary>
+            Represents the renderer class for a <see cref="T:Syncfusion.ListView.XForms.SfListView"/> control.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SfListViewRenderer.Init">
+            <summary>
+            Initializes the required renderer classes of a <see cref="T:Syncfusion.ListView.XForms.SfListView"/> control.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.SwipeViewRenderer">
+            <summary>
+            Represents the render for <see cref="T:Syncfusion.ListView.XForms.SwipeView"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.SwipeViewRenderer.ListView">
+            <summary>
+            Gets the instance of <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SwipeViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.ListView.XForms.SwipeView})">
+            <summary>
+            Set the element for SwipeView border when native element changed.
+            </summary>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SwipeViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Update the element properties when native element is changed based on portable class library element properties.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.SwipeView"/></param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SwipeViewRenderer.Dispose(System.Boolean)">
+            <summary>
+            Dispose the instances, if parameter is true.
+            </summary>
+            <param name="disposing">Represents the boolean value for disposing objects</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SwipeViewRenderer.GetWindowsColor(Xamarin.Forms.Color)">
+            <summary>
+            Gets the native color from portable class library color
+            </summary>
+            <param name="xColor">xamarin forms color</param>
+            <returns>Returns the solid color brush</returns>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.SwipeViewRenderer.RenderSwipeViewBorder">
+            <summary>
+            Render the border around the <see cref="T:Syncfusion.ListView.XForms.SwipeView"/>
+            </summary>
+        </member>
+        <member name="T:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer">
+            <summary>
+            Represents the renderer for <see cref="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ExtendedScrollView"/>
+            </summary>
+        </member>
+        <member name="F:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.isNeedToStopScrolling">
+            <summary>
+            Need to stop the scrolling action while touch the screen after perform the fling action, When the swiping is enable.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the ExtendedScrollViewRenderer class.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.Container">
+            <summary>
+            Gets the instance of the <see cref="T:Syncfusion.ListView.XForms.VisualContainer"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ListView">
+            <summary>
+            Gets the instance of the <see cref="T:Syncfusion.ListView.XForms.SfListView"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ScrollView">
+            <summary>
+            Gets the instance of the <see cref="T:Windows.UI.Xaml.Controls.ScrollViewer"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.SwipeController">
+            <summary>
+            Gets the instance of the <see cref="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.SwipeController"/>
+            </summary>
+        </member>
+        <member name="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ExtendedScrollView">
+            <summary>
+            Gets the instance of the <see cref="T:Syncfusion.ListView.XForms.ExtendedScrollView"/>
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Xamarin.Forms.ScrollView})">
+            <summary>
+            Set the element for SwipeView border when native element changed.
+            </summary>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Update the element properties when native element is changed based on portable class library element properties.
+            </summary>
+            <param name="sender">Represents the <see cref="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ExtendedScrollView"/></param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.Dispose(System.Boolean)">
+            <summary>
+            Dispose the instances, if parameter is true.
+            </summary>
+            <param name="disposing">Represents the boolean value for disposing objects</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.Container_PointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Raises when the element is pressed.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.Container_PointerWheelChanged(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Raises when the mouse wheel is scrolled.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Syncfusion.ListView.XForms.ListViewItem"/>.</param>
+            <param name="e">Contains all the information of event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ScrollTo(System.Double,System.Double,System.Int32)">
+            <summary>
+            Translate calculations take place here and scrolling processed in separate thread using XForms animation 
+            </summary>
+            <param name="horizontalOffset">Represents the horizontal offset value.</param>
+            <param name="verticalOffset">Represents the vertical offset value.</param>
+            <param name="scrollFactor">Represents the scrolling factor.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.Container_ManipulationCompleted(System.Object,Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs)">
+            <summary>
+            Raises when the manipulation and inertia on the <see cref="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ScrollView"/> is completed.
+            </summary>
+            <param name="sender">Represents the <see cref="T:Windows.UI.Xaml.Controls.ScrollViewer"/>.</param>
+            <param name="e">Provides data for the ManipulationCompleted event.</param>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.RaiseLoaded">
+            <summary>
+            To raise loaded event from the renderer.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ScrollView_LayoutUpdated(System.Object,System.Object)">
+            <summary>
+            XAMARIN-9956 - Unable to find out child view’s size changes from PCL and OnSizeAllocated also not invoked on child changes.
+            This method only called when item's size affected. So refresh the <see cref="P:Syncfusion.ListView.XForms.UWP.ExtendedScrollViewRenderer.ListView"/> from here.
+            </summary>
+            <param name="sender">The parameter is not used.</param>
+            <param name="e">The parameter is not used.</param>
+        </member>
+    </members>
+</doc>

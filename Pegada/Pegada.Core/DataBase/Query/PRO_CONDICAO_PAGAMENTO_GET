@@ -1,0 +1,11 @@
+﻿SELECT 
+    CP.CodCondicaoPagamento AS Codigo,
+    CP.Descricao AS Descricao
+FROM TBT_CONDICAO_PAGAMENTO CP
+WHERE CP.IndAtivo = 1
+AND (
+	'@PrazoMedio' = -1
+	OR CP.PrazoMedio = '@PrazoMedio' 
+)
+GROUP BY CP.Descricao
+ORDER BY CP.Descricao;

@@ -1,0 +1,22 @@
+﻿SELECT IC.CodItemCarrinho,
+	   IPE.Cor, 
+	   IPE.Site,
+	   IPE.Configuracao,
+	   IPE.Localizacao, 
+	   IPE.CodDeposito AS CodDeposito,
+	   IPE.NumeroItem, 
+	   (
+			SELECT Descricao FROM TBT_NIVEL_ATRIBUTO NA
+			INNER JOIN TBT_NIVEL_PRODUTO NP ON NA.CodNivel = NP.CodNivel AND NA.CodAtributo = NP.CodAtributo
+			WHERE NA.CodNivel = '6' 
+			AND NP.CodProduto = IC.CodProduto
+			LIMIT 1
+	   ) AS Descricao, 
+	   IC.DataEstoque AS DataEstoque,
+	   IC.Comissao AS Comissao
+FROM TBT_ITEM_PRONTA_ENTREGA IPE
+INNER JOIN TBT_ITEM_CARRINHO IC ON IC.CodProduto = IPE.CodProduto 
+WHERE IC.CodCarrinho = '@CodCarrinho'
+AND IC.CodProduto = '@CodProduto'
+AND ('@CodEstoque' = '-1' OR IPE.DataDisponibilidade = '@CodEstoque')
+GROUP BY IC.CodItemCarrinho;

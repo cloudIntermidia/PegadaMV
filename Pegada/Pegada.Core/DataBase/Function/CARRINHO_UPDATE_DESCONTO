@@ -1,0 +1,7 @@
+﻿
+UPDATE TBT_CARRINHO
+SET 
+    PercentualDesconto = '@Desconto',
+ 
+    ValorTotalLiquido =  '@ValorTotal'
+WHERE CodCarrinho = '@CodCarrinho';

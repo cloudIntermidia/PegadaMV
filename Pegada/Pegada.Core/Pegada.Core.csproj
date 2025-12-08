@@ -1,0 +1,161 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>E:\Projetos\TimberlandMultiplataforma\TimberlandMulltiplataforma\Backup1\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Sestini\**" />
+    <EmbeddedResource Remove="Sestini\**" />
+    <None Remove="Sestini\**" />
+    <None Remove="DataBase\Query\PRO_MODELO_MESMA_LINHA_GET %28copy%29" />
+    <None Remove="DataBase\Function\CARRINHO_UPDATE" />
+    <None Remove="DataBase\Function\CARRINHO_UPDATE_DESCONTO_ITEM" />
+    <None Remove="DataBase\ALTERACOES\VACUUM" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="DataBase\ALTERACOES\Add_Produto_Sku" />
+    <None Remove="DataBase\ALTERACOES\ALTER_TBT_CARRINHO_CAMPOS_INTEGRACAO" />
+    <None Remove="DataBase\ALTERACOES\ALTER_TBT_CLIENTE_CAMPOS_BLOQUEIO" />
+    <None Remove="DataBase\ALTERACOES\ALTER_TBT_ITEM_CARRINHO_ADD_DATA_ESTOQUE" />
+    <None Remove="DataBase\ALTERACOES\ALTER_TBT_MUNICIPIO_CAMPOS_MINIMO" />
+    <None Remove="DataBase\ALTERACOES\ATUALIZA_VERSAO" />
+    <None Remove="DataBase\ALTERACOES\CREATE_TBT_HISTORICO_CARRINHO" />
+    <None Remove="DataBase\ALTERACOES\CREATE_TBT_PESSOA_DEPOSITO_FATURAMENTO" />
+    <None Remove="DataBase\ALTERACOES\LIMPAR_FOTOS" />
+    <None Remove="DataBase\DDL\DATA_INIT" />
+    <None Remove="DataBase\Function\CARRINHO_UPDATE_QTD" />
+    <None Remove="DataBase\Query\PRO_CALCULA_PRECO_GET" />
+    <None Remove="DataBase\Query\PRO_CARRINHO_GET" />
+    <None Remove="DataBase\Query\PRO_CARRINHO_QUEBRA" />
+    <None Remove="DataBase\Query\PRO_CD_PRODUTO_GET" />
+    <None Remove="DataBase\Query\PRO_CLIENTES_GET" />
+    <None Remove="DataBase\Query\PRO_COMISSAO_ITEM_TABELA_PRECO_GET" />
+    <None Remove="DataBase\Query\PRO_CONDICAO_PAGAMENTO_GET" />
+    <None Remove="DataBase\Query\PRO_CONDICOES_POLITICA_COMERCIAL_GET" />
+    <None Remove="DataBase\Query\PRO_ESTOQUES_GET" />
+    <None Remove="DataBase\Query\PRO_GRADE_ITEM_CARRINHO_GET" />
+    <None Remove="DataBase\Query\PRO_GRADE_ITEM_PEDIDO_GET" />
+    <None Remove="DataBase\Query\PRO_ITEM_CARRINHO_GET" />
+    <None Remove="DataBase\Query\PRO_ITEM_INTEGRACAO_GET" />
+    <None Remove="DataBase\Query\PRO_METODO_PAGAMENTO_GET" />
+    <None Remove="DataBase\Query\PRO_MODELO_MESMA_LINHA_GET" />
+    <None Remove="DataBase\Query\PRO_NIVEL_DEFINE_PRECO_GET" />
+    <None Remove="DataBase\Query\PRO_OPERACAO_FISCAL_GET" />
+    <None Remove="DataBase\Query\PRO_PEDIDO_GET" />
+    <None Remove="DataBase\Query\PRO_POLITICA_COMERCIAL_GET" />
+    <None Remove="DataBase\Query\PRO_PRAZO_MEDIO_GET" />
+    <None Remove="DataBase\Query\PRO_PRODUTOS_MODELO_GET" />
+    <None Remove="DataBase\Query\PRO_TABELA_PRECO_GET" />
+    <None Remove="DataBase\Query\PRO_TAMANHOS_POSSIVEIS_PRODUTO_GET" />
+    <None Remove="DataBase\Query\PRO_TIPO_PEDIDO_POLITICA_COMERCIAL_GET" />
+    <None Remove="DataBase\Query\PRO_TIPO_PRAZO_POLITICA_COMERCIAL_GET" />
+    <None Remove="DataBase\Query\PRO_GRADES_PRODUTO_GET" />
+    <None Remove="DataBase\VALIDACOES\PRO_VALICAO_PEDIDO_GET" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Views\CatalogoPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataBase\ALTERACOES\Add_Produto_Sku" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\CREATE_TBT_HISTORICO_CARRINHO" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\ALTER_TBT_MUNICIPIO_CAMPOS_MINIMO" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\ALTER_TBT_CLIENTE_CAMPOS_BLOQUEIO" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\CREATE_TBT_PESSOA_DEPOSITO_FATURAMENTO" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\ATUALIZA_VERSAO" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\LIMPAR_FOTOS" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\ALTER_TBT_CARRINHO_CAMPOS_INTEGRACAO" />
+    <EmbeddedResource Include="DataBase\DDL\DATA_INIT" />
+    <EmbeddedResource Include="DataBase\Function\CARRINHO_UPDATE_QTD" />
+    <EmbeddedResource Include="DataBase\Query\PRO_CARRINHO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_CARRINHO_QUEBRA" />
+    <EmbeddedResource Include="DataBase\Query\PRO_CD_PRODUTO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_CLIENTES_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_CONDICAO_PAGAMENTO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_ESTOQUES_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_ITEM_INTEGRACAO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_COMISSAO_ITEM_TABELA_PRECO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_GRADE_ITEM_CARRINHO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_ITEM_CARRINHO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_MODELO_MESMA_LINHA_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_OPERACAO_FISCAL_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_METODO_PAGAMENTO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_CALCULA_PRECO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_PEDIDO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_GRADE_ITEM_PEDIDO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_POLITICA_COMERCIAL_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_CONDICOES_POLITICA_COMERCIAL_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_NIVEL_DEFINE_PRECO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_PRAZO_MEDIO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_PRODUTOS_MODELO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_TAMANHOS_POSSIVEIS_PRODUTO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_TIPO_PEDIDO_POLITICA_COMERCIAL_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_TIPO_PRAZO_POLITICA_COMERCIAL_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_TABELA_PRECO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_GRADES_PRODUTO_GET" />
+    <EmbeddedResource Include="DataBase\VALIDACOES\PRO_VALICAO_PEDIDO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_MODELO_MESMA_LINHA_PDF_GET" />
+    <EmbeddedResource Include="DataBase\Function\CARRINHO_UPDATE_DESCONTO" />
+    <EmbeddedResource Include="DataBase\Function\CARRINHO_UPDATE_DESCONTO_ITEM" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\VACUUM" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs" Version="7.0.1" />
+    <PackageReference Include="CarouselView.FormsPlugin" Version="5.2.0" />
+    <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.11" />
+    <PackageReference Include="Forms.Controls.FlexButton" Version="0.9.0" />
+    <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
+    <PackageReference Include="SharpZipLib" Version="1.3.3" />
+    <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
+    <PackageReference Include="Xam.Plugins.Settings" Version="3.1.1" />
+    <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.362" />
+    <PackageReference Include="Flunt" Version="1.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="PCLStorage" Version="1.0.2" />
+    <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
+    <PackageReference Include="Xamarin.Forms" Version="4.3.0.991211" />
+    <PackageReference Include="Xamarin.Forms.BehaviorValidationPack" Version="1.1.1" />
+    <PackageReference Include="Xamarin.Forms.Maps" Version="4.3.0.991211" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="1.2.0.223" />
+    <PackageReference Include="Xamarin.Forms.MaskedEntry" Version="1.0.0" />
+    <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.DataBase\MobiliVendas.Core.DataBase.csproj" />
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.Domain\MobiliVendas.Core.Domain.csproj" />
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.Infra\MobiliVendas.Core.Infra.csproj" />
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.Shared\MobiliVendas.Core.Shared.csproj" />
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core\MobiliVendas.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Views\Carrinho\CarrinhoFechamentoView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Carrinho\CarrinhoPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Negocio\CadastroClientePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataBase\CRUD\" />
+    <Folder Include="DataBase\Query\Function\" />
+    <Folder Include="DataBase\Query\Filtros\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\Negocio\PedidoPage.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

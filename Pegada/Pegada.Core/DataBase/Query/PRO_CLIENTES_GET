@@ -1,0 +1,91 @@
+﻿SELECT c.CodPessoaCliente AS CodPessoaCliente,
+       c.RazaoSocial AS RazaoSocial,
+       c.NomeFantasia AS NomeFantasia,
+       c.CNPJ AS CNPJ,
+       c.CodSituacaoCliente AS CodSituacaoCliente,
+       c.CodGrupoCliente AS CodGrupoCliente,
+       c.CodCategoriaCliente AS CodCategoriaCliente,
+       c.Contato AS Contato,
+       c.Telefone1 AS Telefone1,
+       c.Telefone2 AS Telefone2,
+       c.Email AS Email,
+       c.EmailNFE AS EmailNFE,
+       c.InscricaoEstadual AS InscricaoEstadual,
+       p.CodPessoaAFV AS CodPessoaAFV,
+       p.CodPessoaERP AS CodPessoaERP,
+       ec.Cidade AS Cidade,
+       ec.UF AS UF,
+       ec.Latitude AS Latitude,
+       ec.Longitude AS Longitude,
+	   NULL AS Representante, 
+       c.UltimoPedido,
+	   C.TipoVenda,
+	   IFNULL(C.IndBloqueioPedido, 0) As IndBloqueioPedido,
+	   IFNULL(C.IndBloqueioFaturamento, 0) As IndBloqueioFaturamento,
+	   IFNULL(C.IndBloqueioExpedicao, 0) As IndBloqueioExpedicao,
+	   IFNULL(C.LimiteCredito,0) AS LimiteCredito,
+	   ec.Endereco || CASE WHEN ec.Complemento IS NULL OR RTRIM(ec.Complemento) = '' THEN ' - ' ELSE ', ' || ec.Complemento || ' - '  END || ec.Bairro || ', ' || ec.Cidade || ' - ' || ec.Uf AS EnderecoPrincipalCompleto,
+	   CASE WHEN CP.Codigo IS NOT NULL THEN 1 else 0 END AS IsCategoriaValida,
+	   C.CodigoSegmento,
+	   S.Descricao AS Categoria
+  FROM TBT_CLIENTE c
+       INNER JOIN TBT_PESSOA p ON c.CodPessoaCliente = p.CodPessoa
+       LEFT JOIN TBT_ENDERECO_CLIENTE ec ON c.CodPessoaCliente = ec.CodPessoaCliente AND ec.IndPrincipal = 1
+	   LEFT JOIN (
+			SELECT CP.Codigo FROM TBT_COEFICIENTE_PERSONAGEM CP
+			WHERE CP.Tipo = 'DESCONTO_MAXIMO'
+	   ) CP ON CP.Codigo = C.CodigoSegmento
+	   LEFT JOIN TBT_SEGMENTO S ON S.CodSegmento = C.CodigoSegmento
+ WHERE  (
+			('@CodTipoPessoa' <> '1' 
+				AND EXISTS (
+					   SELECT *
+						 FROM TBT_MARCA_CLIENTE MC
+						WHERE MC.CodPessoaCliente = C.CodPessoaCliente AND 
+							  MC.CodMarca = '@CodMarca' AND
+							  (MC.CodPessoaRepresentante = '@CodPessoaVendedor' OR 
+							   MC.CodPessoaVendedor = '@CodPessoaVendedor'
+					)
+				) 
+			   OR
+			   ('@CodTipoPessoa' = '1' AND 
+				   EXISTS(
+						SELECT * FROM TBT_GERENTE_VENDEDOR GV
+						INNER JOIN TBT_MARCA_CLIENTE MC ON GV.CodPessoaRepresentante = MC.CodPessoaRepresentante
+						WHERE MC.CodPessoaCliente = C.CodPessoaCliente 
+						AND MC.CodMarca = '@CodMarca' 
+						AND GV.CodPessoaGerente = '@CodPessoaVendedor'
+
+				   )
+			   )
+			)
+       )
+        AND (
+                '-1' = '@CodPessoaCliente' OR  c.CodPessoaCliente = '@CodPessoaCliente'
+            ) 
+		AND (
+                '-1' = '@FiltroPesquisa' OR 
+				(	
+					c.RazaoSocial like '%@FiltroPesquisa%'  OR 
+					c.NomeFantasia like '%@FiltroPesquisa%' OR
+					c.Cnpj like '%@FiltroPesquisa%' OR
+					c.CodPessoaCliente like '%@FiltroPesquisa%' OR
+					ec.UF like '%@FiltroPesquisa%' OR
+					ec.Endereco like '%@FiltroPesquisa%' OR
+					ec.Complemento like '%@FiltroPesquisa%' OR
+					ec.Cidade like '%@FiltroPesquisa%'
+				)
+			) 
+--        AND NOT EXISTS(
+--            SELECT 1 FROM TBT_CLIENTE CC
+--            WHERE CC.CodPessoaCliente = p.CodPessoaERP
+--			AND  CC.CodPessoaCliente LIKE '%.%'
+--        )
+        AND NOT EXISTS(
+            SELECT * FROM TBT_PESSOA
+            WHERE TBT_PESSOA.CodPessoaAFV = C.CodPessoaCliente
+            AND C.CodPessoaCliente LIKE '%.%'
+        )
+GROUP BY C.CodPessoaCliente
+ORDER BY LTRIM(RazaoSocial)
+LIMIT 2000;

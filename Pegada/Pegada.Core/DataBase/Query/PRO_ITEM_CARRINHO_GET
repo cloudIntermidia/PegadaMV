@@ -1,0 +1,71 @@
+﻿SELECT 
+     I.CodItemCarrinho AS CodItemCarrinho,
+	 I.CodItemCarrinho AS CodItemPedido,
+     I.CodCarrinho AS CodPedido,
+     I.CodCarrinho AS CodCarrinho,
+     I.CodProduto AS CodProduto,
+	 I.DataEstoque AS DataEntrega,
+	 I.CodDeposito AS CodDeposito,
+     P.CodMarca AS CodMarca,
+     NULL AS CodLinha,
+     P.CodModelo AS CodModelo,
+	 CASE WHEN I.CodKit IS NOT NULL THEN RTRIM(I.CodKit) || ' - ' ||  P.CodProduto || ' - ' || P.Descricao ELSE P.CodProduto || ' - ' || P.Descricao END  AS Descricao,
+	 P.DescricaoMaterial AS DescricaoMaterial,
+     I.QtdCaixa AS QtdCaixa,
+     I.QtdTotal AS QtdTotal,
+	 I.QtdDisponivel AS QtdDisponivel,
+	 I.CodGrade AS CodGrade,
+	 ITP.PrecoSugestao As PrecoSugestao,
+	 I.ValorUnitario AS PrecoCusto,
+	 ROUND(I.ValorUnitarioLiquido, 2) AS PrecoCustoComDesconto,
+     I.ValorUnitario AS ValorUnitario,
+	 NULL AS Entrega,
+     NULL AS IndPPK,
+	 (I.ValorUnitarioLiquido * I.QtdTotal) AS ValorTotal,
+     (
+        SELECT FP.Imagem FROM TBT_FOTO_PRODUTO FP
+        INNER JOIN TBT_PRODUTO P ON FP.CodProdutoFoto = P.CodProdutoFoto 
+        AND P.CodProduto = I.CodProduto
+        LIMIT 1
+     )
+     AS Imagem,
+	 I.CodTabelaPreco,
+	 RTRIM(I.CodKit) AS CodKit,
+	 P.Custom2 As CodCor,
+	 P.DescricaoMaterial,
+	 P.DescricaoCor,
+     I.PercDesc as PercDesc,
+	 I.PercDesc1 as PercDesc1,
+	 I.PercDesc2 as PercDesc2,
+	 P.Cor AS Cor,
+	 I.PedidoMae,
+	 REPLACE(ROUND((((I.ValorUnitarioLiquido * 100) / I.ValorUnitario) - 100), 2), '-', '') AS DescontoUI,
+	 I.DataEstoque,
+	 I.DataAlocacao,
+	 I.FatorKit,
+	 I.CodCarrinhoAlocado,
+	 I.QtdDistribuida,
+	 CASE WHEN (IFNULL(I.QtdTotal, 0) - IFNULL(CarFilho.QtdTotal, 0)) < 0 THEN 0 ELSE IFNULL(I.QtdTotal, 0) - IFNULL(CarFilho.QtdTotal, 0) END AS QtdSaldoMae
+FROM TBT_ITEM_CARRINHO I
+LEFT JOIN TBT_CARRINHO C ON C.CodCarrinho = I.CodCarrinho
+LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodTabelaPreco = I.CodTabelaPreco AND I.CodProduto = ITP.CodProduto
+LEFT JOIN TBT_PRODUTO P ON P.CodProduto = I.CodProduto 
+LEFT JOIN TBT_MODELO M ON M.CodModelo = P.CodModelo AND M.CodMarca = P.CodMarca
+LEFT JOIN (
+    SELECT IC2.PedidoMae AS CodCarrinho, IFNULL(IC2.CodKit,1) AS CodKit, IC2.CodProduto, IC2.CodDeposito, SUM(IC2.QtdTotal) AS QtdTotal
+    FROM TBT_ITEM_CARRINHO IC2
+	JOIN TBT_CARRINHO C2 ON C2.CodCarrinho = IC2.CodCarrinho
+    WHERE (C2.CodSituacaoPedido IN('1') OR EXISTS (
+        SELECT * FROM TBT_HISTORICO_CARRINHO HC
+        WHERE HC.CodCarrinho = C2.CodCarrinho
+    ))
+    GROUP BY IC2.PedidoMae, IFNULL(IC2.CodKit,1), IC2.CodProduto, IC2.CodDeposito
+) CarFilho ON CarFilho.CodCarrinho = I.CodCarrinho
+    AND CarFilho.CodProduto = I.CodProduto
+    AND CarFilho.CodDeposito = I.CodDeposito
+    AND CarFilho.CodKit = IFNULL(I.CodKit,1)
+--LEFT JOIN TBT_KIT K ON P.CodProduto = K.CodProduto
+WHERE I.CodCarrinho = '@CodCarrinho'
+--AND I.StatusFilho IS NULL
+GROUP BY I.CodItemCarrinho
+ORDER BY I.CodItemCarrinho;

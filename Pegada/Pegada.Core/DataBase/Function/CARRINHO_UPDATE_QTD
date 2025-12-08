@@ -1,0 +1,265 @@
+﻿DELETE FROM TBT_GRADE_ITEM_CARRINHO
+WHERE CodCarrinho = '@CodCarrinho'
+AND QTD = 0;
+
+DELETE FROM TBT_ITEM_CARRINHO
+WHERE CodCarrinho = '@CodCarrinho'
+AND QtdTotal = 0;
+
+--APLICA DESCONTO LICENCIAMENTO CLIENTE
+UPDATE TBT_ITEM_CARRINHO
+SET PercDesc2 = (
+    SELECT CASE WHEN TBT_CLIENTE.Licenciamento = 'S' THEN (IFNULL((SELECT CAST( Valor as INTEGER) FROM TBT_PARAMETRO WHERE CodParametro = 'DESCLICENC'), 32)) ELSE 0 END
+    FROM TBT_CLIENTE 
+    INNER JOIN TBT_CARRINHO C ON C.CodPessoaCliente = TBT_CLIENTE.CodPessoaCliente 
+    WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+    )
+WHERE TBT_ITEM_CARRINHO.CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL;
+
+--atualiza desconto atendimento/fechamento do carrinho
+UPDATE TBT_ITEM_CARRINHO 
+SET PercDesc = (SELECT C.PercentualDesconto FROM TBT_CARRINHO C WHERE C.CodCarrinho = '@CodCarrinho') 
+WHERE TBT_ITEM_CARRINHO.CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL;
+
+
+--ATUALIZA PRECO TABELA
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitario = (SELECT DISTINCT ITP.Preco FROM TBT_ITEM_TABELA_PRECO ITP WHERE ITP.CodProduto = TBT_ITEM_CARRINHO.CodProduto )
+WHERE CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL
+AND NOT EXISTS (
+	SELECT * FROM TBT_CARRINHO C
+	WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+	AND IFNULL(IndEmAlocacao, 0) = 1
+);
+
+--APLICA COEFICIENTE DE UF
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitario =  ValorUnitario * IFNULL(
+    (
+        SELECT Coeficiente AS Coeficiente
+        FROM TBT_COEFICIENTE_PERSONAGEM 
+        WHERE TBT_COEFICIENTE_PERSONAGEM.Tipo = 'UF' 
+        AND TBT_COEFICIENTE_PERSONAGEM.Codigo IN (
+            SELECT DISTINCT UF 
+            FROM TBT_ENDERECO_CLIENTE EC 
+                WHERE EC.CodPessoaCliente IN (
+                    SELECT C.CodPessoaCliente FROM TBT_CARRINHO C
+                    WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+                )
+		)
+		AND (
+            EXISTS (
+                SELECT * FROM TBT_PRODUTO P 
+                WHERE p.CodProduto = TBT_ITEM_CARRINHO.CodProduto
+                AND P.Novo = TBT_COEFICIENTE_PERSONAGEM.Personagem
+            ) 
+            OR (
+                TBT_COEFICIENTE_PERSONAGEM.Personagem = '-1'  
+                AND NOT EXISTS (
+                    SELECT * FROM TBT_PRODUTO P 
+                    WHERE p.CodProduto = TBT_ITEM_CARRINHO.CodProduto
+                    AND P.Novo = TBT_COEFICIENTE_PERSONAGEM.Personagem
+                )
+            )
+        )
+        ORDER BY CASE WHEN TBT_COEFICIENTE_PERSONAGEM.Personagem = '-1' THEN 2 ELSE 1 END
+), 1)
+WHERE CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL
+AND NOT EXISTS (
+	SELECT * FROM TBT_CARRINHO C
+	WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+	AND IFNULL(IndEmAlocacao, 0) = 1
+);
+
+
+--APLICA COEFICIENTE DE SEGMENTO
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitario =  Round(ValorUnitario * IFNULL(
+    (
+        SELECT Coeficiente AS Coeficiente
+        FROM TBT_COEFICIENTE_PERSONAGEM 
+        WHERE TBT_COEFICIENTE_PERSONAGEM.Tipo = 'SEGMENTO' 
+        AND TBT_COEFICIENTE_PERSONAGEM.Codigo IN (
+            SELECT DISTINCT CodigoSegmento 
+            FROM TBT_CLIENTE C 
+                WHERE C.CodPessoaCliente IN (
+                    SELECT C.CodPessoaCliente FROM TBT_CARRINHO C
+                    WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+                )
+		)
+		AND (
+            EXISTS (
+                SELECT * FROM TBT_PRODUTO P 
+                WHERE p.CodProduto = TBT_ITEM_CARRINHO.CodProduto
+                AND P.Novo = TBT_COEFICIENTE_PERSONAGEM.Personagem
+            ) 
+            OR (
+                TBT_COEFICIENTE_PERSONAGEM.Personagem = '-1'  
+                AND NOT EXISTS (
+                    SELECT * FROM TBT_PRODUTO P 
+                    WHERE p.CodProduto = TBT_ITEM_CARRINHO.CodProduto
+                    AND P.Novo = TBT_COEFICIENTE_PERSONAGEM.Personagem
+                )
+            )
+        )
+        ORDER BY CASE WHEN TBT_COEFICIENTE_PERSONAGEM.Personagem = '-1' THEN 2 ELSE 1 END
+		), 1), 2)
+WHERE CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL
+AND NOT EXISTS (
+	SELECT * FROM TBT_CARRINHO C
+	WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+	AND IFNULL(IndEmAlocacao, 0) = 1
+);
+
+--APLICA COEFICIENTE DE PRAZO
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitario =  Round(ValorUnitario * IFNULL(
+    (
+        SELECT Coeficiente AS Coeficiente
+        FROM TBT_COEFICIENTE_PERSONAGEM 
+        WHERE TBT_COEFICIENTE_PERSONAGEM.Tipo = 'PRAZO' 
+        AND TBT_COEFICIENTE_PERSONAGEM.Codigo IN (
+            SELECT DISTINCT PrazoMedio 
+            FROM TBT_CONDICAO_PAGAMENTO CP 
+                WHERE CP.CodCondicaoPagamento IN (
+                    SELECT C.CodCondicaoPagamento FROM TBT_CARRINHO C
+                    WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+				)
+		)
+		AND (
+            EXISTS (
+                SELECT * FROM TBT_PRODUTO P 
+                WHERE p.CodProduto = TBT_ITEM_CARRINHO.CodProduto
+                AND P.Novo = TBT_COEFICIENTE_PERSONAGEM.Personagem
+            ) 
+            OR (
+                TBT_COEFICIENTE_PERSONAGEM.Personagem = '-1'  
+                AND NOT EXISTS (
+                    SELECT * FROM TBT_PRODUTO P 
+                    WHERE p.CodProduto = TBT_ITEM_CARRINHO.CodProduto
+                    AND P.Novo = TBT_COEFICIENTE_PERSONAGEM.Personagem
+                )
+            )
+        )
+        ORDER BY CASE WHEN TBT_COEFICIENTE_PERSONAGEM.Personagem = '-1' THEN 2 ELSE 1 END
+), 1), 2)
+WHERE CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL
+AND NOT EXISTS (
+	SELECT * FROM TBT_CARRINHO C
+	WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+	AND IFNULL(IndEmAlocacao, 0) = 1
+);
+
+--################### KIT ###########################
+--ALIMENTA DESCONTO DO KIT NO ITEM DO CARRINHO
+UPDATE TBT_ITEM_CARRINHO
+SET DescontoKit = (
+    SELECT IFNULL(K.Desconto, 0) AS Desconto
+	FROM TBT_KIT K 
+	WHERE K.CodProduto = TBT_ITEM_CARRINHO.CodProduto AND K.CodKit = TBT_ITEM_CARRINHO.CodKit
+)
+WHERE CodCarrinho = '@CodCarrinho'
+AND IFNULL(DescontoKit,0) = 0
+AND CodKit IS NOT NULL
+AND StatusFilho IS NULL
+AND NOT EXISTS (
+	SELECT * FROM TBT_CARRINHO C
+	WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+	AND IFNULL(IndEmAlocacao, 0) = 1
+);
+
+--ALIMENTA ACRESCIMO DO KIT NO ITEM DO CARRINHO
+UPDATE TBT_ITEM_CARRINHO
+SET AcrescimoKit = (
+    SELECT IFNULL(K.Acrescimo, 0) AS Desconto
+	FROM TBT_KIT K 
+	WHERE K.CodProduto = TBT_ITEM_CARRINHO.CodProduto AND K.CodKit = TBT_ITEM_CARRINHO.CodKit
+)
+WHERE CodCarrinho = '@CodCarrinho'
+AND IFNULL(DescontoKit,0) = 0
+AND CodKit IS NOT NULL
+AND StatusFilho IS NULL
+AND NOT EXISTS (
+	SELECT * FROM TBT_CARRINHO C
+	WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+	AND IFNULL(IndEmAlocacao, 0) = 1
+);
+
+--APLICA ACRESCIMO KIT
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitario =  CASE WHEN IFNULL(AcrescimoKit, 0) > 0 
+                          THEN ROUND((TBT_ITEM_CARRINHO.ValorUnitario * (1 + (IFNULL(AcrescimoKit,0)/100))), 2) 
+                          ELSE TBT_ITEM_CARRINHO.ValorUnitario
+                      END
+WHERE CodCarrinho = '@CodCarrinho'
+AND CodKit IS NOT NULL
+AND StatusFilho IS NULL
+AND NOT EXISTS (
+	SELECT * FROM TBT_CARRINHO C
+	WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+	AND IFNULL(IndEmAlocacao, 0) = 1
+);
+
+--APLICA DESCONTO KIT
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitario =  CASE WHEN IFNULL(DescontoKit, 0) > 0 
+                         THEN ROUND(TBT_ITEM_CARRINHO.ValorUnitario - (TBT_ITEM_CARRINHO.ValorUnitario * (CAST(DescontoKit as float)  / 100)), 2)
+                         ELSE TBT_ITEM_CARRINHO.ValorUnitario 
+                     END
+WHERE CodCarrinho = '@CodCarrinho'
+AND CodKit IS NOT NULL
+AND StatusFilho IS NULL
+AND NOT EXISTS (
+	SELECT * FROM TBT_CARRINHO C
+	WHERE C.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+	AND IFNULL(IndEmAlocacao, 0) = 1
+);
+--##############################################
+
+
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitarioLiquido = CASE WHEN 
+(ValorUnitario - (ValorUnitario * (CAST(PercDesc as float)  / 100))) > 0 THEN ValorUnitario - (ValorUnitario * (CAST(PercDesc as float)  / 100))
+ELSE 0.01 END
+WHERE CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL;
+
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitarioLiquido = CASE WHEN (ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc1 as float)  / 100))) > 0 THEN ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc1 as float)  / 100))
+ELSE 0.01 END
+WHERE CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL;
+
+--PercDesc2 DESCONTO DE LICENCIAMENTO DO CLIENTE
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitarioLiquido = CASE WHEN (ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc2 as float)  / 100))) > 0 THEN ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc2 as float)  / 100))
+ELSE 0.01 END
+WHERE CodCarrinho = '@CodCarrinho'
+AND StatusFilho IS NULL;
+
+
+UPDATE TBT_CARRINHO
+SET 
+    QtdTotal =  (SELECT SUM(IC.QtdTotal) AS QtdTotal
+	FROM TBT_ITEM_CARRINHO IC
+	WHERE IC.CodCarrinho = '@CodCarrinho' AND IC.StatusFilho IS NULL),
+ 
+    ValorTotal =  ( SELECT SUM(IC.QtdTotal *  IC.ValorUnitario) AS ValorTotal
+                	FROM TBT_ITEM_CARRINHO IC
+                	WHERE IC.CodCarrinho = '@CodCarrinho'
+					AND IC.StatusFilho IS NULL
+				  ),
+    ValorTotalLiquido =  ( SELECT SUM(IC.QtdTotal *  IC.ValorUnitarioLiquido) AS ValorTotal
+                	FROM TBT_ITEM_CARRINHO IC
+                	WHERE IC.CodCarrinho = '@CodCarrinho'
+					AND IC.StatusFilho IS NULL
+				  )
+WHERE CodCarrinho = '@CodCarrinho';
+
+

@@ -1,0 +1,7 @@
+﻿SELECT IFNULL(PercentualComissao, 0)
+FROM TBT_ITEM_TABELA_PRECO ITP
+INNER JOIN TBT_PESSOA_TABELA_PRECO PTP ON ON ITP.CodTabelaPreco = PTP.CodTabelaPreco
+WHERE ('@CodTabelaPreco' = '-1' OR ITP.CodTabelaPreco = '@CodTabelaPreco')
+AND  ('@CodProduto' = '-1' OR ITP.CodProduto = '@CodProduto')
+AND  ('@CodPessoa' = '-1' OR PTP.CodPessoa = '@CodPessoa')
+LIMIT 1;

@@ -1,0 +1,53 @@
+﻿SELECT DISTINCT D.CodDerivacao,
+				D.CodGrade,
+				D.Ordem,
+				IFNULL(G.TamanhoCaixa,1) As TamanhoCaixa,
+				0 AS Qtd,
+				CASE WHEN 
+						IPE.Quantidade -
+						IFNULL((
+							SELECT Qtd FROM TBT_GRADE_ITEM_CARRINHO GIC
+							INNER JOIN TBT_ITEM_CARRINHO IC ON GIC.CodCarrinho = IC.CodCarrinho AND GIC.CodItemCarrinho = IC.CodItemCarrinho
+							INNER JOIN TBT_CARRINHO C ON IC.CodCarrinho = C.CodCarrinho
+							WHERE (C.CodSituacaoPedido IN('1','3','99') OR EXISTS (
+								SELECT * FROM TBT_HISTORICO_CARRINHO HC
+								WHERE HC.CodCarrinho = C.CodCarrinho
+							)) 
+							AND C.CodAtendimento = '@CodAtendimento'
+							AND GIC.CodDerivacao = D.CodDerivacao
+							AND IC.CodProduto = PG.CodProduto
+							AND (
+									(IC.DataEstoque IS NULL AND IPE.DataDisponibilidade IS NULL)
+									OR (IC.DataEstoque = IPE.DataDisponibilidade)
+								)
+							LIMIT 1
+						), 0) < 0 THEN 0 
+					ELSE
+						IPE.Quantidade -
+						IFNULL((
+							SELECT Qtd FROM TBT_GRADE_ITEM_CARRINHO GIC
+							INNER JOIN TBT_ITEM_CARRINHO IC ON GIC.CodCarrinho = IC.CodCarrinho AND GIC.CodItemCarrinho = IC.CodItemCarrinho
+							INNER JOIN TBT_CARRINHO C ON IC.CodCarrinho = C.CodCarrinho
+							WHERE (C.CodSituacaoPedido IN('1','3','99') OR EXISTS (
+								SELECT * FROM TBT_HISTORICO_CARRINHO HC
+								WHERE HC.CodCarrinho = C.CodCarrinho
+							))  
+							AND C.CodAtendimento = '@CodAtendimento'
+							AND GIC.CodDerivacao = D.CodDerivacao
+							AND IC.CodProduto = PG.CodProduto
+							AND (
+									(IC.DataEstoque IS NULL AND IPE.DataDisponibilidade IS NULL)
+									OR (IC.DataEstoque = IPE.DataDisponibilidade)
+								)
+							LIMIT 1
+						), 0) 
+					END
+			AS Estoque
+FROM TBT_PRODUTO_GRADE PG
+INNER JOIN TBT_GRADE G ON PG.CodGrade = G.CodGrade
+INNER JOIN TBT_DERIVACAO_GRADE D ON G.CodGrade = D.CodGrade
+INNER JOIN TBT_PRODUTO P ON PG.CodProduto = P.CodProduto
+LEFT JOIN TBT_ITEM_PRONTA_ENTREGA IPE ON IPE.CodProduto = P.CodProduto 
+WHERE PG.CodProduto = '@CodProduto'
+AND PG.CodGrade = '@CodGrade'
+ORDER BY D.ORDEM;

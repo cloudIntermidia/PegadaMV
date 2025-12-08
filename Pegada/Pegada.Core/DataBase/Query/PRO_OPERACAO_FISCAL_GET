@@ -1,0 +1,7 @@
+﻿SELECT 
+	CodOperacaoFiscal AS Codigo
+	, Descricao
+	, ValidaMinimoPedido
+FROM TBT_OPERACAO_FISCAL
+WHERE IndAtivo = '1'
+AND ('@CodOperacaoFiscal' = '-1' OR CodOperacaoFiscal = '@CodOperacaoFiscal');

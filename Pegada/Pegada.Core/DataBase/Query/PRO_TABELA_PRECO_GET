@@ -1,0 +1,20 @@
+﻿SELECT * 
+FROM TBT_TABELA_PRECO 
+WHERE IndAtivo = 1 
+AND strftime('%Y-%m-%dT%H:%M:%S', InicioVigencia) <= strftime('%Y-%m-%dT%H:%M:%S', datetime('now'))
+AND strftime('%Y-%m-%dT%H:%M:%S', datetime('now')) <= strftime('%Y-%m-%dT%H:%M:%S', Finalvigencia)
+AND ('@CodTabelaPreco' = '-1' OR CodTabelaPreco = '@CodTabelaPreco')
+AND ('@Tipo' = '-1' OR Tipo = '@Tipo')
+AND ('@CodProduto' = '-1' OR EXISTS (
+	SELECT 1 FROM TBT_ITEM_TABELA_PRECO
+	WHERE CodProduto = '@CodProduto'
+	AND ('@CodPrazo' = '-1' OR CodPrazo = '@CodPrazo')
+	AND Preco > 0
+	AND CodTabelaPreco = TBT_TABELA_PRECO.CodTabelaPreco
+)) AND EXISTS (
+	SELECT 1 FROM TBT_PESSOA_TABELA_PRECO
+	WHERE CodPessoa = '@CodPessoaVendedor'
+	AND CodTabelaPreco = TBT_TABELA_PRECO.CodTabelaPreco
+);
+
+

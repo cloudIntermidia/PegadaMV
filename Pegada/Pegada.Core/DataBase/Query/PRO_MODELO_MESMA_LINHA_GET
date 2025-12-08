@@ -1,0 +1,83 @@
+﻿SELECT 
+   '1' AS CodTipoPedido,
+   P.CodMarca AS CodMarca,
+   P.CodProdutoFoto AS CodProdutoFoto, 
+   P.CodProduto AS CodProdutoModelo,
+   P.CodProduto || ' - ' || UPPER(P.Descricao) AS DescricaoProdutoModelo,
+   P.Descricao AS Descricao,
+   M.CodModelo AS CodModelo,
+   P.DescricaoCompleta AS DescricaoCompleta,
+   P.DescricaoCor AS DescricaoCor,
+   P.PrecoVenda As PrecoSugestao,
+   ITP.CodTabelaPreco as CodTabelaPreco,
+   ITP.Preco As PrecoVenda,
+   IFNULL((
+        SELECT Markup FROM TBT_CARRINHO
+        INNER JOIN TBT_ITEM_CARRINHO ON TBT_CARRINHO.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+        WHERE TBT_ITEM_CARRINHO.CodProduto =  P.CodProduto
+        AND TBT_CARRINHO.CodAtendimento = '@CodAtendimento'
+		AND TBT_CARRINHO.CodSituacaoPedido = '1'
+        LIMIT 1
+    ), ITP.Markup) As Markup,
+   ITP.Markup As MarkupTabela,
+   P.DataInicioVendas AS DataInicioVendas,
+   CASE WHEN IA.CodProduto IS NULL THEN 0 ELSE 1 END AS ItemChecadoInt,
+   IFNULL((
+        SELECT 1 FROM TBT_CARRINHO
+        INNER JOIN TBT_ITEM_CARRINHO ON TBT_CARRINHO.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
+        WHERE TBT_ITEM_CARRINHO.CodProduto =  P.CodProduto
+        AND TBT_CARRINHO.CodAtendimento = '@CodAtendimento'
+		AND TBT_CARRINHO.CodSituacaoPedido = '1'
+        LIMIT 1
+    ),0) AS ItemEstaNoCarrinho,
+	FP.Imagem AS Imagem,
+    P.EAN AS CodeEAN,
+    P.Novo As Novo,
+    CASE WHEN (IPE.Quantidade - CASE WHEN IC.QtdCarrinho IS NULL THEN 0 ELSE IC.QtdCarrinho END) < 0 THEN 0 ELSE (IPE.Quantidade - CASE WHEN IC.QtdCarrinho IS NULL THEN 0 ELSE IC.QtdCarrinho END) END AS Estoque,
+	IFNULL(P.IndKit,0) AS ItemEKit,
+	IFNULL(P.QtdMultipla,1) AS QtdMultipla,
+	P.QtdMultiplaEncaixotamento As QtdMultiplaEncaixotamento,
+	P.Familia
+FROM TBT_PRODUTO P
+INNER JOIN TBT_MODELO M ON P.CodModelo = M.CodModelo
+INNER JOIN TBT_ITEM_PRONTA_ENTREGA IPE ON IPE.CodProduto = P.CodProduto
+LEFT JOIN TBT_KIT KIT ON KIT.CodProduto = P.CodProduto
+LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodProduto = P.CodProduto
+LEFT JOIN TBT_FOTO_PRODUTO FP ON P.CodProdutoFoto = FP.CodProdutoFoto
+LEFT JOIN TBT_ITEM_ATENDIMENTO IA ON IA.CodAtendimento = '@CodAtendimento' AND IA.CodProduto = P.CodProduto
+LEFT JOIN (
+    SELECT IC.CodProduto, IC.CodDeposito, SUM(GIC.Qtd) AS QtdCarrinho 
+    FROM TBT_GRADE_ITEM_CARRINHO GIC
+    JOIN TBT_ITEM_CARRINHO IC ON IC.CodCarrinho = GIC.CodCarrinho 
+        AND IC.CodItemCarrinho = GIC.CodItemCarrinho
+    JOIN TBT_CARRINHO C ON C.CodCarrinho = IC.CodCarrinho
+    WHERE (C.CodSituacaoPedido IN('1','99') OR EXISTS (
+        SELECT * FROM TBT_HISTORICO_CARRINHO HC
+        WHERE HC.CodCarrinho = C.CodCarrinho
+    ))
+    GROUP BY IC.CodProduto, IC.CodDeposito
+) IC ON IC.CodProduto = IPE.CodProduto AND IC.CodDeposito = IPE.Configuracao
+WHERE P.Familia IN (FUNCTION_SPLIT('@Familia'))
+AND (
+    ('-1' = '@CodTabelaPreco' 
+		OR ITP.CodTabelaPreco = '@CodTabelaPreco' 
+	)  
+)
+AND (
+       '@ItensEmAtendimento' = -1 OR 
+       EXISTS (
+           SELECT 1 FROM TBT_ITEM_ATENDIMENTO IA 
+		   WHERE P.CodProduto = IA.CodProduto 
+		   AND IA.CodAtendimento = '@CodAtendimento'
+       )
+    )
+AND (
+    ('-1' = '@RestricaoLocal' 
+		OR (P.RestricaoLocal IS NULL OR P.RestricaoLocal = 'N') 
+	)  
+)
+GROUP BY P.CodProduto
+ORDER BY P.CodProduto
+;
+
+

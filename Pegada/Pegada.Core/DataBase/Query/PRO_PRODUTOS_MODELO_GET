@@ -1,0 +1,46 @@
+﻿SELECT 
+	'1' As CodMarca,
+    P.CodModelo AS CodModelo,
+    P.CodProduto AS CodProduto,
+    P.Descricao AS Descricao,
+    P.DescricaoCor AS Cor,
+	IFNULL(ITP.PrecoSugestao, 0) As PrecoSugestao,
+	IFNULL(ITP.Preco, 0) As PrecoVenda,
+	IFNULL(ITP.Preco, 0) As ValorUnitario,
+	IFNULL(ITP.Preco, 0) As ValorUnitarioLiquido,
+	IFNULL(ITP.Markup, 1) As Markup,
+    (
+        SELECT CodItemCarrinho FROM TBT_ITEM_CARRINHO IC
+        INNER JOIN TBT_CARRINHO C ON C.CodCarrinho = IC.CodCarrinho
+        WHERE '@CodAtendimento' = '-1' 
+        OR(
+            C.CodAtendimento = '@CodAtendimento'
+            AND IC.CodProduto = P.CodProduto 
+        ) 
+		AND C.CodSituacaoPedido = '1'
+    )
+    AS CodItemCarrinho,
+    FP.Imagem AS Imagem,
+    CASE WHEN IA.CodProduto IS NULL THEN 0 ELSE 1 END AS ItemChecadoInt,
+	ITP.CodTabelaPreco AS CodTabelaPreco
+FROM TBT_PRODUTO P
+LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodProduto = P.CodProduto AND ITP.CodTabelaPreco = '@CodTabelaPreco' 
+LEFT JOIN TBT_ITEM_ATENDIMENTO IA ON P.CodProduto = IA.CodProduto AND IA.CodAtendimento = '@CodAtendimento'
+LEFT JOIN TBT_FOTO_PRODUTO FP ON P.CodProdutoFoto = FP.CodProdutoFoto
+WHERE P.CodModelo = '@CodModelo'
+--AND P.VendaBloqueada = 0 
+AND (
+       '@ItensEmAtendimento' = -1 OR 
+       EXISTS (
+           SELECT 1 FROM TBT_ITEM_ATENDIMENTO IA 
+		   WHERE P.CodProduto = IA.CodProduto 
+		   AND IA.CodAtendimento = '@CodAtendimento'
+       )
+    )
+AND EXISTS(
+	SELECT * FROM TBT_ITEM_PRONTA_ENTREGA
+	WHERE TBT_ITEM_PRONTA_ENTREGA.CodProduto = P.CodProduto
+)
+GROUP BY P.CodProduto
+ORDER BY P.Ranking;
+

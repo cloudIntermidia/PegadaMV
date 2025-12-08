@@ -1,0 +1,50 @@
+﻿SELECT DISTINCT
+	IPE.CodDeposito AS Estoque
+	,IFNULL(DataDisponibilidade, date('now','+1 day')) AS DataDisponibilidade
+	,0 AS Quantidade
+	,IPE.CodGrade AS CodDerivacao
+	,CASE WHEN (IPE.Quantidade - CASE WHEN IC.QtdCarrinho IS NULL THEN 0 ELSE IC.QtdCarrinho END) < 0 THEN 0 ELSE (IPE.Quantidade - CASE WHEN IC.QtdCarrinho IS NULL THEN 0 ELSE IC.QtdCarrinho END) END AS QtdEstoque
+FROM TBT_ITEM_PRONTA_ENTREGA IPE
+INNER JOIN TBT_PRODUTO P ON IPE.CodProduto = P.CodProduto
+INNER JOIN TBT_MODELO M ON P.CodModelo = M.CodModelo
+LEFT JOIN TBT_DERIVACAO_GRADE DG on DG.CodDerivacao = IPE.CodGrade
+LEFT JOIN (
+    SELECT CodProduto, CodDeposito, SUM(QtdCarrinho) AS QtdCarrinho 
+    FROM (
+        SELECT C.CodCarrinho, IC.CodKit AS CodProduto, IC.CodDeposito, 
+                MAX(IC.QtdTotal / COALESCE(IC.Fatorkit, 1)) AS QtdCarrinho
+        FROM TBT_ITEM_CARRINHO IC
+        JOIN TBT_CARRINHO C ON C.CodCarrinho = IC.CodCarrinho
+        WHERE (C.CodSituacaoPedido IN('1','3','99') OR EXISTS (
+            SELECT * FROM TBT_HISTORICO_CARRINHO HC
+            WHERE HC.CodCarrinho = C.CodCarrinho
+            )
+        )
+        AND IC.CodKit IS NOT NULL
+        GROUP BY C.CodCarrinho, IC.CodKit, IC.CodDeposito
+    ) T
+	GROUP BY CodProduto, CodDeposito
+    
+    UNION
+    
+    SELECT IC.CodProduto, IC.CodDeposito, 
+	SUM(GIC.Qtd) AS QtdCarrinho
+    FROM TBT_GRADE_ITEM_CARRINHO GIC
+    JOIN TBT_ITEM_CARRINHO IC ON IC.CodCarrinho = GIC.CodCarrinho 
+        AND IC.CodItemCarrinho = GIC.CodItemCarrinho
+    JOIN TBT_CARRINHO C ON C.CodCarrinho = IC.CodCarrinho
+    WHERE (C.CodSituacaoPedido IN('1','3','99') 
+            OR EXISTS (
+                SELECT * FROM TBT_HISTORICO_CARRINHO HC
+                WHERE HC.CodCarrinho = C.CodCarrinho
+            )
+    )
+    AND IC.CodKit IS NULL
+    GROUP BY IC.CodProduto, IC.CodDeposito
+    
+) IC ON IC.CodProduto = IPE.CodProduto AND IC.CodDeposito = IPE.CodDeposito
+WHERE ('@CodModelo' = '-1' OR P.CodModelo = '@CodModelo')
+AND   ('@CodProduto' = '-1' OR P.CodProduto = '@CodProduto')
+AND   ('@CodDeposito' = '-1' OR IPE.CodDeposito = '@CodDeposito')
+AND IFNULL(P.ExibirSemSaldo, 0) = 0
+ORDER BY IFNULL(DataDisponibilidade, '2000-01-01T00:00:00'), DG.Ordem;

@@ -1,0 +1,77 @@
+﻿SELECT  
+    C.CodCarrinho,  
+    C.OrdemCompra,  
+    C.CodPessoaCliente,  
+    C.CodTipoPedido,  
+    C.CodSituacaoPedido,  
+    C.DataEmissao AS DataEmissao,  
+    C.DataEntrega AS DataEntrega,  
+    IC.QtdTotal,  
+    C.ValorTotal,  
+    ROUND(C.ValorTotalLiquido, 2) AS ValorTotalLiquido,  
+    C.CodAtendimento,  
+    C.CodUsuario,  
+    C.CodInstalacao,  
+    C.CodMarca,
+	C.CifFob,
+    C.Observacoes,
+	C.Observacoes1,
+	C.PercentualDesconto,
+	0 AS PercentualDesconto1,
+	C.PercentualDesconto2,
+	C.PercentualDesconto3,
+	C.PercentualDesconto4,
+	C.PercentualDesconto5,
+	C.PercentualComissaoRep,
+	C.PrazoMedio,
+	C.PrazoAdicional,
+	C.PedidoBonificado,
+	C.CupomChave,
+	CLI.NomeFantasia,
+    CLI.RazaoSocial,
+    CLI.CNPJ,
+    SIT.Descricao as Situacao,
+	C.CodTabelaPreco, 
+	TP.Descricao AS TabelaPreco,
+	CON.CodCondicaoPagamento,  
+    CON.Descricao AS CondicaoPagamento ,
+	CASE WHEN (C.CodDeposito = 'Imediato' OR C.CodDeposito = '1') THEN '1' ELSE '2' END || ' - ' || T.Descricao AS TipoPedido,
+	IFNULL(C.IndBloqueado, 0) As IndBloqueado,
+    C.CodPessoaRepresentante,
+	C.CodPessoaPreposto,
+	REP.Nome AS  Representante,
+	PRE.Nome AS  Preposto,
+	CLI.Email AS Email,
+	MARCA.Descricao as Marca,
+	GRUPO.Descricao AS GrupoCliente,
+	C.CodDeposito AS CodDeposito,
+	C.IndPedidoMae,
+	C.PedidoMae,
+	REPLACE(ROUND((((C.ValorTotalLiquido * 100) / C.ValorTotal) - 100), 2), '-', '') AS DescontoUI,
+	C.ID as IdServidor,
+	CASE WHEN C.AceitaFaturamentoParcial = 1 THEN 'S' ELSE 'N' END AS AceitaFaturamentoParcialUI,
+	CASE WHEN C.AceitaFaturamentoAntecipado = 1 THEN 'S' ELSE 'N' END AS AceitaFaturamentoAntecipadoUI,
+	C.AceitaFaturamentoAntecipado,
+	C.IndEmAlocacao,
+	CASE WHEN C.IndPedidoMae = 1 THEN 'S' ELSE 'N' END AS IndPedidoMaeUI
+FROM TBT_CARRINHO C 
+INNER JOIN TBT_ATENDIMENTO AT ON C.CodAtendimento = AT.CodAtendimento AND AT.IndAberto = 1
+INNER JOIN TBT_CLIENTE CLI ON CLI.CodPessoaCliente = C.CodPessoaCliente 
+LEFT JOIN TBT_MARCA MARCA ON MARCA.CodMarca = C.CodMarca
+LEFT JOIN TBT_GRUPO_CLIENTE GRUPO ON CLI.CodGrupoCliente = GRUPO.CodGrupoCliente
+LEFT JOIN TBT_PESSOA REP ON REP.CodPessoa = C.CodPessoaRepresentante
+LEFT JOIN TBT_PESSOA PRE ON PRE.CodPessoa = C.CodPessoaPreposto
+LEFT JOIN TBT_TIPO_PEDIDO T ON C.CodTipoPedido = T.CodTipoPedido
+LEFT JOIN TBT_SITUACAO_PEDIDO SIT ON SIT.CodSituacaoPedido = C.CodSituacaoPedido
+LEFT JOIN TBT_CONDICAO_PAGAMENTO CON ON CON.CodCondicaoPagamento = C.CodCondicaoPagamento
+LEFT JOIN TBT_TABELA_PRECO TP ON TP.CodTabelaPreco = C.CodTabelaPreco
+LEFT JOIN (
+	SELECT CodCarrinho, SUM(QtdTotal) As QtdTotal, CodDeposito
+	FROM TBT_ITEM_CARRINHO
+	GROUP BY CodCarrinho 
+) AS IC ON IC.CodCarrinho = C.CodCarrinho
+WHERE ('@CodCarrinho' = '-1' OR C.CodCarrinho = '@CodCarrinho' )
+AND  ('@CodUsuario' = 0 OR C.CodUsuario = '@CodUsuario' OR C.CodPessoaRepresentante = '@CodPessoa')
+AND ('@CodAtendimento' = '-1' OR C.CodAtendimento = '@CodAtendimento' ) 
+AND ('@CodSituacaoPedido' = '-1' OR C.CodSituacaoPedido IN (FUNCTION_SPLIT('@CodSituacaoPedido'))) 
+AND ('@CodMarca' = '-1' OR C.CodMarca = '@CodMarca'  );

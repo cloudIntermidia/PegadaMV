@@ -1,0 +1,7 @@
+﻿SELECT 
+	TBT_PRAZO.CodPrazo AS Codigo
+	, TBT_PRAZO.Descricao AS Descricao	
+FROM TBT_PRAZO
+INNER JOIN TBT_POLITICA_PRAZO ON TBT_PRAZO.CodPrazo = TBT_POLITICA_PRAZO.CodPrazo
+WHERE TBT_POLITICA_PRAZO.IndAtivo = 1
+AND TBT_POLITICA_PRAZO.CodPoliticaComercial = '@CodPoliticaComercial'

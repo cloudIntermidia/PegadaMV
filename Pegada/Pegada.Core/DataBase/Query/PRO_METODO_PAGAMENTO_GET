@@ -1,0 +1,5 @@
+﻿SELECT 
+	CodMetodoPagamento AS Codigo
+	, Descricao
+FROM TBT_METODO_PAGAMENTO
+WHERE IndAtivo = '1';

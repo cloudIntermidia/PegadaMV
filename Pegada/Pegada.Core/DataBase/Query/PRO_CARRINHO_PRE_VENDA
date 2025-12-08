@@ -1,0 +1,23 @@
+﻿SELECT 
+     I.CodItemCarrinho AS CodItemCarrinho,
+     I.CodCarrinho AS CodPedido,
+     I.CodProduto AS CodProduto,
+     C.DataEntrega AS DataEntrega,
+     P.CodMarca AS CodMarca,
+     P.CodProduto || ' - ' || P.Descricao AS Descricao,
+     I.QtdTotal AS QtdTotal,
+     I.ValorUnitarioLiquido AS PrecoCustoComDesconto,
+     I.ValorUnitario AS ValorUnitario,
+     R.CodPessoa AS CodRepresentante,
+     R.Nome AS NomeRepresentante,
+     CLI.RazaoSocial
+FROM TBT_ITEM_CARRINHO I
+LEFT JOIN TBT_CARRINHO C ON C.CodCarrinho = I.CodCarrinho
+LEFT JOIN TBT_PRODUTO P ON P.CodProduto = I.CodProduto 
+LEFT JOIN TBT_PESSOA R ON R.CodPessoa = C.CodPessoaRepresentante
+INNER JOIN TBT_CLIENTE CLI ON CLI.CodPessoaCliente = C.CodPessoaCliente
+WHERE ('@CodUsuario' = 0 OR C.CodUsuario = '@CodUsuario' )
+AND ('@CodAtendimento' = '-1' OR C.CodAtendimento = '@CodAtendimento' ) 
+AND ('@CodMarca' = '-1' OR C.CodMarca = '@CodMarca'  );
+GROUP BY I.CodItemCarrinho
+ORDER BY I.CodItemCarrinho;

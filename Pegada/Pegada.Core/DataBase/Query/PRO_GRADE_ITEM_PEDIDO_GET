@@ -1,0 +1,17 @@
+﻿SELECT 
+    CodPedido AS CodCarrinho,
+    CodItemPedido AS CodItemCarrinho,
+    CodGradeItemPedido AS CodGradeItemCarrinho,
+    Qtd AS Qtd,
+	Qtd AS QtdNaGrade,
+    CodDerivacao AS CodDerivacao,
+	QtdEntregue,
+	QtdCancelado,
+	QtdAEntregar,
+	QtdEmbalada AS QtdMultipla,
+	IFNULL(QtdDevolvido, 0) AS QtdDevolvido
+FROM TBT_GRADE_ITEM_PEDIDO
+WHERE CodPedido = '@CodCarrinho'
+AND CodItemPedido = '@CodItemPedido';
+
+

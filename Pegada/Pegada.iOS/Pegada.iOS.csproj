@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BE7E54E9-920D-4E70-AA12-C87E4A766E79}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Sestini.iOS</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>Sestini.iOS</AssemblyName>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchLink>None</MtouchLink>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
+    <CodesignKey>Apple Development: Rogerio Silva (4F5RAXRBZT)</CodesignKey>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <CodesignProvision>Wildcard ITMDev_04_10_2021_Novo2</CodesignProvision>
+    <PlatformTarget>x64</PlatformTarget>
+    <MtouchLink>SdkOnly</MtouchLink>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchArch>ARM64</MtouchArch>
+    <ConsolePause>false</ConsolePause>
+    <CodesignKey>Apple Distribution: Itm Consultoria e Negocios Ltda (Z78TDPWDTK)</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <CodesignProvision>Sestini_26_02_2024</CodesignProvision>
+    <MtouchLink>SdkOnly</MtouchLink>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\Ad-Hoc</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchArch>ARM64</MtouchArch>
+    <BuildIpa>True</BuildIpa>
+    <CodesignProvision>Automatic:AdHoc</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>SdkOnly</MtouchLink>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\AppStore</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchArch>ARM64</MtouchArch>
+    <CodesignProvision>Automatic:AppStore</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>SdkOnly</MtouchLink>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <None Include="Entitlements.plist" />
+    <None Include="Info.plist" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <BundleResource Include="Resources\nav_carrinho_branco.png" />
+    <BundleResource Include="Resources\nav_carrinho_destaque.png" />
+    <BundleResource Include="Resources\nav_catalogo_branco.png" />
+    <BundleResource Include="Resources\nav_catalogo_destaque.png" />
+    <BundleResource Include="Resources\nav_comunicacao_branco.png" />
+    <BundleResource Include="Resources\nav_comunicacao_destaque.png" />
+    <BundleResource Include="Resources\nav_gerenciamento_destaque.png" />
+    <BundleResource Include="Resources\nav_gerenciamento_branco.png" />
+    <BundleResource Include="Resources\nav_negocio_branco.png" />
+    <BundleResource Include="Resources\nav_negocio_destaque.png" />
+    <BundleResource Include="Resources\pesquisa_icone.png" />
+    <BundleResource Include="Resources\radio_off.png" />
+    <BundleResource Include="Resources\radio_on.png" />
+    <BundleResource Include="Resources\star.png" />
+    <BundleResource Include="Resources\star2.png" />
+    <BundleResource Include="Resources\logo_mv.png" />
+    <BundleResource Include="Resources\Default_Landscape.png" />
+    <BundleResource Include="Resources\Roboto-Medium.ttf" />
+    <BundleResource Include="Resources\Roboto-Regular.ttf" />
+    <BundleResource Include="Resources\SemplicitaPro.otf" />
+    <BundleResource Include="Resources\gerarpdf.png" />
+    <BundleResource Include="Resources\btn_bg_off.png" />
+    <BundleResource Include="Resources\btn_bg_on.png" />
+    <BundleResource Include="Resources\edit.png" />
+    <BundleResource Include="Resources\wish_checked.png" />
+    <BundleResource Include="Resources\wish_unchecked.png" />
+    <BundleResource Include="Resources\NaoDispE.png" />
+    <BundleResource Include="Resources\logo_cliente.png" />
+    <BundleResource Include="Resources\logo_clienteE.png" />
+    <BundleResource Include="Resources\logo_white.png" />
+    <BundleResource Include="Resources\fundo_catalogo.jpeg" />
+    <BundleResource Include="Resources\login_background.jpeg" />
+    <BundleResource Include="Resources\logo_mv_padrao.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+    <BundleResource Include="Resources\carrinho.png" />
+    <BundleResource Include="Resources\catalogo.png" />
+    <BundleResource Include="Resources\comunicacao.png" />
+    <BundleResource Include="Resources\consulta.png" />
+    <BundleResource Include="Resources\btnBack.png" />
+    <BundleResource Include="Resources\GerClient.png" />
+    <BundleResource Include="Resources\NaoDisp.png" />
+    <BundleResource Include="Resources\sincronizacao.png" />
+    <BundleResource Include="Resources\btn_logoff.png" />
+    <BundleResource Include="Resources\check.png" />
+    <BundleResource Include="Resources\uncheck.png" />
+    <BundleResource Include="Resources\g_cifrao_press.png" />
+    <BundleResource Include="Resources\g_cifrao.png" />
+    <BundleResource Include="Resources\logo.png" />
+    <BundleResource Include="Resources\itm.png" />
+    <BundleResource Include="Resources\info.png" />
+    <BundleResource Include="Resources\Icon.png" />
+    <BundleResource Include="Resources\selected_circle.png" />
+    <BundleResource Include="Resources\unselected_circle.png" />
+    <BundleResource Include="Resources\square_check.png" />
+    <BundleResource Include="Resources\square_uncheck.png" />
+    <BundleResource Include="Resources\BluePin.png" />
+    <BundleResource Include="Resources\map.png" />
+    <BundleResource Include="Resources\PurplePin.png" />
+    <BundleResource Include="Resources\RedPin.png" />
+    <BundleResource Include="Resources\WhitePin.png" />
+    <BundleResource Include="Resources\back_btn_acessar.png" />
+    <BundleResource Include="Resources\form_login_background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs">
+      <Version>7.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="CarouselView.FormsPlugin">
+      <Version>5.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Forms.Controls.FlexButton">
+      <Version>0.9.0</Version>
+    </PackageReference>
+    <PackageReference Include="Plugin.Permissions">
+      <Version>3.0.0.12</Version>
+    </PackageReference>
+    <PackageReference Include="SharpZipLib">
+      <Version>1.3.3</Version>
+    </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.5.231</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.Plugin.Connectivity">
+      <Version>3.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.Plugins.Settings">
+      <Version>3.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.362" />
+    <PackageReference Include="Xam.Plugins.Forms.KeyboardOverlap">
+      <Version>1.0.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms.CarouselView">
+      <Version>2.3.0-pre2</Version>
+    </PackageReference>
+    <PackageReference Include="Xam.iTextSharpLGPL">
+      <Version>0.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms.Maps">
+      <Version>4.3.0.991211</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms">
+      <Version>4.5.0.725</Version>
+    </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>1.2.0.223</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Dropbox.Api">
+      <Version>4.5.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="Syncfusion.Xamarin.DataGridExport">
+      <Version>17.2.0.39</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.Domain\MobiliVendas.Core.Domain.csproj">
+      <Project>{daf67a18-e85c-4db5-83c2-e7449e60260a}</Project>
+      <Name>MobiliVendas.Core.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.Infra\MobiliVendas.Core.Infra.csproj">
+      <Project>{79a937fd-5691-473e-b6b3-ff08924f3b7b}</Project>
+      <Name>MobiliVendas.Core.Infra</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.Shared\MobiliVendas.Core.Shared.csproj">
+      <Project>{26393b33-ea40-422c-8d1a-f6d19c94ba0d}</Project>
+      <Name>MobiliVendas.Core.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core\MobiliVendas.Core.csproj">
+      <Project>{82d8312b-4b4c-43e4-a8e1-57d75ff4baf4}</Project>
+      <Name>MobiliVendas.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.Lib.IOS\MobiliVendas.Core.Lib.IOS.csproj">
+      <Project>{e71f3053-056c-4381-9638-048ed73bdff6}</Project>
+      <Name>MobiliVendas.Core.Lib.IOS</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\Pegada.Core\Pegada.Core.csproj">
+      <Project>{8C7D517D-4803-4268-86AC-674E65D35DDD}</Project>
+      <Name>Sestini.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Fonts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\square_niveis_check.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\square_niveis_uncheck.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pesquisa_icone_preco.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\preco_checked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\alterar_senha.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\camera_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\120@2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\120@3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\152@2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\167@2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\180@3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\20.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\29.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\40.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\40@2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\40@2x1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\58@2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\58@2x1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\60@3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\76.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\80@2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\80@2x1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\87@3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>

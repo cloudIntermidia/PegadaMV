@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<AppInstaller
+    xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2"
+    Version="2.0.0.0"
+    Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/appset.appinstaller" >
+
+  <MainBundle
+      Name="Pegada"
+      Publisher="CN=ITM"
+      Version="2.0.0.0"
+      Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Pegada.appxbundle" />
+
+  <Dependencies>
+    <Package Name="Microsoft.VCLibs.140.00" 
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" 
+             Version="14.0.25426.0" 
+             ProcessorArchitecture="x86" 
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/x86/Microsoft.VCLibs.x86.14.00.appx" />
+    
+    <Package Name="Microsoft.VCLibs.140.00"
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+             Version="14.0.25426.0"
+             ProcessorArchitecture="x64"
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/x64/Microsoft.VCLibs.x64.14.00.appx" />
+
+    <!--
+    <Package Name="Microsoft.VCLibs.140.00"
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+             Version="14.0.25426.0"
+             ProcessorArchitecture="arm"
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/arm/Microsoft.VCLibs.ARM.14.00.appx" />
+             -->
+
+    <Package Name="Microsoft.NET.Native.Runtime.2.0"
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+             Version="2.0.25709.0"
+             ProcessorArchitecture="x86"
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/x86/Microsoft.NET.Native.Runtime.2.0.appx" />
+
+
+    <Package Name="Microsoft.NET.Native.Runtime.2.0"
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+             Version="2.0.25709.0"
+             ProcessorArchitecture="x64"
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/x64/Microsoft.NET.Native.Runtime.2.0.appx" />
+
+    <!--<Package Name="Microsoft.NET.Native.Runtime.2.0"
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+             Version="2.0.25709.0"
+             ProcessorArchitecture="ARM"
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/ARM/Microsoft.NET.Native.Runtime.2.0.appx" />
+             -->
+
+
+    <Package Name="Microsoft.NET.Native.Framework.2.0"
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+             Version="2.0.25709.0"
+             ProcessorArchitecture="x86"
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/x86/Microsoft.NET.Native.Framework.2.0.appx" />
+
+
+    <Package Name="Microsoft.NET.Native.Framework.2.0"
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+             Version="2.0.25709.0"
+             ProcessorArchitecture="x64"
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/x64/Microsoft.NET.Native.Framework.2.0.appx" />
+
+
+    <!--<Package Name="Microsoft.NET.Native.Framework.2.0"
+             Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+             Version="2.0.25709.0"
+             ProcessorArchitecture="ARM"
+             Uri="http://ipad.intermidia.com.br/Pegada/Multiplataforma/Windows/package/Dependencies/ARM/Microsoft.NET.Native.Framework.2.0.appx" />
+             -->
+    
+  </Dependencies>  
+  
+</AppInstaller>

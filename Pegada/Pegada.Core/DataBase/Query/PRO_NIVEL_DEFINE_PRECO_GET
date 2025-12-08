@@ -1,0 +1,18 @@
+﻿SELECT 
+	IC.CodCarrinho,
+	IC.CodItemCarrinho, 
+	IC.CodProduto, 
+	NA.CodAtributo, 
+	NA.Descricao AS Atributo,
+	IC.CodTabelaPreco,
+	IFNULL(ITP.Preco,0) AS PrecoNaTabela
+FROM TBT_ITEM_CARRINHO IC
+INNER JOIN TBT_NIVEL_PRODUTO NP ON IC.CodProduto = NP.CodProduto
+INNER JOIN TBT_NIVEL_ATRIBUTO NA ON NP.CodAtributo = NA.CodAtributo
+INNER JOIN TBT_NIVEL N ON NP.CodNIvel = N.CodNivel
+LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodProduto = IC.CodProduto
+WHERE N.DefinePreco = 1
+AND ( IC.CodCarrinho = '@CodCarrinho')
+AND ('@CodAtributo' = '-1' OR NP.CodAtributo = '@CodAtributo')
+AND ('@CodTabelaPreco' = '-1' OR ITP.CodTabelaPreco = '@CodTabelaPreco')
+AND ('@CodProduto' = '-1' OR NP.CodProduto = '@CodProduto');

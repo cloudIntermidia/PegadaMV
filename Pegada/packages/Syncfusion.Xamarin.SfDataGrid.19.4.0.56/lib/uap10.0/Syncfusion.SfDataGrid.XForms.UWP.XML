@@ -1,0 +1,2229 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Syncfusion.SfDataGrid.XForms.UWP</name>
+    </assembly>
+    <members>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer">
+            <summary>
+            Represents renderer for GridIndentCell.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.OnTapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Occurs when tap on the indent cell
+            </summary>
+            <param name="sender">GridColumn instance</param>
+            <param name="e">TappedRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.GridCell})">
+            <summary>
+            Methods gets called when any property of the GridIntendCellRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridIndentCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.GetLastVisibleGroup(Syncfusion.Data.Group)">
+            <summary>
+            Gets the last visible group of the given group.
+            </summary>
+            <param name="group">
+            The group that needs to be get the last visible group.
+            </param>
+            <returns>
+            Returns the last visible group.
+            </returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.GetIsLeft">
+            <summary>
+            Checks the left border for indent.
+            </summary>
+            <returns>Returns left border to show or not.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.GetIsRight(Syncfusion.SfDataGrid.XForms.GridDataRow)">
+            <summary>
+            Checks the right border for indent.
+            </summary>
+            <param name="dataRow">The dataRow.</param>
+            <returns>Returns right border to show or not.</returns>    
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.GetIsBottom(Syncfusion.SfDataGrid.XForms.GridDataRow)">
+            <summary>
+            Checks the bottom border for indent.
+            </summary>
+            <param name="dataRow">The dataRow.</param>
+            <returns>Returns bottom border to show or not.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.GetIsTop(Syncfusion.SfDataGrid.XForms.GridDataRow)">
+            <summary>
+            Checks the top border for indent.
+            </summary>
+            <param name="dataRow">The dataRow.</param>
+            <returns>Returns top border to show or not.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.CheckBottomForIndentCell(Syncfusion.SfDataGrid.XForms.GridDataRow,Syncfusion.SfDataGrid.XForms.DataColumnBase)">
+            <summary>
+            Checks whether to draw the bottom border of the indent cell.
+            </summary>
+            <param name="dataRow">
+            The <see cref="T:Syncfusion.SfDataGrid.XForms.DataRowBase"/>.
+            </param>
+            <param name="column">
+            The <see cref="T:Syncfusion.SfDataGrid.XForms.DataColumnBase"/>.
+            </param>
+            <returns>
+            Returns true when need to draw the bottom border; Otherwise return false.
+            </returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.CheckBottomForGroupSummaryRow(Syncfusion.SfDataGrid.XForms.GridDataRow,Syncfusion.SfDataGrid.XForms.DataColumnBase)">
+            <summary>
+            Returns whether the bottom border can be applied for the indent cells of the group summary row.
+            </summary>
+            <param name="dataRow">The instance of the group summary row.</param>
+            <param name="column">The instance of the indent cell.</param>
+            <returns>Returns true when need to draw the bottom border; Otherwise return false.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.CheckBottomBorderForDefaultRow(Syncfusion.SfDataGrid.XForms.GridDataRow,Syncfusion.SfDataGrid.XForms.DataColumnBase)">
+            <summary>
+            Returns whether the bottom border can be applied for the indent cells of the default row.
+            </summary>
+            <param name="dataRow">The instance of the default row.</param>
+            <param name="column">The instance of the indent cell.</param>
+            <returns>Returns true when need to draw the bottom border; Otherwise return false.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.IsLastRow(Syncfusion.SfDataGrid.XForms.SfDataGrid,System.Int32)">
+            <summary>
+            Checks whether the nextRecordIndex's row is last row.
+            </summary>
+            <param name="dataGrid">
+            The <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> 
+            </param>
+            <param name="nextRecordIndex">The next record index.</param>
+            <returns>Returns the boolean value indicates whether the next record is null</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.IsLastRow(Syncfusion.SfDataGrid.XForms.SfDataGrid,Syncfusion.Data.NodeEntry,System.Int32,System.Int32@)">
+            <summary>
+            Checks weather the given record is the last row or not.
+            </summary>
+            <param name="dataGrid">
+            The <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> 
+            </param>
+            <param name="record">
+            The <see cref="T:Syncfusion.Data.NodeEntry"/> of the record.
+            </param>
+            <param name="rowIndex">
+            The row index.
+            </param>
+            <param name="level">
+            Retrieves the level of the record.
+            </param>
+            <returns>
+            Returns true if its a last row; Otherwise return false.
+            </returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridIndentCellRenderer.IsLastGroup(Syncfusion.Data.Group)">
+            <summary>
+            Checks whether the given group is the last visible group or not.
+            </summary>
+            <param name="group">
+            The group that need to be checked as the last group.
+            </param>
+            <returns>
+            Returns true, If its a last group; Otherwise returns false.
+            </returns>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.LocalizationLabelRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.LocalizationLabel"/>
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.LocalizationLabelRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.LocalizationLabelRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.LocalizationLabelRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender">DataGrid instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.LocalizationLabelRenderer.SetLoadMoreText">
+            <summary>
+            Sets text for load more.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.LocalizationLabelRenderer.SetTextColor">
+            <summary>
+            Sets text color.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.LocalizationLabelRenderer.SetDragAndDropText">
+            <summary>
+            Sets text for drag and drop.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources">
+            <summary>
+            Provides the localize text for LOAD MORE ITEMS
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources.ResourceManager">
+            <summary>
+            Gets or sets the ResourceManager of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources"/>.
+            </summary>
+            <value>The ResourceManager of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources"/>.</value>   
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources.Culture">
+            <summary>
+            Gets the CultureInfo of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources"/> which handles the culture of the text.
+            </summary>  
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources.LOAD_MORE_ITEMS">
+            <summary>
+            Gets the LOAD_MORE_ITEMS of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources"/> which handles the localize text.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources.Drop_above">
+            <summary>
+            Gets the Drop_above of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources"/> which handles the localize text.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources.Drop_below">
+            <summary>
+            Gets the Drop_below of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources"/> which handles the localize text.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources.Cancel_drop">
+            <summary>
+            Gets the Cancel_drop of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources"/> which handles the localize text.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridResources.GetString(System.Globalization.CultureInfo,System.String)">
+            <summary>
+            Provides the localize text value
+            </summary>
+            <param name="culture">Gives the Culture Information</param>
+            <param name="text">Gives the text string</param>
+            <returns>Returns the text</returns>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer">
+            <summary>
+            Renderer for the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer.BorderView"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer.BorderView">
+            <summary>
+            Gets the reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer.BorderView"/> control.
+            </summary>
+            <value>The reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer.BorderView"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            This method checks whether to clip and collapse visibility.
+            </summary>        
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.BorderView})">
+            <summary>
+            Methods gets called when any property of the BorderViewRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer.GetBorderColor(Xamarin.Forms.Color)">
+            <summary>
+            Gets the border color of <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.
+            </summary>
+            <param name="color">Current color</param>
+            <returns>Returns the border color of <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.BorderViewRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer">
+            <summary>
+            Renderer for the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.CaptionSummaryRowControl"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.CaptionSummaryRowControl">
+            <summary>
+            Gets the reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.CaptionSummaryRowControl"/> control.
+            </summary>
+            <value>The reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.CaptionSummaryRowControl"/> control.</value>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.Container">
+            <summary>
+            Gets the VisualContainer.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.CaptionSummaryRowControl})">
+            <summary>
+            Methods gets called when any property of the CaptionSummaryRowRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.OnCaptionSummaryRowRenderer_Tapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Method that handles the tapped on the Virtualizing Cells Control.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">TappedRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.OnCaptionSummaryRowRenderer_KeyDown(System.Object,Windows.UI.Xaml.Input.KeyRoutedEventArgs)">
+            <summary>
+            Method that handles the key pressed event
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> instance</param>
+            <param name="e">KeyRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.OnCaptionSummaryRowRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Notifies when a mouse button press up operation is performed     
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.EndSwipe">
+            <summary>
+            Method that called after swiping operation is finished.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.OnCaptionSummaryRowRenderer_ManipulationDelta(System.Object,Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs)">
+            <summary>
+            Notifies when there is a change in the position of the touches in progress
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">ManipulationDeltaRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.CaptionSummaryRowRenderer.OnCaptionSummaryRowRenderer_ManipulationCompleted(System.Object,Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs)">
+            <summary>
+             Gets notified when the touches are complete and a touch up operation is performed
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">ManipulationCompletedRoutedEvent arguments</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridCaptionCellRenderer">
+            <summary>
+            Renderer Class for GridCaptionSummaryCell.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.GridCaptionCellRenderer.CaptionSummaryRowControl">
+            <summary>
+            Gets the instance of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.GridCaptionCellRenderer.CaptionSummaryRowControl"/> control.
+            </summary>
+            <value>The instance of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.GridCaptionCellRenderer.CaptionSummaryRowControl"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCaptionCellRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.GridCell})">
+            <summary>
+            Methods gets called when any property of the GridCaptionCellRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCaptionCellRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            This method checks whether to clip and collapse visibility.
+            </summary>        
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCaptionCellRenderer.OnTapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Occurs when tap on the caption summary cell
+            </summary>
+            <param name="sender">GridColumn instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCaptionCellRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCellRendererBase"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnTapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Occurs when tap on the grid cell
+            </summary>
+            <param name="sender">GridColumn instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnDoubleTapped(System.Object,Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs)">
+            <summary>
+            Occurs when double tap on the grid cell
+            </summary>
+            <param name="sender">GridColumn instance</param>
+            <param name="e">DoubleTappedRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnLongPressed(System.Object,Windows.UI.Xaml.Input.HoldingRoutedEventArgs)">
+            <summary>
+            Occurs if we long press on the grid cell
+            </summary>
+            <param name="sender">GridColumn instance</param>
+            <param name="e">HoldingRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnKeyDown(System.Object,Windows.UI.Xaml.Input.KeyRoutedEventArgs)">
+            <summary>
+            Occurs when down key is pressed.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="e">Gets the information from <see cref="T:Windows.UI.Xaml.Input.KeyRoutedEventArgs"/></param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnLongPressTimerTick(System.Object,System.Object)">
+            <summary>
+            Occurs when long press timer is reached.
+            </summary>
+            <param name="sender">Sender of this method</param>
+            <param name="e">Long press instance</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.GridCell})">
+            <summary>
+            Methods gets called when any property of the GridCellBaseRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnPointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Occurs when mouse is touch down
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnPointerMoved(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Occurs when mouse is moved.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.OnPointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Occurs when mouse is touch up
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.InitiateDragStarted">
+            <summary>
+            Initializes the values required for row drag and drop.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.StopLongPressTimer">
+            <summary>
+            Stops LongPressTimer
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellBaseRenderer.StartLongPressTimer">
+            <summary>
+            Starts LongPressTimer 
+            </summary>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.GridCell})">
+            <summary>
+            Methods gets called when any property of the GridCellRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.GridCellRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Notifies when a mouse button press up operation is performed     
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.GridCellRenderer_GotFocus(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Called to set the current time when focus is obtained for that cell.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">RoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.GridCellRenderer_LostFocus(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Called to set the current time when focus is lost for that cell.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">RoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.ArrangeOverride(Windows.Foundation.Size)">
+            <summary>
+            Arranges the sub views.
+            </summary>
+            <param name="finalSize">final size</param>
+            <returns>Returns the size of the child</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.DrawFrozenIndicator">
+            <summary>
+            Method that draws the frozen column indicator view.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.CheckIfSelectedRow(Syncfusion.SfDataGrid.XForms.DataColumnBase)">
+            <summary>
+            Checks and returns a value indicating whether the current row is selected row.
+            </summary>
+            <param name="dataColumn"><see cref="T:Syncfusion.SfDataGrid.XForms.DataColumn"/> instance</param>
+            <returns>Returns a value indicating whether the current row is selected row.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.SetVisiblity">
+            <summary>
+            Set visibility for the cell element
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridCellRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.GridComboBox"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer" /> class.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.GridComboBox"/> control.</value>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer.FormsElement">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.GridComboBox"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.GridComboBox"/> control.</value>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer.GridCell">
+            <summary>
+            Gets the reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer.GridCell"/> control.
+            </summary>
+            <value>The reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer.GridCell"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.GridComboBoxRenderer.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridGroupSummaryCellRenderer">
+            <summary>
+            Renderer class for GridGroupSummaryCell.
+            </summary>  
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridGroupSummaryCellRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.GridGroupSummaryCellRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridGroupSummaryCellRenderer.CanDrawLeftBorder(Syncfusion.SfDataGrid.XForms.SfDataGrid)">
+            <summary>
+            Return true or false to draw the left cell border.
+            </summary>
+            <param name="dataGrid">The DataGrid.</param>
+            <returns>Return true or false based on the column index and group column description count in overridden class.</returns>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.GridHeaderCellControl"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.NativeHeaderCell">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridHeaderCellControl"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridHeaderCellControl"/> control.</value>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.DataGrid">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.GridHeaderCellControl})">
+            <summary>
+            Methods gets called when any property of the GridHeaderCellControlRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.ArrangeOverride(Windows.Foundation.Size)">
+            <summary>
+            Arranges the sub views.
+            </summary>
+            <param name="finalSize">final size</param>
+            <returns>Returns the size of the child</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.MeasureOverride(Windows.Foundation.Size)">
+            <summary>
+            Measures the size of the child element
+            </summary>
+            <param name="availableSize">measured size</param>
+            <returns>Returns the measured child size</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.StartLongPressTimer">
+            <summary>
+            Starts LongPressTimer 
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.StopLongPressTimer">
+            <summary>
+            Stops LongPressTimer
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.OnLongPressTimerTick(System.Object,System.Object)">
+            <summary>
+            Occurs when long press timer is reached.
+            </summary>
+            <param name="sender">Sender of this method</param>
+            <param name="e">Long press instance</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.DrawFrozenIndicator">
+            <summary>
+            Method that draws the frozen column indicator view.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.GridHeaderCellControlRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the touch release on the header cells.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.GridHeaderCellControlRenderer_PointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the touch down on the header cells.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.GridHeaderCellControlRenderer_Holding(System.Object,Windows.UI.Xaml.Input.HoldingRoutedEventArgs)">
+            <summary>
+            Method that handles long press operation on the header cell
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> instance</param>
+            <param name="e">HoldingRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.GridHeaderCellControlRenderer_DoubleTapped(System.Object,Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs)">
+            <summary>
+            Method that handles the double tapped on the header cells.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">DoubleTappedRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.GridHeaderCellControlRenderer_PointerEntered(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the touch hover on the header cells.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.GridHeaderCellControlRenderer_PointerExited(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the touch when it leaved the header cell.
+            </summary>
+            <param name="sender">Indicates the sender.</param>
+            <param name="e">Gets the information about event args.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.GridHeaderCellControlRenderer_KeyDown(System.Object,Windows.UI.Xaml.Input.KeyRoutedEventArgs)">
+            <summary>
+            Method that handles the key down on the header cells.
+            </summary>
+            <param name="sender">Indicates the sender</param>
+            <param name="e">Gets the information about event args.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.GridHeaderCellControlRenderer_PointerMoved(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the touch movement on the header cells.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.CursorUpdate(Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the cursor type change.
+            </summary>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.HeaderCellRenderer_Tapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Method that handles the tapped on the header cells.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridHeaderCellControlRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.GridRowHeaderCell"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.NativeRowHeaderCell">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridRowHeaderCell"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridRowHeaderCell"/> control.</value>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.DataGrid">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.GridRowHeaderCell})">
+            <summary>
+            Methods gets called when any property of the GridHeaderCellControlRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.HeaderCellControl"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.InitiateDragStarted">
+            <summary>
+            Initializes the values required for drag and drop.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.IsDraggable(Syncfusion.SfDataGrid.XForms.RowType)">
+            <summary>
+            Gets or returns whether cell is drag-gable or not
+            </summary>
+            <param name="rowtype">row type</param>
+            <returns>Return whether cell is drag-gable or not</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.StartLongPressTimer">
+            <summary>
+            Starts LongPressTimer 
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.StopLongPressTimer">
+            <summary>
+            Stops LongPressTimer
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.OnLongPressTimerTick(System.Object,System.Object)">
+            <summary>
+            Occurs when long press timer is reached.
+            </summary>
+            <param name="sender">Sender of this method</param>
+            <param name="e">Long press instance</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.GridRowHeaderCellRenderer_Tapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Occurs when tap on the row header.
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.GridRowHeaderCellRenderer_Holding(System.Object,Windows.UI.Xaml.Input.HoldingRoutedEventArgs)">
+            <summary>
+            Method that handles the long press operation on the row header cells.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">HoldingRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.GridRowHeaderCellRenderer_DoubleTapped(System.Object,Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs)">
+            <summary>
+            Occurs when double tap on the row header
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">DoubleTappedRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.OnPointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Occurs when mouse is touch down
+            </summary>
+            <param name="sender">Sender of this method</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.OnPointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Occurs when mouse is touch up
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridRowHeaderCellRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridStackedHeaderCellControlRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.GridStackedHeaderCellControl"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridStackedHeaderCellControlRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.GridStackedHeaderCellControlRenderer"/> class.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridSummaryCellRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.GridGroupSummaryCell"/> in UWP platform.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridSummaryCellRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.GridCell})">
+            <summary>
+            Methods gets called when any property of the GridSummaryCellRenderer get changed.
+            </summary>
+            <param name="e">ElementChangedEvent argument.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridSummaryCellRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            This method checks whether to layout, clip or collapse visibility.
+            </summary>
+            <param name="sender">Gets the sender.</param>
+            <param name="e">Gets the information from <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/>.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridSummaryCellRenderer.CanDrawLeftBorder(Syncfusion.SfDataGrid.XForms.SfDataGrid)">
+            <summary>
+            Return true or false to draw the left cell border.
+            </summary>
+            <param name="dataGrid">The DataGrid.</param>
+            <returns>Return true or false based on the column index and group column description count in overridden class.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridSummaryCellRenderer.Dispose(System.Boolean)">
+            <summary>
+            Perform final clean up before it is released from memory.
+            </summary>
+            <param name="disposing">if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.GridTableCellRenderer">
+            <summary>
+            Renderer class for GridTableSummaryCell.
+            </summary>  
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridTableCellRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.GridTableCellRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.GridTableCellRenderer.CanDrawLeftBorder(Syncfusion.SfDataGrid.XForms.SfDataGrid)">
+            <summary>
+            Returns true or false to draw left border.
+            </summary>
+            <param name="dataGrid">The DataGrid.</param>
+            <returns>Returns true to draw left border.</returns>                          
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.PullToRefreshViewRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.PullToRefreshView"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.PullToRefreshViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.PullToRefreshView})">
+            <summary>
+            Methods gets called when any property of the PullToRefreshView get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.PullToRefreshViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.PullToRefreshViewRenderer.GetDesiredSize(System.Double,System.Double)">
+            <summary>
+            Get the desired size of the <see cref="T:Syncfusion.SfDataGrid.XForms.PullToRefreshView"/>.
+            </summary>
+            <param name="widthConstraint">required width</param>
+            <param name="heightConstraint">required height</param>
+            <returns>Returns the desired size of the <see cref="T:Syncfusion.SfDataGrid.XForms.PullToRefreshView"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.PullToRefreshViewRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox">
+            <summary>
+            Represents the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox"/> class.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.CornerRadiusProperty">
+            <summary>
+            Using a DependencyProperty as the backing store for CornerRadius.  This enables animation, styling, binding, etc...
+            </summary>
+        </member>
+        <member name="F:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.CheckedColorProperty">
+            <summary>
+            Using a DependencyProperty as the backing store for CheckedColor.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.UncheckedColorProperty">
+            <summary>
+            Using a DependencyProperty as the backing store for UncheckedColor.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.TickColorProperty">
+            <summary>
+            Using a DependencyProperty as the backing store for TickColor.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.BorderWidthProperty">
+            <summary>
+            Using a DependencyProperty as the backing store for BorderWidth.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.ControlSizeProperty">
+            <summary>
+            Using a DependencyProperty as the backing store for ControlSize.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox"/> class.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.TickColor">
+            <summary>
+            Gets or sets the tick color of a <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox"/>.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.UncheckedColor">
+            <summary>
+            Gets or sets the stroke color of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox"/> when the IsChecked property is set to false.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.CheckedColor">
+            <summary>
+            Gets or sets the fill color of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox"/> when the IsChecked property is set to true
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.CornerRadius">
+            <summary>
+            Gets or sets the degree to which the corners of a <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox"/> rectangle is rounded
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.BorderWidth">
+            <summary>
+            Gets or sets the value of BorderWidth. This property can be used to get the border of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox"/> rectangle.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.ControlSize">
+            <summary>
+            Gets or sets the value of ControlSize. This property can be used to get the ControlSize of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox"/> rectangle 
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.UpdateCheckBoxColor">
+            <summary>
+            Apply the color for the Tick of the checkbox.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.OnToggle">
+            <summary>
+             Called when the ToggleButton receives toggle stimulus.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfCheckBox.OnApplyTemplate">
+            <summary>
+            Invoked whenever application code or internal processes (such as a rebuilding layout pass) call ApplyTemplate.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfLableRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.SfLabel"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfLableRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfLableRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfLableRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Xamarin.Forms.Label})">
+            <summary>
+            Methods gets called when any property of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfLableRenderer"/> get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfLableRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer">
+            <summary>
+            Renderer for the <see cref="N:Syncfusion.SfNumericTextBox"/> in UWP platform.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer"/> class.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.GridCell">
+            <summary>
+            Gets the grid cell.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfNumericTextBox.XForms.SfNumericTextBox})">
+            <summary>
+            Occurs when the element of the control has been changed.
+            </summary>
+            <param name="e">Indicates the NumericTextBox </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when the property of the element has been changed.
+            </summary>
+            <param name="sender">Indicates the sender.</param>
+            <param name="e">Gets the information from <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/>.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.UpdateSelection">
+            <summary>
+            Update the control selection based on the <see cref="P:Syncfusion.SfDataGrid.XForms.SfDataGrid.EditorSelectionBehavior"/> property.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.OnLoaded(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Numeric TextBox Loaded.
+            </summary>
+            <param name="sender">object type</param>
+            <param name="e">Routed event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.OnGotFocus(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Occurs when the focus is obtained
+            </summary>
+            <param name="sender">object type</param>
+            <param name="e">Routed event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfNumericTextBoxExtRenderer.SfNumericTextBoxExtRenderer_LostFocus(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Raises when <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.SfNumericTextBoxExt"/> loses focus.
+            </summary>
+            <param name="sender">Instance of entry.</param>
+            <param name="e"><see cref="T:Windows.UI.Xaml.RoutedEventArgs"/> event args.</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfProgressBarRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.SfProgressBar"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfProgressBarRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfProgressBarRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfProgressBarRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Xamarin.Forms.ProgressBar})">
+            <summary>
+            Methods gets called when any property of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfProgressBarRenderer"/> gets changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfProgressBarRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.SfSwitchControl"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.GridCell">
+            <summary>
+            Gets the reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.GridCell"/> control.
+            </summary>
+            <value>The reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.GridCell"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.SfSwitchControl})">
+            <summary>
+            Methods gets called when any property of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer"/> get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfSwitchControl"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.AlignNativeView">
+            <summary>
+            Aligns the switch element based on the <see cref="P:Syncfusion.SfDataGrid.XForms.GridColumn.TextAlignment"/> property value.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.NativeView_Checked(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Event handler for Native view checked event
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">RoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.Element_Toggled(System.Object,Xamarin.Forms.ToggledEventArgs)">
+            <summary>
+            Event handler for the  switches toggled event(portable class library)
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">ToggledEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.NativeView_Tapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Occurs when the native view is tapped.
+            </summary>
+            <param name="sender">Indicates the sender.</param>
+            <param name="e">Gets the information about event args.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.NativeView_Unchecked(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Event handler for Native view unchecked event
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">RoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfSwitchRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SwipeViewRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.SwipeView"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SwipeViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.SwipeView})">
+            <summary>
+            Methods gets called when any property of the SwipeViewRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SwipeViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SwipeViewRenderer.GetBorderColor(Xamarin.Forms.Color)">
+            <summary>
+            Gets the border color of the current view.
+            </summary>
+            <param name="color">current color</param>
+            <returns>Returns the border color for the current view.</returns>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.LoadMoreViewRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.LoadMoreView"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.LoadMoreViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.LoadMoreView})">
+            <summary>
+            Methods gets called when any property of the SwipeViewRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.LoadMoreViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+             Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.LoadMoreView"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.LoadMoreView"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer">
+            <summary>
+            Renderer for the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.VirtualizingCellsControl"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.DataGrid">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.</value>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.VirtualizingCellsControl">
+            <summary>
+            Gets the reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.VirtualizingCellsControl"/> control.
+            </summary>
+            <value>The reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.VirtualizingCellsControl"/> control.</value>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.Container">
+            <summary>
+            Gets the VisualContainer.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.VirtualizingCellsControl})">
+            <summary>
+            Methods gets called when any property of VirtualizingCellsControlRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.ElementRenderer_KeyDown(System.Object,Windows.UI.Xaml.Input.KeyRoutedEventArgs)">
+            <summary>
+            Method that handles the key pressed event
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> instance</param>
+            <param name="e">KeyRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.ElementRenderer_Tapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Method that handles the tapped on the Virtualizing Cells Control.
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">TappedRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.ElementRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Notifies when a mouse button press up operation is performed     
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.ElementRenderer_ManipulationCompleted(System.Object,Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs)">
+            <summary>
+             Gets notified when the touches are complete and a touch up operation is performed
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">ManipulationCompletedRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.ElementRenderer_ManipulationDelta(System.Object,Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs)">
+            <summary>
+            Notifies when there is a change in the position of the touches in progress
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">ManipulationDeltaRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.VirtualizingCellsControl"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.EndSwipe">
+            <summary>
+            Method that called after swiping operation is finished
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.VirtualizingCellsControlRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.ExtendedScrollView"/> in UWP platform
+            </summary>
+        </member>
+        <member name="F:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.isFirstZoomingManipulation">
+            <summary>
+            /To detect whether it is first zooming manipulation, To raise zooming event starts.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer"/> class.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container">
+            <summary>
+            Gets the VisualContainer.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.ContentTransform">
+            <summary>
+            Gets the matric transform value of this view
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.DataGrid">
+            <summary>
+            Gets an instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> class.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.ScrollView">
+            <summary>
+            Gets an instance of the scroll view.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Xamarin.Forms.ScrollView})">
+            <summary>
+            Methods gets called when any property of the ExtendedScrollViewRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container_ManipulationCompleted(System.Object,Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs)">
+            <summary>
+             Gets notified when the touches are complete and a touch up operation is performed
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">ManipulationCompleted event arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container_ManipulationInertiaStarting(System.Object,Windows.UI.Xaml.Input.ManipulationInertiaStartingRoutedEventArgs)">
+            <summary>
+            Method will be fired once the <see cref="T:Windows.UI.Xaml.Controls.ScrollViewer"/>pan operation is starting
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">ManipulationInertiaStarting event arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container_ManipulationStarted(System.Object,Windows.UI.Xaml.Input.ManipulationStartedRoutedEventArgs)">
+            <summary>
+            Method will be fired once the <see cref="T:Windows.UI.Xaml.Controls.ScrollViewer"/>pan operation is started
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">ManipulationStarted event arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Notifies when a mouse button press up operation is performed     
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container_PointerExited(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Notifies when the pointer moves out of the scrollView.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.RemovePointer(System.UInt32)">
+            <summary>
+            Removes the pointer from the <see cref="F:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.pointerList"/>.
+            </summary>
+            <param name="pointerId">Id of the pointer to be removed.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container_PointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Notifies when a mouse button press down operation is performed     
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container_ManipulationDelta(System.Object,Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs)">
+            <summary>
+            Notifies when there is a change in the position of the touches in progress
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">ManipulationDelta event arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Container_PointerWheelChanged(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the motion of mouse ball scrolling
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">Gets the information about mouse wheel event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.HorizontalScrollBar_PointerCaptureLost(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            To Disable the horizontal Scrolling while Scrollbar pointer capture lost.
+            </summary>
+            <param name="sender"> sender of this event </param>
+            <param name="e"> PointerRoutedEvent Args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Horizontal_PointerEntered(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            To enable the horizontal scrolling while scrollbar pointer entered.
+            </summary>
+            <param name="sender"> sender of this event </param>
+            <param name="e"> PointerRoutedEvent Args </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.HorizontalScrollBar_Scroll(System.Object,Windows.UI.Xaml.Controls.Primitives.ScrollEventArgs)">
+            <summary>
+            It provides the data when horizontal scroll bar is scrolled.
+            </summary>
+            <param name="sender">Gets the scroll bar.</param>
+            <param name="e">Gets the <see cref="T:Windows.UI.Xaml.Controls.Primitives.ScrollEventArgs"/>.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.VerticalScrollBar_Scroll(System.Object,Windows.UI.Xaml.Controls.Primitives.ScrollEventArgs)">
+            <summary>
+            It provides the data when vertical scroll bar is scrolled.
+            </summary>
+            <param name="sender">Gets the scroll bar.</param>
+            <param name="e">Gets the <see cref="T:Windows.UI.Xaml.Controls.Primitives.ScrollEventArgs"/>.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.ScrollView_ViewChanged(System.Object,Windows.UI.Xaml.Controls.ScrollViewerViewChangedEventArgs)">
+            <summary>
+            Method that is called to update the offset of the <see cref="T:Windows.UI.Xaml.Controls.ScrollViewer"/>
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">ScrollViewerViewChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.GetScrollBarElements(Windows.UI.Xaml.DependencyObject,System.Collections.Generic.List{Windows.UI.Xaml.Controls.Primitives.ScrollBar})">
+            <summary>
+            Gets the <see cref="T:Windows.UI.Xaml.Controls.Primitives.ScrollBar" /> Element
+            </summary>
+            <param name="depObj">Get the <see cref="T:Windows.UI.Xaml.DependencyObject"/></param>
+            <param name="scrollBars">Get the instance of list of scroll bar</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.OnScrollViewLoaded(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Occurs after <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.ScrollView"/> is loaded.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> instance</param>
+            <param name="e">RoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.ScrollView_ViewChanging(System.Object,Windows.UI.Xaml.Controls.ScrollViewerViewChangingEventArgs)">
+            <summary>
+            Method that is called to update the scrollbar maximum of the <see cref="T:Syncfusion.SfDataGrid.XForms.VisualContainer"/> while zooming.
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">ScrollViewerViewChangingEventArgs arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.ZoomTo(System.Single)">
+            <summary>
+            Applies the passed zoom factor to the <see cref="T:Syncfusion.SfDataGrid.XForms.ExtendedScrollView"/> control and zooms towards the center of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.
+            </summary>
+            <param name="zoomFactor">The zoom factor to be applied to the <see cref="T:Syncfusion.SfDataGrid.XForms.ExtendedScrollView"/>.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.CheckForParent">
+            <summary>
+            Checks the immediate parent of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.EndDragging">
+            <summary>
+            Call this method to end drag and drop
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.ResetOverscrollvalue">
+            <summary>
+            Resets the over scroll value
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.ScrollTo(System.Double,System.Double,System.Int32)">
+            <summary>
+            scroll to the specified offset values
+            </summary>
+            <param name="horizontalOffset">horizontal offset</param>
+            <param name="verticalOffset">vertical offset</param>
+            <param name="scrollFactor">scroll factor</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.UpdateOffsetForPixelLineScrolling">
+            <summary>
+            Assigns the horizontal and vertical offset values based on line ScrollOffset and ClippedSize, 
+            to achieve PixelLineScrolling.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.VerticalScrollBar_PointerCaptureLost(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            To disable the vertical scrolling while scrollbar pointer capture lost.
+            </summary>
+            <param name="sender"> sender of this event</param>
+            <param name="e">PointerRoutedEvent Args </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Vertical_PointerEntered(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            To enable the vertical scrolling while scrollbar pointer enter.
+            </summary>
+            <param name="sender"> sender of this event </param>
+            <param name="e"> RoutedEvent Args </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.UnWireEvents">
+            <summary>
+            Unhooks the events in the GridModel.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.WireEvents">
+            <summary>
+            Wires the required events for the ExtendedScrollViewRenderer.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExtendedScrollViewRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.DataGrid">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when the element property has been changed.
+            </summary>
+            <param name="sender">Indicates the sender.</param>
+            <param name="e">Gets the information from <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/>.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.SfDataGrid})">
+            <summary>
+            Methods gets called when any property of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer"/> get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.SfDataGridControlRenderer_KeyDown(System.Object,Windows.UI.Xaml.Input.KeyRoutedEventArgs)">
+            <summary>
+            Occurs when the down key is pressed.
+            </summary>
+            <param name="sender">Indicates the sender.</param>
+            <param name="e">Gets the information about event args.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.SfDataGridControlRenderer_ManipulationCompleted(System.Object,Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs)">
+            <summary>
+             Gets notified when the touches are complete and a touch up operation is performed
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">ManipulationCompleted event arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.SfDataGridControlRenderer_ManipulationDelta(System.Object,Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs)">
+            <summary>
+            Notifies when there is a change in the position of the touches in progress
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">ManipulationDelta event arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.SfDataGridControlRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Notifies when a mouse button press up operation is performed     
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">Gets the information about event args.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.EndDraggingAndResizing">
+            <summary>
+            Ends the dragging and resizing
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControlRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridControl">
+            <summary>
+            Control for <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> in UWP platform.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer">
+            <summary>
+            Renderer for the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.NumericButton"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer"/> class.
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.NumericButton">
+            <summary>
+            Gets a instances of the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.SfDataPager"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Syncfusion.SfDataGrid.XForms.DataPager.NumericButton})">
+            <summary>
+            Methods gets called when any property of the PagerNumericButtonRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.DrawRectangle">
+            <summary>
+            Draws the rectangular button.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.NumericButtonRenderer_PointerReleased(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the touch released on Numeric button
+            </summary>
+            <param name="sender">Numeric Button instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.NumericButtonRenderer_PointerPressed(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the touches on Numeric button
+            </summary>
+            <param name="sender">Numeric Button instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.NumericButtonRenderer_PointerCaptureLost(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles when touches lost on numeric button 
+            </summary>
+            <param name="sender">Numeric Button instance</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.ResetBackgroundColor(System.String)">
+            <summary>
+            Reset the background color
+            </summary>
+            <param name="state">String that determines the PointerPressed, PointerReleased, PointerCaptureLost events</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.ConvertToNativeColor(Xamarin.Forms.Color)">
+            <summary>
+            Convert to native Color
+            </summary>
+            <param name="color">Forms Color</param>
+            <returns>Windows UI Color</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.NumericButtonRenderer_Tapped(System.Object,Windows.UI.Xaml.Input.TappedRoutedEventArgs)">
+            <summary>
+            Method that handles the tapped on the numeric button
+            </summary>
+            <param name="sender">GridCell instance</param>
+            <param name="e">Gets the information about event args</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.AnimateTap">
+            <summary>
+            Gives fading effect to the view.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.SetOpacity(System.Single)">
+            <summary>
+            Sets the opacity to the shape.
+            </summary>
+            <param name="value">opacity value</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property  is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.GetControlColor(Xamarin.Forms.Color)">
+            <summary>
+            Gets the native color equivalent of the <see cref="T:Xamarin.Forms.Color"/>
+            </summary>
+            <param name="color">current color</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.ArrangeOverride(Windows.Foundation.Size)">
+            <summary>
+            Arranges the sub views.
+            </summary>
+            <param name="finalSize">final size</param>
+            <returns>Returns the size of the child</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.NumericButtonRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.FooterRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.Footer"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.FooterRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.FooterRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.FooterRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.Footer"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.HeaderRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.Header"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.HeaderRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.HeaderRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.HeaderRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.Header"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.PagerScrollViewRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.PagerScrollView"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.PagerScrollViewRenderer.FormsElement">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.PagerScrollView"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.PagerScrollView"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.PagerScrollViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Xamarin.Forms.ScrollView})">
+            <summary>
+            Methods gets called when any property of the PagerScrollViewRenderer get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.PagerScrollViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.PagerScrollViewRenderer.PagerScrollViewRenderer_PointerCaptureLost(System.Object,Windows.UI.Xaml.Input.PointerRoutedEventArgs)">
+            <summary>
+            Method that handles the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.PagerScrollView"/> when focus is lost
+            </summary>
+            <param name="sender">Sender of this event</param>
+            <param name="e">PointerRoutedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.PagerScrollViewRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfPagerLableRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.DataPager.SfPagerLabel"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfPagerLableRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfPagerLableRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfPagerLableRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Xamarin.Forms.Label})">
+            <summary>
+            Methods gets called when any property of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfPagerLableRenderer"/> get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfPagerLableRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.AsyncScrolling">
+            <summary>
+            Dependency service implementation of the <see cref="T:Syncfusion.SfDataGrid.XForms.IAsyncScrolling"/> interface.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.AsyncScrolling.IsScrollingOver(Xamarin.Forms.View,System.Boolean)">
+            <summary>
+            Returns true when scrolling is completed in native platforms.
+            </summary>
+            <param name="scrollView">The instance of the Forms ScrollView.</param>
+            <param name="canAnimate">Boolean value that indicates whether scrolling is animated.</param>
+            <returns> True if scrolling is over, else false.</returns>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.CalculateWidth(Syncfusion.SfDataGrid.XForms.SfDataGrid,Syncfusion.SfDataGrid.XForms.GridColumn,System.String,System.String,System.Double,Xamarin.Forms.FontAttributes)">
+            <summary>
+            Calculate the width of the view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> based on the given values.
+            </summary>
+            <param name="grid">The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+            <param name="column">The corresponding grid column.</param>
+            <param name="text">The text in the cell.</param>
+            <param name="font">The type of the font.</param>
+            <param name="fontSize">The font size of the text.</param>
+            <param name="attribute">The font attribute of the text.</param>
+            <returns>The width of the view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> based on the given values.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.CalculateWidth(Syncfusion.SfDataGrid.XForms.SfDataGrid,Xamarin.Forms.View)">
+            <summary>
+            Calculates the width of the given view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.
+            </summary>
+            <param name="grid">The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+            <param name="view">The view to be measured.</param>
+            <returns>The width of the given view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.CalculateSwipeViewWidth(Syncfusion.SfDataGrid.XForms.SfDataGrid,Xamarin.Forms.View)">
+            <summary>
+            Calculates the width of the given swipe view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.
+            </summary>
+            <param name="grid">The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+            <param name="view">The view to be measured.</param>
+            <returns>The width of the given swipe view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.CalculateHeight(Syncfusion.SfDataGrid.XForms.SfDataGrid,Syncfusion.SfDataGrid.XForms.GridColumn,System.String,System.String,System.Double,Xamarin.Forms.FontAttributes)">
+            <summary>
+            Calculate the height of the view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> based on the given values.
+            </summary>
+            <param name="grid">The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+            <param name="column">The corresponding grid column.</param>
+            <param name="text">The text in the cell.</param>
+            <param name="font">The type of the font.</param>
+            <param name="fontSize">The font size of the text.</param>
+            <param name="attribute">The font attribute of the text.</param>
+            <returns>The height of the view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.CalculateHeight(Syncfusion.SfDataGrid.XForms.SfDataGrid,Syncfusion.SfDataGrid.XForms.GridColumn,Xamarin.Forms.View)">
+            <summary>
+            Calculate the height of the view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> based on the given values.
+            </summary>
+            <param name="grid">The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+            <param name="column">The corresponding grid column.</param>
+            <param name="view">The current view</param>
+            <returns>The height of the view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.CalculateStackedHeaderHeight(Syncfusion.SfDataGrid.XForms.SfDataGrid,Syncfusion.SfDataGrid.XForms.StackedColumn,System.Double,System.String,System.String,System.Double,Xamarin.Forms.FontAttributes)">
+            <summary>
+            Calculate the <see cref="T:Syncfusion.SfDataGrid.XForms.StackedHeaderRow"/> height of the view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> based on the given values.
+            </summary>
+            <param name="grid">The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+            <param name="column">The corresponding <see cref="T:Syncfusion.SfDataGrid.XForms.StackedColumn"/>.</param>
+            <param name="stackedColumnWidth">The corresponding stacked column width.</param>
+            <param name="text">The text in the cell.</param>
+            <param name="font">The type of the font.</param>
+            <param name="fontSize">The font size of the text.</param>
+            <param name="attribute">The font attribute of the text.</param>
+            <returns>The height of the view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.CalculateStackedHeaderHeight(Syncfusion.SfDataGrid.XForms.SfDataGrid,Syncfusion.SfDataGrid.XForms.StackedColumn,System.Double,Xamarin.Forms.View)">
+            <summary>
+            Calculate the <see cref="T:Syncfusion.SfDataGrid.XForms.StackedHeaderRow"/> height of the given view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.
+            </summary>
+            <param name="grid">The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+            <param name="column">The <see cref="T:Syncfusion.SfDataGrid.XForms.StackedColumn"/> containing the view.</param>
+            <param name="stackedColumnWidth">The corresponding stacked column width.</param>
+            <param name="view">The view to be measured.</param>
+            <returns>The height of the given view in the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.IsFontAvailable(System.String)">
+            <summary>
+            This method used to check the given font is available in native font collection system or not.
+            </summary>
+            <param name="font">The font family</param>
+            <returns>If font is available returns true else false.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.MeasureSize.Convert(Xamarin.Forms.View,Xamarin.Forms.Element)">
+            <summary>
+            Converts the portable class library view to the UWP render views.
+            </summary>
+            <param name="view">current view</param>
+            <param name="valid">current element</param>
+            <returns>Returns the views of the renderer view</returns>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.ZoomingHelpers">
+            <summary>
+            Dependency service implementation of the <see cref="T:Syncfusion.SfDataGrid.XForms.IZoomingHelpers"/> interface.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ZoomingHelpers.GetZoomFactor(Xamarin.Forms.View)">
+            <summary>
+            Returns the zoom factor of the scrollView renderer.
+            </summary>
+            <param name="scrollView">The instance of scrollView.</param>
+            <returns> Zoom factor of the scrollView renderer.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ZoomingHelpers.ResetZoom(Xamarin.Forms.View,System.Single,System.Double,System.Double)">
+            <summary>
+            Resets to last zoomed value.
+            </summary>
+            <param name="scrollView">The instance of the scrollView./></param>
+            <param name="scale">Last zoomed value.</param>
+            <param name="scrollX">Last scrolled x.</param>
+            <param name="scrollY">Last scrolled y.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ZoomingHelpers.ZoomTo(Xamarin.Forms.View,System.Single)">
+            <summary>
+            Applies the provided zoom factor to the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control and zooms towards the center of the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.
+            </summary>
+            <param name="scrollView">The instance of the scrollView.</param>
+            <param name="zoomFactor">The zoom factor to be applied to the <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.ExportHelper">
+            <summary>
+            Class that implements the IExportHelper interface and defines methods that converts the file image source to stream.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExportHelper.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.ExportHelper"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExportHelper.HelperStream(Xamarin.Forms.ImageSource)">
+            <summary>
+            converts the <see cref="T:Xamarin.Forms.FileImageSource"/> to <see cref="T:System.IO.Stream"/>.
+            </summary>
+            <param name="imageSource">Gets the <see cref="T:Xamarin.Forms.ImageSource"/>.</param>
+            <returns>Returns the <see cref="T:System.IO.Stream"/>.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExportHelper.ConvertToRandomAccessStream(System.Byte[])">
+            <summary>
+            Converting the byte array to access stream.
+            </summary>
+            <param name="byteArray">Gets the byte array.</param>
+            <returns>Returns the <see cref="T:Windows.Storage.Streams.RandomAccessStream"/></returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.ExportHelper.ConvertToIOBufferedStream(System.Uri)">
+            <summary>
+            Convert the image to stream.
+            </summary>
+            <param name="imageUri">Gets the image <see cref="T:System.Uri"/> source.</param>
+            <returns>Returns the <see cref="T:System.IO.Stream"/>.</returns>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.KeyNavigationHelper">
+            <summary>
+            Provides methods to handle navigation in UWP platform.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.KeyNavigationHelper.CheckShiftKeyPressed(Syncfusion.SfDataGrid.XForms.SfDataGrid)">
+            <summary>
+            Checked the shift key pressed or not.
+            </summary>
+            <param name="dataGrid"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.KeyNavigationHelper.CheckControlKeyPressed(Syncfusion.SfDataGrid.XForms.SfDataGrid)">
+            <summary>
+            Checked the ctrl key pressed or not.
+            </summary>
+            <param name="dataGrid"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/>.</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.RendererHelper">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.RendererHelper"/> in UWP platform
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.RendererHelper.DrawBorder(Windows.UI.Xaml.Controls.Border,System.Double,System.Double,System.Double,System.Double,Xamarin.Forms.FlowDirection)">
+            <summary>
+             Draws the border for the grid cell
+            </summary>
+            <param name="border">border value</param>
+            <param name="left">left border</param>
+            <param name="top">top border</param>
+            <param name="right">right border</param>
+            <param name="bottom">bottom border</param>
+            <param name="layoutDirection">flow direction if the grid</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.RendererHelper.CanDrawLeftBorder(Syncfusion.SfDataGrid.XForms.GridCell)">
+            <summary>
+            Can Draw left Border
+            </summary>
+            <param name="element">GridCell value</param>
+            <returns>return ColumnIndex and GroupColumnDescriptions count</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.RendererHelper.CanDrawHeaderCellLeftBorder(Syncfusion.SfDataGrid.XForms.GridHeaderCellControl)">
+            <summary>
+            Can draw header cell left border
+            </summary>
+            <param name="element">GridHeaderCellControl value</param>
+            <returns>return ColumnIndex and GroupColumnDescriptions count</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.RendererHelper.GetWindowsColor(Xamarin.Forms.Color)">
+            <summary>
+            Gets the windows color
+            </summary>
+            <param name="xColor">current color</param>
+            <returns>Returns the windows color</returns>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridRenderer">
+            <summary>
+            Represents the renderer class for a <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDataGridRenderer.Init">
+            <summary>
+            Initializes the required renderer classes of a <see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> control.
+            </summary>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.SfImageView"/> in UWP platform
+            Temporary fix for image alignment issue. Need to be removed once <see cref="N:Xamarin"/> fixed the reported issue.
+            </summary>
+        </member>
+        <member name="F:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.dummyTask">
+            <summary>
+            Dummy task has been created for image alignment issue.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer"/> class.
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Xamarin.Forms.Image})">
+            <summary>
+            Methods gets called when any property of the <see cref="T:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer"/> get changed. 
+            </summary>
+            <param name="e">ElementChangedEvent argument</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.TryUpdateSource">
+            <summary>
+            To be added.
+            </summary>
+            <returns>Returns the dummy task.</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.GetStretch(Xamarin.Forms.Aspect)">
+            <summary>
+            Gets and returns the stretch value for the image
+            </summary>
+            <param name="aspect">aspect for the image.</param>
+            <returns>Returns the stretch value for the image</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.TryUpdateSourceBase">
+            <summary>
+             Actual source update will be done here.
+            </summary>
+            <returns>Returns the updated source</returns>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.UpdateAspect">
+            <summary>
+            Updates the stretch value of the image
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfImageViewRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfDatePickerRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.SfDatePicker"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfDatePickerRenderer.FormsElement">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.SfDatePicker"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.SfDatePicker"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDatePickerRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfDatePickerRenderer.SetControlTextAlignment(Xamarin.Forms.TextAlignment)">
+            <summary>
+            Sets the control text alignment
+            </summary>
+            <param name="textAlignment">Enumerates values that control text alignment.</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.SfEntry"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.FormsElement">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.SfEntry"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.SfEntry"/> control.</value>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.GridCell">
+            <summary>
+            Gets the reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.GridCell"/> control.
+            </summary>
+            <value>The reference of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.GridCell"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.OnElementChanged(Xamarin.Forms.Platform.UWP.ElementChangedEventArgs{Xamarin.Forms.Entry})">
+            <summary>
+            Occurs when the element of the control has been changed.
+            </summary>
+            <param name="e">Indicates the Entry</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="P:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.GridCell"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the component and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"> if true - release both managed and unmanaged resources; 
+            if false - release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfEntryRenderer.SfEntryRenderer_LostFocus(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Raises when <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.SfEntry"/> loses focus.
+            </summary>
+            <param name="sender">Instance of entry.</param>
+            <param name="e"><see cref="T:Windows.UI.Xaml.RoutedEventArgs"/> event args.</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.SfPickerRenderer">
+            <summary>
+            Renderer for the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.GridPicker"/> in UWP platform
+            </summary>
+        </member>
+        <member name="P:Syncfusion.SfDataGrid.XForms.UWP.SfPickerRenderer.FormsElement">
+            <summary>
+            Gets the reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.GridPicker"/> control.
+            </summary>
+            <value>The reference of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.GridPicker"/> control.</value>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfPickerRenderer.OnElementPropertyChanged(System.Object,System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Occurs when property of the <see cref="T:Syncfusion.SfDataGrid.XForms.Renderers.GridPicker"/> is changed.
+            </summary>
+            <param name="sender"><see cref="T:Syncfusion.SfDataGrid.XForms.SfDataGrid"/> instance</param>
+            <param name="e">PropertyChangedEvent arguments</param>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.SfPickerRenderer.SetControlTextAlignment(Xamarin.Forms.TextAlignment)">
+            <summary>
+            Sets the text alignment of the control
+            </summary>
+            <param name="textAlignment">Enumerates values that control text alignment.</param>
+        </member>
+        <member name="T:Syncfusion.SfDataGrid.XForms.UWP.Syncfusion_SfDataGrid_XForms_UWP_XamlTypeInfo.XamlMetaDataProvider">
+            <summary>
+            Main class for providing metadata for the app or library
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.Syncfusion_SfDataGrid_XForms_UWP_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.Type)">
+            <summary>
+            GetXamlType(Type)
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.Syncfusion_SfDataGrid_XForms_UWP_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.String)">
+            <summary>
+            GetXamlType(String)
+            </summary>
+        </member>
+        <member name="M:Syncfusion.SfDataGrid.XForms.UWP.Syncfusion_SfDataGrid_XForms_UWP_XamlTypeInfo.XamlMetaDataProvider.GetXmlnsDefinitions">
+            <summary>
+            GetXmlnsDefinitions()
+            </summary>
+        </member>
+    </members>
+</doc>
