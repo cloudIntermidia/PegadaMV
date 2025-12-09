@@ -172,6 +172,9 @@
     <Content Include="clear.png" />
     <Content Include="Default_Landscape.png" />
     <Content Include="digitalizar.png" />
+    <Content Include="flag_brazil.png" />
+    <Content Include="flag_eua.png" />
+    <Content Include="flag_spain.png" />
     <Content Include="form_login_background.png" />
     <Content Include="fundo_catalogo.jpeg" />
     <Content Include="gerarpdf.png" />
