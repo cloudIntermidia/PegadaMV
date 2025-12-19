@@ -2804,27 +2804,27 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Intermidia\\.nuget\\packages\\": {},
+    "C:\\Users\\wagner.santos\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {},
+    "F:\\Nugets_VS\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Developer\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj",
+      "projectUniqueName": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj",
       "projectName": "Pegada.Core",
-      "projectPath": "C:\\Developer\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj",
-      "packagesPath": "C:\\Users\\Intermidia\\.nuget\\packages\\",
-      "outputPath": "C:\\Developer\\PegadaMV\\Pegada\\Pegada.Core\\obj\\",
+      "projectPath": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj",
+      "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
+      "outputPath": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+        "F:\\Nugets_VS\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Intermidia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
@@ -2833,26 +2833,28 @@
         "netstandard2.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
+        "D:\\_SoftwaresInstalados\\NuGetPackages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
           "projectReferences": {
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj"
             },
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj"
             },
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj"
             },
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj"
             },
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj"
             }
           }
         }
@@ -2865,6 +2867,7 @@
     },
     "frameworks": {
       "netstandard2.0": {
+        "targetAlias": "netstandard2.0",
         "dependencies": {
           "Acr.UserDialogs": {
             "target": "Package",
@@ -2950,10 +2953,16 @@
           }
         },
         "imports": [
-          "net461"
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.410\\RuntimeIdentifierGraph.json"
       }
     }
   },
@@ -2962,7 +2971,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Microsoft.Bcl 1.1.6' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "message": "O pacote 'Microsoft.Bcl 1.1.6' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' em vez da estrutura de destino do projeto '.NETStandard,Version=v2.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "Microsoft.Bcl",
       "targetGraphs": [
         ".NETStandard,Version=v2.0"
@@ -2972,7 +2981,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Microsoft.Bcl.Async 1.0.165' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "message": "O pacote 'Microsoft.Bcl.Async 1.0.165' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' em vez da estrutura de destino do projeto '.NETStandard,Version=v2.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "Microsoft.Bcl.Async",
       "targetGraphs": [
         ".NETStandard,Version=v2.0"
@@ -2982,7 +2991,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'PCLStorage 1.0.2' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "message": "O pacote 'PCLStorage 1.0.2' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' em vez da estrutura de destino do projeto '.NETStandard,Version=v2.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "PCLStorage",
       "targetGraphs": [
         ".NETStandard,Version=v2.0"
@@ -2992,7 +3001,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Plugin.MediaManager 0.4.5' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "message": "O pacote 'Plugin.MediaManager 0.4.5' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' em vez da estrutura de destino do projeto '.NETStandard,Version=v2.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "Plugin.MediaManager",
       "targetGraphs": [
         ".NETStandard,Version=v2.0"
@@ -3002,7 +3011,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Plugin.MediaManager.Forms 0.4.5' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "message": "O pacote 'Plugin.MediaManager.Forms 0.4.5' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' em vez da estrutura de destino do projeto '.NETStandard,Version=v2.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "Plugin.MediaManager.Forms",
       "targetGraphs": [
         ".NETStandard,Version=v2.0"
@@ -3012,7 +3021,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Xam.Plugin.FilePicker 1.1.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "message": "O pacote 'Xam.Plugin.FilePicker 1.1.0' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' em vez da estrutura de destino do projeto '.NETStandard,Version=v2.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
       "libraryId": "Xam.Plugin.FilePicker",
       "targetGraphs": [
         ".NETStandard,Version=v2.0"

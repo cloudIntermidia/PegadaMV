@@ -203,10 +203,10 @@
       "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {}
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {}
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {}
         }
       },
       "sqlite-net-pcl/1.5.231": {
@@ -699,8 +699,8 @@
           }
         },
         "build": {
-          "build/Xamarin.Forms.props": {},
-          "build/Xamarin.Forms.targets": {}
+          "buildTransitive/Xamarin.Forms.props": {},
+          "buildTransitive/Xamarin.Forms.targets": {}
         }
       },
       "Xamarin.Forms.BehaviorValidationPack/1.1.1": {
@@ -1150,10 +1150,10 @@
       "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {}
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {}
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {}
         }
       },
       "sqlite-net-pcl/1.5.231": {
@@ -1646,8 +1646,8 @@
           }
         },
         "build": {
-          "build/Xamarin.Forms.props": {},
-          "build/Xamarin.Forms.targets": {}
+          "buildTransitive/Xamarin.Forms.props": {},
+          "buildTransitive/Xamarin.Forms.targets": {}
         }
       },
       "Xamarin.Forms.BehaviorValidationPack/1.1.1": {
@@ -2097,10 +2097,10 @@
       "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {}
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {}
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {}
         }
       },
       "sqlite-net-pcl/1.5.231": {
@@ -2593,8 +2593,8 @@
           }
         },
         "build": {
-          "build/Xamarin.Forms.props": {},
-          "build/Xamarin.Forms.targets": {}
+          "buildTransitive/Xamarin.Forms.props": {},
+          "buildTransitive/Xamarin.Forms.targets": {}
         }
       },
       "Xamarin.Forms.BehaviorValidationPack/1.1.1": {
@@ -3044,10 +3044,10 @@
       "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {}
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {}
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {}
         }
       },
       "sqlite-net-pcl/1.5.231": {
@@ -3540,8 +3540,8 @@
           }
         },
         "build": {
-          "build/Xamarin.Forms.props": {},
-          "build/Xamarin.Forms.targets": {}
+          "buildTransitive/Xamarin.Forms.props": {},
+          "buildTransitive/Xamarin.Forms.targets": {}
         }
       },
       "Xamarin.Forms.BehaviorValidationPack/1.1.1": {
@@ -5697,26 +5697,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Intermidia\\.nuget\\packages\\": {},
+    "C:\\Users\\wagner.santos\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "F:\\Nugets_VS\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Developer\\PegadaMV\\Pegada\\Pegada.iOS\\Pegada.iOS.csproj",
+      "projectUniqueName": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.iOS\\Pegada.iOS.csproj",
       "projectName": "Pegada.iOS",
-      "projectPath": "C:\\Developer\\PegadaMV\\Pegada\\Pegada.iOS\\Pegada.iOS.csproj",
-      "packagesPath": "C:\\Users\\Intermidia\\.nuget\\packages\\",
-      "outputPath": "C:\\Developer\\PegadaMV\\Pegada\\Pegada.iOS\\obj\\",
+      "projectPath": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.iOS\\Pegada.iOS.csproj",
+      "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
+      "outputPath": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.iOS\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        "F:\\Nugets_VS\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\Intermidia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
@@ -5725,29 +5725,29 @@
         "xamarinios10"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "D:\\_SoftwaresInstalados\\NuGetPackages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "xamarinios10": {
           "projectReferences": {
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj"
             },
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj"
             },
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Lib.IOS\\MobiliVendas.Core.Lib.IOS.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Lib.IOS\\MobiliVendas.Core.Lib.IOS.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Lib.IOS\\MobiliVendas.Core.Lib.IOS.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Lib.IOS\\MobiliVendas.Core.Lib.IOS.csproj"
             },
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj"
             },
-            "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj": {
-              "projectPath": "C:\\Developer\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj"
+            "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj"
             },
-            "C:\\Developer\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj": {
-              "projectPath": "C:\\Developer\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj"
+            "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj": {
+              "projectPath": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj"
             }
           }
         }

@@ -209,12 +209,12 @@ namespace Pegada.Core.ViewModels
                     return;
                 }
 
-                if (ClienteSelecionado.IsCategoriaValida == 0)
-                {
-                    await UserDialogs.Instance.AlertAsync($"Não é permitido abrir atendimento para este cliente, pois a categoria {ClienteSelecionado.CodigoSegmento} não possui política configurada.");
-                    ClienteSelecionado = new ClienteCommandResult();
-                    return;
-                }
+                //if (ClienteSelecionado.IsCategoriaValida == 0)
+                //{
+                //    await UserDialogs.Instance.AlertAsync($"Não é permitido abrir atendimento para este cliente, pois a categoria {ClienteSelecionado.CodigoSegmento} não possui política configurada.");
+                //    ClienteSelecionado = new ClienteCommandResult();
+                //    return;
+                //}
 
                 if (ClienteSelecionado.Licenciamento != null)
                 {
