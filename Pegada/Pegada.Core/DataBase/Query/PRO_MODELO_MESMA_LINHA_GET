@@ -7,7 +7,7 @@
    P.Descricao AS Descricao,
    M.CodModelo AS CodModelo,
    P.DescricaoCompleta AS DescricaoCompleta,
-   P.DescricaoCor AS DescricaoCor,
+   P.Custom3 AS DescricaoCor,
    P.PrecoVenda As PrecoSugestao,
    ITP.CodTabelaPreco as CodTabelaPreco,
    ITP.Preco As PrecoVenda,
@@ -40,7 +40,7 @@
 	P.Familia
 FROM TBT_PRODUTO P
 INNER JOIN TBT_MODELO M ON P.CodModelo = M.CodModelo
-INNER JOIN TBT_ITEM_PRONTA_ENTREGA IPE ON IPE.CodProduto = P.CodProduto
+LEFT JOIN TBT_ITEM_PRONTA_ENTREGA IPE ON IPE.CodProduto = P.CodProduto
 LEFT JOIN TBT_KIT KIT ON KIT.CodProduto = P.CodProduto
 LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodProduto = P.CodProduto
 LEFT JOIN TBT_FOTO_PRODUTO FP ON P.CodProdutoFoto = FP.CodProdutoFoto
@@ -57,25 +57,8 @@ LEFT JOIN (
     ))
     GROUP BY IC.CodProduto, IC.CodDeposito
 ) IC ON IC.CodProduto = IPE.CodProduto AND IC.CodDeposito = IPE.Configuracao
-WHERE P.Familia IN (FUNCTION_SPLIT('@Familia'))
-AND (
-    ('-1' = '@CodTabelaPreco' 
-		OR ITP.CodTabelaPreco = '@CodTabelaPreco' 
-	)  
-)
-AND (
-       '@ItensEmAtendimento' = -1 OR 
-       EXISTS (
-           SELECT 1 FROM TBT_ITEM_ATENDIMENTO IA 
-		   WHERE P.CodProduto = IA.CodProduto 
-		   AND IA.CodAtendimento = '@CodAtendimento'
-       )
-    )
-AND (
-    ('-1' = '@RestricaoLocal' 
-		OR (P.RestricaoLocal IS NULL OR P.RestricaoLocal = 'N') 
-	)  
-)
+WHERE P.CodModelo IN (FUNCTION_SPLIT('@CodModelo'))
+AND P.VendaBloqueada = 0
 GROUP BY P.CodProduto
 ORDER BY P.CodProduto
 ;

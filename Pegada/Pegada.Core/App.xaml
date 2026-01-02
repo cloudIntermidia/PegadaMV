@@ -23,6 +23,9 @@
                 <On Platform="iOS" Value="Roboto-Bold" />
             </OnPlatform>
 
+            <x:Double x:Key="GridCellWidth">30</x:Double>
+            <x:Double x:Key="GridCellHeight">30</x:Double>
+
             <!-- Cores da aplicação -->
             <!--INICIO CORES FILTRO NIVEIS-->
             <Color x:Key="BackColor">#000000</Color>
@@ -117,6 +120,21 @@
                 <Setter Property="VerticalTextAlignment" Value="Center"/>
                 <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
                 <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            </Style>
+
+            <Style x:Key="labelGridItemGrade" TargetType="Label">
+                <Setter Property="TextColor" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource corItemGrid}"/>
+
+                <!-- Alinhamento correto -->
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+
+                <!-- ESSENCIAL: remover Expand -->
+                <Setter Property="HorizontalOptions" Value="Fill"/>
+                <Setter Property="VerticalOptions" Value="Fill"/>
             </Style>
 
             <Style x:Key="labelGridItemSmall" TargetType="Label">
