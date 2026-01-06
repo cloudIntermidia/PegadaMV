@@ -281,7 +281,7 @@
             </Style>
 
 
-            <DataTemplate x:Key="CatalogoTemplate">
+            <!--<DataTemplate x:Key="CatalogoTemplate">
                 <StackLayout HeightRequest="235"
                              BackgroundColor="Silver">
                     <Grid BackgroundColor="White"
@@ -407,6 +407,131 @@
 
                         </Grid>
                         
+                    </Grid>
+                </StackLayout>
+            </DataTemplate>-->
+
+
+            <DataTemplate x:Key="CatalogoTemplate">
+                <StackLayout HeightRequest="235"
+                             BackgroundColor="Silver">
+                    <Grid BackgroundColor="White"
+                          RowSpacing="3"
+                          Margin="1"
+                          HorizontalOptions="FillAndExpand"
+                          VerticalOptions="FillAndExpand"
+                      >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--<StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="End">
+                            <ffimageloading:CachedImage DownsampleToViewSize="False" Source="{Binding ExibeEtiquetaPromocao, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',etiqueta_promocao.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
+
+                            <ffimageloading:CachedImage DownsampleToViewSize="False" Source="{Binding ExibeSetaBaixoVermelha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',seta_baixo_vermelha.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="20" WidthRequest="20" Margin="10,0" />
+
+                            <Label HorizontalTextAlignment="Center" Text="{Binding PrecoVenda, Converter={StaticResource ValorParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" />
+                        </StackLayout>-->
+
+                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="White" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeEtiquetaPromocao, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',etiqueta_promocao.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
+
+                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="1" DownsampleToViewSize="False" Source="{Binding ExibeSetaBaixoVermelha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',seta_baixo_vermelha.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="15" WidthRequest="15" Margin="10,0" />
+
+                            <Label Grid.Row="0" Grid.Column="4" HorizontalTextAlignment="Center" Text="{Binding PrecoVenda, Converter={StaticResource ValorParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" />
+
+
+                        </Grid>
+
+
+
+                        <Grid Grid.Row="1" Grid.Column="0" BackgroundColor="White" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                            </Grid.RowDefinitions>
+
+                            <!--<Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25"/>
+                            </Grid.ColumnDefinitions>-->
+
+
+                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeTrofeu, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',trofeu.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
+
+                            <ffimageloading:CachedImage Grid.Row="1" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeTV, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',tv.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
+
+                            <ffimageloading:CachedImage Grid.Row="2" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeNew, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',new.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
+
+                            <ffimageloading:CachedImage Grid.Row="3" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeEstrela, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',estrela_inativa.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
+
+                        </Grid>
+
+
+
+                        <Grid Grid.Row="1" Grid.Column="2" BackgroundColor="White" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                            </Grid.RowDefinitions>
+
+                            <!--<Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25"/>
+                            </Grid.ColumnDefinitions>-->
+
+                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeProntaEntrega, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',pronta_entrega.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="35" WidthRequest="35" Margin="10,0" />
+
+                            <ffimageloading:CachedImage Grid.Row="1" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeCaixaAzul, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',caixa_azul.jpeg'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="35" WidthRequest="35" Margin="10,0" />
+
+                            <ffimageloading:CachedImage Grid.Row="2" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeForaLinha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',fora_linha.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="35" WidthRequest="35" Margin="10,0" />
+
+
+
+                        </Grid>
+
+
+
+                        <ffimageloading:CachedImage Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" DownsampleToViewSize="False" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}" 
+                            LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
+
+
+                        <Label Grid.Row="2" Grid.Column="0" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="Sigla" FontSize="10" FontFamily="{StaticResource RobotoNormalFont}" />
+                        <Label Grid.Row="2" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding Descricao}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
+
+                        <Label Grid.Row="3" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding DescricaoProdutoModelo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
+
                     </Grid>
                 </StackLayout>
             </DataTemplate>

@@ -184,6 +184,17 @@
     <Content Include="icone_dropdown.png" />
     <Content Include="icone_seta_atendimento.png" />
     <Content Include="ic_settings.png" />
+    <Content Include="caixa_azul.jpeg" />
+    <Content Include="estrela_ativa.png" />
+    <Content Include="estrela_inativa.png" />
+    <Content Include="etiqueta_promocao.png" />
+    <Content Include="fora_linha.png" />
+    <Content Include="new.png" />
+    <Content Include="pronta_entrega.png" />
+    <Content Include="sapato.png" />
+    <Content Include="seta_baixo_vermelha.png" />
+    <Content Include="trofeu.png" />
+    <Content Include="tv.png" />
     <Content Include="info.png" />
     <Content Include="inserir.png" />
     <EmbeddedResource Include="logo_clienteE.png" />
