@@ -342,5 +342,38 @@
   <ItemGroup>
     <BundleResource Include="Resources\flag_spain.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\caixa_azul.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\estrela_ativa.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\estrela_inativa.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\etiqueta_promocao.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\fora_linha.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\new.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pronta_entrega.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\sapato.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\seta_baixo_vermelha.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\trofeu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\tv.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
