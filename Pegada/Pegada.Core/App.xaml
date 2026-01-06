@@ -425,7 +425,7 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="25"/>
-                            <RowDefinition Height="25"/>
+                            <!--<RowDefinition Height="25"/>-->
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
@@ -530,7 +530,7 @@
                         <Label Grid.Row="2" Grid.Column="0" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="Sigla" FontSize="10" FontFamily="{StaticResource RobotoNormalFont}" />
                         <Label Grid.Row="2" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding Descricao}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
 
-                        <Label Grid.Row="3" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding DescricaoProdutoModelo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
+                        <!--<Label Grid.Row="3" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding DescricaoProdutoModelo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />-->
 
                     </Grid>
                 </StackLayout>
