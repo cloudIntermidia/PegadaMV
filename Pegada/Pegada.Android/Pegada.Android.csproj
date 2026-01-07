@@ -475,7 +475,7 @@
     </ProjectReference>
     <ProjectReference Include="..\Pegada.Core\Pegada.Core.csproj">
       <Project>{8c7d517d-4803-4268-86ac-674e65d35ddd}</Project>
-      <Name>Sestini.Core</Name>
+      <Name>Pegada.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

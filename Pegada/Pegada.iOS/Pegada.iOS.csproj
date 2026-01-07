@@ -124,6 +124,7 @@
     <BundleResource Include="Resources\fundo_catalogo.jpeg" />
     <BundleResource Include="Resources\login_background.jpeg" />
     <BundleResource Include="Resources\logo_mv_padrao.png" />
+    <BundleResource Include="Resources\LoginPadrao.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -201,7 +202,7 @@
       <Version>4.3.0.991211</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.5.0.725</Version>
+      <Version>5.0.0.2012</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>1.2.0.223</Version>
@@ -241,7 +242,7 @@
     </ProjectReference>
     <ProjectReference Include="..\Pegada.Core\Pegada.Core.csproj">
       <Project>{8C7D517D-4803-4268-86AC-674E65D35DDD}</Project>
-      <Name>Sestini.Core</Name>
+      <Name>Pegada.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
