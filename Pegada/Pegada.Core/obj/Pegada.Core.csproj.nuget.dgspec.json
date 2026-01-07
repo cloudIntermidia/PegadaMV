@@ -1,35 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj": {}
+    "/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/Pegada.Core.csproj": {}
   },
   "projects": {
-    "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj": {
+    "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj",
+        "projectUniqueName": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj",
         "projectName": "MobiliVendas.Core.DataBase",
-        "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj",
-        "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
-        "outputPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\obj\\",
+        "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj",
+        "packagesPath": "/Users/itm/.nuget/packages/",
+        "outputPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "F:\\Nugets_VS\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/Users/itm/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\_SoftwaresInstalados\\NuGetPackages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -65,44 +55,34 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.410\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/Users/itm/Library/Caches/VisualStudio/17.0/MSBuild/34063_3/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj": {
+    "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj",
+        "projectUniqueName": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj",
         "projectName": "MobiliVendas.Core.Domain",
-        "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj",
-        "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
-        "outputPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\obj\\",
+        "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj",
+        "packagesPath": "/Users/itm/.nuget/packages/",
+        "outputPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "F:\\Nugets_VS\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/Users/itm/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\_SoftwaresInstalados\\NuGetPackages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj"
               }
             }
           }
@@ -138,47 +118,37 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.410\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/Users/itm/Library/Caches/VisualStudio/17.0/MSBuild/34063_3/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj": {
+    "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Infra/MobiliVendas.Core.Infra.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj",
+        "projectUniqueName": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Infra/MobiliVendas.Core.Infra.csproj",
         "projectName": "MobiliVendas.Core.Infra",
-        "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj",
-        "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
-        "outputPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\obj\\",
+        "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Infra/MobiliVendas.Core.Infra.csproj",
+        "packagesPath": "/Users/itm/.nuget/packages/",
+        "outputPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Infra/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "F:\\Nugets_VS\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/Users/itm/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\_SoftwaresInstalados\\NuGetPackages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj"
               },
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj"
               }
             }
           }
@@ -214,36 +184,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.410\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/Users/itm/Library/Caches/VisualStudio/17.0/MSBuild/34063_3/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj": {
+    "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj",
+        "projectUniqueName": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj",
         "projectName": "MobiliVendas.Core.Shared",
-        "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj",
-        "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
-        "outputPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\obj\\",
+        "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj",
+        "packagesPath": "/Users/itm/.nuget/packages/",
+        "outputPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "F:\\Nugets_VS\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/Users/itm/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\_SoftwaresInstalados\\NuGetPackages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -283,44 +243,34 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.410\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/Users/itm/Library/Caches/VisualStudio/17.0/MSBuild/34063_3/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Sincronizacao\\MobiliVendas.Core.Sincronizacao.csproj": {
+    "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Sincronizacao/MobiliVendas.Core.Sincronizacao.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Sincronizacao\\MobiliVendas.Core.Sincronizacao.csproj",
+        "projectUniqueName": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Sincronizacao/MobiliVendas.Core.Sincronizacao.csproj",
         "projectName": "MobiliVendas.Core.Sincronizacao",
-        "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Sincronizacao\\MobiliVendas.Core.Sincronizacao.csproj",
-        "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
-        "outputPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Sincronizacao\\obj\\",
+        "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Sincronizacao/MobiliVendas.Core.Sincronizacao.csproj",
+        "packagesPath": "/Users/itm/.nuget/packages/",
+        "outputPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Sincronizacao/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "F:\\Nugets_VS\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/Users/itm/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\_SoftwaresInstalados\\NuGetPackages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj"
               }
             }
           }
@@ -356,53 +306,43 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.410\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/Users/itm/Library/Caches/VisualStudio/17.0/MSBuild/34063_3/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj": {
+    "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core/MobiliVendas.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj",
+        "projectUniqueName": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core/MobiliVendas.Core.csproj",
         "projectName": "MobiliVendas.Core",
-        "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj",
-        "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
-        "outputPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\obj\\",
+        "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core/MobiliVendas.Core.csproj",
+        "packagesPath": "/Users/itm/.nuget/packages/",
+        "outputPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "F:\\Nugets_VS\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/Users/itm/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\_SoftwaresInstalados\\NuGetPackages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj"
               },
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj"
               },
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Infra/MobiliVendas.Core.Infra.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Infra/MobiliVendas.Core.Infra.csproj"
               },
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Sincronizacao\\MobiliVendas.Core.Sincronizacao.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Sincronizacao\\MobiliVendas.Core.Sincronizacao.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Sincronizacao/MobiliVendas.Core.Sincronizacao.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Sincronizacao/MobiliVendas.Core.Sincronizacao.csproj"
               }
             }
           }
@@ -566,56 +506,46 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.410\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/Users/itm/Library/Caches/VisualStudio/17.0/MSBuild/34063_3/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj": {
+    "/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/Pegada.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj",
+        "projectUniqueName": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/Pegada.Core.csproj",
         "projectName": "Pegada.Core",
-        "projectPath": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\Pegada.Core.csproj",
-        "packagesPath": "C:\\Users\\wagner.santos\\.nuget\\packages\\",
-        "outputPath": "D:\\WS Sistemas\\GitHub\\PegadaMV\\Pegada\\Pegada.Core\\obj\\",
+        "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/Pegada.Core.csproj",
+        "packagesPath": "/Users/itm/.nuget/packages/",
+        "outputPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "F:\\Nugets_VS\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\wagner.santos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/Users/itm/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\_SoftwaresInstalados\\NuGetPackages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
             "targetAlias": "netstandard2.0",
             "projectReferences": {
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.DataBase\\MobiliVendas.Core.DataBase.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.DataBase/MobiliVendas.Core.DataBase.csproj"
               },
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Domain\\MobiliVendas.Core.Domain.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Domain/MobiliVendas.Core.Domain.csproj"
               },
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Infra\\MobiliVendas.Core.Infra.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Infra/MobiliVendas.Core.Infra.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Infra/MobiliVendas.Core.Infra.csproj"
               },
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core.Shared\\MobiliVendas.Core.Shared.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core.Shared/MobiliVendas.Core.Shared.csproj"
               },
-              "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj": {
-                "projectPath": "D:\\WS Sistemas\\GitHub\\IntermidiaXamarin\\MobiliVendas\\Compartilhado\\MobiliVendas.Core\\MobiliVendas.Core.csproj"
+              "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core/MobiliVendas.Core.csproj": {
+                "projectPath": "/Volumes/HD-Lucas_ITM/Developer/Intermidia/IntermidiaXamarin/MobiliVendas/Compartilhado/MobiliVendas.Core/MobiliVendas.Core.csproj"
               }
             }
           }
@@ -723,7 +653,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.410\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/Users/itm/Library/Caches/VisualStudio/17.0/MSBuild/34063_3/RuntimeIdentifierGraph.json"
         }
       }
     }
