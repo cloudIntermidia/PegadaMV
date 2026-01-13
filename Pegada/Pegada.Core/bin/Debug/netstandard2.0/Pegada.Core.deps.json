@@ -273,7 +273,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.Licensing.dll": {
             "assemblyVersion": "17.3.0.14",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.3.0.14"
           }
         }
       },
@@ -285,7 +285,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.Buttons.XForms.dll": {
             "assemblyVersion": "17.2451.0.39",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.2451.0.39"
           }
         }
       },
@@ -305,7 +305,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.Core.XForms.dll": {
             "assemblyVersion": "17.3451.0.14",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.3451.0.14"
           }
         }
       },
@@ -321,7 +321,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.SfGridConverter.XForms.dll": {
             "assemblyVersion": "17.2451.0.39",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.2451.0.39"
           }
         }
       },
@@ -329,7 +329,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.DataSource.Portable.dll": {
             "assemblyVersion": "17.2451.0.39",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.2451.0.39"
           }
         }
       },
@@ -337,7 +337,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.GridCommon.Portable.dll": {
             "assemblyVersion": "17.2451.0.39",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.2451.0.39"
           }
         }
       },
@@ -361,7 +361,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.SfComboBox.XForms.dll": {
             "assemblyVersion": "17.2451.0.39",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.2451.0.39"
           }
         }
       },
@@ -376,11 +376,11 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.Data.Portable.dll": {
             "assemblyVersion": "17.2451.0.39",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.2451.0.39"
           },
           "lib/netstandard2.0/Syncfusion.SfDataGrid.XForms.dll": {
             "assemblyVersion": "17.2451.0.39",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.2451.0.39"
           }
         }
       },
@@ -394,7 +394,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.SfListView.XForms.dll": {
             "assemblyVersion": "17.2451.0.39",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.2451.0.39"
           }
         }
       },
@@ -406,7 +406,7 @@
         "runtime": {
           "lib/netstandard2.0/Syncfusion.SfNumericTextBox.XForms.dll": {
             "assemblyVersion": "17.3451.0.14",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "17.3451.0.14"
           }
         }
       },
@@ -591,11 +591,11 @@
         "runtime": {
           "lib/netstandard1.0/ZXing.Net.Mobile.Core.dll": {
             "assemblyVersion": "2.4.1.0",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "2.4.1.0"
           },
           "lib/netstandard1.0/ZXingNetMobile.dll": {
             "assemblyVersion": "2.4.1.0",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "2.4.1.0"
           },
           "lib/netstandard1.0/zxing.portable.dll": {
             "assemblyVersion": "0.16.2.0",
@@ -611,7 +611,7 @@
         "runtime": {
           "lib/netstandard1.0/ZXing.Net.Mobile.Forms.dll": {
             "assemblyVersion": "2.4.1.0",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "2.4.1.0"
           }
         }
       },
@@ -659,14 +659,14 @@
           "MobiliVendas.Core.dll": {}
         },
         "resources": {
-          "pt/MobiliVendas.Core.resources.dll": {
-            "locale": "pt"
+          "en/MobiliVendas.Core.resources.dll": {
+            "locale": "en"
           },
           "es/MobiliVendas.Core.resources.dll": {
             "locale": "es"
           },
-          "en/MobiliVendas.Core.resources.dll": {
-            "locale": "en"
+          "pt/MobiliVendas.Core.resources.dll": {
+            "locale": "pt"
           }
         }
       },

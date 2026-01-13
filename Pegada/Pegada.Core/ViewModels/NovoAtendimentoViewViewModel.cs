@@ -260,14 +260,19 @@ namespace Pegada.Core.ViewModels
                     await UserDialogs.Instance.AlertAsync("Selecione um cliente para abrir o atendimento.");
                     return;
                 }
-                else if (CarrinhoFechamento.CodCondicaoPagamento == null)
+                //else if (CarrinhoFechamento.CodCondicaoPagamento == null)
+                //{
+                //    await UserDialogs.Instance.AlertAsync("Selecione uma Condição de Pagamento para abrir o atendimento.");
+                //    return;
+                //}
+                //else if (CarrinhoFechamento.CodTipoPedido == null)
+                //{
+                //    await UserDialogs.Instance.AlertAsync("Selecione um Tipo de Pedido para abrir o atendimento.");
+                //    return;
+                //}
+                else if (CarrinhoFechamento.CodTabelaPreco == null)
                 {
-                    await UserDialogs.Instance.AlertAsync("Selecione uma Condição de Pagamento para abrir o atendimento.");
-                    return;
-                }
-                else if (CarrinhoFechamento.CodTipoPedido == null)
-                {
-                    await UserDialogs.Instance.AlertAsync("Selecione um Tipo de Pedido para abrir o atendimento.");
+                    await UserDialogs.Instance.AlertAsync("Selecione uma Tabela de Preço para abrir o atendimento.");
                     return;
                 }
                 else if (Session.USUARIO_LOGADO.CodTipoPessoa != "1" && CarrinhoFechamento.CodTipoPedido == "5")

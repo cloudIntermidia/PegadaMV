@@ -1,98 +1,33 @@
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.deps.json
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.pdb
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.DataBase.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Domain.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Infra.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Shared.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Sincronizacao.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.DataBase.pdb
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Domain.pdb
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Infra.pdb
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Shared.pdb
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.pdb
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Sincronizacao.pdb
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/en/MobiliVendas.Core.resources.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/es/MobiliVendas.Core.resources.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/pt/MobiliVendas.Core.resources.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csprojAssemblyReference.cache
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/App.xaml.g.cs
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Carrinho/CarrinhoFechamentoView.xaml.g.cs
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Carrinho/CarrinhoPage.xaml.g.cs
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Negocio/CadastroClientePage.xaml.g.cs
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Negocio/PedidoPage.xaml.g.cs
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Shared/NovoAtendimentoView.xaml.g.cs
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csproj.CoreCompileInputs.cache
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.AssemblyInfoInputs.cache
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.AssemblyInfo.cs
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/XamlC.stamp
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csproj.CopyComplete
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.dll
-C:/Developer/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.pdb
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.deps.json
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.pdb
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.DataBase.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Domain.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Infra.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Shared.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Sincronizacao.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.DataBase.pdb
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Domain.pdb
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Infra.pdb
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Shared.pdb
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.pdb
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Sincronizacao.pdb
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/en/MobiliVendas.Core.resources.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/es/MobiliVendas.Core.resources.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/pt/MobiliVendas.Core.resources.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csproj.AssemblyReference.cache
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.GeneratedMSBuildEditorConfig.editorconfig
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/App.xaml.g.cs
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Carrinho/CarrinhoFechamentoView.xaml.g.cs
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Carrinho/CarrinhoPage.xaml.g.cs
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Negocio/CadastroClientePage.xaml.g.cs
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Negocio/PedidoPage.xaml.g.cs
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Shared/NovoAtendimentoView.xaml.g.cs
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.AssemblyInfoInputs.cache
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.AssemblyInfo.cs
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csproj.CoreCompileInputs.cache
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/XamlC.stamp
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csproj.CopyComplete
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.dll
-D:/WS Sistemas/GitHub/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.deps.json
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/Pegada.Core.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.DataBase.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Domain.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Infra.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Shared.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Sincronizacao.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.DataBase.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Domain.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Infra.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Shared.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/MobiliVendas.Core.Sincronizacao.pdb
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/pt/MobiliVendas.Core.resources.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/es/MobiliVendas.Core.resources.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/bin/Debug/netstandard2.0/en/MobiliVendas.Core.resources.dll
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csproj.AssemblyReference.cache
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.GeneratedMSBuildEditorConfig.editorconfig
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/App.xaml.g.cs
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Carrinho/CarrinhoFechamentoView.xaml.g.cs
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Carrinho/CarrinhoPage.xaml.g.cs
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Negocio/CadastroClientePage.xaml.g.cs
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Negocio/PedidoPage.xaml.g.cs
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Views/Shared/NovoAtendimentoView.xaml.g.cs
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.AssemblyInfoInputs.cache
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.AssemblyInfo.cs
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csproj.CoreCompileInputs.cache
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/XamlC.stamp
-/Volumes/HD-Lucas_ITM/Developer/Intermidia/PegadaMV/Pegada/Pegada.Core/obj/Debug/netstandard2.0/Pegada.Core.csproj.CopyComplete
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\Pegada.Core.deps.json
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\Pegada.Core.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\Pegada.Core.pdb
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.DataBase.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.Domain.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.Infra.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.Shared.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.Sincronizacao.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.DataBase.pdb
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.Domain.pdb
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.Infra.pdb
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.Shared.pdb
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.pdb
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\MobiliVendas.Core.Sincronizacao.pdb
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\en\MobiliVendas.Core.resources.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\es\MobiliVendas.Core.resources.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\bin\Debug\netstandard2.0\pt\MobiliVendas.Core.resources.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Pegada.Core.csproj.AssemblyReference.cache
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Pegada.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\App.xaml.g.cs
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Views\Carrinho\CarrinhoFechamentoView.xaml.g.cs
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Views\Carrinho\CarrinhoPage.xaml.g.cs
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Views\Negocio\CadastroClientePage.xaml.g.cs
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Views\Negocio\PedidoPage.xaml.g.cs
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Views\Shared\NovoAtendimentoView.xaml.g.cs
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Pegada.Core.AssemblyInfoInputs.cache
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Pegada.Core.AssemblyInfo.cs
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Pegada.Core.csproj.CoreCompileInputs.cache
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\XamlC.stamp
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Pegada.Core.csproj.CopyComplete
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Pegada.Core.dll
+D:\WS Sistemas\GitHub\PegadaMV\Pegada\Pegada.Core\obj\Debug\netstandard2.0\Pegada.Core.pdb

@@ -86,7 +86,14 @@
                                 HorizontalTextAlignment="End" 
                                 VerticalTextAlignment="Center"/>
 
-                        <custom:BotaoComVisualDropView Label="Condição de Pagamento"
+                        <custom:BotaoComVisualDropView Label="Tabela de Preço"
+                                                        Descricao="{Binding BindingContext.CarrinhoFechamento.TabelaPreco, StringFormat='Tabela de Preço &#10; {0}', Source={x:Reference this}}"
+                                                        Command="{Binding BindingContext.SelecionarTabelaPrecoCommand, Source={x:Reference this}}"
+                                                       />
+
+                        
+
+                        <!--<custom:BotaoComVisualDropView Label="Condição de Pagamento"
                                                         Descricao="{Binding BindingContext.CarrinhoFechamento.CondicaoPagamento, Source={x:Reference this}}"
                                                         Command="{Binding BindingContext.SelecionarCondicaoPagamentoCommand, Source={x:Reference this}}"/>
 
@@ -107,8 +114,8 @@
                             Label="Tipo de Pedido"
                             Descricao="{Binding BindingContext.CarrinhoFechamento.TipoPedido,
                                                 Source={x:Reference this}}"
-                            Command="{Binding BindingContext.SelecionarTipoPedidoCommand, Source={x:Reference this}}"/>
-
+                            Command="{Binding BindingContext.SelecionarTipoPedidoCommand, Source={x:Reference this}}"/>-->
+                        
                     </StackLayout>
 
                 </StackLayout>
