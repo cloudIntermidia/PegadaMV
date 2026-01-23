@@ -73,6 +73,7 @@
             <converters:BoleanoParaCor x:Key="BoleanoParaCor"/>
             <converters:CompareValoresParaBoleano x:Key="CompareValoresParaBoleano"/>
             <converters:ValorParaMoeda x:Key="ValorParaMoeda"/>
+            <converters:ValorPVLParaMoeda x:Key="ValorPVLParaMoeda"/>
             <converters:Base64ParaImagem x:Key="Base64ParaImagem"/>
             <converters:ByteArrayParaImagem x:Key="ByteArrayParaImagem"/>
             <converters:ColecaoNaoTemDados x:Key="ColecaoNaoTemDados"/>
@@ -444,22 +445,32 @@
                             <Label HorizontalTextAlignment="Center" Text="{Binding PrecoVenda, Converter={StaticResource ValorParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" />
                         </StackLayout>-->
 
-                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="White" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0,0,3,0">
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="40"/>
-                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeEtiquetaPromocao, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',etiqueta_promocao.png'}" 
+                            <Grid.RowDefinitions>
+                               <RowDefinition Height="*"/>
+                               <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" DownsampleToViewSize="False" Source="{Binding ExibeEtiquetaPromocao, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',etiqueta_promocao.png'}" 
                                 LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
 
-                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="1" DownsampleToViewSize="False" Source="{Binding ExibeSetaBaixoVermelha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',seta_baixo_vermelha.png'}" 
+                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" DownsampleToViewSize="False" Source="{Binding ExibeSetaBaixoVermelha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',seta_baixo_vermelha.png'}" 
                                 LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="15" WidthRequest="15" Margin="10,0" />
 
-                            <Label Grid.Row="0" Grid.Column="4" HorizontalTextAlignment="Center" Text="{Binding PrecoVenda, Converter={StaticResource ValorParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" />
+                            <!--PRECO DE-->
+                            <Label IsVisible="{Binding IsMostraPreco}" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" Text="{Binding PrecoOriginal, Converter={StaticResource ValorParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" HorizontalOptions="End"/>
+                            <!--PRECO-->
+                            <Label IsVisible="{Binding IsMostraPreco}" Grid.Row="0" Grid.Column="3" HorizontalTextAlignment="Center" Text="{Binding PrecoVenda, Converter={StaticResource ValorParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" HorizontalOptions="EndAndExpand"/>
+                            <!--PRECO PVL-->
+                            <Label IsVisible="{Binding IsMostraPreco}" Grid.Row="1" Grid.Column="3" HorizontalTextAlignment="Center" Text="{Binding PrecoPVL, Converter={StaticResource ValorPVLParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" HorizontalOptions="EndAndExpand"/>
 
 
                         </Grid>
@@ -527,7 +538,7 @@
                             LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
 
 
-                        <Label Grid.Row="2" Grid.Column="0" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="Sigla" FontSize="10" FontFamily="{StaticResource RobotoNormalFont}" />
+                        <Label Grid.Row="2" Grid.Column="0" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding Sigla}" FontSize="10" FontFamily="{StaticResource RobotoNormalFont}" />
                         <Label Grid.Row="2" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding Descricao}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
 
                         <!--<Label Grid.Row="3" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding DescricaoProdutoModelo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />-->
