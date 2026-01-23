@@ -53,9 +53,9 @@
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
     <ConsolePause>false</ConsolePause>
-    <CodesignKey>Apple Distribution: Itm Consultoria e Negocios Ltda (Z78TDPWDTK)</CodesignKey>
+    <CodesignKey>iPhone Distribution: CALCADOS PEGADA NORDESTE LTDA</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>Sestini_26_02_2024</CodesignProvision>
+    <CodesignProvision>PegadaMobili_08012026</CodesignProvision>
     <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">

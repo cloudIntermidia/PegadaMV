@@ -4,3 +4,7 @@ Pegada/Pegada.UWP/bin/
 Pegada/Pegada.UWP/obj/
 Pegada/Pegada.Core/bin/
 Pegada/Pegada.iOS/obj/
+packages/
+bin/
+obj/
+.vs/

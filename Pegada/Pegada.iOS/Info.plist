@@ -51,7 +51,7 @@
 		<true/>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>br.com.intermidia.Pegada</string>
+	<string>br.com.intermidia.pegadamobili</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.1</string>
 	<key>CFBundleVersion</key>
