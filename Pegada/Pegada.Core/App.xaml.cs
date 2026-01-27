@@ -175,6 +175,8 @@ namespace Pegada.Core
             containerRegistry.Register(typeof(ISelecaoAtendimentoView), typeof(SelecaoAtendimentoView));
             containerRegistry.Register(typeof(ISelecaoAtendimentoViewModel), typeof(SelecaoAtendimentoViewModel));
 
+            containerRegistry.Register(typeof(IPessoaRepository), typeof(PessoaRepository));
+
             containerRegistry.Register(typeof(IZoomView), typeof(ZoomView));
             containerRegistry.Register(typeof(IZoomViewModel), typeof(ZoomViewModel));
 

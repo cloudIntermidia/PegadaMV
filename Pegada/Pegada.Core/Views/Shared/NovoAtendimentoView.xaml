@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behavior="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
@@ -77,44 +77,12 @@
                                                        Command="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"
                                                        Descricao="{Binding BindingContext.ClienteSelecionado.RazaoSocial,Source={x:Reference this}}"/>
 
-                        <Label IsVisible="{Binding BindingContext.IsLicenciamento, Source={x:Reference this}}"
-                                FontFamily="{StaticResource RobotoNormalFont}" 
-                                Text="{Binding BindingContext.IsLicenciamento, Source={x:Reference this}}" 
-                                FontAttributes="Italic" 
-                                TextColor="DarkRed" 
-                                HorizontalOptions="FillAndExpand" 
-                                HorizontalTextAlignment="End" 
-                                VerticalTextAlignment="Center"/>
 
                         <custom:BotaoComVisualDropView Label="Tabela de Preço"
-                                                        Descricao="{Binding BindingContext.CarrinhoFechamento.TabelaPreco, StringFormat='Tabela de Preço &#10; {0}', Source={x:Reference this}}"
                                                         Command="{Binding BindingContext.SelecionarTabelaPrecoCommand, Source={x:Reference this}}"
+                                                        Descricao="{Binding BindingContext.CarrinhoFechamento.TabelaPreco, Source={x:Reference this}}"
                                                        />
 
-                        
-
-                        <!--<custom:BotaoComVisualDropView Label="Condição de Pagamento"
-                                                        Descricao="{Binding BindingContext.CarrinhoFechamento.CondicaoPagamento, Source={x:Reference this}}"
-                                                        Command="{Binding BindingContext.SelecionarCondicaoPagamentoCommand, Source={x:Reference this}}"/>
-
-                        <StackLayout >
-                            <Label Text="% Desconto"/>
-                            <Entry Placeholder="% Desconto"
-                                    IsEnabled="True"
-                                    HeightRequest="40"
-                                    VerticalOptions="End"
-                                    Text="{Binding BindingContext.CarrinhoFechamento.PercentualDesconto, Source={x:Reference this}}">
-                                <Entry.Behaviors>
-                                    <behavior:DiscountValidatorBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-
-                        <custom:BotaoComVisualDropView
-                            Label="Tipo de Pedido"
-                            Descricao="{Binding BindingContext.CarrinhoFechamento.TipoPedido,
-                                                Source={x:Reference this}}"
-                            Command="{Binding BindingContext.SelecionarTipoPedidoCommand, Source={x:Reference this}}"/>-->
                         
                     </StackLayout>
 
