@@ -170,6 +170,7 @@ namespace Pegada.Core
             containerRegistry.Register(typeof(ICriticaView), typeof(CriticaView));
             containerRegistry.Register(typeof(ICriticaViewModel), typeof(CriticaViewModel));
             containerRegistry.Register(typeof(ITipoPedidoRepository), typeof(TipoPedidoRepository));
+            containerRegistry.Register(typeof(ISemanaRepository), typeof(SemanaRepository));
             containerRegistry.Register(typeof(ICoeficienteRepository), typeof(CoeficienteRepository));
 
             containerRegistry.Register(typeof(ISelecaoAtendimentoView), typeof(SelecaoAtendimentoView));

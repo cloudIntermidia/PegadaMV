@@ -23,11 +23,11 @@
 	<key>MinimumOSVersion</key>
 	<string>9.3</string>
 	<key>CFBundleDisplayName</key>
-	<string>Pegada</string>
+	<string>PegadaMV</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
-	<string>Pegada</string>
+	<string>PegadaMV</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Can we use your location at all times?</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -53,10 +53,12 @@
 	<key>CFBundleIdentifier</key>
 	<string>br.com.intermidia.pegadamobili</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>CFBundleVersion</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcons.appiconset</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>
