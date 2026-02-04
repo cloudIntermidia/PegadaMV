@@ -98,6 +98,7 @@ namespace Pegada.Core
             containerRegistry.RegisterForNavigation<SincronizacaoPage, SincronizacaoPageViewModel>();
             containerRegistry.RegisterForNavigation<GerenciamentoMapPage, GerenciamentoMapPageViewModel>();
             containerRegistry.Register<AtendimentoUtility>();
+            containerRegistry.RegisterForNavigation<MaisFiltroPopupView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IFormCadastroClienteView, FormCadastroClienteView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IFormCadastroClienteViewModel, FormCadastroClienteViewModel>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.ICadastroClienteNovoViewModel, CadastroClienteNovoViewModel>();

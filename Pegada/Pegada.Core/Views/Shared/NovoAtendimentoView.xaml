@@ -73,6 +73,17 @@
                     <BoxView HeightRequest="2.5" Color="Silver" HorizontalOptions="FillAndExpand"/>
 
                     <StackLayout Padding="20,20" Spacing="20">
+
+                        <custom:BotaoComVisualDropView Label="Preposto"
+                                                       WidthRequest="150"
+                                                       Command="{Binding BindingContext.SelecionarPrepostoCommand, Source={x:Reference this}}"
+                                                       Descricao="{Binding BindingContext.PrepostoSelecionado.Nome,Source={x:Reference this}}"/>
+
+                        <custom:BotaoComVisualDropView Label="Tipo Atendimento"
+                                                       WidthRequest="150"
+                                                       Command="{Binding BindingContext.SelecionarTipoAtendimentoCommand, Source={x:Reference this}}"
+                                                       Descricao="{Binding BindingContext.TipoAtendimento.Descricao,Source={x:Reference this}}"/>
+
                         <custom:BotaoComVisualDropView Label="Cliente"
                                                        Command="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"
                                                        Descricao="{Binding BindingContext.ClienteSelecionado.RazaoSocial,Source={x:Reference this}}"/>

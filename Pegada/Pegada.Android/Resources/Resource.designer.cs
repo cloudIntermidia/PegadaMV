@@ -1165,7 +1165,6 @@ namespace Sestini.Droid
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.expandedTitleMarginStart = global::Sestini.Droid.Resource.Attribute.expandedTitleMarginStart;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.expandedTitleMarginTop = global::Sestini.Droid.Resource.Attribute.expandedTitleMarginTop;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.expandedTitleTextAppearance = global::Sestini.Droid.Resource.Attribute.expandedTitleTextAppearance;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.externalRouteEnabledDrawable = global::Sestini.Droid.Resource.Attribute.externalRouteEnabledDrawable;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.fabSize = global::Sestini.Droid.Resource.Attribute.fabSize;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.fastScrollEnabled = global::Sestini.Droid.Resource.Attribute.fastScrollEnabled;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.fastScrollHorizontalThumbDrawable = global::Sestini.Droid.Resource.Attribute.fastScrollHorizontalThumbDrawable;
@@ -1247,19 +1246,6 @@ namespace Sestini.Droid
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.maxButtonHeight = global::Sestini.Droid.Resource.Attribute.maxButtonHeight;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.maximumDecimalDigits = global::Sestini.Droid.Resource.Attribute.maximumDecimalDigits;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.measureWithLargestChild = global::Sestini.Droid.Resource.Attribute.measureWithLargestChild;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteAudioTrackDrawable = global::Sestini.Droid.Resource.Attribute.mediaRouteAudioTrackDrawable;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteButtonStyle = global::Sestini.Droid.Resource.Attribute.mediaRouteButtonStyle;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteButtonTint = global::Sestini.Droid.Resource.Attribute.mediaRouteButtonTint;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteCloseDrawable = global::Sestini.Droid.Resource.Attribute.mediaRouteCloseDrawable;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteControlPanelThemeOverlay = global::Sestini.Droid.Resource.Attribute.mediaRouteControlPanelThemeOverlay;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteDefaultIconDrawable = global::Sestini.Droid.Resource.Attribute.mediaRouteDefaultIconDrawable;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRoutePauseDrawable = global::Sestini.Droid.Resource.Attribute.mediaRoutePauseDrawable;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRoutePlayDrawable = global::Sestini.Droid.Resource.Attribute.mediaRoutePlayDrawable;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteSpeakerGroupIconDrawable = global::Sestini.Droid.Resource.Attribute.mediaRouteSpeakerGroupIconDrawable;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteSpeakerIconDrawable = global::Sestini.Droid.Resource.Attribute.mediaRouteSpeakerIconDrawable;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteStopDrawable = global::Sestini.Droid.Resource.Attribute.mediaRouteStopDrawable;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteTheme = global::Sestini.Droid.Resource.Attribute.mediaRouteTheme;
-			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.mediaRouteTvIconDrawable = global::Sestini.Droid.Resource.Attribute.mediaRouteTvIconDrawable;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.menu = global::Sestini.Droid.Resource.Attribute.menu;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.multiChoiceItemLayout = global::Sestini.Droid.Resource.Attribute.multiChoiceItemLayout;
 			global::MobiliVendas.Core.Lib.Android.Resource.Attribute.navigationContentDescription = global::Sestini.Droid.Resource.Attribute.navigationContentDescription;
@@ -1709,12 +1695,6 @@ namespace Sestini.Droid
 			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.item_touch_helper_max_drag_scroll_per_frame = global::Sestini.Droid.Resource.Dimension.item_touch_helper_max_drag_scroll_per_frame;
 			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.item_touch_helper_swipe_escape_max_velocity = global::Sestini.Droid.Resource.Dimension.item_touch_helper_swipe_escape_max_velocity;
 			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.item_touch_helper_swipe_escape_velocity = global::Sestini.Droid.Resource.Dimension.item_touch_helper_swipe_escape_velocity;
-			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.mr_controller_volume_group_list_item_height = global::Sestini.Droid.Resource.Dimension.mr_controller_volume_group_list_item_height;
-			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.mr_controller_volume_group_list_item_icon_size = global::Sestini.Droid.Resource.Dimension.mr_controller_volume_group_list_item_icon_size;
-			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.mr_controller_volume_group_list_max_height = global::Sestini.Droid.Resource.Dimension.mr_controller_volume_group_list_max_height;
-			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.mr_controller_volume_group_list_padding_top = global::Sestini.Droid.Resource.Dimension.mr_controller_volume_group_list_padding_top;
-			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.mr_dialog_fixed_width_major = global::Sestini.Droid.Resource.Dimension.mr_dialog_fixed_width_major;
-			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.mr_dialog_fixed_width_minor = global::Sestini.Droid.Resource.Dimension.mr_dialog_fixed_width_minor;
 			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.notification_action_icon_size = global::Sestini.Droid.Resource.Dimension.notification_action_icon_size;
 			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.notification_action_text_size = global::Sestini.Droid.Resource.Dimension.notification_action_text_size;
 			global::MobiliVendas.Core.Lib.Android.Resource.Dimension.notification_big_circle_margin = global::Sestini.Droid.Resource.Dimension.notification_big_circle_margin;
@@ -1893,212 +1873,14 @@ namespace Sestini.Droid
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.design_snackbar_background = global::Sestini.Droid.Resource.Drawable.design_snackbar_background;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.Down = global::Sestini.Droid.Resource.Drawable.Down;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.dropdownbuttonimage = global::Sestini.Droid.Resource.Drawable.dropdownbuttonimage;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.fundoCatalogoPDF = global::Sestini.Droid.Resource.Drawable.fundoCatalogoPDF;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.googleg_disabled_color_18 = global::Sestini.Droid.Resource.Drawable.googleg_disabled_color_18;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.googleg_standard_color_18 = global::Sestini.Droid.Resource.Drawable.googleg_standard_color_18;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.GreenPin = global::Sestini.Droid.Resource.Drawable.GreenPin;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_audiotrack_dark = global::Sestini.Droid.Resource.Drawable.ic_audiotrack_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_audiotrack_light = global::Sestini.Droid.Resource.Drawable.ic_audiotrack_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_dialog_close_dark = global::Sestini.Droid.Resource.Drawable.ic_dialog_close_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_dialog_close_light = global::Sestini.Droid.Resource.Drawable.ic_dialog_close_light;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_errorstatus = global::Sestini.Droid.Resource.Drawable.ic_errorstatus;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_00 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_00;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_01 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_01;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_02 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_02;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_03 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_03;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_04 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_04;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_05 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_05;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_06 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_06;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_07 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_07;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_08 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_08;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_09 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_09;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_10 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_10;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_11 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_11;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_12 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_12;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_13 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_13;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_14 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_14;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_collapse_15 = global::Sestini.Droid.Resource.Drawable.ic_group_collapse_15;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_00 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_00;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_01 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_01;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_02 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_02;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_03 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_03;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_04 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_04;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_05 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_05;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_06 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_06;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_07 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_07;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_08 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_08;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_09 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_09;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_10 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_10;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_11 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_11;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_12 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_12;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_13 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_13;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_14 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_14;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_group_expand_15 = global::Sestini.Droid.Resource.Drawable.ic_group_expand_15;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_media_pause_dark = global::Sestini.Droid.Resource.Drawable.ic_media_pause_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_media_pause_light = global::Sestini.Droid.Resource.Drawable.ic_media_pause_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_media_play_dark = global::Sestini.Droid.Resource.Drawable.ic_media_play_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_media_play_light = global::Sestini.Droid.Resource.Drawable.ic_media_play_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_media_stop_dark = global::Sestini.Droid.Resource.Drawable.ic_media_stop_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_media_stop_light = global::Sestini.Droid.Resource.Drawable.ic_media_stop_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_00_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_00_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_00_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_00_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_01_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_01_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_01_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_01_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_02_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_02_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_02_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_02_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_03_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_03_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_03_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_03_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_04_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_04_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_04_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_04_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_05_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_05_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_05_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_05_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_06_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_06_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_06_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_06_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_07_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_07_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_07_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_07_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_08_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_08_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_08_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_08_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_09_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_09_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_09_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_09_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_10_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_10_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_10_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_10_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_11_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_11_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_11_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_11_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_12_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_12_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_12_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_12_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_13_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_13_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_13_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_13_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_14_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_14_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_14_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_14_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_15_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_15_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_15_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_15_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_16_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_16_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_16_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_16_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_17_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_17_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_17_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_17_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_18_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_18_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_18_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_18_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_19_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_19_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_19_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_19_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_20_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_20_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_20_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_20_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_21_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_21_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_21_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_21_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_22_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_22_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_22_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_22_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_23_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_23_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_23_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_23_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_24_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_24_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_24_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_24_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_25_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_25_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_25_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_25_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_26_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_26_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_26_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_26_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_27_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_27_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_27_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_27_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_28_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_28_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_28_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_28_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_29_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_29_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_29_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_29_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_30_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_30_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connected_30_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connected_30_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_00_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_00_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_00_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_00_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_01_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_01_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_01_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_01_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_02_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_02_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_02_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_02_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_03_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_03_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_03_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_03_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_04_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_04_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_04_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_04_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_05_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_05_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_05_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_05_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_06_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_06_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_06_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_06_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_07_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_07_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_07_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_07_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_08_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_08_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_08_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_08_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_09_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_09_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_09_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_09_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_10_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_10_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_10_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_10_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_11_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_11_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_11_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_11_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_12_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_12_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_12_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_12_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_13_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_13_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_13_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_13_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_14_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_14_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_14_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_14_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_15_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_15_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_15_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_15_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_16_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_16_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_16_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_16_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_17_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_17_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_17_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_17_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_18_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_18_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_18_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_18_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_19_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_19_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_19_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_19_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_20_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_20_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_20_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_20_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_21_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_21_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_21_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_21_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_22_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_22_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_22_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_22_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_23_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_23_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_23_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_23_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_24_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_24_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_24_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_24_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_25_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_25_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_25_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_25_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_26_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_26_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_26_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_26_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_27_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_27_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_27_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_27_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_28_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_28_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_28_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_28_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_29_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_29_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_29_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_29_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_30_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_30_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_connecting_30_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_connecting_30_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_disabled_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_disabled_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_disabled_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_disabled_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_disconnected_dark = global::Sestini.Droid.Resource.Drawable.ic_mr_button_disconnected_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_disconnected_light = global::Sestini.Droid.Resource.Drawable.ic_mr_button_disconnected_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_mr_button_grey = global::Sestini.Droid.Resource.Drawable.ic_mr_button_grey;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_successstatus = global::Sestini.Droid.Resource.Drawable.ic_successstatus;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_vol_type_speaker_dark = global::Sestini.Droid.Resource.Drawable.ic_vol_type_speaker_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_vol_type_speaker_group_dark = global::Sestini.Droid.Resource.Drawable.ic_vol_type_speaker_group_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_vol_type_speaker_group_light = global::Sestini.Droid.Resource.Drawable.ic_vol_type_speaker_group_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_vol_type_speaker_light = global::Sestini.Droid.Resource.Drawable.ic_vol_type_speaker_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_vol_type_tv_dark = global::Sestini.Droid.Resource.Drawable.ic_vol_type_tv_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.ic_vol_type_tv_light = global::Sestini.Droid.Resource.Drawable.ic_vol_type_tv_light;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.inputlayout_togglecollapseicon = global::Sestini.Droid.Resource.Drawable.inputlayout_togglecollapseicon;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.inputlayout_togglevisibleicon = global::Sestini.Droid.Resource.Drawable.inputlayout_togglevisibleicon;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.input_layout_drop_down_icon = global::Sestini.Droid.Resource.Drawable.input_layout_drop_down_icon;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_button_connected_dark = global::Sestini.Droid.Resource.Drawable.mr_button_connected_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_button_connected_light = global::Sestini.Droid.Resource.Drawable.mr_button_connected_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_button_connecting_dark = global::Sestini.Droid.Resource.Drawable.mr_button_connecting_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_button_connecting_light = global::Sestini.Droid.Resource.Drawable.mr_button_connecting_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_button_dark = global::Sestini.Droid.Resource.Drawable.mr_button_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_button_light = global::Sestini.Droid.Resource.Drawable.mr_button_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_dialog_close_dark = global::Sestini.Droid.Resource.Drawable.mr_dialog_close_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_dialog_close_light = global::Sestini.Droid.Resource.Drawable.mr_dialog_close_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_dialog_material_background_dark = global::Sestini.Droid.Resource.Drawable.mr_dialog_material_background_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_dialog_material_background_light = global::Sestini.Droid.Resource.Drawable.mr_dialog_material_background_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_group_collapse = global::Sestini.Droid.Resource.Drawable.mr_group_collapse;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_group_expand = global::Sestini.Droid.Resource.Drawable.mr_group_expand;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_media_pause_dark = global::Sestini.Droid.Resource.Drawable.mr_media_pause_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_media_pause_light = global::Sestini.Droid.Resource.Drawable.mr_media_pause_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_media_play_dark = global::Sestini.Droid.Resource.Drawable.mr_media_play_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_media_play_light = global::Sestini.Droid.Resource.Drawable.mr_media_play_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_media_stop_dark = global::Sestini.Droid.Resource.Drawable.mr_media_stop_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_media_stop_light = global::Sestini.Droid.Resource.Drawable.mr_media_stop_light;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_vol_type_audiotrack_dark = global::Sestini.Droid.Resource.Drawable.mr_vol_type_audiotrack_dark;
-			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.mr_vol_type_audiotrack_light = global::Sestini.Droid.Resource.Drawable.mr_vol_type_audiotrack_light;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.NaoDispE = global::Sestini.Droid.Resource.Drawable.NaoDispE;
 			global::MobiliVendas.Core.Lib.Android.Resource.Drawable.navigation_empty_icon = global::Sestini.Droid.Resource.Drawable.navigation_empty_icon;
 			global::Plugin.MediaManager.Forms.Android.Resource.Animation.abc_fade_in = global::Sestini.Droid.Resource.Animation.abc_fade_in;
@@ -6785,713 +6567,710 @@ namespace Sestini.Droid
 			// aapt resource value: 0x7F0700B7
 			public const int form_login_background = 2131165367;
 			
-			// aapt resource value: 0x7F0700B9
-			public const int fundoCatalogoPDF = 2131165369;
-			
 			// aapt resource value: 0x7F0700B8
 			public const int fundo_catalogo = 2131165368;
 			
+			// aapt resource value: 0x7F0700BB
+			public const int gerarpdf = 2131165371;
+			
 			// aapt resource value: 0x7F0700BC
-			public const int gerarpdf = 2131165372;
+			public const int googleg_disabled_color_18 = 2131165372;
 			
 			// aapt resource value: 0x7F0700BD
-			public const int googleg_disabled_color_18 = 2131165373;
+			public const int googleg_standard_color_18 = 2131165373;
 			
 			// aapt resource value: 0x7F0700BE
-			public const int googleg_standard_color_18 = 2131165374;
+			public const int GreenPin = 2131165374;
 			
-			// aapt resource value: 0x7F0700BF
-			public const int GreenPin = 2131165375;
+			// aapt resource value: 0x7F0700B9
+			public const int g_cifrao = 2131165369;
 			
 			// aapt resource value: 0x7F0700BA
-			public const int g_cifrao = 2131165370;
-			
-			// aapt resource value: 0x7F0700BB
-			public const int g_cifrao_press = 2131165371;
-			
-			// aapt resource value: 0x7F070174
-			public const int Icon = 2131165556;
-			
-			// aapt resource value: 0x7F070175
-			public const int icone_seta_atendimento = 2131165557;
-			
-			// aapt resource value: 0x7F0700C0
-			public const int ic_audiotrack_dark = 2131165376;
-			
-			// aapt resource value: 0x7F0700C1
-			public const int ic_audiotrack_light = 2131165377;
-			
-			// aapt resource value: 0x7F0700C2
-			public const int ic_dialog_close_dark = 2131165378;
-			
-			// aapt resource value: 0x7F0700C3
-			public const int ic_dialog_close_light = 2131165379;
-			
-			// aapt resource value: 0x7F0700C4
-			public const int ic_errorstatus = 2131165380;
-			
-			// aapt resource value: 0x7F0700C5
-			public const int ic_group_collapse_00 = 2131165381;
-			
-			// aapt resource value: 0x7F0700C6
-			public const int ic_group_collapse_01 = 2131165382;
-			
-			// aapt resource value: 0x7F0700C7
-			public const int ic_group_collapse_02 = 2131165383;
-			
-			// aapt resource value: 0x7F0700C8
-			public const int ic_group_collapse_03 = 2131165384;
-			
-			// aapt resource value: 0x7F0700C9
-			public const int ic_group_collapse_04 = 2131165385;
-			
-			// aapt resource value: 0x7F0700CA
-			public const int ic_group_collapse_05 = 2131165386;
-			
-			// aapt resource value: 0x7F0700CB
-			public const int ic_group_collapse_06 = 2131165387;
-			
-			// aapt resource value: 0x7F0700CC
-			public const int ic_group_collapse_07 = 2131165388;
-			
-			// aapt resource value: 0x7F0700CD
-			public const int ic_group_collapse_08 = 2131165389;
-			
-			// aapt resource value: 0x7F0700CE
-			public const int ic_group_collapse_09 = 2131165390;
-			
-			// aapt resource value: 0x7F0700CF
-			public const int ic_group_collapse_10 = 2131165391;
-			
-			// aapt resource value: 0x7F0700D0
-			public const int ic_group_collapse_11 = 2131165392;
-			
-			// aapt resource value: 0x7F0700D1
-			public const int ic_group_collapse_12 = 2131165393;
-			
-			// aapt resource value: 0x7F0700D2
-			public const int ic_group_collapse_13 = 2131165394;
-			
-			// aapt resource value: 0x7F0700D3
-			public const int ic_group_collapse_14 = 2131165395;
-			
-			// aapt resource value: 0x7F0700D4
-			public const int ic_group_collapse_15 = 2131165396;
-			
-			// aapt resource value: 0x7F0700D5
-			public const int ic_group_expand_00 = 2131165397;
-			
-			// aapt resource value: 0x7F0700D6
-			public const int ic_group_expand_01 = 2131165398;
-			
-			// aapt resource value: 0x7F0700D7
-			public const int ic_group_expand_02 = 2131165399;
-			
-			// aapt resource value: 0x7F0700D8
-			public const int ic_group_expand_03 = 2131165400;
-			
-			// aapt resource value: 0x7F0700D9
-			public const int ic_group_expand_04 = 2131165401;
-			
-			// aapt resource value: 0x7F0700DA
-			public const int ic_group_expand_05 = 2131165402;
-			
-			// aapt resource value: 0x7F0700DB
-			public const int ic_group_expand_06 = 2131165403;
-			
-			// aapt resource value: 0x7F0700DC
-			public const int ic_group_expand_07 = 2131165404;
-			
-			// aapt resource value: 0x7F0700DD
-			public const int ic_group_expand_08 = 2131165405;
-			
-			// aapt resource value: 0x7F0700DE
-			public const int ic_group_expand_09 = 2131165406;
-			
-			// aapt resource value: 0x7F0700DF
-			public const int ic_group_expand_10 = 2131165407;
-			
-			// aapt resource value: 0x7F0700E0
-			public const int ic_group_expand_11 = 2131165408;
-			
-			// aapt resource value: 0x7F0700E1
-			public const int ic_group_expand_12 = 2131165409;
-			
-			// aapt resource value: 0x7F0700E2
-			public const int ic_group_expand_13 = 2131165410;
-			
-			// aapt resource value: 0x7F0700E3
-			public const int ic_group_expand_14 = 2131165411;
-			
-			// aapt resource value: 0x7F0700E4
-			public const int ic_group_expand_15 = 2131165412;
-			
-			// aapt resource value: 0x7F0700E5
-			public const int ic_media_pause_dark = 2131165413;
-			
-			// aapt resource value: 0x7F0700E6
-			public const int ic_media_pause_light = 2131165414;
-			
-			// aapt resource value: 0x7F0700E7
-			public const int ic_media_play_dark = 2131165415;
-			
-			// aapt resource value: 0x7F0700E8
-			public const int ic_media_play_light = 2131165416;
-			
-			// aapt resource value: 0x7F0700E9
-			public const int ic_media_stop_dark = 2131165417;
-			
-			// aapt resource value: 0x7F0700EA
-			public const int ic_media_stop_light = 2131165418;
-			
-			// aapt resource value: 0x7F0700EB
-			public const int ic_mr_button_connected_00_dark = 2131165419;
-			
-			// aapt resource value: 0x7F0700EC
-			public const int ic_mr_button_connected_00_light = 2131165420;
-			
-			// aapt resource value: 0x7F0700ED
-			public const int ic_mr_button_connected_01_dark = 2131165421;
-			
-			// aapt resource value: 0x7F0700EE
-			public const int ic_mr_button_connected_01_light = 2131165422;
-			
-			// aapt resource value: 0x7F0700EF
-			public const int ic_mr_button_connected_02_dark = 2131165423;
-			
-			// aapt resource value: 0x7F0700F0
-			public const int ic_mr_button_connected_02_light = 2131165424;
-			
-			// aapt resource value: 0x7F0700F1
-			public const int ic_mr_button_connected_03_dark = 2131165425;
-			
-			// aapt resource value: 0x7F0700F2
-			public const int ic_mr_button_connected_03_light = 2131165426;
-			
-			// aapt resource value: 0x7F0700F3
-			public const int ic_mr_button_connected_04_dark = 2131165427;
-			
-			// aapt resource value: 0x7F0700F4
-			public const int ic_mr_button_connected_04_light = 2131165428;
-			
-			// aapt resource value: 0x7F0700F5
-			public const int ic_mr_button_connected_05_dark = 2131165429;
-			
-			// aapt resource value: 0x7F0700F6
-			public const int ic_mr_button_connected_05_light = 2131165430;
-			
-			// aapt resource value: 0x7F0700F7
-			public const int ic_mr_button_connected_06_dark = 2131165431;
-			
-			// aapt resource value: 0x7F0700F8
-			public const int ic_mr_button_connected_06_light = 2131165432;
-			
-			// aapt resource value: 0x7F0700F9
-			public const int ic_mr_button_connected_07_dark = 2131165433;
-			
-			// aapt resource value: 0x7F0700FA
-			public const int ic_mr_button_connected_07_light = 2131165434;
-			
-			// aapt resource value: 0x7F0700FB
-			public const int ic_mr_button_connected_08_dark = 2131165435;
-			
-			// aapt resource value: 0x7F0700FC
-			public const int ic_mr_button_connected_08_light = 2131165436;
-			
-			// aapt resource value: 0x7F0700FD
-			public const int ic_mr_button_connected_09_dark = 2131165437;
-			
-			// aapt resource value: 0x7F0700FE
-			public const int ic_mr_button_connected_09_light = 2131165438;
-			
-			// aapt resource value: 0x7F0700FF
-			public const int ic_mr_button_connected_10_dark = 2131165439;
-			
-			// aapt resource value: 0x7F070100
-			public const int ic_mr_button_connected_10_light = 2131165440;
-			
-			// aapt resource value: 0x7F070101
-			public const int ic_mr_button_connected_11_dark = 2131165441;
-			
-			// aapt resource value: 0x7F070102
-			public const int ic_mr_button_connected_11_light = 2131165442;
-			
-			// aapt resource value: 0x7F070103
-			public const int ic_mr_button_connected_12_dark = 2131165443;
-			
-			// aapt resource value: 0x7F070104
-			public const int ic_mr_button_connected_12_light = 2131165444;
-			
-			// aapt resource value: 0x7F070105
-			public const int ic_mr_button_connected_13_dark = 2131165445;
-			
-			// aapt resource value: 0x7F070106
-			public const int ic_mr_button_connected_13_light = 2131165446;
-			
-			// aapt resource value: 0x7F070107
-			public const int ic_mr_button_connected_14_dark = 2131165447;
-			
-			// aapt resource value: 0x7F070108
-			public const int ic_mr_button_connected_14_light = 2131165448;
-			
-			// aapt resource value: 0x7F070109
-			public const int ic_mr_button_connected_15_dark = 2131165449;
-			
-			// aapt resource value: 0x7F07010A
-			public const int ic_mr_button_connected_15_light = 2131165450;
-			
-			// aapt resource value: 0x7F07010B
-			public const int ic_mr_button_connected_16_dark = 2131165451;
-			
-			// aapt resource value: 0x7F07010C
-			public const int ic_mr_button_connected_16_light = 2131165452;
-			
-			// aapt resource value: 0x7F07010D
-			public const int ic_mr_button_connected_17_dark = 2131165453;
-			
-			// aapt resource value: 0x7F07010E
-			public const int ic_mr_button_connected_17_light = 2131165454;
-			
-			// aapt resource value: 0x7F07010F
-			public const int ic_mr_button_connected_18_dark = 2131165455;
-			
-			// aapt resource value: 0x7F070110
-			public const int ic_mr_button_connected_18_light = 2131165456;
-			
-			// aapt resource value: 0x7F070111
-			public const int ic_mr_button_connected_19_dark = 2131165457;
-			
-			// aapt resource value: 0x7F070112
-			public const int ic_mr_button_connected_19_light = 2131165458;
-			
-			// aapt resource value: 0x7F070113
-			public const int ic_mr_button_connected_20_dark = 2131165459;
-			
-			// aapt resource value: 0x7F070114
-			public const int ic_mr_button_connected_20_light = 2131165460;
-			
-			// aapt resource value: 0x7F070115
-			public const int ic_mr_button_connected_21_dark = 2131165461;
-			
-			// aapt resource value: 0x7F070116
-			public const int ic_mr_button_connected_21_light = 2131165462;
-			
-			// aapt resource value: 0x7F070117
-			public const int ic_mr_button_connected_22_dark = 2131165463;
-			
-			// aapt resource value: 0x7F070118
-			public const int ic_mr_button_connected_22_light = 2131165464;
-			
-			// aapt resource value: 0x7F070119
-			public const int ic_mr_button_connected_23_dark = 2131165465;
-			
-			// aapt resource value: 0x7F07011A
-			public const int ic_mr_button_connected_23_light = 2131165466;
-			
-			// aapt resource value: 0x7F07011B
-			public const int ic_mr_button_connected_24_dark = 2131165467;
-			
-			// aapt resource value: 0x7F07011C
-			public const int ic_mr_button_connected_24_light = 2131165468;
-			
-			// aapt resource value: 0x7F07011D
-			public const int ic_mr_button_connected_25_dark = 2131165469;
-			
-			// aapt resource value: 0x7F07011E
-			public const int ic_mr_button_connected_25_light = 2131165470;
-			
-			// aapt resource value: 0x7F07011F
-			public const int ic_mr_button_connected_26_dark = 2131165471;
-			
-			// aapt resource value: 0x7F070120
-			public const int ic_mr_button_connected_26_light = 2131165472;
-			
-			// aapt resource value: 0x7F070121
-			public const int ic_mr_button_connected_27_dark = 2131165473;
-			
-			// aapt resource value: 0x7F070122
-			public const int ic_mr_button_connected_27_light = 2131165474;
-			
-			// aapt resource value: 0x7F070123
-			public const int ic_mr_button_connected_28_dark = 2131165475;
-			
-			// aapt resource value: 0x7F070124
-			public const int ic_mr_button_connected_28_light = 2131165476;
-			
-			// aapt resource value: 0x7F070125
-			public const int ic_mr_button_connected_29_dark = 2131165477;
-			
-			// aapt resource value: 0x7F070126
-			public const int ic_mr_button_connected_29_light = 2131165478;
-			
-			// aapt resource value: 0x7F070127
-			public const int ic_mr_button_connected_30_dark = 2131165479;
-			
-			// aapt resource value: 0x7F070128
-			public const int ic_mr_button_connected_30_light = 2131165480;
-			
-			// aapt resource value: 0x7F070129
-			public const int ic_mr_button_connecting_00_dark = 2131165481;
-			
-			// aapt resource value: 0x7F07012A
-			public const int ic_mr_button_connecting_00_light = 2131165482;
-			
-			// aapt resource value: 0x7F07012B
-			public const int ic_mr_button_connecting_01_dark = 2131165483;
-			
-			// aapt resource value: 0x7F07012C
-			public const int ic_mr_button_connecting_01_light = 2131165484;
-			
-			// aapt resource value: 0x7F07012D
-			public const int ic_mr_button_connecting_02_dark = 2131165485;
-			
-			// aapt resource value: 0x7F07012E
-			public const int ic_mr_button_connecting_02_light = 2131165486;
-			
-			// aapt resource value: 0x7F07012F
-			public const int ic_mr_button_connecting_03_dark = 2131165487;
-			
-			// aapt resource value: 0x7F070130
-			public const int ic_mr_button_connecting_03_light = 2131165488;
-			
-			// aapt resource value: 0x7F070131
-			public const int ic_mr_button_connecting_04_dark = 2131165489;
-			
-			// aapt resource value: 0x7F070132
-			public const int ic_mr_button_connecting_04_light = 2131165490;
-			
-			// aapt resource value: 0x7F070133
-			public const int ic_mr_button_connecting_05_dark = 2131165491;
-			
-			// aapt resource value: 0x7F070134
-			public const int ic_mr_button_connecting_05_light = 2131165492;
-			
-			// aapt resource value: 0x7F070135
-			public const int ic_mr_button_connecting_06_dark = 2131165493;
-			
-			// aapt resource value: 0x7F070136
-			public const int ic_mr_button_connecting_06_light = 2131165494;
-			
-			// aapt resource value: 0x7F070137
-			public const int ic_mr_button_connecting_07_dark = 2131165495;
-			
-			// aapt resource value: 0x7F070138
-			public const int ic_mr_button_connecting_07_light = 2131165496;
-			
-			// aapt resource value: 0x7F070139
-			public const int ic_mr_button_connecting_08_dark = 2131165497;
-			
-			// aapt resource value: 0x7F07013A
-			public const int ic_mr_button_connecting_08_light = 2131165498;
-			
-			// aapt resource value: 0x7F07013B
-			public const int ic_mr_button_connecting_09_dark = 2131165499;
-			
-			// aapt resource value: 0x7F07013C
-			public const int ic_mr_button_connecting_09_light = 2131165500;
-			
-			// aapt resource value: 0x7F07013D
-			public const int ic_mr_button_connecting_10_dark = 2131165501;
-			
-			// aapt resource value: 0x7F07013E
-			public const int ic_mr_button_connecting_10_light = 2131165502;
-			
-			// aapt resource value: 0x7F07013F
-			public const int ic_mr_button_connecting_11_dark = 2131165503;
-			
-			// aapt resource value: 0x7F070140
-			public const int ic_mr_button_connecting_11_light = 2131165504;
-			
-			// aapt resource value: 0x7F070141
-			public const int ic_mr_button_connecting_12_dark = 2131165505;
-			
-			// aapt resource value: 0x7F070142
-			public const int ic_mr_button_connecting_12_light = 2131165506;
-			
-			// aapt resource value: 0x7F070143
-			public const int ic_mr_button_connecting_13_dark = 2131165507;
-			
-			// aapt resource value: 0x7F070144
-			public const int ic_mr_button_connecting_13_light = 2131165508;
-			
-			// aapt resource value: 0x7F070145
-			public const int ic_mr_button_connecting_14_dark = 2131165509;
-			
-			// aapt resource value: 0x7F070146
-			public const int ic_mr_button_connecting_14_light = 2131165510;
-			
-			// aapt resource value: 0x7F070147
-			public const int ic_mr_button_connecting_15_dark = 2131165511;
-			
-			// aapt resource value: 0x7F070148
-			public const int ic_mr_button_connecting_15_light = 2131165512;
-			
-			// aapt resource value: 0x7F070149
-			public const int ic_mr_button_connecting_16_dark = 2131165513;
-			
-			// aapt resource value: 0x7F07014A
-			public const int ic_mr_button_connecting_16_light = 2131165514;
-			
-			// aapt resource value: 0x7F07014B
-			public const int ic_mr_button_connecting_17_dark = 2131165515;
-			
-			// aapt resource value: 0x7F07014C
-			public const int ic_mr_button_connecting_17_light = 2131165516;
-			
-			// aapt resource value: 0x7F07014D
-			public const int ic_mr_button_connecting_18_dark = 2131165517;
-			
-			// aapt resource value: 0x7F07014E
-			public const int ic_mr_button_connecting_18_light = 2131165518;
-			
-			// aapt resource value: 0x7F07014F
-			public const int ic_mr_button_connecting_19_dark = 2131165519;
-			
-			// aapt resource value: 0x7F070150
-			public const int ic_mr_button_connecting_19_light = 2131165520;
-			
-			// aapt resource value: 0x7F070151
-			public const int ic_mr_button_connecting_20_dark = 2131165521;
-			
-			// aapt resource value: 0x7F070152
-			public const int ic_mr_button_connecting_20_light = 2131165522;
-			
-			// aapt resource value: 0x7F070153
-			public const int ic_mr_button_connecting_21_dark = 2131165523;
-			
-			// aapt resource value: 0x7F070154
-			public const int ic_mr_button_connecting_21_light = 2131165524;
-			
-			// aapt resource value: 0x7F070155
-			public const int ic_mr_button_connecting_22_dark = 2131165525;
-			
-			// aapt resource value: 0x7F070156
-			public const int ic_mr_button_connecting_22_light = 2131165526;
-			
-			// aapt resource value: 0x7F070157
-			public const int ic_mr_button_connecting_23_dark = 2131165527;
-			
-			// aapt resource value: 0x7F070158
-			public const int ic_mr_button_connecting_23_light = 2131165528;
-			
-			// aapt resource value: 0x7F070159
-			public const int ic_mr_button_connecting_24_dark = 2131165529;
-			
-			// aapt resource value: 0x7F07015A
-			public const int ic_mr_button_connecting_24_light = 2131165530;
-			
-			// aapt resource value: 0x7F07015B
-			public const int ic_mr_button_connecting_25_dark = 2131165531;
-			
-			// aapt resource value: 0x7F07015C
-			public const int ic_mr_button_connecting_25_light = 2131165532;
-			
-			// aapt resource value: 0x7F07015D
-			public const int ic_mr_button_connecting_26_dark = 2131165533;
-			
-			// aapt resource value: 0x7F07015E
-			public const int ic_mr_button_connecting_26_light = 2131165534;
-			
-			// aapt resource value: 0x7F07015F
-			public const int ic_mr_button_connecting_27_dark = 2131165535;
-			
-			// aapt resource value: 0x7F070160
-			public const int ic_mr_button_connecting_27_light = 2131165536;
-			
-			// aapt resource value: 0x7F070161
-			public const int ic_mr_button_connecting_28_dark = 2131165537;
-			
-			// aapt resource value: 0x7F070162
-			public const int ic_mr_button_connecting_28_light = 2131165538;
-			
-			// aapt resource value: 0x7F070163
-			public const int ic_mr_button_connecting_29_dark = 2131165539;
-			
-			// aapt resource value: 0x7F070164
-			public const int ic_mr_button_connecting_29_light = 2131165540;
-			
-			// aapt resource value: 0x7F070165
-			public const int ic_mr_button_connecting_30_dark = 2131165541;
-			
-			// aapt resource value: 0x7F070166
-			public const int ic_mr_button_connecting_30_light = 2131165542;
-			
-			// aapt resource value: 0x7F070167
-			public const int ic_mr_button_disabled_dark = 2131165543;
-			
-			// aapt resource value: 0x7F070168
-			public const int ic_mr_button_disabled_light = 2131165544;
-			
-			// aapt resource value: 0x7F070169
-			public const int ic_mr_button_disconnected_dark = 2131165545;
-			
-			// aapt resource value: 0x7F07016A
-			public const int ic_mr_button_disconnected_light = 2131165546;
-			
-			// aapt resource value: 0x7F07016B
-			public const int ic_mr_button_grey = 2131165547;
-			
-			// aapt resource value: 0x7F07016C
-			public const int ic_settings = 2131165548;
-			
-			// aapt resource value: 0x7F07016D
-			public const int ic_successstatus = 2131165549;
-			
-			// aapt resource value: 0x7F07016E
-			public const int ic_vol_type_speaker_dark = 2131165550;
-			
-			// aapt resource value: 0x7F07016F
-			public const int ic_vol_type_speaker_group_dark = 2131165551;
-			
-			// aapt resource value: 0x7F070170
-			public const int ic_vol_type_speaker_group_light = 2131165552;
-			
-			// aapt resource value: 0x7F070171
-			public const int ic_vol_type_speaker_light = 2131165553;
-			
-			// aapt resource value: 0x7F070172
-			public const int ic_vol_type_tv_dark = 2131165554;
+			public const int g_cifrao_press = 2131165370;
 			
 			// aapt resource value: 0x7F070173
-			public const int ic_vol_type_tv_light = 2131165555;
+			public const int Icon = 2131165555;
 			
-			// aapt resource value: 0x7F070176
-			public const int info = 2131165558;
+			// aapt resource value: 0x7F070174
+			public const int icone_seta_atendimento = 2131165556;
 			
-			// aapt resource value: 0x7F070178
-			public const int inputlayout_togglecollapseicon = 2131165560;
+			// aapt resource value: 0x7F0700BF
+			public const int ic_audiotrack_dark = 2131165375;
 			
-			// aapt resource value: 0x7F070179
-			public const int inputlayout_togglevisibleicon = 2131165561;
+			// aapt resource value: 0x7F0700C0
+			public const int ic_audiotrack_light = 2131165376;
+			
+			// aapt resource value: 0x7F0700C1
+			public const int ic_dialog_close_dark = 2131165377;
+			
+			// aapt resource value: 0x7F0700C2
+			public const int ic_dialog_close_light = 2131165378;
+			
+			// aapt resource value: 0x7F0700C3
+			public const int ic_errorstatus = 2131165379;
+			
+			// aapt resource value: 0x7F0700C4
+			public const int ic_group_collapse_00 = 2131165380;
+			
+			// aapt resource value: 0x7F0700C5
+			public const int ic_group_collapse_01 = 2131165381;
+			
+			// aapt resource value: 0x7F0700C6
+			public const int ic_group_collapse_02 = 2131165382;
+			
+			// aapt resource value: 0x7F0700C7
+			public const int ic_group_collapse_03 = 2131165383;
+			
+			// aapt resource value: 0x7F0700C8
+			public const int ic_group_collapse_04 = 2131165384;
+			
+			// aapt resource value: 0x7F0700C9
+			public const int ic_group_collapse_05 = 2131165385;
+			
+			// aapt resource value: 0x7F0700CA
+			public const int ic_group_collapse_06 = 2131165386;
+			
+			// aapt resource value: 0x7F0700CB
+			public const int ic_group_collapse_07 = 2131165387;
+			
+			// aapt resource value: 0x7F0700CC
+			public const int ic_group_collapse_08 = 2131165388;
+			
+			// aapt resource value: 0x7F0700CD
+			public const int ic_group_collapse_09 = 2131165389;
+			
+			// aapt resource value: 0x7F0700CE
+			public const int ic_group_collapse_10 = 2131165390;
+			
+			// aapt resource value: 0x7F0700CF
+			public const int ic_group_collapse_11 = 2131165391;
+			
+			// aapt resource value: 0x7F0700D0
+			public const int ic_group_collapse_12 = 2131165392;
+			
+			// aapt resource value: 0x7F0700D1
+			public const int ic_group_collapse_13 = 2131165393;
+			
+			// aapt resource value: 0x7F0700D2
+			public const int ic_group_collapse_14 = 2131165394;
+			
+			// aapt resource value: 0x7F0700D3
+			public const int ic_group_collapse_15 = 2131165395;
+			
+			// aapt resource value: 0x7F0700D4
+			public const int ic_group_expand_00 = 2131165396;
+			
+			// aapt resource value: 0x7F0700D5
+			public const int ic_group_expand_01 = 2131165397;
+			
+			// aapt resource value: 0x7F0700D6
+			public const int ic_group_expand_02 = 2131165398;
+			
+			// aapt resource value: 0x7F0700D7
+			public const int ic_group_expand_03 = 2131165399;
+			
+			// aapt resource value: 0x7F0700D8
+			public const int ic_group_expand_04 = 2131165400;
+			
+			// aapt resource value: 0x7F0700D9
+			public const int ic_group_expand_05 = 2131165401;
+			
+			// aapt resource value: 0x7F0700DA
+			public const int ic_group_expand_06 = 2131165402;
+			
+			// aapt resource value: 0x7F0700DB
+			public const int ic_group_expand_07 = 2131165403;
+			
+			// aapt resource value: 0x7F0700DC
+			public const int ic_group_expand_08 = 2131165404;
+			
+			// aapt resource value: 0x7F0700DD
+			public const int ic_group_expand_09 = 2131165405;
+			
+			// aapt resource value: 0x7F0700DE
+			public const int ic_group_expand_10 = 2131165406;
+			
+			// aapt resource value: 0x7F0700DF
+			public const int ic_group_expand_11 = 2131165407;
+			
+			// aapt resource value: 0x7F0700E0
+			public const int ic_group_expand_12 = 2131165408;
+			
+			// aapt resource value: 0x7F0700E1
+			public const int ic_group_expand_13 = 2131165409;
+			
+			// aapt resource value: 0x7F0700E2
+			public const int ic_group_expand_14 = 2131165410;
+			
+			// aapt resource value: 0x7F0700E3
+			public const int ic_group_expand_15 = 2131165411;
+			
+			// aapt resource value: 0x7F0700E4
+			public const int ic_media_pause_dark = 2131165412;
+			
+			// aapt resource value: 0x7F0700E5
+			public const int ic_media_pause_light = 2131165413;
+			
+			// aapt resource value: 0x7F0700E6
+			public const int ic_media_play_dark = 2131165414;
+			
+			// aapt resource value: 0x7F0700E7
+			public const int ic_media_play_light = 2131165415;
+			
+			// aapt resource value: 0x7F0700E8
+			public const int ic_media_stop_dark = 2131165416;
+			
+			// aapt resource value: 0x7F0700E9
+			public const int ic_media_stop_light = 2131165417;
+			
+			// aapt resource value: 0x7F0700EA
+			public const int ic_mr_button_connected_00_dark = 2131165418;
+			
+			// aapt resource value: 0x7F0700EB
+			public const int ic_mr_button_connected_00_light = 2131165419;
+			
+			// aapt resource value: 0x7F0700EC
+			public const int ic_mr_button_connected_01_dark = 2131165420;
+			
+			// aapt resource value: 0x7F0700ED
+			public const int ic_mr_button_connected_01_light = 2131165421;
+			
+			// aapt resource value: 0x7F0700EE
+			public const int ic_mr_button_connected_02_dark = 2131165422;
+			
+			// aapt resource value: 0x7F0700EF
+			public const int ic_mr_button_connected_02_light = 2131165423;
+			
+			// aapt resource value: 0x7F0700F0
+			public const int ic_mr_button_connected_03_dark = 2131165424;
+			
+			// aapt resource value: 0x7F0700F1
+			public const int ic_mr_button_connected_03_light = 2131165425;
+			
+			// aapt resource value: 0x7F0700F2
+			public const int ic_mr_button_connected_04_dark = 2131165426;
+			
+			// aapt resource value: 0x7F0700F3
+			public const int ic_mr_button_connected_04_light = 2131165427;
+			
+			// aapt resource value: 0x7F0700F4
+			public const int ic_mr_button_connected_05_dark = 2131165428;
+			
+			// aapt resource value: 0x7F0700F5
+			public const int ic_mr_button_connected_05_light = 2131165429;
+			
+			// aapt resource value: 0x7F0700F6
+			public const int ic_mr_button_connected_06_dark = 2131165430;
+			
+			// aapt resource value: 0x7F0700F7
+			public const int ic_mr_button_connected_06_light = 2131165431;
+			
+			// aapt resource value: 0x7F0700F8
+			public const int ic_mr_button_connected_07_dark = 2131165432;
+			
+			// aapt resource value: 0x7F0700F9
+			public const int ic_mr_button_connected_07_light = 2131165433;
+			
+			// aapt resource value: 0x7F0700FA
+			public const int ic_mr_button_connected_08_dark = 2131165434;
+			
+			// aapt resource value: 0x7F0700FB
+			public const int ic_mr_button_connected_08_light = 2131165435;
+			
+			// aapt resource value: 0x7F0700FC
+			public const int ic_mr_button_connected_09_dark = 2131165436;
+			
+			// aapt resource value: 0x7F0700FD
+			public const int ic_mr_button_connected_09_light = 2131165437;
+			
+			// aapt resource value: 0x7F0700FE
+			public const int ic_mr_button_connected_10_dark = 2131165438;
+			
+			// aapt resource value: 0x7F0700FF
+			public const int ic_mr_button_connected_10_light = 2131165439;
+			
+			// aapt resource value: 0x7F070100
+			public const int ic_mr_button_connected_11_dark = 2131165440;
+			
+			// aapt resource value: 0x7F070101
+			public const int ic_mr_button_connected_11_light = 2131165441;
+			
+			// aapt resource value: 0x7F070102
+			public const int ic_mr_button_connected_12_dark = 2131165442;
+			
+			// aapt resource value: 0x7F070103
+			public const int ic_mr_button_connected_12_light = 2131165443;
+			
+			// aapt resource value: 0x7F070104
+			public const int ic_mr_button_connected_13_dark = 2131165444;
+			
+			// aapt resource value: 0x7F070105
+			public const int ic_mr_button_connected_13_light = 2131165445;
+			
+			// aapt resource value: 0x7F070106
+			public const int ic_mr_button_connected_14_dark = 2131165446;
+			
+			// aapt resource value: 0x7F070107
+			public const int ic_mr_button_connected_14_light = 2131165447;
+			
+			// aapt resource value: 0x7F070108
+			public const int ic_mr_button_connected_15_dark = 2131165448;
+			
+			// aapt resource value: 0x7F070109
+			public const int ic_mr_button_connected_15_light = 2131165449;
+			
+			// aapt resource value: 0x7F07010A
+			public const int ic_mr_button_connected_16_dark = 2131165450;
+			
+			// aapt resource value: 0x7F07010B
+			public const int ic_mr_button_connected_16_light = 2131165451;
+			
+			// aapt resource value: 0x7F07010C
+			public const int ic_mr_button_connected_17_dark = 2131165452;
+			
+			// aapt resource value: 0x7F07010D
+			public const int ic_mr_button_connected_17_light = 2131165453;
+			
+			// aapt resource value: 0x7F07010E
+			public const int ic_mr_button_connected_18_dark = 2131165454;
+			
+			// aapt resource value: 0x7F07010F
+			public const int ic_mr_button_connected_18_light = 2131165455;
+			
+			// aapt resource value: 0x7F070110
+			public const int ic_mr_button_connected_19_dark = 2131165456;
+			
+			// aapt resource value: 0x7F070111
+			public const int ic_mr_button_connected_19_light = 2131165457;
+			
+			// aapt resource value: 0x7F070112
+			public const int ic_mr_button_connected_20_dark = 2131165458;
+			
+			// aapt resource value: 0x7F070113
+			public const int ic_mr_button_connected_20_light = 2131165459;
+			
+			// aapt resource value: 0x7F070114
+			public const int ic_mr_button_connected_21_dark = 2131165460;
+			
+			// aapt resource value: 0x7F070115
+			public const int ic_mr_button_connected_21_light = 2131165461;
+			
+			// aapt resource value: 0x7F070116
+			public const int ic_mr_button_connected_22_dark = 2131165462;
+			
+			// aapt resource value: 0x7F070117
+			public const int ic_mr_button_connected_22_light = 2131165463;
+			
+			// aapt resource value: 0x7F070118
+			public const int ic_mr_button_connected_23_dark = 2131165464;
+			
+			// aapt resource value: 0x7F070119
+			public const int ic_mr_button_connected_23_light = 2131165465;
+			
+			// aapt resource value: 0x7F07011A
+			public const int ic_mr_button_connected_24_dark = 2131165466;
+			
+			// aapt resource value: 0x7F07011B
+			public const int ic_mr_button_connected_24_light = 2131165467;
+			
+			// aapt resource value: 0x7F07011C
+			public const int ic_mr_button_connected_25_dark = 2131165468;
+			
+			// aapt resource value: 0x7F07011D
+			public const int ic_mr_button_connected_25_light = 2131165469;
+			
+			// aapt resource value: 0x7F07011E
+			public const int ic_mr_button_connected_26_dark = 2131165470;
+			
+			// aapt resource value: 0x7F07011F
+			public const int ic_mr_button_connected_26_light = 2131165471;
+			
+			// aapt resource value: 0x7F070120
+			public const int ic_mr_button_connected_27_dark = 2131165472;
+			
+			// aapt resource value: 0x7F070121
+			public const int ic_mr_button_connected_27_light = 2131165473;
+			
+			// aapt resource value: 0x7F070122
+			public const int ic_mr_button_connected_28_dark = 2131165474;
+			
+			// aapt resource value: 0x7F070123
+			public const int ic_mr_button_connected_28_light = 2131165475;
+			
+			// aapt resource value: 0x7F070124
+			public const int ic_mr_button_connected_29_dark = 2131165476;
+			
+			// aapt resource value: 0x7F070125
+			public const int ic_mr_button_connected_29_light = 2131165477;
+			
+			// aapt resource value: 0x7F070126
+			public const int ic_mr_button_connected_30_dark = 2131165478;
+			
+			// aapt resource value: 0x7F070127
+			public const int ic_mr_button_connected_30_light = 2131165479;
+			
+			// aapt resource value: 0x7F070128
+			public const int ic_mr_button_connecting_00_dark = 2131165480;
+			
+			// aapt resource value: 0x7F070129
+			public const int ic_mr_button_connecting_00_light = 2131165481;
+			
+			// aapt resource value: 0x7F07012A
+			public const int ic_mr_button_connecting_01_dark = 2131165482;
+			
+			// aapt resource value: 0x7F07012B
+			public const int ic_mr_button_connecting_01_light = 2131165483;
+			
+			// aapt resource value: 0x7F07012C
+			public const int ic_mr_button_connecting_02_dark = 2131165484;
+			
+			// aapt resource value: 0x7F07012D
+			public const int ic_mr_button_connecting_02_light = 2131165485;
+			
+			// aapt resource value: 0x7F07012E
+			public const int ic_mr_button_connecting_03_dark = 2131165486;
+			
+			// aapt resource value: 0x7F07012F
+			public const int ic_mr_button_connecting_03_light = 2131165487;
+			
+			// aapt resource value: 0x7F070130
+			public const int ic_mr_button_connecting_04_dark = 2131165488;
+			
+			// aapt resource value: 0x7F070131
+			public const int ic_mr_button_connecting_04_light = 2131165489;
+			
+			// aapt resource value: 0x7F070132
+			public const int ic_mr_button_connecting_05_dark = 2131165490;
+			
+			// aapt resource value: 0x7F070133
+			public const int ic_mr_button_connecting_05_light = 2131165491;
+			
+			// aapt resource value: 0x7F070134
+			public const int ic_mr_button_connecting_06_dark = 2131165492;
+			
+			// aapt resource value: 0x7F070135
+			public const int ic_mr_button_connecting_06_light = 2131165493;
+			
+			// aapt resource value: 0x7F070136
+			public const int ic_mr_button_connecting_07_dark = 2131165494;
+			
+			// aapt resource value: 0x7F070137
+			public const int ic_mr_button_connecting_07_light = 2131165495;
+			
+			// aapt resource value: 0x7F070138
+			public const int ic_mr_button_connecting_08_dark = 2131165496;
+			
+			// aapt resource value: 0x7F070139
+			public const int ic_mr_button_connecting_08_light = 2131165497;
+			
+			// aapt resource value: 0x7F07013A
+			public const int ic_mr_button_connecting_09_dark = 2131165498;
+			
+			// aapt resource value: 0x7F07013B
+			public const int ic_mr_button_connecting_09_light = 2131165499;
+			
+			// aapt resource value: 0x7F07013C
+			public const int ic_mr_button_connecting_10_dark = 2131165500;
+			
+			// aapt resource value: 0x7F07013D
+			public const int ic_mr_button_connecting_10_light = 2131165501;
+			
+			// aapt resource value: 0x7F07013E
+			public const int ic_mr_button_connecting_11_dark = 2131165502;
+			
+			// aapt resource value: 0x7F07013F
+			public const int ic_mr_button_connecting_11_light = 2131165503;
+			
+			// aapt resource value: 0x7F070140
+			public const int ic_mr_button_connecting_12_dark = 2131165504;
+			
+			// aapt resource value: 0x7F070141
+			public const int ic_mr_button_connecting_12_light = 2131165505;
+			
+			// aapt resource value: 0x7F070142
+			public const int ic_mr_button_connecting_13_dark = 2131165506;
+			
+			// aapt resource value: 0x7F070143
+			public const int ic_mr_button_connecting_13_light = 2131165507;
+			
+			// aapt resource value: 0x7F070144
+			public const int ic_mr_button_connecting_14_dark = 2131165508;
+			
+			// aapt resource value: 0x7F070145
+			public const int ic_mr_button_connecting_14_light = 2131165509;
+			
+			// aapt resource value: 0x7F070146
+			public const int ic_mr_button_connecting_15_dark = 2131165510;
+			
+			// aapt resource value: 0x7F070147
+			public const int ic_mr_button_connecting_15_light = 2131165511;
+			
+			// aapt resource value: 0x7F070148
+			public const int ic_mr_button_connecting_16_dark = 2131165512;
+			
+			// aapt resource value: 0x7F070149
+			public const int ic_mr_button_connecting_16_light = 2131165513;
+			
+			// aapt resource value: 0x7F07014A
+			public const int ic_mr_button_connecting_17_dark = 2131165514;
+			
+			// aapt resource value: 0x7F07014B
+			public const int ic_mr_button_connecting_17_light = 2131165515;
+			
+			// aapt resource value: 0x7F07014C
+			public const int ic_mr_button_connecting_18_dark = 2131165516;
+			
+			// aapt resource value: 0x7F07014D
+			public const int ic_mr_button_connecting_18_light = 2131165517;
+			
+			// aapt resource value: 0x7F07014E
+			public const int ic_mr_button_connecting_19_dark = 2131165518;
+			
+			// aapt resource value: 0x7F07014F
+			public const int ic_mr_button_connecting_19_light = 2131165519;
+			
+			// aapt resource value: 0x7F070150
+			public const int ic_mr_button_connecting_20_dark = 2131165520;
+			
+			// aapt resource value: 0x7F070151
+			public const int ic_mr_button_connecting_20_light = 2131165521;
+			
+			// aapt resource value: 0x7F070152
+			public const int ic_mr_button_connecting_21_dark = 2131165522;
+			
+			// aapt resource value: 0x7F070153
+			public const int ic_mr_button_connecting_21_light = 2131165523;
+			
+			// aapt resource value: 0x7F070154
+			public const int ic_mr_button_connecting_22_dark = 2131165524;
+			
+			// aapt resource value: 0x7F070155
+			public const int ic_mr_button_connecting_22_light = 2131165525;
+			
+			// aapt resource value: 0x7F070156
+			public const int ic_mr_button_connecting_23_dark = 2131165526;
+			
+			// aapt resource value: 0x7F070157
+			public const int ic_mr_button_connecting_23_light = 2131165527;
+			
+			// aapt resource value: 0x7F070158
+			public const int ic_mr_button_connecting_24_dark = 2131165528;
+			
+			// aapt resource value: 0x7F070159
+			public const int ic_mr_button_connecting_24_light = 2131165529;
+			
+			// aapt resource value: 0x7F07015A
+			public const int ic_mr_button_connecting_25_dark = 2131165530;
+			
+			// aapt resource value: 0x7F07015B
+			public const int ic_mr_button_connecting_25_light = 2131165531;
+			
+			// aapt resource value: 0x7F07015C
+			public const int ic_mr_button_connecting_26_dark = 2131165532;
+			
+			// aapt resource value: 0x7F07015D
+			public const int ic_mr_button_connecting_26_light = 2131165533;
+			
+			// aapt resource value: 0x7F07015E
+			public const int ic_mr_button_connecting_27_dark = 2131165534;
+			
+			// aapt resource value: 0x7F07015F
+			public const int ic_mr_button_connecting_27_light = 2131165535;
+			
+			// aapt resource value: 0x7F070160
+			public const int ic_mr_button_connecting_28_dark = 2131165536;
+			
+			// aapt resource value: 0x7F070161
+			public const int ic_mr_button_connecting_28_light = 2131165537;
+			
+			// aapt resource value: 0x7F070162
+			public const int ic_mr_button_connecting_29_dark = 2131165538;
+			
+			// aapt resource value: 0x7F070163
+			public const int ic_mr_button_connecting_29_light = 2131165539;
+			
+			// aapt resource value: 0x7F070164
+			public const int ic_mr_button_connecting_30_dark = 2131165540;
+			
+			// aapt resource value: 0x7F070165
+			public const int ic_mr_button_connecting_30_light = 2131165541;
+			
+			// aapt resource value: 0x7F070166
+			public const int ic_mr_button_disabled_dark = 2131165542;
+			
+			// aapt resource value: 0x7F070167
+			public const int ic_mr_button_disabled_light = 2131165543;
+			
+			// aapt resource value: 0x7F070168
+			public const int ic_mr_button_disconnected_dark = 2131165544;
+			
+			// aapt resource value: 0x7F070169
+			public const int ic_mr_button_disconnected_light = 2131165545;
+			
+			// aapt resource value: 0x7F07016A
+			public const int ic_mr_button_grey = 2131165546;
+			
+			// aapt resource value: 0x7F07016B
+			public const int ic_settings = 2131165547;
+			
+			// aapt resource value: 0x7F07016C
+			public const int ic_successstatus = 2131165548;
+			
+			// aapt resource value: 0x7F07016D
+			public const int ic_vol_type_speaker_dark = 2131165549;
+			
+			// aapt resource value: 0x7F07016E
+			public const int ic_vol_type_speaker_group_dark = 2131165550;
+			
+			// aapt resource value: 0x7F07016F
+			public const int ic_vol_type_speaker_group_light = 2131165551;
+			
+			// aapt resource value: 0x7F070170
+			public const int ic_vol_type_speaker_light = 2131165552;
+			
+			// aapt resource value: 0x7F070171
+			public const int ic_vol_type_tv_dark = 2131165553;
+			
+			// aapt resource value: 0x7F070172
+			public const int ic_vol_type_tv_light = 2131165554;
+			
+			// aapt resource value: 0x7F070175
+			public const int info = 2131165557;
 			
 			// aapt resource value: 0x7F070177
-			public const int input_layout_drop_down_icon = 2131165559;
+			public const int inputlayout_togglecollapseicon = 2131165559;
+			
+			// aapt resource value: 0x7F070178
+			public const int inputlayout_togglevisibleicon = 2131165560;
+			
+			// aapt resource value: 0x7F070176
+			public const int input_layout_drop_down_icon = 2131165558;
+			
+			// aapt resource value: 0x7F070179
+			public const int inserir = 2131165561;
 			
 			// aapt resource value: 0x7F07017A
-			public const int inserir = 2131165562;
+			public const int login_background = 2131165562;
 			
 			// aapt resource value: 0x7F07017B
-			public const int login_background = 2131165563;
+			public const int logo_cliente = 2131165563;
 			
 			// aapt resource value: 0x7F07017C
-			public const int logo_cliente = 2131165564;
+			public const int logo_clienteE = 2131165564;
 			
 			// aapt resource value: 0x7F07017D
-			public const int logo_clienteE = 2131165565;
+			public const int logo_mobilivendas_black = 2131165565;
 			
 			// aapt resource value: 0x7F07017E
-			public const int logo_mobilivendas_black = 2131165566;
+			public const int logo_mobilivendas_white = 2131165566;
 			
 			// aapt resource value: 0x7F07017F
-			public const int logo_mobilivendas_white = 2131165567;
+			public const int logo_mv = 2131165567;
 			
 			// aapt resource value: 0x7F070180
-			public const int logo_mv = 2131165568;
+			public const int logo_white = 2131165568;
 			
 			// aapt resource value: 0x7F070181
-			public const int logo_white = 2131165569;
+			public const int map = 2131165569;
 			
 			// aapt resource value: 0x7F070182
-			public const int map = 2131165570;
+			public const int mr_button_connected_dark = 2131165570;
 			
 			// aapt resource value: 0x7F070183
-			public const int mr_button_connected_dark = 2131165571;
+			public const int mr_button_connected_light = 2131165571;
 			
 			// aapt resource value: 0x7F070184
-			public const int mr_button_connected_light = 2131165572;
+			public const int mr_button_connecting_dark = 2131165572;
 			
 			// aapt resource value: 0x7F070185
-			public const int mr_button_connecting_dark = 2131165573;
+			public const int mr_button_connecting_light = 2131165573;
 			
 			// aapt resource value: 0x7F070186
-			public const int mr_button_connecting_light = 2131165574;
+			public const int mr_button_dark = 2131165574;
 			
 			// aapt resource value: 0x7F070187
-			public const int mr_button_dark = 2131165575;
+			public const int mr_button_light = 2131165575;
 			
 			// aapt resource value: 0x7F070188
-			public const int mr_button_light = 2131165576;
+			public const int mr_dialog_close_dark = 2131165576;
 			
 			// aapt resource value: 0x7F070189
-			public const int mr_dialog_close_dark = 2131165577;
+			public const int mr_dialog_close_light = 2131165577;
 			
 			// aapt resource value: 0x7F07018A
-			public const int mr_dialog_close_light = 2131165578;
+			public const int mr_dialog_material_background_dark = 2131165578;
 			
 			// aapt resource value: 0x7F07018B
-			public const int mr_dialog_material_background_dark = 2131165579;
+			public const int mr_dialog_material_background_light = 2131165579;
 			
 			// aapt resource value: 0x7F07018C
-			public const int mr_dialog_material_background_light = 2131165580;
+			public const int mr_group_collapse = 2131165580;
 			
 			// aapt resource value: 0x7F07018D
-			public const int mr_group_collapse = 2131165581;
+			public const int mr_group_expand = 2131165581;
 			
 			// aapt resource value: 0x7F07018E
-			public const int mr_group_expand = 2131165582;
+			public const int mr_media_pause_dark = 2131165582;
 			
 			// aapt resource value: 0x7F07018F
-			public const int mr_media_pause_dark = 2131165583;
+			public const int mr_media_pause_light = 2131165583;
 			
 			// aapt resource value: 0x7F070190
-			public const int mr_media_pause_light = 2131165584;
+			public const int mr_media_play_dark = 2131165584;
 			
 			// aapt resource value: 0x7F070191
-			public const int mr_media_play_dark = 2131165585;
+			public const int mr_media_play_light = 2131165585;
 			
 			// aapt resource value: 0x7F070192
-			public const int mr_media_play_light = 2131165586;
+			public const int mr_media_stop_dark = 2131165586;
 			
 			// aapt resource value: 0x7F070193
-			public const int mr_media_stop_dark = 2131165587;
+			public const int mr_media_stop_light = 2131165587;
 			
 			// aapt resource value: 0x7F070194
-			public const int mr_media_stop_light = 2131165588;
+			public const int mr_vol_type_audiotrack_dark = 2131165588;
 			
 			// aapt resource value: 0x7F070195
-			public const int mr_vol_type_audiotrack_dark = 2131165589;
+			public const int mr_vol_type_audiotrack_light = 2131165589;
 			
 			// aapt resource value: 0x7F070196
-			public const int mr_vol_type_audiotrack_light = 2131165590;
+			public const int NaoDisp = 2131165590;
 			
 			// aapt resource value: 0x7F070197
-			public const int NaoDisp = 2131165591;
-			
-			// aapt resource value: 0x7F070198
-			public const int NaoDispE = 2131165592;
-			
-			// aapt resource value: 0x7F0701A3
-			public const int navigation_empty_icon = 2131165603;
-			
-			// aapt resource value: 0x7F070199
-			public const int nav_carrinho_branco = 2131165593;
-			
-			// aapt resource value: 0x7F07019A
-			public const int nav_carrinho_destaque = 2131165594;
-			
-			// aapt resource value: 0x7F07019B
-			public const int nav_catalogo_branco = 2131165595;
-			
-			// aapt resource value: 0x7F07019C
-			public const int nav_catalogo_destaque = 2131165596;
-			
-			// aapt resource value: 0x7F07019D
-			public const int nav_comunicacao_branco = 2131165597;
-			
-			// aapt resource value: 0x7F07019E
-			public const int nav_comunicacao_destaque = 2131165598;
-			
-			// aapt resource value: 0x7F07019F
-			public const int nav_gerenciamento_branco = 2131165599;
-			
-			// aapt resource value: 0x7F0701A0
-			public const int nav_gerenciamento_destaque = 2131165600;
-			
-			// aapt resource value: 0x7F0701A1
-			public const int nav_negocio_branco = 2131165601;
+			public const int NaoDispE = 2131165591;
 			
 			// aapt resource value: 0x7F0701A2
-			public const int nav_negocio_destaque = 2131165602;
+			public const int navigation_empty_icon = 2131165602;
+			
+			// aapt resource value: 0x7F070198
+			public const int nav_carrinho_branco = 2131165592;
+			
+			// aapt resource value: 0x7F070199
+			public const int nav_carrinho_destaque = 2131165593;
+			
+			// aapt resource value: 0x7F07019A
+			public const int nav_catalogo_branco = 2131165594;
+			
+			// aapt resource value: 0x7F07019B
+			public const int nav_catalogo_destaque = 2131165595;
+			
+			// aapt resource value: 0x7F07019C
+			public const int nav_comunicacao_branco = 2131165596;
+			
+			// aapt resource value: 0x7F07019D
+			public const int nav_comunicacao_destaque = 2131165597;
+			
+			// aapt resource value: 0x7F07019E
+			public const int nav_gerenciamento_branco = 2131165598;
+			
+			// aapt resource value: 0x7F07019F
+			public const int nav_gerenciamento_destaque = 2131165599;
+			
+			// aapt resource value: 0x7F0701A0
+			public const int nav_negocio_branco = 2131165600;
+			
+			// aapt resource value: 0x7F0701A1
+			public const int nav_negocio_destaque = 2131165601;
 			
 			static Drawable()
 			{
