@@ -9,17 +9,8 @@
    P.DescricaoCompleta AS DescricaoCompleta,
    P.Custom3 AS DescricaoCor,
    P.PrecoVenda As PrecoSugestao,
-   ITP.CodTabelaPreco as CodTabelaPreco,
-   ITP.Preco As PrecoVenda,
-   IFNULL((
-        SELECT Markup FROM TBT_CARRINHO
-        INNER JOIN TBT_ITEM_CARRINHO ON TBT_CARRINHO.CodCarrinho = TBT_ITEM_CARRINHO.CodCarrinho
-        WHERE TBT_ITEM_CARRINHO.CodProduto =  P.CodProduto
-        AND TBT_CARRINHO.CodAtendimento = '@CodAtendimento'
-		AND TBT_CARRINHO.CodSituacaoPedido = '1'
-        LIMIT 1
-    ), ITP.Markup) As Markup,
-   ITP.Markup As MarkupTabela,
+   PRECO.CodTabelaPreco as CodTabelaPreco,
+   CASE WHEN PRECO_CLIENTE.Preco IS NOT NULL THEN PRECO_CLIENTE.Preco ELSE PRECO.Preco END As PrecoVenda,
    P.DataInicioVendas AS DataInicioVendas,
    CASE WHEN IA.CodProduto IS NULL THEN 0 ELSE 1 END AS ItemChecadoInt,
    IFNULL((
@@ -33,34 +24,146 @@
 	FP.Imagem AS Imagem,
     P.EAN AS CodeEAN,
     P.Novo As Novo,
-    CASE WHEN (IPE.Quantidade - CASE WHEN IC.QtdCarrinho IS NULL THEN 0 ELSE IC.QtdCarrinho END) < 0 THEN 0 ELSE (IPE.Quantidade - CASE WHEN IC.QtdCarrinho IS NULL THEN 0 ELSE IC.QtdCarrinho END) END AS Estoque,
 	IFNULL(P.IndKit,0) AS ItemEKit,
 	IFNULL(P.QtdMultipla,1) AS QtdMultipla,
 	P.QtdMultiplaEncaixotamento As QtdMultiplaEncaixotamento,
-	P.Familia
-FROM TBT_PRODUTO P
+	P.Familia,
+
+    F.Descricao AS DescricaoFabrica,
+	'Tamanho Corrugados: ' || M.TamanhosPossiveis AS TamanhoCorrugado,
+    MAX(VEP.IndEstoqueDisponivel) AS ExibeProntaEntrega,
+    CASE WHEN Promo.Preco > 0 THEN 1 ELSE 0 END AS ExibeEtiquetaPromocao,
+    CASE WHEN PRECO.Desconto IS NOT NULL THEN PRECO.Desconto ELSE 0 END AS Desconto,
+    CASE WHEN IFNULL(PRECO.Desconto, 0) > 0 THEN 1 ELSE 0 END AS ExibeSetaBaixoVermelha,
+    P.IndNovidade AS ExibeNew,
+    MAX(P.IndCampeaoVenda) AS ExibeTrofeu,
+    MAX(P.IndMidia) AS ExibeTV,
+    MAX(VEPFU.IndEstoqueFuturo) AS ExibeCaixaAzul,
+    P.VendaBloqueada AS ExibeForaLinha,
+    CASE WHEN F.Sigla IS NULL THEN '' ELSE F.Sigla END AS Sigla,
+    CASE WHEN PRECO_CLIENTE.PrecoPVL IS NOT NULL THEN PRECO_CLIENTE.PrecoPVL ELSE PRECO.PrecoPVL END AS PrecoPVL,
+    CASE WHEN Promo.PrecoOriginal > 0 THEN Promo.PrecoOriginal ELSE 0 END AS PrecoOriginal,
+    M.CodLinha,
+    VEP.QUANTIDADE AS Estoque,
+    VEPFU.QUANTIDADE AS EstoqueFuturo
+
+FROM TBT_PRODUTO P 
 INNER JOIN TBT_MODELO M ON P.CodModelo = M.CodModelo
-LEFT JOIN TBT_ITEM_PRONTA_ENTREGA IPE ON IPE.CodProduto = P.CodProduto
-LEFT JOIN TBT_KIT KIT ON KIT.CodProduto = P.CodProduto
-LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodProduto = P.CodProduto
+INNER JOIN TBT_NIVEL_PRODUTO NP ON P.CodProduto = NP.CodProduto
+LEFT JOIN TBT_LINHA L ON L.CodLinha = M.CodLinha
+LEFT JOIN TBT_FABRICA F ON F.CodFabrica = L.CodFabrica
 LEFT JOIN TBT_FOTO_PRODUTO FP ON P.CodProdutoFoto = FP.CodProdutoFoto
+ LEFT JOIN 
+   ( 
+       SELECT ITP.Preco, 
+               TP.CodTabelaPreco, 
+               ITP.CodProduto, 
+               TP.Moeda, 
+               ITP.PrecoPVL 
+        FROM TBT_ITEM_TABELA_PRECO ITP 
+        INNER JOIN TBT_TABELA_PRECO TP ON TP.CodTabelaPreco = ITP.CodTabelaPreco 
+        INNER JOIN TBT_PESSOA_TABELA_PRECO PTP ON PTP.CodTabelaPreco = TP.CodTabelaPreco 
+        AND PTP.CodPessoa = '-1'
+        WHERE TP.IndAtivo = 1 
+        AND TP.InicioVigencia <= DATE('NOW') 
+        AND TP.FinalVigencia >= DATE('NOW') 
+        GROUP BY CodProduto 
+    ) 
+  AS PRECO_CLIENTE ON PRECO_CLIENTE.CodProduto = P.CodProduto 
+LEFT JOIN
+  (
+      SELECT ITP.Preco,
+             TP.CodTabelaPreco,
+             ITP.CodProduto,
+             TP.Moeda,
+             ITP.PrecoPVL,
+             ITP.PrecoOriginal,
+             ITP.IndPromocional,
+             ITP.Desconto,
+             ITP.HabilitaVenda
+        FROM TBT_ITEM_TABELA_PRECO ITP
+        INNER JOIN TBT_TABELA_PRECO TP ON TP.CodTabelaPreco = ITP.CodTabelaPreco
+        LEFT JOIN TBT_PESSOA_TABELA_PRECO PTP ON PTP.CodTabelaPreco = TP.CodTabelaPreco
+       WHERE TP.IndAtivo = 1 
+       AND TP.InicioVigencia <= DATE('NOW') 
+       AND TP.FinalVigencia >= DATE('NOW') 
+       AND ('-1' = '@CodTabelaPreco' OR TP.CodTabelaPreco = '@CodTabelaPreco')
+       AND ('-1' = '@CodPessoa' OR PTP.CodPessoa = '@CodPessoa')
+       GROUP BY CodProduto
+  )
+  AS PRECO ON PRECO.CodProduto = P.CodProduto
+  LEFT JOIN
+  (
+      SELECT P.CodProduto,
+             SUM(IPE.QUANTIDADE) AS QUANTIDADE,
+             P.VendaBloqueada,
+             IPE.CodFabrica,
+             MAX(IPE.IndEstoqueFuturo) AS IndEstoqueFuturo,
+             CASE WHEN MIN(IFNULL(IPE.IndEstoqueFuturo, 0) ) = 0 THEN 1 ELSE 0 END AS IndEstoqueDisponivel,
+             CASE WHEN SUM(IPE.QUANTIDADE) > 0 THEN 1 ELSE 0 END AS IndProntaEntrega
+        FROM TBT_ITEM_PRONTA_ENTREGA IPE
+        JOIN TBT_PRODUTO P ON P.CodProduto = IPE.CodProduto 
+        AND P.IndProntaEntrega = 1
+        JOIN TBT_PESSOA_CD PCD ON PCD.CodFabrica = IPE.CodFabrica 
+        AND PCD.CodPessoa = '@CodPessoaCD'
+       WHERE 1 = 1 
+       AND IFNULL(P.VendaBloqueada, 0) = 0 
+       AND IPE.DataDisponibilidade IS NULL
+       GROUP BY P.CodProduto
+      HAVING SUM(IPE.QUANTIDADE) > 0
+  )
+  AS VEP ON VEP.CodProduto = P.CodProduto
 LEFT JOIN TBT_ITEM_ATENDIMENTO IA ON IA.CodAtendimento = '@CodAtendimento' AND IA.CodProduto = P.CodProduto
 LEFT JOIN (
-    SELECT IC.CodProduto, IC.CodDeposito, SUM(GIC.Qtd) AS QtdCarrinho 
+    SELECT IC.CodProduto, IC.CodDeposito, 
+	SUM(GIC.Qtd) AS QtdCarrinho
     FROM TBT_GRADE_ITEM_CARRINHO GIC
     JOIN TBT_ITEM_CARRINHO IC ON IC.CodCarrinho = GIC.CodCarrinho 
         AND IC.CodItemCarrinho = GIC.CodItemCarrinho
     JOIN TBT_CARRINHO C ON C.CodCarrinho = IC.CodCarrinho
-    WHERE (C.CodSituacaoPedido IN('1','99') OR EXISTS (
-        SELECT * FROM TBT_HISTORICO_CARRINHO HC
-        WHERE HC.CodCarrinho = C.CodCarrinho
-    ))
+    WHERE (C.CodSituacaoPedido IN('1','3','99') 
+            OR EXISTS (
+                SELECT * FROM TBT_HISTORICO_CARRINHO HC
+                WHERE HC.CodCarrinho = C.CodCarrinho
+            )
+    )
+    AND IC.CodKit IS NULL
     GROUP BY IC.CodProduto, IC.CodDeposito
-) IC ON IC.CodProduto = IPE.CodProduto AND IC.CodDeposito = IPE.Configuracao
+    
+) IC ON IC.CodProduto = P.CodProduto
+LEFT JOIN 
+( 
+    SELECT CodProduto, 
+        Max(preco) AS Preco, 
+        PrecoOriginal 
+    FROM TBT_TABELA_PRECO T 
+    INNER JOIN TBT_ITEM_TABELA_PRECO ITP ON T.CodTabelaPreco = ITP.CodTabelaPreco 
+            AND ITP.IndPromocional = 1 
+    INNER JOIN TBT_PESSOA_TABELA_PRECO PTP ON T.CodTabelaPreco = PTP.CodTabelaPreco 
+    AND PTP.CodPessoa = '@CodPessoa'  --pRep
+    WHERE T.InicioVigencia <= DATE('NOW') 
+            AND T.FinalVigencia >= DATE('NOW') 
+    GROUP BY CodProduto 
+    ) 
+Promo ON P.CodProduto = Promo.CodProduto
+LEFT JOIN 
+( 
+      SELECT P.CodProduto, 
+             SUM(IPE.QUANTIDADE) AS QUANTIDADE, 
+             MAX(IPE.IndEstoqueFuturo) AS IndEstoqueFuturo 
+         FROM TBT_ITEM_PRONTA_ENTREGA IPE 
+         JOIN TBT_PRODUTO P ON P.CodProduto = IPE.CodProduto AND P.IndProntaEntrega = 1 
+         JOIN TBT_PESSOA_CD PCD ON PCD.CodFabrica = IPE.CodFabrica AND ('-1'='@CodPessoa' OR PCD.CodPessoa = '@CodPessoa') 
+        WHERE 1 = 1 
+        AND IPE.DataDisponibilidade IS NOT NULL 
+        GROUP BY P.CodProduto 
+       HAVING SUM(IPE.QUANTIDADE) > 0 
+) 
+AS VEPFU ON VEPFU.CodProduto = P.CodProduto
+--@Inners 
 WHERE P.CodModelo IN (FUNCTION_SPLIT('@CodModelo'))
-AND P.VendaBloqueada = 0
 GROUP BY P.CodProduto
-ORDER BY P.CodProduto
+ORDER BY CASE WHEN P.codProduto = '@CodProduto' THEN 1 ELSE 2 END, P.Ranking
 ;
 
 

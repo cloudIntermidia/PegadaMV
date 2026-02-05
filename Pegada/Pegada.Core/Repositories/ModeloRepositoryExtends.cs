@@ -19,9 +19,9 @@ namespace Pegada.Core.Repositories
         {
             string restricaoLocal = null;
 
-            if (atendimento != null) {
-                restricaoLocal = atendimento.RestricaoLocal == "S" ? atendimento.RestricaoLocal : null;
-            }
+            //precisa aplicar algumas regras aqui
+            //string where = await MontarWhereNiveis(command);
+            //command.WhereNiveis = where;
 
             string sql = ManagerQuery.MakeSql("PRO_MODELO_MESMA_LINHA_GET",
                                              "Query",
@@ -34,7 +34,9 @@ namespace Pegada.Core.Repositories
                                                     ItensEmAtendimento = atendimento == null ? -1 : atendimento.ItensEmAtendimento,
                                                     ValidaEstoque = "-1",
                                                     Familia = command.Familia,
-                                                    RestricaoLocal = restricaoLocal
+                                                    RestricaoLocal = restricaoLocal,
+                                                    CodPessoa = command.CodPessoa,
+                                                    CodPessoaCD = command.CodPessoaCD,
                                                 });
             var result = await _sqlAsyncConnection.QueryAsync<ModeloCommandResult>(sql);
             return result;
