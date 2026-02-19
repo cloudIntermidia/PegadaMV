@@ -27,20 +27,19 @@
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="70" />
                     <ColumnDefinition Width="130" />
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="130" />
                     <ColumnDefinition Width="1.5*" />
                     <ColumnDefinition Width="1.5*" />
                     <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="0.8*" />
                     <ColumnDefinition Width="0.8*" />
                     <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="1.25*"/>
-                    <ColumnDefinition Width="1.25*"/>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1.5*" />
+
+
                 </Grid.ColumnDefinitions>
 
 
@@ -62,25 +61,22 @@
                 </StackLayout>
 
 
-
                 <Label Style="{StaticResource labelGridHeader}" Text="Pedido AFV"   Grid.Row="0" Grid.Column="1"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Cliente"      Grid.Row="0" Grid.Column="2"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="% Desc."        Grid.Row="0" Grid.Column="3"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Preposto"      Grid.Row="0" Grid.Column="2"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Cliente"      Grid.Row="0" Grid.Column="3"/>
                 <Label Style="{StaticResource labelGridHeader}" Text="Cond. Pgto"   Grid.Row="0" Grid.Column="4"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Tipo Pedido"  Grid.Row="0" Grid.Column="5"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Mãe"  Grid.Row="0" Grid.Column="6"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Fat Antec."  Grid.Row="0" Grid.Column="7"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Fat Parc."   Grid.Row="0" Grid.Column="8"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Situação"     Grid.Row="0" Grid.Column="9"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Emissão"      Grid.Row="0" Grid.Column="10"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Data de Faturamento"      Grid.Row="0" Grid.Column="11"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="QTD"          Grid.Row="0" Grid.Column="12"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total Líq"  Grid.Row="0" Grid.Column="13"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Tipo"  Grid.Row="0" Grid.Column="5"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Situação"  Grid.Row="0" Grid.Column="6"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Faturamento"  Grid.Row="0" Grid.Column="7"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Qtd"   Grid.Row="0" Grid.Column="8"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total"     Grid.Row="0" Grid.Column="9"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Valor Líquido"      Grid.Row="0" Grid.Column="10"/>
+
                 <!--Header-->
 
                 <ListView Grid.Row="1" 
                           Grid.Column="0" 
-                          Grid.ColumnSpan="14"
+                          Grid.ColumnSpan="11"
                           HeightRequest="350"
                           SeparatorVisibility="Default"
                           ItemsSource="{Binding Pedidos}">
@@ -102,20 +98,17 @@
                                     </Grid.RowDefinitions>
 
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="70" />
                                         <ColumnDefinition Width="130" />
-                                        <ColumnDefinition Width="3*" />
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="130" />
                                         <ColumnDefinition Width="1.5*" />
                                         <ColumnDefinition Width="1.5*" />
                                         <ColumnDefinition Width="0.5*" />
                                         <ColumnDefinition Width="0.8*" />
                                         <ColumnDefinition Width="0.8*" />
                                         <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="1.25*"/>
-                                        <ColumnDefinition Width="1.25*"/>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1.5*" />
                                     </Grid.ColumnDefinitions>
 
                                     <StackLayout Grid.Row="0" Grid.Column="0" 
@@ -136,8 +129,9 @@
 
 
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CodCarrinho}" Grid.Row="0" Grid.Column="1" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding Preposto}"  Grid.Row="0" Grid.Column="2"/>
                                     <Label Style="{StaticResource labelGridItem}" FontSize="10"
-                                           Grid.Row="0" Grid.Column="2">
+                                           Grid.Row="0" Grid.Column="3">
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Text="{Binding RazaoSocial}" />
@@ -146,17 +140,13 @@
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DescontoUI}"  Grid.Row="0" Grid.Column="3"/>
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CondicaoPagamento}"  Grid.Row="0" Grid.Column="4"/>
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding TipoPedido}" Grid.Row="0" Grid.Column="5" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding IndPedidoMaeUI}" Grid.Row="0" Grid.Column="6" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding AceitaFaturamentoAntecipadoUI}" Grid.Row="0" Grid.Column="7" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding AceitaFaturamentoParcialUI}" Grid.Row="0" Grid.Column="8" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}" Grid.Row="0" Grid.Column="9" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEmissao, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="10" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="11" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="12" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="13" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}" Grid.Row="0" Grid.Column="6" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataFaturamento}" Grid.Row="0" Grid.Column="7" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="8" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="9" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="10" />
 
                                 </Grid>
                             </ViewCell>
@@ -240,17 +230,22 @@
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="4*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
 
 
@@ -271,20 +266,27 @@
                     </forms:CachedImage>
                 </StackLayout>
                 <Label Style="{StaticResource labelGridHeader}" Text="Item"             Grid.Row="0" Grid.Column="1"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Descrição"        Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Qtd"        Grid.Row="0" Grid.Column="4" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Estoque"        Grid.Row="0" Grid.Column="5" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Unit."      Grid.Row="0" Grid.Column="6"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="% Desc."            Grid.Row="0" Grid.Column="7"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Unit. Liq." Grid.Row="0" Grid.Column="8"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total Líq"      Grid.Row="0" Grid.Column="9" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Foto"             Grid.Row="0" Grid.Column="10"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Modelo"        Grid.Row="0" Grid.Column="2" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Categoria"        Grid.Row="0" Grid.Column="3" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Descrição"        Grid.Row="0" Grid.Column="4" />
+
+                <Label Style="{StaticResource labelGridHeader}" Text="Dt. Disponível"        Grid.Row="0" Grid.Column="5" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Cxs"        Grid.Row="0" Grid.Column="6" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Qtd Total Cxs"      Grid.Row="0" Grid.Column="7"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Markup Cliente"            Grid.Row="0" Grid.Column="8"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Markup Aplicado" Grid.Row="0" Grid.Column="9"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="Preço"      Grid.Row="0" Grid.Column="10" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Desc. Total"      Grid.Row="0" Grid.Column="11" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Preço Líq."      Grid.Row="0" Grid.Column="12" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total"      Grid.Row="0" Grid.Column="13" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total Líq"      Grid.Row="0" Grid.Column="14" />
+                <Label Style="{StaticResource labelGridHeader}" Text="Foto"             Grid.Row="0" Grid.Column="15"/>
                 <!--Header-->
 
 
                 <ListView Grid.Row="1" 
                           Grid.Column="0" 
-                          Grid.ColumnSpan="10"
+                          Grid.ColumnSpan="15"
                           HeightRequest="350"
                           SeparatorVisibility="Default"
                           ItemsSource="{Binding PedidoSelecionado.Itens}">
@@ -304,16 +306,23 @@
                                     </Grid.RowDefinitions>
 
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="45" />
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="3.9*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="35" />
+                                        <ColumnDefinition Width="35" />
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="80" />
+                                        <ColumnDefinition Width="100" />
                                         <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="60" />
+
                                     </Grid.ColumnDefinitions>
 
                                     <StackLayout Grid.Row="0"
@@ -333,15 +342,24 @@
                                     </StackLayout>
 
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CodItemCarrinho}"                                                   Grid.Row="0" Grid.Column="1" />
-                                    <StackLayout                                                                                                                      Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2">
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodModelo}"                                                   Grid.Row="0" Grid.Column="2" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodCategoria}"                                                   Grid.Row="0" Grid.Column="3" />
+
+                                    <StackLayout                                                                                                                      Grid.Row="0" Grid.Column="4" >
                                         <Label Style="{StaticResource labelGridItem}" HorizontalTextAlignment="Start"  Text="{Binding Descricao}"/>
                                     </StackLayout>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}"                                                          Grid.Row="0" Grid.Column="4" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodDeposito, Converter={StaticResource FormatDataQuinzena}}"      Grid.Row="0" Grid.Column="5" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCusto,  Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="6" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DescontoUI}"                                                          Grid.Row="0" Grid.Column="7" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCustoComDesconto, Converter={StaticResource ValorParaMoeda}}"  Grid.Row="0" Grid.Column="8" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="9" />
+
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataDisponivel}"                                                          Grid.Row="0" Grid.Column="5" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdCx}"                                                          Grid.Row="0" Grid.Column="6" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdCxTotal}"                                                          Grid.Row="0" Grid.Column="7" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupCliente}"                                                          Grid.Row="0" Grid.Column="8" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupAplicado}"                                                          Grid.Row="0" Grid.Column="9" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCusto,  Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="10" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DescontoUI}"                                                          Grid.Row="0" Grid.Column="11" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCustoComDesconto, Converter={StaticResource ValorParaMoeda}}"  Grid.Row="0" Grid.Column="12" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="13" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="14" />
+
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
@@ -349,7 +367,7 @@
                 </ListView>
 
                 <Grid Grid.Row="1" 
-                      Grid.Column="10" 
+                      Grid.Column="15" 
                       BackgroundColor="White">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*" />
