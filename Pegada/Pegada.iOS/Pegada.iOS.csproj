@@ -133,6 +133,7 @@
     <BundleResource Include="Resources\price_without.png" />
     <BundleResource Include="Resources\factory.png" />
     <BundleResource Include="Resources\factory2.png" />
+    <BundleResource Include="Resources\FundoCatalogo2.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />

@@ -143,7 +143,7 @@
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CondicaoPagamento}"  Grid.Row="0" Grid.Column="4"/>
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding TipoPedido}" Grid.Row="0" Grid.Column="5" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}" Grid.Row="0" Grid.Column="6" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataFaturamento}" Grid.Row="0" Grid.Column="7" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega}" Grid.Row="0" Grid.Column="7" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="8" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="9" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="10" />

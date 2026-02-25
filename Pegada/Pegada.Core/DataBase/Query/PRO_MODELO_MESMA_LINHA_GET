@@ -45,7 +45,12 @@
     CASE WHEN Promo.PrecoOriginal > 0 THEN Promo.PrecoOriginal ELSE 0 END AS PrecoOriginal,
     M.CodLinha,
     VEP.QUANTIDADE AS Estoque,
-    VEPFU.QUANTIDADE AS EstoqueFuturo
+    VEPFU.QUANTIDADE AS EstoqueFuturo,
+    P.IDProduto,
+    P.IDModelo,
+    P.IDLinha,
+    P.IDSubCategoria,
+    P.IDCategoria
 
 FROM TBT_PRODUTO P 
 INNER JOIN TBT_MODELO M ON P.CodModelo = M.CodModelo

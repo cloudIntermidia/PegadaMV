@@ -270,11 +270,16 @@ namespace Pegada.Core.ViewModels
 
             string opcaoSelecionada = string.Empty;
             var quebrarCommand = new QuebrarPedidoCommand(
-                Session.ATENDIMENTO_ATUAL.CodAtendimento, Session.ATENDIMENTO_ATUAL.CodPessoaCliente,
-                Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante, Session.ATENDIMENTO_ATUAL.CodMarca,
-                PedidoSelecionado.Itens.Where(x => x.ItemChecado).Select(x => x.CodProduto).FirstOrDefault(),
-                PedidoSelecionado.CodTipoPedido, PedidoSelecionado.CodPoliticaComercial,
-                PedidoSelecionado.CodTabelaPreco, null, null, DiasEntregaInicio, DiasEntregaFim);
+                        Session.ATENDIMENTO_ATUAL.CodAtendimento,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaCliente,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante,//preposto
+                        null,
+                        Session.ATENDIMENTO_ATUAL.CodTabelaPreco,
+                        null,
+                        null,
+                        null
+                        );
 
             var carrinhos = await _atendimentoRepository.BuscarCarrinhosParaDesmembrar(quebrarCommand);
             if (carrinhos?.Count > 1)
@@ -345,11 +350,16 @@ namespace Pegada.Core.ViewModels
 
             string opcaoSelecionada = string.Empty;
             var quebrarCommand = new QuebrarPedidoCommand(
-                Session.ATENDIMENTO_ATUAL.CodAtendimento, Session.ATENDIMENTO_ATUAL.CodPessoaCliente,
-                Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante, Session.ATENDIMENTO_ATUAL.CodMarca,
-                PedidoSelecionado.Itens.Where(x => x.ItemChecado).Select(x => x.CodProduto).FirstOrDefault(),
-                PedidoSelecionado.CodTipoPedido, PedidoSelecionado.CodPoliticaComercial,
-                PedidoSelecionado.CodTabelaPreco, null, "2", DiasAgrupoInicio, DiasAgrupaFim);
+                        Session.ATENDIMENTO_ATUAL.CodAtendimento,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaCliente,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante,//preposto
+                        null,
+                        Session.ATENDIMENTO_ATUAL.CodTabelaPreco,
+                        null,
+                        null,
+                        null
+                        );
 
             var carrinhos = await _atendimentoRepository.BuscarCarrinhosParaDesmembrar(quebrarCommand);
             if (carrinhos?.Count > 1)
@@ -1847,9 +1857,17 @@ namespace Pegada.Core.ViewModels
                             foreach (var itemPedido in pedido.Itens)
                             {
                                 codCarrinhoQuebra = await _carrinhoRepository.QuebrarPedidoAgrupamento(
-                                new QuebrarPedidoCommand(Session.ATENDIMENTO_ATUAL.CodAtendimento, Session.ATENDIMENTO_ATUAL.CodPessoaCliente,
-                                Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante, Session.ATENDIMENTO_ATUAL.CodMarca, null, pedido.CodTipoPedido, null, null, itemPedido.DataEntrega, pedidoFuturo.CodDeposito
-                                , DiasAgrupoInicio, DiasAgrupaFim, $"'{pedidoFuturo.CodCarrinho}'", pedido.CodPedidoOrigem/*carrinhosCheckedStg*/));
+                                new QuebrarPedidoCommand(
+                        Session.ATENDIMENTO_ATUAL.CodAtendimento,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaCliente,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante,
+                        Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante,//preposto
+                        null,
+                        Session.ATENDIMENTO_ATUAL.CodTabelaPreco,
+                        null,
+                        null,
+                        null
+                        ));
 
                                 if (codCarrinhoQuebra == pedidoFuturo.CodCarrinho)
                                 {
@@ -1938,9 +1956,17 @@ namespace Pegada.Core.ViewModels
                                 foreach (var itemPedido in pedido.Itens)
                                 {
                                     codCarrinhoQuebra = await _carrinhoRepository.QuebrarPedido(
-                                    new QuebrarPedidoCommand(Session.ATENDIMENTO_ATUAL.CodAtendimento, Session.ATENDIMENTO_ATUAL.CodPessoaCliente,
-                                    Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante, Session.ATENDIMENTO_ATUAL.CodMarca, null, pedido.CodTipoPedido, null, null, itemPedido.DataEntrega, pedido.CodDeposito
-                                    , DiasEntregaInicio, DiasEntregaFim, null, pedido.CodPedidoOrigem));
+                                    new QuebrarPedidoCommand(
+                                        Session.ATENDIMENTO_ATUAL.CodAtendimento,
+                                        Session.ATENDIMENTO_ATUAL.CodPessoaCliente,
+                                        Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante,
+                                        Session.ATENDIMENTO_ATUAL.CodPessoaRepresentante,//preposto
+                                        null,
+                                        Session.ATENDIMENTO_ATUAL.CodTabelaPreco,
+                                        null,
+                                        null,
+                                        null
+                                        ));
 
                                     if (codCarrinhoQuebra == pedidosChecados[0].CodCarrinho)
                                     {
