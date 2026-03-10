@@ -1,7 +1,8 @@
 ﻿SELECT 
                D.CodDerivacao,
                0 AS Qtd,
-               D.Descricao
+               D.Descricao,
+               g.CodGrade
  FROM TBT_GRADE G
 JOIN TBT_DERIVACAO_GRADE DG ON G.CodGrade = DG.CodGrade 
 AND DG.IndAtivo = 1

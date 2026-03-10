@@ -21,7 +21,8 @@
      I.ValorUnitario AS ValorUnitario,
 	 NULL AS Entrega,
      NULL AS IndPPK,
-	 (I.ValorUnitarioLiquido * I.QtdTotal) AS ValorTotal,
+	 (I.ValorUnitario * I.QtdTotal) AS ValorTotal,
+     (I.ValorUnitarioLiquido * I.QtdTotal) AS ValorTotalLiquido,
      (
         SELECT FP.Imagem FROM TBT_FOTO_PRODUTO FP
         INNER JOIN TBT_PRODUTO P ON FP.CodProdutoFoto = P.CodProdutoFoto 
@@ -37,6 +38,9 @@
      I.PercDesc as PercDesc,
 	 I.PercDesc1 as PercDesc1,
 	 I.PercDesc2 as PercDesc2,
+     I.PercDesc3 as PercDesc3,
+     I.PercDesc4 as PercDesc4,
+     I.PercDesc5 as PercDesc5,
 	 P.Cor AS Cor,
 	 I.PedidoMae,
 	 REPLACE(ROUND((((I.ValorUnitarioLiquido * 100) / I.ValorUnitario) - 100), 2), '-', '') AS DescontoUI,
@@ -45,12 +49,16 @@
 	 I.FatorKit,
 	 I.CodCarrinhoAlocado,
 	 I.QtdDistribuida,
-	 CASE WHEN (IFNULL(I.QtdTotal, 0) - IFNULL(CarFilho.QtdTotal, 0)) < 0 THEN 0 ELSE IFNULL(I.QtdTotal, 0) - IFNULL(CarFilho.QtdTotal, 0) END AS QtdSaldoMae
+	 CASE WHEN (IFNULL(I.QtdTotal, 0) - IFNULL(CarFilho.QtdTotal, 0)) < 0 THEN 0 ELSE IFNULL(I.QtdTotal, 0) - IFNULL(CarFilho.QtdTotal, 0) END AS QtdSaldoMae,
+     NA.Descricao AS Categoria,
+    I.QtdCaixa * I.QtdTotal AS QtdTotalNaCaixa
 FROM TBT_ITEM_CARRINHO I
 LEFT JOIN TBT_CARRINHO C ON C.CodCarrinho = I.CodCarrinho
 LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodTabelaPreco = I.CodTabelaPreco AND I.CodProduto = ITP.CodProduto
 LEFT JOIN TBT_PRODUTO P ON P.CodProduto = I.CodProduto 
 LEFT JOIN TBT_MODELO M ON M.CodModelo = P.CodModelo AND M.CodMarca = P.CodMarca
+LEFT JOIN TBT_NIVEL_PRODUTO NP ON NP.CodProduto = I.CodProduto AND NP.CodNivel = '3'
+LEFT JOIN TBT_NIVEL_ATRIBUTO NA ON NA.CodNivel = NP.CodNivel AND NA.CodAtributo = NP.CodAtributo
 LEFT JOIN (
     SELECT IC2.PedidoMae AS CodCarrinho, IFNULL(IC2.CodKit,1) AS CodKit, IC2.CodProduto, IC2.CodDeposito, SUM(IC2.QtdTotal) AS QtdTotal
     FROM TBT_ITEM_CARRINHO IC2

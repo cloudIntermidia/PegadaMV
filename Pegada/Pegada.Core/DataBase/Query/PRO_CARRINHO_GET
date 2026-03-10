@@ -35,7 +35,7 @@
 	TP.Descricao AS TabelaPreco,
 	CON.CodCondicaoPagamento,  
     CON.Descricao AS CondicaoPagamento ,
-	CASE WHEN (C.CodDeposito = 'Imediato' OR C.CodDeposito = '1') THEN '1' ELSE '2' END || ' - ' || T.Descricao AS TipoPedido,
+	T.Descricao AS TipoPedido,
 	IFNULL(C.IndBloqueado, 0) As IndBloqueado,
     C.CodPessoaRepresentante,
 	C.CodPessoaPreposto,
@@ -49,11 +49,21 @@
 	C.PedidoMae,
 	REPLACE(ROUND((((C.ValorTotalLiquido * 100) / C.ValorTotal) - 100), 2), '-', '') AS DescontoUI,
 	C.ID as IdServidor,
-	CASE WHEN C.AceitaFaturamentoParcial = 1 THEN 'S' ELSE 'N' END AS AceitaFaturamentoParcialUI,
-	CASE WHEN C.AceitaFaturamentoAntecipado = 1 THEN 'S' ELSE 'N' END AS AceitaFaturamentoAntecipadoUI,
+	CASE WHEN C.AceitaFaturamentoParcial IS NULL
+			THEN CASE WHEN CLI.indFatParcial = 1 THEN 1 ELSE 0 END
+		 ELSE C.AceitaFaturamentoParcial
+		END AS AceitaFaturamentoParcial,
+	C.AceitaFaturamentoAntecipado AS AceitaFaturamentoAntecipado,
 	C.AceitaFaturamentoAntecipado,
 	C.IndEmAlocacao,
-	CASE WHEN C.IndPedidoMae = 1 THEN 'S' ELSE 'N' END AS IndPedidoMaeUI
+	CASE WHEN C.IndPedidoMae = 1 THEN 'S' ELSE 'N' END AS IndPedidoMaeUI,
+    T.IndValidaPrazo,
+    C.CodSemana,
+    CLI.PermiteAlterarCondicao AS ClientePermiteAlterarCondi,
+	C.OrdemCompra,
+	C.DiasBonificacao,
+	CASE WHEN C.DiasFatAntecipado IS NULL THEN CLI.DiasFatAntecipado ELSE C.DiasFatAntecipado END DiasFatAntecipado,
+    CON.QtdParcela
 FROM TBT_CARRINHO C 
 INNER JOIN TBT_ATENDIMENTO AT ON C.CodAtendimento = AT.CodAtendimento AND AT.IndAberto = 1
 INNER JOIN TBT_CLIENTE CLI ON CLI.CodPessoaCliente = C.CodPessoaCliente 

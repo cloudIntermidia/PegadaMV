@@ -21,7 +21,8 @@ SET CodCondicaoPagamento = (
     AND C.CodCarrinho = '@CodCarrinho'
 LIMIT 1
 )
-WHERE CodCarrinho = '@CodCarrinho';
+WHERE CodCarrinho = '@CodCarrinho'
+AND CodCondicaoPagamento IS NULL;
 
 
 UPDATE TBT_ITEM_CARRINHO
@@ -35,38 +36,143 @@ SELECT
 ), 0)
 WHERE CodCarrinho = '@CodCarrinho';
 
+UPDATE TBT_CARRINHO
+SET  IsAplicaMarkup = (
+    SELECT PermiteAjustePreco FROM TBT_CLIENTE CLI
+    WHERE CLI.CodPessoaCliente = TBT_CARRINHO.CodPessoaCliente
+)
+WHERE CodCarrinho = '@CodCarrinho';
 
-UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquido = CASE WHEN (ValorUnitario - (ValorUnitario * (CAST(PercDesc as float)  / 100))) > 0 THEN ValorUnitario - (ValorUnitario * (CAST(PercDesc as float)  / 100))
-ELSE 0.01 END
+UPDATE TBT_CARRINHO
+SET  Markup = (
+    SELECT Markup FROM TBT_CLIENTE CLI
+    WHERE CLI.CodPessoaCliente = TBT_CARRINHO.CodPessoaCliente
+)
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquido = CASE WHEN (ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc1 as float)  / 100))) > 0 THEN ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc1 as float)  / 100))
-ELSE 0.01 END
+SET  IsAplicaMarkup = (SELECT IsAplicaMarkup FROM TBT_CARRINHO C1 WHERE C1.CodCarrinho = '@CodCarrinho')
+WHERE TBT_ITEM_CARRINHO.CodCarrinho = '@CodCarrinho';
+
+UPDATE TBT_ITEM_CARRINHO
+SET Markup = CASE WHEN IsAplicaMarkup = 1 THEN 
+(SELECT
+  MA.Markup 
+  FROM TBT_MARKUP_ATRIBUTO  MA, TBT_PRODUTO P, TBT_CLIENTE C, TBT_CARRINHO CA
+  WHERE 1 = 1 
+  AND MA.CodAtributo IN( IDProduto ,IDModelo, IDLinha, IDSubCategoria, IDCategoria, '-1' )
+  AND (MA.CodPessoaCliente = C.CodPessoaCliente OR MA.CodPessoaCliente = '-1') 
+  AND (MA.CodGrupoCliente = C.CodGrupoCliente OR MA.CodGrupoCliente = '-1') 
+  AND MA.IndAtivo = 1 
+  AND CA.CodPessoaCliente = C.CodPessoaCliente
+  AND CA.CodCarrinho = '@CodCarrinho'
+  AND P.CodProduto = TBT_ITEM_CARRINHO.CodProduto
+ ORDER BY CASE WHEN CodAtributo = IDProduto THEN 1 
+               WHEN CodAtributo = IDModelo THEN 2 
+               WHEN CodAtributo = IDLinha THEN 3 
+               WHEN CodAtributo = IDSubCategoria THEN 4 
+               WHEN CodAtributo = IDCategoria THEN 5 
+               ELSE 6 END)
+               ELSE 0 END
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquido = CASE WHEN (ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc2 as float)  / 100))) > 0 THEN ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc2 as float)  / 100))
-ELSE 0.01 END
+SET ValorUnitarioLiquido = ValorUnitario
+WHERE CodCarrinho = '@CodCarrinho';
+
+
+UPDATE TBT_ITEM_CARRINHO 
+SET ValorUnitarioLiquido =  CASE WHEN IsAplicaMarkup = 1 
+    THEN
+        CASE WHEN IFNULL(Markup, 0) > 0 
+            THEN  Round((SELECT PrecoPVL - (PrecoPVL * (CAST(Desconto AS float) / 100)) FROM TBT_ITEM_TABELA_PRECO ITP WHERE ITP.CodProduto = TBT_ITEM_CARRINHO.CodProduto AND ITP.CodTabelaPreco = TBT_ITEM_CARRINHO.CodTabelaPreco) / Markup, 2)
+            ELSE Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc1, 0.0)/100.0)), 2)
+        END
+ELSE 
+    Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc1, 0.0)/100.0)), 2)
+END
+ WHERE CodCarrinho = '@CodCarrinho';
+
+UPDATE TBT_ITEM_CARRINHO 
+SET ValorUnitarioLiquido =  CASE WHEN IsAplicaMarkup = 1 
+    THEN
+        CASE WHEN IFNULL(Markup, 0) > 0 
+            THEN  Round((SELECT PrecoPVL - (PrecoPVL * (CAST(Desconto AS float) / 100)) FROM TBT_ITEM_TABELA_PRECO ITP WHERE ITP.CodProduto = TBT_ITEM_CARRINHO.CodProduto AND ITP.CodTabelaPreco = TBT_ITEM_CARRINHO.CodTabelaPreco) / Markup, 2)
+            ELSE Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc2, 0.0)/100.0)), 2)
+        END
+ELSE 
+    Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc2, 0.0)/100.0)), 2)
+END
+ WHERE CodCarrinho = '@CodCarrinho';
+
+UPDATE TBT_ITEM_CARRINHO 
+SET ValorUnitarioLiquido =  CASE WHEN IsAplicaMarkup = 1 
+    THEN
+        CASE WHEN IFNULL(Markup, 0) > 0 
+            THEN  Round((SELECT PrecoPVL - (PrecoPVL * (CAST(Desconto AS float) / 100)) FROM TBT_ITEM_TABELA_PRECO ITP WHERE ITP.CodProduto = TBT_ITEM_CARRINHO.CodProduto AND ITP.CodTabelaPreco = TBT_ITEM_CARRINHO.CodTabelaPreco) / Markup, 2)
+            ELSE Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc3, 0.0)/100.0)), 2)
+        END
+ELSE 
+    Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc3, 0.0)/100.0)), 2)
+END
+ WHERE CodCarrinho = '@CodCarrinho';
+
+UPDATE TBT_ITEM_CARRINHO 
+SET ValorUnitarioLiquido =  CASE WHEN IsAplicaMarkup = 1 
+    THEN
+        CASE WHEN IFNULL(Markup, 0) > 0 
+            THEN  Round((SELECT PrecoPVL - (PrecoPVL * (CAST(Desconto AS float) / 100)) FROM TBT_ITEM_TABELA_PRECO ITP WHERE ITP.CodProduto = TBT_ITEM_CARRINHO.CodProduto AND ITP.CodTabelaPreco = TBT_ITEM_CARRINHO.CodTabelaPreco) / Markup, 2)
+            ELSE Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc4, 0.0)/100.0)), 2)
+        END
+ELSE 
+    Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc4, 0.0)/100.0)), 2)
+END
+ WHERE CodCarrinho = '@CodCarrinho';
+
+UPDATE TBT_ITEM_CARRINHO 
+SET ValorUnitarioLiquido =  CASE WHEN IsAplicaMarkup = 1 
+    THEN
+        CASE WHEN IFNULL(Markup, 0) > 0 
+            THEN  Round((SELECT PrecoPVL - (PrecoPVL * (CAST(Desconto AS float) / 100)) FROM TBT_ITEM_TABELA_PRECO ITP WHERE ITP.CodProduto = TBT_ITEM_CARRINHO.CodProduto AND ITP.CodTabelaPreco = TBT_ITEM_CARRINHO.CodTabelaPreco) / Markup, 2)
+            ELSE Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc5, 0.0)/100.0)), 2)
+        END
+ELSE 
+    Round((ValorUnitarioLiquido - (ValorUnitarioLiquido * IFNULL(PercDesc5, 0.0)/100.0)), 2)
+END
+ WHERE CodCarrinho = '@CodCarrinho';
+
+
+
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitarioLiquidoOriginal = ValorUnitario - (ValorUnitario * (CAST(PercDesc1 as float)  / 100))
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquido = CASE WHEN (ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc3 as float)  / 100))) > 0 THEN ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc3 as float)  / 100))
-ELSE 0.01 END
+SET ValorUnitarioLiquidoOriginal = ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc2 as float)  / 100))
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquido = CASE WHEN (ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc4 as float)  / 100))) > 0 THEN ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc4 as float)  / 100))
-ELSE 0.01 END
+SET ValorUnitarioLiquidoOriginal = ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc3 as float)  / 100))
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquido = CASE WHEN (ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc5 as float)  / 100))) > 0 THEN ValorUnitarioLiquido - (ValorUnitarioLiquido * (CAST(PercDesc5 as float)  / 100))
-ELSE 0.01 END
+SET ValorUnitarioLiquidoOriginal = ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc4 as float)  / 100))
+WHERE CodCarrinho = '@CodCarrinho';
+
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitarioLiquidoOriginal = ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc5 as float)  / 100))
 WHERE CodCarrinho = '@CodCarrinho';
 
 
+
+UPDATE TBT_ITEM_CARRINHO SET
+ValorUnitarioLiquidoDif = NULL
+WHERE CodCarrinho = '@CodCarrinho';
+
+
+UPDATE TBT_ITEM_CARRINHO
+SET ValorUnitarioLiquidoDif = CASE WHEN IsAplicaMarkup = 1  AND IFNULL(Markup, 0) > 0 THEN Round((ValorUnitarioLiquidoOriginal - ValorUnitarioLiquido), 2) ELSE NULL END
+WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_CARRINHO
 SET 

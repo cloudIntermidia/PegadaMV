@@ -22,6 +22,9 @@ using System.Reflection;
 using System.Windows.Input;
 using Xamarin.Forms;
 using System.Threading.Tasks;
+using ZXing.QrCode.Internal;
+using static Dropbox.Api.TeamLog.SharingMemberPolicy;
+using Syncfusion.SfDataGrid.XForms;
 
 namespace Pegada.Core.ViewModels
 {
@@ -36,12 +39,27 @@ namespace Pegada.Core.ViewModels
 
         #region "Propriedades"
 
-        private bool _isPedidoMae;
-        public bool IsPedidoMae
+        private List<SemanaResult> _semanas;
+        public List<SemanaResult> Semanas
         {
-            get { return _isPedidoMae; }
-            set { SetProperty(ref _isPedidoMae, value); }
+            get { return _semanas; }
+            set { SetProperty(ref _semanas, value); }
         }
+
+        private SemanaResult _semanaSelecionada;
+        public SemanaResult SemanaSelecionada
+        {
+            get { return _semanaSelecionada; }
+            set { SetProperty(ref _semanaSelecionada, value); }
+        }
+
+        private List<GenericComboResult> _condicoesPagamento;
+        public List<GenericComboResult> CondicoesPagamento
+        {
+            get { return _condicoesPagamento; }
+            set { SetProperty(ref _condicoesPagamento, value); }
+        }
+
 
         private bool _isFatAntecipado;
         public bool IsFatAntecipado
@@ -57,18 +75,26 @@ namespace Pegada.Core.ViewModels
             set { SetProperty(ref _isFatParcial, value); }
         }
 
-        private bool _mostraFlagPedidoMae;
-        public bool MostraFlagPedidoMae
+
+        private bool _isMostraSemana;
+        public bool IsMostraSemana
         {
-            get { return _mostraFlagPedidoMae; }
-            set { SetProperty(ref _mostraFlagPedidoMae, value); }
+            get { return _isMostraSemana; }
+            set { SetProperty(ref _isMostraSemana, value); }
         }
 
-        private bool _mostraObservacoes;
-        public bool MostraObservacoes
+        private bool _isHabilitaEdicao;
+        public bool IsHabilitaEdicao
         {
-            get { return _mostraObservacoes; }
-            set { SetProperty(ref _mostraObservacoes, value); }
+            get { return _isHabilitaEdicao; }
+            set { SetProperty(ref _isHabilitaEdicao, value); }
+        }
+
+        private string _ordemCompra;
+        public string OrdemCompra
+        {
+            get { return _ordemCompra; }
+            set { SetProperty(ref _ordemCompra, value); }
         }
 
         private GenericComboResult _condicaoPagamento;
@@ -76,6 +102,13 @@ namespace Pegada.Core.ViewModels
         {
             get { return _condicaoPagamento; }
             set { SetProperty(ref _condicaoPagamento, value); }
+        }
+
+        private decimal _percentualComissaoRep;
+        public decimal PercentualComissaoRep
+        {
+            get { return _percentualComissaoRep; }
+            set { SetProperty(ref _percentualComissaoRep, value); }
         }
 
         private bool _transportadoraEstaVisivel;
@@ -157,13 +190,6 @@ namespace Pegada.Core.ViewModels
             set { SetProperty(ref _transportadora, value); }
         }
 
-        private string _ordemCompra;
-        public string OrdemCompra
-        {
-            get { return _ordemCompra; }
-            set { SetProperty(ref _ordemCompra, value); }
-        }
-
         private string _observacoes;
         public string Observacoes
         {
@@ -239,11 +265,15 @@ namespace Pegada.Core.ViewModels
         public ICommand SelecionarTransportadoraCommand { get; set; }
         public ICommand SelecionarDepositoCommand { get; set; }
         public ICommand SelecionarTipoPedidoCommand { get; set; }
+        public ICommand SelecionarSemanaCommand { get; set; }
+
+        public ICommand SwitchFaturamentoAntecipadoCommand { get; } 
         #endregion
 
         #region "Repositorios"
         private CarrinhoCommandHandler _carrinhoCommandHandler;
         private ICarrinhoRepository _carrinhoRepository;
+        private readonly ISemanaRepository _semanaRepository;
         private DataBaseRepository _dataBaseRepository;
         private readonly ICondicaoPagamentoRepository _condicaoPagamentoRepository;
         private readonly IParametroRepository _parametroRepository;
@@ -255,6 +285,8 @@ namespace Pegada.Core.ViewModels
         private readonly IPoliticaComercialRepository _politicaComercialRepository;
         private readonly INivelRepository _nivelRepository;
         private readonly ICoeficienteRepository _coeficienteRepository;
+        private readonly IPrazoAdicionalRepository _prazoAdicionalRepository;
+        
         #endregion
 
         #region "Construtores"
@@ -270,6 +302,8 @@ namespace Pegada.Core.ViewModels
                     , IPoliticaComercialRepository politicaComercialRepository
                     , INivelRepository nivelRepository
                     , ICoeficienteRepository coeficienteRepository
+                    , ISemanaRepository semanaRepository
+                    , IPrazoAdicionalRepository prazoAdicionalRepository
                     )
                    : base(null, null)
         {
@@ -286,19 +320,23 @@ namespace Pegada.Core.ViewModels
             _politicaComercialRepository = politicaComercialRepository;
             _nivelRepository = nivelRepository;
             _coeficienteRepository = coeficienteRepository;
+            _semanaRepository = semanaRepository;
+            _prazoAdicionalRepository = prazoAdicionalRepository;
+
+
             CancelarFechamentoCommand = new Command(CancelarFechamento);
             SalvarFechamentoCommand = new Command(SalvarFechamento);
             SelecionarDataEntregaCommand = new Command(SelecionarDataEntrega);
             SelecionarTipoFreteCommand = new Command(SelecionarTipoFrete);
             SelecionarTransportadoraCommand = new Command(SelecionarTransportadora);
             SelecionarCondicaoPagamentoCommand = new Command(SelecionarCondicaoPagamento);
+            SelecionarSemanaCommand = new Command(SelecionarSemana);
             SelecionarDepositoCommand = new Command(SelecionarDeposito);
             SelecionarTipoPedidoCommand = new Command(SelecionarTipoPedido);
             CarrinhoFechamento = new CarrinhoFechamentoCommandResult();
-            buscaDescontoFrenteCliente();
 
-            AplicaPedidoMaeCommand = new Command(ChangeIsPedidoMae);
-            IsPedidoMae = false;
+            SwitchFaturamentoAntecipadoCommand = new Command<bool>(OnSwitchFaturamentoAntecipado);
+            // buscaDescontoFrenteCliente();
 
             AceitaFatAntCommand = new Command(ChangeIsAceitaFatAntecipado);
             IsFatAntecipado = true;
@@ -310,8 +348,426 @@ namespace Pegada.Core.ViewModels
 
         }
         #endregion
+        #region "Metodos Pegada"
 
-        #region "Metodos"
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        public void SetCarrinhoFechamento(CarrinhoCommandResult pedidoSelecionado)
+        {
+            PedidoSelecionado = pedidoSelecionado;
+        }
+
+        public async void Init()
+        {
+            try
+            {
+                IsMostraSemana = true;
+                if (PedidoSelecionado.TipoPedido == "PE") {
+                    IsMostraSemana = false;
+                }
+
+                await CarregaCondicaoPagamento();
+
+                await CarregaSemanas();
+
+                IsFatAntecipado = false;
+                if (PedidoSelecionado.AceitaFaturamentoAntecipado == 1) {
+                    IsFatAntecipado = true;
+                }
+
+                IsHabilitaEdicao = true;
+                if (PedidoSelecionado.ClientePermiteAlterarCondi != 1) {
+                    IsHabilitaEdicao = false;
+                }
+
+
+                List<string> camposFora = new List<string>();
+                var camposWhere = new List<TableInfo> { new TableInfo("CodCarrinho", PedidoSelecionado.CodCarrinho) };
+                var dados = await _dataBaseRepository.BuscarDadosTabela("TBT_CARRINHO", camposWhere);
+
+                var properties = this.GetType().GetRuntimeProperties();
+                foreach (var item in dados)
+                {
+                    var prop = properties.Where(x => x.Name == item.ColumnName).FirstOrDefault();
+                    if (prop != null)
+                    {
+                        if (prop.PropertyType == typeof(System.DateTime?))
+                        {
+                            DateTime data;
+                            if (DateTime.TryParse(item.ColumnValue, out data))
+                            {
+                                prop.SetValue(this, data);
+                            }
+                        }
+                        else if (prop.PropertyType == typeof(string))
+                        {
+                            prop.SetValue(this, item.ColumnValue);
+                        }
+                        else if (prop.PropertyType == typeof(bool))
+                        {
+                            prop.SetValue(this, item.ColumnValue == "1");
+                        }
+                        //Defeito #23179 - apresentar os descontos
+                        else if (prop.PropertyType == typeof(double))
+                        {
+                            prop.SetValue(this, Convert.ToDouble(item.ColumnValue));
+                        }
+                    }
+                    else
+                    {
+                        camposFora.Add(item.ColumnName);
+                        if (item.ColumnName == "CodTransportadora")
+                        {
+                            Transportadora = (await _transportadoraRepository.BuscarTransportadoras(new BuscarTransportadoraCommand() { CodTransportadora = item.ColumnValue })).FirstOrDefault();
+                        }
+                        //else if (item.ColumnName == "AceitaFaturamentoAntecipado")
+                        //{
+                        //    if (item.ColumnValue == null)
+                        //    {
+                        //        IsFatAntecipado = true;
+                        //    }
+                        //    else
+                        //    {
+                        //        IsFatAntecipado = item.ColumnValue == "1" ? true : false;
+                        //    }
+                        //}
+                        //else if (item.ColumnName == "AceitaFaturamentoParcial")
+                        //{
+                        //    if (item.ColumnValue == null)
+                        //    {
+                        //        IsFatParcial = true;
+                        //    }
+                        //    else
+                        //    {
+                        //        IsFatParcial = item.ColumnValue == "1" ? true : false;
+                        //    }
+                        //}
+                        else if (item.ColumnName == "CodTipoPedido")
+                        {
+                            if (item.ColumnValue != "1")
+                            {
+                                //ChangeKeyIsVisibleObs();
+                            }
+                        }
+                        else if (item.ColumnName == "CodCondicaoPagamento")
+                        {
+                            if (item.ColumnValue != null)
+                            {
+                                CondicaoPagamento = await _condicaoPagamentoRepository.BuscarCondicaoPagamentoCode(item.ColumnValue);
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        private async Task CarregaCondicaoPagamento()
+        {
+
+            var condicoesTmp = new List<GenericComboResult>();
+            var command = new BuscarCondicaoPagamentoCommand()
+            {
+                CodTabelaPreco = Session.ATENDIMENTO_ATUAL.CodTabelaPreco
+            };
+            CondicoesPagamento = await _condicaoPagamentoRepository.BuscarCondicoesParaFechamento(command);
+
+            command = new BuscarCondicaoPagamentoCommand()
+            {
+                CodPessoaCliente = Session.ATENDIMENTO_ATUAL.CodPessoaCliente
+            };
+            var condicaoDoCliente = await _condicaoPagamentoRepository.BuscarCondicaoPagamentoCliente(command);
+
+            //#############################
+
+            if (condicaoDoCliente != null && CondicaoPagamento == null)
+            {
+
+                CondicaoPagamento = condicaoDoCliente;
+
+                bool contem = false;
+                foreach (var c in CondicoesPagamento)
+                {
+                    //verifica se na consulta padrão ja existe a condiçao do cliente, para que não fique duplicada.
+                    if (condicaoDoCliente.Codigo == c.Codigo)
+                    {
+                        contem = true;
+                        break;
+                    }
+                }
+
+                //se não tiver a condicao do cliente na lista original
+                if (!contem)
+                {
+                    //adiciona
+                    condicoesTmp.Add(condicaoDoCliente);
+                }
+
+                //se for um cliente novo, só mostra a opção de condição do cadastro dele.
+                if (!PedidoSelecionado.CodPessoaCliente.Contains("."))
+                {
+                    foreach (var c in CondicoesPagamento)
+                        condicoesTmp.Add(c);
+                }
+                else
+                {
+                    if (contem)
+                    {
+                        //adiciona
+                        condicoesTmp.Add(condicaoDoCliente);
+                    }
+                }
+
+                CondicoesPagamento.Clear();
+                CondicoesPagamento = condicoesTmp;
+            }
+        }
+
+        private async Task CarregaSemanas() {
+
+            var dataMinima = await _carrinhoRepository.GetDataMinimaPorPedido(PedidoSelecionado.CodCarrinho, PedidoSelecionado.CodTipoPedido);
+
+            var fabricas = await _carrinhoRepository.BuscarFabricasPorCarrinho(PedidoSelecionado.CodCarrinho);
+
+            var semanaFabricas = new List<SemanaResult>();
+            foreach (var f in fabricas) {
+
+                var sf = new SemanaResult();
+                sf.CodLinha = f.CodLinha;
+                sf.CodFabrica = f.CodFabrica;
+                sf.Descricao = f.Descricao;
+
+                semanaFabricas.Add(sf);
+            }
+
+            var commandFabrica = new FabricaCommand(semanaFabricas, dataMinima, DateTime.Now, PedidoSelecionado.IndValidaPrazo, null, Session.ATENDIMENTO_ATUAL?.CodTabelaPreco, PedidoSelecionado.CodCarrinho);
+            this.Semanas = await _semanaRepository.BuscarSemanaPorFabrica(commandFabrica);
+
+            if (PedidoSelecionado.CodSemana != null && PedidoSelecionado.CodSemana != "0")
+            {
+                if (PedidoSelecionado.IndValidaPrazo == 0)
+                {
+                    SemanaSelecionada = await _semanaRepository.GetSemanaPorCode(PedidoSelecionado.CodSemana);
+                }
+                else
+                {
+                    bool achou = false;
+                    foreach (var s in this.Semanas) {
+                        if (s.CodSemana == PedidoSelecionado.CodSemana) {
+                            SemanaSelecionada = await _semanaRepository.GetSemanaPorCode(PedidoSelecionado.CodSemana);
+                            achou = true;
+                            break;
+                        }
+                    }
+                    if (achou == false) {
+                        SemanaSelecionada = null;
+                    }
+                }
+            }
+        }
+
+        public async void SelecionarSemana()
+        {
+            try
+            {
+
+                await PopupNavigation.Instance.PushAsync(
+                    RgPopupUtility.GerarPopupGenerico(new ObservableCollection<GenericComboResult>(this.Semanas),
+                    SetSemanaSelecionada,
+                    new Rectangle(0.5, 0.5, 0.5, 0.5), true, true, false));
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message);
+            }
+        }
+
+        private async void SetSemanaSelecionada(object obj)
+        {
+            if (obj == null)
+            {
+                await PopupNavigation.Instance.PopAsync();
+                return;
+            }
+
+            var gc = obj as GenericComboResult;
+
+            SemanaSelecionada = await _semanaRepository.GetSemanaPorCode(gc.Codigo);
+
+            DataEntrega = SemanaSelecionada.DataInicial;
+
+            await PopupNavigation.Instance.PopAsync();
+        }
+
+        public async void SelecionarDataEntrega()
+        {
+            var data = await UserDialogs.Instance.DatePromptAsync(new DatePromptConfig() { MinimumDate = SemanaSelecionada.DataInicial, MaximumDate = SemanaSelecionada.DataFinal });
+            if (data.Ok)
+            {
+
+                DateTime dateErrada = new DateTime(0001, 1, 1, 0, 0, 0);
+                int result = DateTime.Compare(data.Value, dateErrada);
+                if (result == 0)
+                {
+                    DataEntrega = DateTime.Now.AddDays(1);
+                }
+                else
+                {
+                    DataEntrega = data.Value;
+                }
+            }
+
+        }
+
+        public async void SelecionarCondicaoPagamento()
+        {
+            try
+            {
+
+                await PopupNavigation.Instance.PushAsync(
+                    RgPopupUtility.GerarPopupGenerico(new ObservableCollection<GenericComboResult>(CondicoesPagamento),
+                    CondicaoPagamentoSelecionada,
+                    new Rectangle(0.5, 0.5, 0.5, 0.5), true, true, false));
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message);
+            }
+        }
+
+        private async void CondicaoPagamentoSelecionada(object obj)
+        {
+            if (obj == null)
+            {
+                await PopupNavigation.Instance.PopAsync();
+                return;
+            }
+
+            CondicaoPagamento = obj as GenericComboResult;
+
+            await PopupNavigation.Instance.PopAsync();
+        }
+
+        private void OnSwitchFaturamentoAntecipado(bool ligado)
+        {
+            if (ligado)
+            {
+                IsFatAntecipado = true;
+            }
+            else
+            {
+                IsFatAntecipado = false;
+            }
+        }
+
+        private async void SalvarFechamento()
+        {
+            try
+            {
+
+                if (CondicaoPagamento == null)
+                {
+                    await UserDialogs.Instance.AlertAsync("Prazo obrigatório.");
+                    return;
+                }
+                if (!DataEntrega.HasValue)
+                {
+                    await UserDialogs.Instance.AlertAsync("A data de entrega é obrigatoria.");
+                    return;
+                }
+
+                if (DataEntrega.Value < DateTime.Now)
+                {
+                    await UserDialogs.Instance.AlertAsync("A data de entrega não pode ser inferior a hoje.");
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(PedidoSelecionado.DiasBonificacao)) {
+
+                    var prazoAdicional = await _prazoAdicionalRepository.BuscaPrazoAdicional(new BuscarPrazoAdicionalCommand(PedidoSelecionado.CodTipoPedido, PedidoSelecionado.DiasBonificacao));
+
+                    if (prazoAdicional?.AbatimentoComissao > 0)
+                    {
+                        PercentualComissaoRep = prazoAdicional.AbatimentoComissao;
+                    }
+                    else {
+                        await UserDialogs.Instance.AlertAsync("Prazo extra não permitido!");
+                        return;
+                    }
+
+                    //if (prazoAdicional.abatimentoComissao)
+                    //{
+                    //    if (!pessoa.comissao)
+                    //    {
+                    //        pessoa.comissao = [[NSDecimalNumber alloc] initWithInt: 0];
+                    //    }
+                    //    self.carrinhoSelecionado.percComissaoRep = [prazoAdicional.abatimentoComissao decimalNumberBySubtracting: pessoa.comissao];
+
+                    //}
+                    //else
+                    //{
+                    //    [[[NSException alloc] initWithName: [Language getStringFromKey:@"Global_Atencao"] reason: [Language getStringFromKey:@"ECarrinho_TB_PrazoNPermitido"] userInfo: nil] raise];
+                    //}
+                }
+
+
+
+
+                //########################################################
+
+
+                var model = new
+                {
+                    CodCarrinho = PedidoSelecionado.CodCarrinho,
+                    CodCondicaoPagamento = CondicaoPagamento?.Codigo,
+                    DataEntrega = DataEntrega.HasValue ? DataEntrega.Value.ToString("yyyy-MM-ddTHH:mm:ss") : null,
+                    CifFob = this.CifFob == "CIF" ? "C" : "F",
+                    CodTransportadora = Transportadora?.Codigo,
+                    AceitaFaturamentoAntecipado = PedidoSelecionado.AceitaFaturamentoAntecipado,
+                    AceitaFaturamentoParcial = PedidoSelecionado.AceitaFaturamentoParcial,
+                    CodSemana = SemanaSelecionada.CodSemana,
+                    PercentualComissaoRep = PercentualComissaoRep,
+                    DiasBonificacao = PedidoSelecionado.DiasBonificacao,
+                    OrdemCompra = PedidoSelecionado.OrdemCompra,
+                    DiasFatAntecipado = PedidoSelecionado?.AceitaFaturamentoAntecipado == 1 ? PedidoSelecionado.DiasFatAntecipado : 0
+                };
+
+                var columnsName = model.GetType().GetRuntimeProperties().Select(x => x.Name).ToList();
+                int rows = await _dataBaseRepository.ExecutaUpdate("TBT_CARRINHO", columnsName, new List<string>() { "CodCarrinho" }, model);
+                var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(PedidoSelecionado.CodCarrinho);
+
+
+                if (rows > 0 && atualizouCarrinho)
+                    await UserDialogs.Instance.AlertAsync("Carrinho salvo", AppName);
+                else
+                {
+                    await UserDialogs.Instance.AlertAsync("Ocorreu um erro ao tentar persistir as informações", AppName);
+                    return;
+                }
+
+                MessagingCenter.Send<object>(this, "LoadCarrinho");
+                await PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        private async void CancelarFechamento()
+        {
+            await PopupNavigation.Instance.PopAsync();
+        }
+
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        #endregion
+
+        #region "Metodos Antigo"
         public async void buscaDescontoFrenteCliente()
         {
             PercentualDesconto1Max = 0;
@@ -327,15 +783,6 @@ namespace Pegada.Core.ViewModels
             }
         }
 
-        private async void ChangeKeyIsVisibleObs() {
-            MostraObservacoes = true;
-        }
-
-        private async void ChangeIsPedidoMae()
-        {
-            IsPedidoMae = !IsPedidoMae;
-        }
-
         private async void ChangeIsAceitaFatAntecipado()
         {
             IsFatAntecipado = !IsFatAntecipado;
@@ -346,28 +793,7 @@ namespace Pegada.Core.ViewModels
             IsFatParcial = !IsFatParcial;
         }
 
-        public async void SelecionarCondicaoPagamento()
-        {
-            try
-            {
-                var command = new BuscarCondicaoPagamentoCommand()
-                {
-                    PrazoMedio = -1
-                };
-                var condicoes = await _condicaoPagamentoRepository.BuscarCondicoesParaFechamento(command);
-                //Projeto #22617
-                //[...] "condição funcionou nos testes, mas o Layout no Ipad não está agradável a Leitura.
-                // Sugestão de Aumentar a largura do box."
-                await PopupNavigation.Instance.PushAsync(
-                    RgPopupUtility.GerarPopupGenerico(new ObservableCollection<GenericComboResult>(condicoes),
-                    CondicaoPagamentoSelecionada,
-                    new Rectangle(0.5, 0.5, 0.5, 0.5), true, true, false));
-            }
-            catch (Exception ex)
-            {
-                await UserDialogs.Instance.AlertAsync(ex.Message);
-            }
-        }
+       
 
         public async void SelecionarTipoPedido()
         {
@@ -395,10 +821,6 @@ namespace Pegada.Core.ViewModels
 
             TipoPedido = obj as GenericComboResult;
 
-            MostraObservacoes = false;
-            if (TipoPedido.Codigo != "1") {
-                ChangeKeyIsVisibleObs();
-            }
 
             CarrinhoFechamento.CodTipoPedido = (obj as GenericComboResult).Codigo;
             CarrinhoFechamento.TipoPedido = (obj as GenericComboResult).Descricao;
@@ -408,51 +830,7 @@ namespace Pegada.Core.ViewModels
             await PopupNavigation.Instance.PopAsync();
         }
 
-        private async void CondicaoPagamentoSelecionada(object obj)
-        {
-            if (obj == null)
-            {
-                await PopupNavigation.Instance.PopAsync();
-                return;
-            }
-
-            CondicaoPagamento = obj as GenericComboResult;
-
-
-            var conCommand = new BuscarCondicaoPagamentoCommand()
-            {
-                CodCondicaoPagamento = CondicaoPagamento.Codigo
-            };
-
-
-            var condicaPgto =
-                await _condicaoPagamentoRepository.BuscarCondicaoPagamento(conCommand);
-
-            PercentualMax = condicaPgto.Desconto;
-
-            await PopupNavigation.Instance.PopAsync();
-        }
-
-        public async void SelecionarDataEntrega()
-        {
-            var data = await UserDialogs.Instance.DatePromptAsync(new DatePromptConfig() { MinimumDate = DataMinimaEntrega != null ? DataMinimaEntrega : DateTime.Now.AddDays(1) });
-            if (data.Ok)
-            {
-
-                DateTime dateErrada = new DateTime(0001, 1, 1, 0, 0, 0);
-                int result = DateTime.Compare(data.Value, dateErrada);
-                if (result == 0)
-                {
-                    DataEntrega = DateTime.Now.AddDays(1);
-                }
-                else
-                {
-                    DataEntrega = data.Value;
-                }
-            }
-
-        }
-
+   
         public async void SelecionarTipoFrete()
         {
             var result = await UserDialogs.Instance.ActionSheetAsync("Selecione o tipo de frete", "Cancelar", null, null, "CIF", "FOB");
@@ -529,791 +907,10 @@ namespace Pegada.Core.ViewModels
             await PopupNavigation.Instance.PopAsync();
         }
 
-        public async void Init()
-        {
-            try
-            {
-                //TAREFA 30891
-                DateTime dataMinima = await _parametroRepository.BuscarDataMinimaPedido(PedidoSelecionado.CodCarrinho);
-                DataMinimaEntrega = dataMinima;
+        
 
-                string liberaImportacao = await _parametroRepository.BuscarValorParametro(ParametrosSistema.LIBERA);
-                string usuarioLiberadoTeste = await _parametroRepository.BuscarValorParametro(ParametrosSistema.USUARIOPARAMETRO);
+        
 
-                if (liberaImportacao == "N" && Session.USUARIO_LOGADO.CodPessoa == usuarioLiberadoTeste)
-                {
-                    MostraFlagPedidoMae = true;
-                    if (PedidoSelecionado.PedidoMae != null)
-                    {
-                        MostraFlagPedidoMae = false;
-                    }
-                }
-
-                if (liberaImportacao == "S")
-                {
-                    MostraFlagPedidoMae = true;
-                    if (PedidoSelecionado.PedidoMae != null)
-                    {
-                        MostraFlagPedidoMae = false;
-                    }
-                }
-
-                DescontoAlterou = Convert.ToDecimal(PedidoSelecionado.PercentualDesconto);
-
-                List<string> camposFora = new List<string>();
-                var camposWhere = new List<TableInfo> { new TableInfo("CodCarrinho", PedidoSelecionado.CodCarrinho) };
-                var dados = await _dataBaseRepository.BuscarDadosTabela("TBT_CARRINHO", camposWhere);
-
-                var properties = this.GetType().GetRuntimeProperties();
-                foreach (var item in dados)
-                {
-                    var prop = properties.Where(x => x.Name == item.ColumnName).FirstOrDefault();
-                    if (prop != null)
-                    {
-                        if (prop.PropertyType == typeof(System.DateTime?))
-                        {
-                            DateTime data;
-                            if (DateTime.TryParse(item.ColumnValue, out data))
-                            {
-                                prop.SetValue(this, data);
-                            }
-                        }
-                        else if (prop.PropertyType == typeof(string))
-                        {
-                            prop.SetValue(this, item.ColumnValue);
-                        }
-                        else if (prop.PropertyType == typeof(bool))
-                        {
-                            prop.SetValue(this, item.ColumnValue == "1");
-                        }
-                        //Defeito #23179 - apresentar os descontos
-                        else if (prop.PropertyType == typeof(double))
-                        {
-                            prop.SetValue(this, Convert.ToDouble(item.ColumnValue));
-                        }
-                    }
-                    else
-                    {
-                        camposFora.Add(item.ColumnName);
-                        if (item.ColumnName == "CodCondicaoPagamento")
-                        {
-                            var conCommand = new BuscarCondicaoPagamentoCommand()
-                            {
-                                CodCondicaoPagamento = item.ColumnValue,
-                                PrazoMedio = -1
-                            };
-                            CondicaoPagamento = (await _condicaoPagamentoRepository.BuscarCondicaoPagamento(conCommand));
-
-                            var condicaPgto =
-                                await _condicaoPagamentoRepository.BuscarCondicaoPagamento(conCommand);
-
-                            if (condicaPgto != null) PercentualMax = condicaPgto.Desconto;
-                        }
-                        else if (item.ColumnName == "CodTransportadora")
-                        {
-                            Transportadora = (await _transportadoraRepository.BuscarTransportadoras(new BuscarTransportadoraCommand() { CodTransportadora = item.ColumnValue })).FirstOrDefault();
-                        }
-                        else if (item.ColumnName == "CodDeposito")
-                        {
-                            //Deposito = (await _produtoRepository.BuscarCDProduto(new BuscarCDProdutoCommand() { CodDeposito = item.ColumnValue, CodPessoa = Session.USUARIO_LOGADO.CodPessoa })).FirstOrDefault();
-                            //Defeito #23178 No momento so trazer MAXLOG NAVEGANTES
-                            Deposito = (await _produtoRepository.BuscarCDProduto(new BuscarCDProdutoCommand() { CodDeposito = "MAXLOG NAVEGANTES", CodPessoa = Session.USUARIO_LOGADO.CodPessoa })).FirstOrDefault();
-
-                        }
-                        else if (item.ColumnName == "PercentualDesconto1")
-                        {
-                            PercentualDesconto1Max = (Double)PedidoSelecionado.PercentualDesconto1;
-                        }
-                        else if (item.ColumnName == "IndPedidoMae")
-                        {
-                            IsPedidoMae = item.ColumnValue == "1" ? true : false;
-                        }
-                        else if (item.ColumnName == "AceitaFaturamentoAntecipado")
-                        {
-                            if (item.ColumnValue == null) {
-                                IsFatAntecipado = true;
-                            }
-                            else {
-                                IsFatAntecipado = item.ColumnValue == "1" ? true : false;
-                            }
-                        }
-                        else if (item.ColumnName == "AceitaFaturamentoParcial")
-                        {
-                            if (item.ColumnValue == null)
-                            {
-                                IsFatParcial = true;
-                            }
-                            else
-                            {
-                                IsFatParcial = item.ColumnValue == "1" ? true : false;
-                            }
-                        }
-                        else if (item.ColumnName == "CodTipoPedido")
-                        {
-                            MostraObservacoes = false;
-                            if (item.ColumnValue != "1")
-                            {
-                                ChangeKeyIsVisibleObs();
-                            }
-                        }
-                    }
-                }
-
-                AplicacaoComissao = PedidoSelecionado.PercentualComissaoRep == null ? 100 : Convert.ToInt32(PedidoSelecionado.PercentualComissaoRep);
-                this.CifFob = this.CifFob == "F" ? "FOB" : "CIF";
-                if (CifFob == "FOB")
-                {
-                    TransportadoraEstaVisivel = true;
-                }
-                if (!string.IsNullOrEmpty(PercentualDesconto4))
-                {
-                    PercentualDesconto4 = PercentualDesconto4.Replace(".", ",");
-                }
-
-                if (!string.IsNullOrEmpty(PercentualDesconto5))
-                {
-                    PercentualDesconto5 = PercentualDesconto5.Replace(".", ",");
-                }
-            }
-            catch (Exception ex)
-            {
-                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
-            }
-        }
-
-        private async void CancelarFechamento()
-        {
-            await PopupNavigation.Instance.PopAsync();
-        }
-
-        private async void SalvarFechamento()
-        {
-            try
-            {
-                decimal percDesc5 = 0;
-                decimal percDesc4 = 0;
-                if (!string.IsNullOrEmpty(PercentualDesconto5))
-                    decimal.TryParse(PercentualDesconto5.Replace(",", "."), NumberStyles.Any, new CultureInfo("en-US"), out percDesc5);
-
-                if (!string.IsNullOrEmpty(PercentualDesconto4))
-                    decimal.TryParse(PercentualDesconto4.Replace(",", "."), NumberStyles.Any, new CultureInfo("en-US"), out percDesc4);
-
-                if (!DataEntrega.HasValue)
-                {
-                    await UserDialogs.Instance.AlertAsync("A data de entrega é obrigatoria.");
-                    return;
-                }
-
-                if (AplicacaoComissao > 100)
-                {
-                    await UserDialogs.Instance.AlertAsync("A comissão não deve ser maior que 100.");
-                    return;
-                }
-
-                if (DataEntrega.Value < DateTime.Now)
-                {
-                    await UserDialogs.Instance.AlertAsync("A data de entrega não pode ser inferior a hoje.");
-                    return;
-                }
-
-                if (PedidoSelecionado.CodTipoPedido == "1")
-                {
-                    this.Observacoes = null;
-                }
-
-                //Regra Politica Escolar
-                var dataHoje = DateTime.Now.Date.ToString("yyyy-MM-ddTHH:mm:ss");
-                //busca as politicas vigentes
-                var dataPoliticaEscolar = await _politicaComercialRepository.BuscarDataPoliticaEscolar(dataHoje);
-
-                //verifica se existe alguma vigente
-                if (dataPoliticaEscolar.Count > 0)
-                {
-
-                    //dentre as vigentes, verificar se escolheu é MiniVA(Mini Voltas Aulas).
-                    var politicaMiniVA = dataPoliticaEscolar.Where(x => x.CodCondicaoPagamento == CondicaoPagamento.Codigo && x.CodCondicaoPagamento == "MV3").FirstOrDefault();
-
-                    //se escolheu
-                    if (politicaMiniVA != null)
-                    {
-                        //valida se o carrinho esta certo
-                        var validaItensMiniVA = await _carrinhoRepository.GetItensPoliticaMiniVACarrinho(PedidoSelecionado.CodCarrinho);
-                        //se não tiver, informa
-                        if (!validaItensMiniVA)
-                        {
-                            await UserDialogs.Instance.AlertAsync($"A condição de pagamento escolhida não pode ser utilizada no carrinho {PedidoSelecionado.CodCarrinho}, por conta da política comercial vigente, favor escolher outra condição de pagamento");
-                            return;
-                        }
-                    }
-
-                    //dentre as vigentes, verificar se escolheu é VA(Voltas Aulas).
-                    var politicaVA = dataPoliticaEscolar.Where(x => x.CodCondicaoPagamento.Contains(CondicaoPagamento.Codigo)).FirstOrDefault();
-
-                    //se escolheu
-                    if (politicaVA != null)
-                    {
-                        //valida se o carrinho esta certo
-                        var validaItensVA = await _carrinhoRepository.GetItensPoliticaVACarrinho(PedidoSelecionado.CodCarrinho);
-                        //se não tiver, informa
-                        if (!validaItensVA)
-                        {
-                            await UserDialogs.Instance.AlertAsync($"A condição de pagamento escolhida não pode ser utilizada no carrinho {PedidoSelecionado.CodCarrinho}, por conta da política comercial vigente, favor escolher outra condição de pagamento");
-                            return;
-                        }
-                    }
-
-
-                    //bool temCondicao = false;
-                    //foreach (var politica in dataPoliticaEscolar) {
-                    //    if (politica.CodCondicaoPagamento == CondicaoPagamento.Codigo) {
-                    //        temCondicao = true;
-                    //        break;
-                    //    }
-                    //}
-
-                    //if (temCondicao)
-                    //{
-                    //    if (!existeItemPolitica)
-                    //    {
-                    //        await UserDialogs.Instance.AlertAsync($"A condição de pagamento escolhida não pode ser utilizada no carrinho {PedidoSelecionado.CodCarrinho}, por conta da política comercial vigente, favor escolher outra condição de pagamento");
-                    //        return;
-                    //    }
-                    //}
-                    //else {
-
-                    //    if (existeItemPolitica) {
-
-                    //        var resposta = await UserDialogs.Instance.ConfirmAsync("O período de digitação da Política Escolar está vigente e você não selecionou a condição de pagamento da política. Deseja continuar?", null, "Sim", "Não");
-
-                    //        if (!resposta)
-                    //        {
-                    //            return;
-                    //        }
-                    //    }
-                    //}
-                }
-
-                //########################################################
-
-                PedidoSelecionado.JustificativaDesconto = await _carrinhoRepository.GetJustificarivaDesconto(PedidoSelecionado);
-                if (PedidoSelecionado.PercentualDesconto > 0 && string.IsNullOrEmpty(PedidoSelecionado.JustificativaDesconto))
-                {
-                    var clienteAtendimento = await _clienteRepository.BuscarClientePorCode(new BuscarClienteCommand(null, null, Session.ATENDIMENTO_ATUAL.CodPessoaCliente, null));
-
-                    var coefiDesconto = await _coeficienteRepository.BuscarCoeficientePorCliente(new BuscarCoeficienteCommand("DESCONTO_MAXIMO", Session.ATENDIMENTO_ATUAL.CodPessoaCliente, null));
-
-                    if (coefiDesconto != null)
-                    {
-                        TabelaPrecoResult condicaoPagamento = await _condicaoPagamentoRepository.BuscarCondicaoPagamento(new BuscarCondicaoPagamentoCommand() { CodCondicaoPagamento = CondicaoPagamento?.Codigo });
-                        string prazoMedio = condicaoPagamento.PrazoMedio > 0 ? condicaoPagamento.PrazoMedio.ToString() : "0";
-
-                        var coefiPrazoMedio = await _coeficienteRepository.BuscarCoeficientePrazoMedio(new BuscarCoeficienteCommand("PRAZO", clienteAtendimento.CodigoSegmento, null, prazoMedio));
-
-                        decimal coeficiente = coefiDesconto.Coeficiente;
-                        if (coefiPrazoMedio != null)
-                        {
-                            if (coefiPrazoMedio.Coeficiente > 0)
-                            {
-                                if (Convert.ToDecimal(prazoMedio) >= 60)
-                                {
-                                    coeficiente = coefiDesconto.Coeficiente - coefiPrazoMedio.Coeficiente;
-                                }
-                                else
-                                {
-                                    coeficiente = coefiDesconto.Coeficiente + coefiPrazoMedio.Coeficiente;
-                                }
-                            }
-                        }
-                        var des = PedidoSelecionado.PercentualDesconto / 100;
-                        if (des > coeficiente)
-                        {
-                            var descontoInteiro = coeficiente != null ? Convert.ToInt32(coeficiente * 100) : coeficiente;
-                            var desconto = await UserDialogs.Instance.ConfirmAsync($"O Desconto Informado é maior que o desconto máximo permitido de {descontoInteiro}% para condição de  {condicaoPagamento.Descricao.Trim()}, seu pedido será enviado para aprovação, deseja continuar?", "Desconto Excedido", "Sim", "Não");
-                            if (!desconto)
-                            {
-                                return;
-                            }
-                            else
-                            {
-                                //abrir popup
-                                await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupDescontoJustificativa("Carrinho", PedidoSelecionado));
-                                return;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        await UserDialogs.Instance.AlertAsync("Não foi encontrado um segmento válido no cliente para o desconto. Sincronize ou entre em contato com a Pegada.", AppName, "OK");
-                        return;
-                    }
-                }
-                //########################################################
-
-                //if (dataPoliticaEscolar.Count > 0 && existeItemPolitica)
-                //{
-                //    foreach (var politica in dataPoliticaEscolar) {
-
-                //        foreach (var item in PedidoSelecionado.Itens)
-                //        {
-                //            var detalhesDoProduto = await _nivelRepository.GetNiveisProduto(item.CodProduto);
-                //            var categoriaDoProduto = detalhesDoProduto[1].CodAtributo;
-                //            var infoPoliticaComercialNiveis = await _politicaComercialRepository.BuscarPoliticaEscolarNiveis(categoriaDoProduto, politica.CodPoliticaComercial);
-
-                //            if (infoPoliticaComercialNiveis.Count > 0)
-                //            {
-                //                string condPagamentoPoliticaEscolar = politica.CodCondicaoPagamento;
-                //                var condPagamento = condPagamentoPoliticaEscolar.Split(',');
-                //                bool temCondicao = false;
-
-                //                foreach (string cond in condPagamento)
-                //                {
-                //                    temCondicao = CondicaoPagamento.Codigo.Equals(cond);
-                //                    if (temCondicao)
-                //                        break;
-                //                }
-
-                //                if (!temCondicao)
-                //                {
-                //                    var resposta = await UserDialogs.Instance.ConfirmAsync("O período de digitação da Política Escolar está vigente e você não selecionou a condição de pagamento da política. Deseja continuar?", null, "Sim", "Não");
-
-                //                    if (!resposta)
-                //                    {
-                //                        return;
-                //                    }
-                //                    else
-                //                    {
-                //                        break;
-                //                    }
-                //                }
-                //            }
-
-                //        }
-                //    }
-                //}
-
-                bool sucesso = false;
-                bool sucessoDesconto = false;
-                bool condicaoAlterou = false;
-                if (Session.ATENDIMENTO_ATUAL.CodCondicaoPagamento != CondicaoPagamento.Codigo)
-                {
-                    //await UserDialogs.Instance.AlertAsync("A condição de pagamento escolhida é diferente da selecionado na abertura do atendimento, os precos será recalculados!");
-                    condicaoAlterou = true;
-                    if (CondicaoPagamento.Codigo == "59")
-                        percDesc4 = 10;
-
-                    if (CondicaoPagamento.Codigo == "107")
-                        percDesc5 = 10;
-
-                    sucesso = await _atendimentoRepository.TrocarCondPgtoAtendimento(Session.ATENDIMENTO_ATUAL.CodAtendimento, CondicaoPagamento.Codigo);
-                    if (sucesso == true)
-                    {
-                        Session.ATENDIMENTO_ATUAL.CodCondicaoPagamento = CondicaoPagamento.Codigo;
-                    }
-                }
-
-                if (DescontoAlterou != PedidoSelecionado.PercentualDesconto)
-                {
-                    sucessoDesconto = await _atendimentoRepository.AtualizarDesconto(Session.ATENDIMENTO_ATUAL.CodAtendimento, PedidoSelecionado.PercentualDesconto ?? 0);
-                    if (sucessoDesconto == true)
-                    {
-                        Session.ATENDIMENTO_ATUAL.PercentualDesconto1 = PedidoSelecionado.PercentualDesconto ?? 0;
-                    }
-                }
-
-                if (sucesso == true || sucessoDesconto == true)
-                {
-                    MessagingCenter.Send<object>(this, "AtendimentoFoiAlterado");
-                }
-
-                var model = new
-                {
-                    CodCarrinho = PedidoSelecionado.CodCarrinho,
-                    CodCondicaoPagamento = CondicaoPagamento?.Codigo,
-                    PercentualDesconto = PedidoSelecionado.PercentualDesconto,
-                    PercentualDesconto1 = 0,//PercentualDesconto1Max,
-                    PercentualDesconto2 = PercentualDesconto2,
-                    PercentualDesconto3 = PercentualDesconto3,
-                    PercentualDesconto4 = percDesc4,
-                    PercentualDesconto5 = percDesc5,
-                    DataEntrega = DataEntrega.HasValue ? DataEntrega.Value.ToString("yyyy-MM-ddTHH:mm:ss") : null,
-                    CifFob = this.CifFob == "CIF" ? "C" : "F",
-                    CodTransportadora = Transportadora?.Codigo,
-                    Observacoes = this.Observacoes,
-                    ObservacoesSeparacao = this.ObservacoesSeparacao,
-                    // CodDeposito = Deposito?.Codigo,
-                    OrdemCompra = this.OrdemCompra,
-                    IndPedidoMae = IsPedidoMae == true ? 1 : 0,
-                    AceitaFaturamentoAntecipado = IsFatAntecipado == true ? 1 : 0,
-                    AceitaFaturamentoParcial = IsFatParcial == true ? 1 : 0,
-                    CodTipoPedido = PedidoSelecionado.CodTipoPedido,
-                    PercentualComissaoRep = Convert.ToDecimal(AplicacaoComissao)
-
-                };
-
-                var columnsName = model.GetType().GetRuntimeProperties().Select(x => x.Name).ToList();
-                int rows = await _dataBaseRepository.ExecutaUpdate("TBT_CARRINHO", columnsName, new List<string>() { "CodCarrinho" }, model);
-                var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(PedidoSelecionado.CodCarrinho);
-
-                if (DescontoAlterou != PedidoSelecionado.PercentualDesconto || condicaoAlterou == true)
-                {
-                    var listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1"));
-                    var ItemSelecionado = new List<ItemCommandResult>();
-                    foreach (var item in listCarrinhos.Where(x => x.CodCarrinho == PedidoSelecionado.CodCarrinho))
-                    {
-                        ItemSelecionado.AddRange(item.Itens);
-                    }
-
-                    AtualizarCarrinhoCommand command = new AtualizarCarrinhoCommand(
-                                                                                PedidoSelecionado.CodCarrinho,
-                                                                                Session.USUARIO_LOGADO,
-                                                                                Session.ATENDIMENTO_ATUAL,
-                                                                                ItemSelecionado);
-
-                    var result = await _carrinhoCommandHandler.Handle(command) as HandlerResult;
-                }
-
-
-                if (rows > 0 && atualizouCarrinho)
-                    await UserDialogs.Instance.AlertAsync("Carrinho salvo", AppName);
-                else
-                {
-                    await UserDialogs.Instance.AlertAsync("Ocorreu um erro ao tentar persistir as informações", AppName);
-                    return;
-                }
-
-                MessagingCenter.Send<object>(this, "LoadCarrinho");
-                await PopupNavigation.Instance.PopAsync();
-            }
-            catch (Exception ex)
-            {
-                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
-            }
-        }
-
-        //versão 35446
-        //private async void SalvarFechamento()
-        //{
-        //    try
-        //    {
-        //        decimal percDesc5 = 0;
-        //        decimal percDesc4 = 0;
-        //        if (!string.IsNullOrEmpty(PercentualDesconto5))
-        //            decimal.TryParse(PercentualDesconto5.Replace(",", "."), NumberStyles.Any, new CultureInfo("en-US"), out percDesc5);
-
-        //        if (!string.IsNullOrEmpty(PercentualDesconto4))
-        //            decimal.TryParse(PercentualDesconto4.Replace(",", "."), NumberStyles.Any, new CultureInfo("en-US"), out percDesc4);
-
-        //        if (!DataEntrega.HasValue)
-        //        {
-        //            await UserDialogs.Instance.AlertAsync("A data de entrega é obrigatoria.");
-        //            return;
-        //        }
-
-        //        if (AplicacaoComissao > 100)
-        //        {
-        //            await UserDialogs.Instance.AlertAsync("A comissão não deve ser maior que 100.");
-        //            return;
-        //        }
-
-        //        if (DataEntrega.Value < DateTime.Now)
-        //        {
-        //            await UserDialogs.Instance.AlertAsync("A data de entrega não pode ser inferior a hoje.");
-        //            return;
-        //        }
-
-        //        if (PedidoSelecionado.CodTipoPedido == "1")
-        //        {
-        //            this.Observacoes = null;
-        //        }
-
-        //        //Regra Politica Escolar
-        //        var dataHoje = DateTime.Now.Date.ToString("yyyy-MM-ddTHH:mm:ss");
-        //        //busca as politicas vigentes
-        //        var dataPoliticaEscolar = await _politicaComercialRepository.BuscarDataPoliticaEscolar(dataHoje);
-
-        //        //verifica se existe alguma vigente
-        //        if (dataPoliticaEscolar.Count > 0) {
-
-        //            //dentre as vigentes, verificar se escolheu é MiniVA(Mini Voltas Aulas).
-        //            var politicaMiniVA =  dataPoliticaEscolar.Where(x => x.CodCondicaoPagamento == CondicaoPagamento.Codigo && x.CodCondicaoPagamento == "MV3").FirstOrDefault();
-
-        //            //se escolheu
-        //            if (politicaMiniVA != null) {
-        //                //valida se o carrinho esta certo
-        //                var validaItensMiniVA = await _carrinhoRepository.GetItensPoliticaMiniVACarrinho(PedidoSelecionado.CodCarrinho);
-        //                //se não tiver, informa
-        //                if (!validaItensMiniVA)
-        //                {
-        //                    await UserDialogs.Instance.AlertAsync($"A condição de pagamento escolhida não pode ser utilizada no carrinho {PedidoSelecionado.CodCarrinho}, por conta da política comercial vigente, favor escolher outra condição de pagamento");
-        //                    return;
-        //                }
-        //            }
-
-        //            //dentre as vigentes, verificar se escolheu é VA(Voltas Aulas).
-        //            var politicaVA = dataPoliticaEscolar.Where(x => x.CodCondicaoPagamento.Contains(CondicaoPagamento.Codigo)).FirstOrDefault();
-
-        //            //se escolheu
-        //            if (politicaVA != null)
-        //            {
-        //                //valida se o carrinho esta certo
-        //                var validaItensVA = await _carrinhoRepository.GetItensPoliticaVACarrinho(PedidoSelecionado.CodCarrinho);
-        //                //se não tiver, informa
-        //                if (!validaItensVA)
-        //                {
-        //                    await UserDialogs.Instance.AlertAsync($"A condição de pagamento escolhida não pode ser utilizada no carrinho {PedidoSelecionado.CodCarrinho}, por conta da política comercial vigente, favor escolher outra condição de pagamento");
-        //                    return;
-        //                }
-        //            }
-
-
-        //            //bool temCondicao = false;
-        //            //foreach (var politica in dataPoliticaEscolar) {
-        //            //    if (politica.CodCondicaoPagamento == CondicaoPagamento.Codigo) {
-        //            //        temCondicao = true;
-        //            //        break;
-        //            //    }
-        //            //}
-
-        //            //if (temCondicao)
-        //            //{
-        //            //    if (!existeItemPolitica)
-        //            //    {
-        //            //        await UserDialogs.Instance.AlertAsync($"A condição de pagamento escolhida não pode ser utilizada no carrinho {PedidoSelecionado.CodCarrinho}, por conta da política comercial vigente, favor escolher outra condição de pagamento");
-        //            //        return;
-        //            //    }
-        //            //}
-        //            //else {
-
-        //            //    if (existeItemPolitica) {
-
-        //            //        var resposta = await UserDialogs.Instance.ConfirmAsync("O período de digitação da Política Escolar está vigente e você não selecionou a condição de pagamento da política. Deseja continuar?", null, "Sim", "Não");
-
-        //            //        if (!resposta)
-        //            //        {
-        //            //            return;
-        //            //        }
-        //            //    }
-        //            //}
-        //        }
-
-        //        //########################################################
-
-        //        PedidoSelecionado.JustificativaDesconto = await _carrinhoRepository.GetJustificarivaDesconto(PedidoSelecionado);
-        //        if (PedidoSelecionado.PercentualDesconto > 0 && string.IsNullOrEmpty(PedidoSelecionado.JustificativaDesconto))
-        //        {
-        //            var clienteAtendimento = await _clienteRepository.BuscarClientePorCode(new BuscarClienteCommand(null, null, Session.ATENDIMENTO_ATUAL.CodPessoaCliente, null));
-
-        //            var coefiDesconto = await _coeficienteRepository.BuscarCoeficientePorProduto(new BuscarCoeficienteCommand("DESCONTO_MAXIMO", clienteAtendimento.CodigoSegmento, null));
-
-        //            if (coefiDesconto != null)
-        //            {
-        //                TabelaPrecoResult condicaoPagamento = await _condicaoPagamentoRepository.BuscarCondicaoPagamento(new BuscarCondicaoPagamentoCommand() { CodCondicaoPagamento = CondicaoPagamento?.Codigo });
-        //                string prazoMedio = condicaoPagamento.PrazoMedio > 0 ? condicaoPagamento.PrazoMedio.ToString() : "0";
-
-        //                var coefiPrazoMedio = await _coeficienteRepository.BuscarCoeficientePrazoMedio(new BuscarCoeficienteCommand("PRAZO", clienteAtendimento.CodigoSegmento, null, prazoMedio));
-
-        //                decimal coeficiente = coefiDesconto.Coeficiente;
-        //                if (coefiPrazoMedio != null)
-        //                {
-        //                    if (coefiPrazoMedio.Coeficiente > 0)
-        //                    {
-        //                        if (Convert.ToDecimal(prazoMedio) >= 60)
-        //                        {
-        //                            if (!string.IsNullOrEmpty(clienteAtendimento.Prazo))
-        //                            {
-        //                                if (Convert.ToDecimal(prazoMedio) > Convert.ToDecimal(clienteAtendimento.Prazo))
-        //                                {
-        //                                    coeficiente = coefiDesconto.Coeficiente - coefiPrazoMedio.Coeficiente;
-        //                                }
-        //                                else
-        //                                {
-        //                                    coeficiente = coefiDesconto.Coeficiente + coefiPrazoMedio.Coeficiente;
-        //                                }
-        //                            }
-        //                            else {
-        //                                coeficiente = coefiDesconto.Coeficiente - coefiPrazoMedio.Coeficiente;
-        //                            }
-        //                        }
-        //                        else
-        //                        {
-        //                            coeficiente = coefiDesconto.Coeficiente + coefiPrazoMedio.Coeficiente;
-        //                        }
-        //                    }
-        //                }
-        //                var des = PedidoSelecionado.PercentualDesconto / 100;
-        //                if (des > coeficiente)
-        //                {
-        //                    var descontoInteiro = coeficiente != null ? Convert.ToInt32(coeficiente * 100) : coeficiente;
-        //                    var desconto = await UserDialogs.Instance.ConfirmAsync($"O Desconto Informado é maior que o desconto máximo permitido de {descontoInteiro}% para condição de  {condicaoPagamento.Descricao.Trim()}, seu pedido será enviado para aprovação, deseja continuar?", "Desconto Excedido", "Sim", "Não");
-        //                    if (!desconto)
-        //                    {
-        //                        return;
-        //                    }
-        //                    else {
-        //                        //abrir popup
-        //                        await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupDescontoJustificativa(PedidoSelecionado));
-        //                        return;
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                await UserDialogs.Instance.AlertAsync("Não foi encontrado um segmento válido no cliente para o desconto. Sincronize ou entre em contato com a Pegada.", AppName, "OK");
-        //                return;
-        //            }
-        //        }
-        //        //########################################################
-
-        //        //if (dataPoliticaEscolar.Count > 0 && existeItemPolitica)
-        //        //{
-        //        //    foreach (var politica in dataPoliticaEscolar) {
-
-        //        //        foreach (var item in PedidoSelecionado.Itens)
-        //        //        {
-        //        //            var detalhesDoProduto = await _nivelRepository.GetNiveisProduto(item.CodProduto);
-        //        //            var categoriaDoProduto = detalhesDoProduto[1].CodAtributo;
-        //        //            var infoPoliticaComercialNiveis = await _politicaComercialRepository.BuscarPoliticaEscolarNiveis(categoriaDoProduto, politica.CodPoliticaComercial);
-
-        //        //            if (infoPoliticaComercialNiveis.Count > 0)
-        //        //            {
-        //        //                string condPagamentoPoliticaEscolar = politica.CodCondicaoPagamento;
-        //        //                var condPagamento = condPagamentoPoliticaEscolar.Split(',');
-        //        //                bool temCondicao = false;
-
-        //        //                foreach (string cond in condPagamento)
-        //        //                {
-        //        //                    temCondicao = CondicaoPagamento.Codigo.Equals(cond);
-        //        //                    if (temCondicao)
-        //        //                        break;
-        //        //                }
-
-        //        //                if (!temCondicao)
-        //        //                {
-        //        //                    var resposta = await UserDialogs.Instance.ConfirmAsync("O período de digitação da Política Escolar está vigente e você não selecionou a condição de pagamento da política. Deseja continuar?", null, "Sim", "Não");
-
-        //        //                    if (!resposta)
-        //        //                    {
-        //        //                        return;
-        //        //                    }
-        //        //                    else
-        //        //                    {
-        //        //                        break;
-        //        //                    }
-        //        //                }
-        //        //            }
-
-        //        //        }
-        //        //    }
-        //        //}
-
-        //        bool sucesso = false;
-        //        bool sucessoDesconto = false;
-        //        bool condicaoAlterou = false;
-        //        if (Session.ATENDIMENTO_ATUAL.CodCondicaoPagamento != CondicaoPagamento.Codigo)
-        //        {
-        //            //await UserDialogs.Instance.AlertAsync("A condição de pagamento escolhida é diferente da selecionado na abertura do atendimento, os precos será recalculados!");
-        //            condicaoAlterou = true;
-        //            if (CondicaoPagamento.Codigo == "59")
-        //                percDesc4 = 10;
-
-        //            if (CondicaoPagamento.Codigo == "107")
-        //                percDesc5 = 10;
-
-        //            sucesso = await _atendimentoRepository.TrocarCondPgtoAtendimento(Session.ATENDIMENTO_ATUAL.CodAtendimento, CondicaoPagamento.Codigo);
-        //            if (sucesso == true)
-        //            {
-        //                Session.ATENDIMENTO_ATUAL.CodCondicaoPagamento = CondicaoPagamento.Codigo;
-        //            }
-        //        }
-
-        //        if (DescontoAlterou != PedidoSelecionado.PercentualDesconto)
-        //        {
-        //            sucessoDesconto = await _atendimentoRepository.AtualizarDesconto(Session.ATENDIMENTO_ATUAL.CodAtendimento, PedidoSelecionado.PercentualDesconto ?? 0);
-        //            if (sucessoDesconto == true)
-        //            {
-        //                Session.ATENDIMENTO_ATUAL.PercentualDesconto1 = PedidoSelecionado.PercentualDesconto ?? 0;
-        //            }
-        //        }
-
-        //        if (sucesso == true || sucessoDesconto == true)
-        //        {
-        //            MessagingCenter.Send<object>(this, "AtendimentoFoiAlterado");
-        //        }
-
-        //            var model = new
-        //        {
-        //            CodCarrinho = PedidoSelecionado.CodCarrinho,
-        //            CodCondicaoPagamento = CondicaoPagamento?.Codigo,
-        //            PercentualDesconto = PedidoSelecionado.PercentualDesconto,
-        //            PercentualDesconto1 = 0,//PercentualDesconto1Max,
-        //            PercentualDesconto2 = PercentualDesconto2,
-        //            PercentualDesconto3 = PercentualDesconto3,
-        //            PercentualDesconto4 = percDesc4,
-        //            PercentualDesconto5 = percDesc5,
-        //            DataEntrega = DataEntrega.HasValue ? DataEntrega.Value.ToString("yyyy-MM-ddTHH:mm:ss") : null,
-        //            CifFob = this.CifFob == "CIF" ? "C" : "F",
-        //            CodTransportadora = Transportadora?.Codigo,
-        //            Observacoes = this.Observacoes,
-        //            ObservacoesSeparacao = this.ObservacoesSeparacao,
-        //           // CodDeposito = Deposito?.Codigo,
-        //            OrdemCompra = this.OrdemCompra,
-        //            IndPedidoMae = IsPedidoMae == true ? 1 : 0,
-        //            AceitaFaturamentoAntecipado = IsFatAntecipado == true ? 1 : 0,
-        //            AceitaFaturamentoParcial = IsFatParcial == true ? 1 : 0,
-        //            CodTipoPedido = PedidoSelecionado.CodTipoPedido,
-        //            PercentualComissaoRep = Convert.ToDecimal(AplicacaoComissao)
-
-        //        };
-
-        //        var columnsName = model.GetType().GetRuntimeProperties().Select(x => x.Name).ToList();
-        //        int rows = await _dataBaseRepository.ExecutaUpdate("TBT_CARRINHO", columnsName, new List<string>() { "CodCarrinho" }, model);
-        //        var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(PedidoSelecionado.CodCarrinho);
-
-        //        if (DescontoAlterou != PedidoSelecionado.PercentualDesconto || condicaoAlterou == true)
-        //        {
-        //            var listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1"));
-        //            var ItemSelecionado = new List<ItemCommandResult>();
-        //            foreach (var item in listCarrinhos.Where(x => x.CodCarrinho == PedidoSelecionado.CodCarrinho))
-        //            {
-        //                ItemSelecionado.AddRange(item.Itens);
-        //            }
-
-        //            AtualizarCarrinhoCommand command = new AtualizarCarrinhoCommand(
-        //                                                                        PedidoSelecionado.CodCarrinho,
-        //                                                                        Session.USUARIO_LOGADO,
-        //                                                                        Session.ATENDIMENTO_ATUAL,
-        //                                                                        ItemSelecionado);
-
-        //            var result = await _carrinhoCommandHandler.Handle(command) as HandlerResult;
-        //        }
-
-
-        //        if (rows > 0 && atualizouCarrinho)
-        //            await UserDialogs.Instance.AlertAsync("Carrinho salvo", AppName);
-        //        else
-        //        {
-        //            await UserDialogs.Instance.AlertAsync("Ocorreu um erro ao tentar persistir as informações", AppName);
-        //            return;
-        //        }
-
-        //        MessagingCenter.Send<object>(this, "LoadCarrinho");
-        //        await PopupNavigation.Instance.PopAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
-        //    }
-        //}
-        public void SetCarrinhoFechamento(CarrinhoCommandResult pedidoSelecionado)
-        {
-            PedidoSelecionado = pedidoSelecionado;
-
-        }
-
-        public void SetIsVisibleObs1(bool flagObservacao)
-        {
-            //throw new NotImplementedException();
-        }
         #endregion
 
     }

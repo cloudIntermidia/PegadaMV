@@ -15,6 +15,7 @@ using Plugin.Connectivity;
 using Prism.Navigation;
 using Prism.Services;
 using Rg.Plugins.Popup.Services;
+using Syncfusion.SfDataGrid.XForms;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -103,6 +104,8 @@ namespace Pegada.Core.ViewModels
         private readonly ICoeficienteRepository _coeficienteRepository;
         private readonly INivelRepository _nivelRepository;
         private readonly IPoliticaComercialRepository _politicaComercialRepository;
+        private readonly ISemanaRepository _semanaRepository;
+        
         private DataBaseRepository _dataBaseRepository;
         #endregion
 
@@ -111,7 +114,7 @@ namespace Pegada.Core.ViewModels
                                         IAtendimentoRepository atendimentoRepository, ICarrinhoRepository carrinhoRepository,
                                         CarrinhoCommandHandler carrinhoHandler, ICondicaoPagamentoRepository condicaoPagamento,
                                         IParametroSincronizacaoRepository parametroSincronizacaRepository, IParametroRepository parametroRepository,
-                                        IPrintService printService, IFotoRepository fotoRepository,
+                                        IPrintService printService, IFotoRepository fotoRepository, ISemanaRepository semanaRepository,
                                         IClienteRepository clienteRepository, IProdutoRepository produtoRepository, IKitRepository kitRepository, IModeloRepository modeloRepository
             , ICoeficienteRepository coeficienteRepository, INivelRepository nivelRepository, IPoliticaComercialRepository politicaComercialRepository, DataBaseRepository dataBaseRepository)
             : base(navigationService, dialogService)
@@ -132,6 +135,7 @@ namespace Pegada.Core.ViewModels
             _nivelRepository = nivelRepository;
             _politicaComercialRepository = politicaComercialRepository;
             _dataBaseRepository = dataBaseRepository;
+            _semanaRepository = semanaRepository;
 
             PedidoTappedCommand = new Command<object>(PedidoTapped);
             CopiarCommand = new Command<CarrinhoCommandResult>(Copiar);
@@ -893,33 +897,33 @@ namespace Pegada.Core.ViewModels
                 foreach (var pedido in Pedidos.Where(x => x.CarrinhoChecado))
                 {
 
-                    string validaValorZerado = await _parametroRepository.BuscarValorParametro(ParametrosSistema.VALIDAZERADO);
-                    if (validaValorZerado == "S")
-                    {
+                    //string validaValorZerado = await _parametroRepository.BuscarValorParametro(ParametrosSistema.VALIDAZERADO);
+                    //if (validaValorZerado == "S")
+                    //{
 
-                        //valida se ha itens sem preço no carrinho.
-                        var buscarItemCommand = new BuscarItensCarrinhoCommand() { CodCarrinho = pedido.CodCarrinho };
-                        var itens = await _carrinhoRepository.BuscarItensCarrinho(buscarItemCommand);
+                    //    //valida se ha itens sem preço no carrinho.
+                    //    var buscarItemCommand = new BuscarItensCarrinhoCommand() { CodCarrinho = pedido.CodCarrinho };
+                    //    var itens = await _carrinhoRepository.BuscarItensCarrinho(buscarItemCommand);
 
-                        if (itens.Count > 0)
-                        {
+                    //    if (itens.Count > 0)
+                    //    {
 
-                            string message = "";
-                            foreach (var item in itens)
-                            {
-                                if (item.ValorUnitario == 0)
-                                {
-                                    message += $"Item {item.CodItemCarrinho} Produto {item.CodProduto} está com o valor zerado, favor corrigir o item para reenviar o pedido.\n";
-                                }
+                    //        string message = "";
+                    //        foreach (var item in itens)
+                    //        {
+                    //            if (item.ValorUnitario == 0)
+                    //            {
+                    //                message += $"Item {item.CodItemCarrinho} Produto {item.CodProduto} está com o valor zerado, favor corrigir o item para reenviar o pedido.\n";
+                    //            }
 
-                            }
-                            if (message.Length > 1)
-                            {
-                                await UserDialogs.Instance.AlertAsync($"Pedido {pedido.CodCarrinho} com erro na transmissão.\n" + message, AppName, "OK");
-                                return;
-                            }
-                        }
-                    }
+                    //        }
+                    //        if (message.Length > 1)
+                    //        {
+                    //            await UserDialogs.Instance.AlertAsync($"Pedido {pedido.CodCarrinho} com erro na transmissão.\n" + message, AppName, "OK");
+                    //            return;
+                    //        }
+                    //    }
+                    //}
 
 
                     var result = await PedidoEValido(pedido);
@@ -1630,30 +1634,62 @@ namespace Pegada.Core.ViewModels
         {
             HandlerResult result = new HandlerResult(true);
 
-            //validar o cupom
-            if (!String.IsNullOrEmpty(pedido.CupomChave))
+            /*Validação de campos*/
+            if (pedido.DataEntrega == null || pedido.DataEntrega <= DateTime.Now.Date)
+                result.ListaErros.Add($"É necessário informar a data de entrega válida para o carrinho.");
+
+            if (string.IsNullOrEmpty(pedido.CodCondicaoPagamento))
+                result.ListaErros.Add($"É necessário informar a condição de pagamento para o pedido");
+
+
+            
+            var valorMinimoPedido = await _parametroRepository.BuscarParametroPorTipoPedido(pedido.CodTipoPedido, "20");
+            if (pedido.ValorTotalLiquido < valorMinimoPedido)
+                result.ListaErros.Add($"O valor total de seu pedido {pedido.ValorTotalLiquido.ToString("C")}, é menor do que o valor mínima necessário {valorMinimoPedido.ToString("C")} para confirmar.");
+
+            var quantidadeMinima = await _parametroRepository.BuscarParametroPorTipoPedido(pedido.CodTipoPedido, "4");
+            if (pedido.QtdTotal < quantidadeMinima)
+                result.ListaErros.Add($"O pedido não alcançou a quantidade mínima de {quantidadeMinima}");
+
+            //$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+            //minimo parcela
+            if (pedido.CodTipoPedido != "23") {
+                var valorDuplicata = pedido.ValorTotalLiquido / pedido.qtdParcela;
+                var valorMinimoParcela = await _parametroRepository.BuscarParametroPorTipoPedido(pedido.CodTipoPedido, "2");
+                if (valorDuplicata < valorMinimoParcela)
+                    result.ListaErros.Add($"Não foi possível realizar a transmissão, pois o pedido {pedido.CodCarrinho} não atingiu o valor mínimo por duplicata {valorMinimoParcela.ToString("C")}. ");
+            }
+            //$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+            if (pedido.IndValidaPrazo > 0)
             {
-                WcfValidarCupomInput input = new WcfValidarCupomInput(PedidoSelecionado.CupomChave, PedidoSelecionado.CodCarrinho, PedidoSelecionado.CodPessoaCliente, PedidoSelecionado.CodUsuario.ToString());
-                WcfModelResult cupomResult = await ServiceUtility.ValidarCupom(input);
-
-                bool sucesso = cupomResult.SUCCESS.ToString().ToLower().Equals("true");
-                string chaveCupom = cupomResult.CODIGO.ToString();
-                string mensagem = cupomResult.CODMENSAGEM.ToString();
-
-                if (!sucesso)
+                var buscarItemCommand = new BuscarItensCarrinhoCommand() { CodCarrinho = pedido.CodCarrinho };
+                var itensCarrinhos = await _carrinhoRepository.BuscarItensCarrinho(buscarItemCommand);
+                foreach(var ic in itensCarrinhos)
                 {
-                    result.ListaErros.Add($"Cupom inválido");
-                    result.Sucesso = false;
-                    return result;
+                    var dataMinima = await _carrinhoRepository.GetDataMinimaPorPedido(pedido.CodCarrinho, pedido.CodTipoPedido);
+                    var fabricas = await _carrinhoRepository.BuscarFabricasPorCarrinho(pedido.CodCarrinho);
+
+                    var semanaFabricas = new List<SemanaResult>();
+                    foreach (var f in fabricas)
+                    {
+                        var sf = new SemanaResult();
+                        sf.CodLinha = f.CodLinha;
+                        sf.CodFabrica = f.CodFabrica;
+                        sf.Descricao = f.Descricao;
+
+                        semanaFabricas.Add(sf);
+                    }
+
+                    var commandFabrica = new FabricaCommand(semanaFabricas, dataMinima, DateTime.Now, PedidoSelecionado.IndValidaPrazo, ic.CodProduto, Session.ATENDIMENTO_ATUAL?.CodTabelaPreco, null);
+                    var semanas = await _semanaRepository.BuscarSemanaPorFabrica(commandFabrica);
+
+                    if (semanas.Count == 0)
+                    {
+                        result.ListaErros.Add($"Produto {ic.CodProduto} está fora do período de venda ");
+                    }
                 }
             }
-
-            /*Validação de campos*/
-            if (string.IsNullOrEmpty(pedido.CodCondicaoPagamento))
-                result.ListaErros.Add($"Condição de pagamento inválida");
-
-            if (pedido.DataEntrega == null || pedido.DataEntrega <= DateTime.Now.Date)
-                result.ListaErros.Add($"Data de entrega inválida.");
 
             if (result.ListaErros.Count > 0)
             {
@@ -1670,25 +1706,23 @@ namespace Pegada.Core.ViewModels
                 }
             }
 
-            //tarefa 31823
-            if (isCarrinhoAlocado == false) {
-                /*Validação de regras de negócio*/
-                decimal valorMinimo = await _parametroRepository.BuscarMinimoPorTipoPedido(pedido.CodTipoPedido);
-                var minimoDuplicata = await _parametroRepository.BuscarValorParametro(ParametrosSistema.MINIMODUPLICATA);
-                decimal valorMinimoDuplicata = !string.IsNullOrEmpty(minimoDuplicata) ? decimal.Parse(minimoDuplicata) : 0;
-                TabelaPrecoResult condicaoPagamento = await _condicaoPagamentoRepository.BuscarCondicaoPagamento(new BuscarCondicaoPagamentoCommand() { CodCondicaoPagamento = pedido.CodCondicaoPagamento });
-                if (valorMinimo > 0 && pedido.ValorTotal < valorMinimo)
-                    result.ListaErros.Add($"Valor mínimo do pedido é R$ {valorMinimo.ToString("N2")}");
 
-                if (valorMinimoDuplicata > 0 && condicaoPagamento.QtdParcela > 0)
-                {
-                    if ((pedido.ValorTotal / condicaoPagamento.QtdParcela) < valorMinimoDuplicata)
-                        result.ListaErros.Add($"Valor mínimo da duplicata é R$ {valorMinimoDuplicata.ToString("N2")}");
-                }
+            /*Validação de regras de negócio*/
+            //decimal valorMinimo = await _parametroRepository.BuscarMinimoPorTipoPedido(pedido.CodTipoPedido);
+            //var minimoDuplicata = await _parametroRepository.BuscarValorParametro(ParametrosSistema.MINIMODUPLICATA);
+            //decimal valorMinimoDuplicata = !string.IsNullOrEmpty(minimoDuplicata) ? decimal.Parse(minimoDuplicata) : 0;
+            //TabelaPrecoResult condicaoPagamento = await _condicaoPagamentoRepository.BuscarCondicaoPagamento(new BuscarCondicaoPagamentoCommand() { CodCondicaoPagamento = pedido.CodCondicaoPagamento });
+            //if (valorMinimo > 0 && pedido.ValorTotal < valorMinimo)
+            //    result.ListaErros.Add($"Valor mínimo do pedido é R$ {valorMinimo.ToString("N2")}");
 
-                var validacoes = await _carrinhoRepository.ValidacoesDoCarrinho(PedidoSelecionado.CodCarrinho);
-                result.ListaErros.AddRange(validacoes);
-            }
+            //if (valorMinimoDuplicata > 0 && condicaoPagamento.QtdParcela > 0)
+            //{
+            //    if ((pedido.ValorTotal / condicaoPagamento.QtdParcela) < valorMinimoDuplicata)
+            //        result.ListaErros.Add($"Valor mínimo da duplicata é R$ {valorMinimoDuplicata.ToString("N2")}");
+            //}
+
+            var validacoes = await _carrinhoRepository.ValidacoesDoCarrinho(PedidoSelecionado.CodCarrinho);
+            result.ListaErros.AddRange(validacoes);
             
 
             result.Sucesso = result.ListaErros.Count() == 0;

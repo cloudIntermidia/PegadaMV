@@ -30,14 +30,14 @@
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="70" />
                     <ColumnDefinition Width="130" />
-                    <ColumnDefinition Width="130" />
                     <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="0.8*" />
                     <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="0.8*" />
                     <ColumnDefinition Width="0.8*" />
-                    <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="1.5*" />
 
 
                 </Grid.ColumnDefinitions>
@@ -98,17 +98,17 @@
                                     </Grid.RowDefinitions>
 
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30" />
+                                         <ColumnDefinition Width="30" />
                                         <ColumnDefinition Width="70" />
                                         <ColumnDefinition Width="130" />
-                                        <ColumnDefinition Width="130" />
                                         <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="1.5*" />
+                                        <ColumnDefinition Width="0.8*" />
+                                        <ColumnDefinition Width="0.8*" />
+                                        <ColumnDefinition Width="0.8*" />
+                                        <ColumnDefinition Width="0.8*" />
                                         <ColumnDefinition Width="0.5*" />
                                         <ColumnDefinition Width="0.8*" />
                                         <ColumnDefinition Width="0.8*" />
-                                        <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="1.5*" />
                                     </Grid.ColumnDefinitions>
 
                                     <StackLayout Grid.Row="0" Grid.Column="0" 
@@ -143,7 +143,7 @@
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CondicaoPagamento}"  Grid.Row="0" Grid.Column="4"/>
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding TipoPedido}" Grid.Row="0" Grid.Column="5" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}" Grid.Row="0" Grid.Column="6" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega}" Grid.Row="0" Grid.Column="7" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="7" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="8" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="9" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="10" />
@@ -177,38 +177,38 @@
                 </Grid.ColumnDefinitions>
 
                 <controls:FlexButton
-                            Grid.Row="0" Grid.Column="0"
+                            Grid.Row="0" Grid.Column="2"
                             Text="CANCELAR"
                             ClickedCommand="{Binding CancelarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
-                            Grid.Row="0" Grid.Column="1"
+                            Grid.Row="0" Grid.Column="3"
                             Text="IMPRIMIR"
                             ClickedCommand="{Binding ImprimirCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
-                            Grid.Row="0" Grid.Column="2"
+                            Grid.Row="0" Grid.Column="4"
                             Text="COPIAR"
                             ClickedCommand="{Binding CopiarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
-                <controls:FlexButton
+                <!--<controls:FlexButton
                             Grid.Row="0" Grid.Column="3"
                             Text="BLOQUEAR/DESBLOQUEAR"
                             ClickedCommand="{Binding BloquearCommand}"
-                            Style="{StaticResource flexButtonAction}"/>
+                            Style="{StaticResource flexButtonAction}"/>-->
 
-                <controls:FlexButton
+                <!--<controls:FlexButton
                             Grid.Row="0" Grid.Column="4"
                             Text="AGRUPAR"
                             ClickedCommand="{Binding AgruparCommand}"
-                            Style="{StaticResource flexButtonAction}"/>
+                            Style="{StaticResource flexButtonAction}"/>-->
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="5"
-                            Text="FINALIZAR"
+                            Text="FECHAMENTO"
                             ClickedCommand="{Binding EditarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
@@ -232,20 +232,20 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="35" />
                     <ColumnDefinition Width="35" />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="80" />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="60" />
+                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="0.8*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="0.8*"/>
+                    <ColumnDefinition Width="0.4*"/>
+                    <ColumnDefinition Width="0.4*"/>
+                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="0.7*"/>
+                    <ColumnDefinition Width="0.7*"/>
+                    <!--<ColumnDefinition Width="60" />-->
                 </Grid.ColumnDefinitions>
 
 
@@ -280,7 +280,7 @@
                 <Label Style="{StaticResource labelGridHeader}" Text="Preço Líq."      Grid.Row="0" Grid.Column="12" />
                 <Label Style="{StaticResource labelGridHeader}" Text="Valor Total"      Grid.Row="0" Grid.Column="13" />
                 <Label Style="{StaticResource labelGridHeader}" Text="Valor Total Líq"      Grid.Row="0" Grid.Column="14" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Foto"             Grid.Row="0" Grid.Column="15"/>
+                <!--<Label Style="{StaticResource labelGridHeader}" Text="Foto"             Grid.Row="0" Grid.Column="15"/>-->
                 <!--Header-->
 
 
@@ -308,20 +308,19 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="35" />
                                         <ColumnDefinition Width="35" />
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="80" />
-                                        <ColumnDefinition Width="100" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="0.6*"/>
+                                        <ColumnDefinition Width="0.8*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="0.8*"/>
+                                        <ColumnDefinition Width="0.4*"/>
+                                        <ColumnDefinition Width="0.4*"/>
+                                        <ColumnDefinition Width="0.3*"/>
+                                        <ColumnDefinition Width="0.3*"/>
+                                        <ColumnDefinition Width="0.6*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.6*"/>
+                                        <ColumnDefinition Width="0.7*"/>
+                                        <ColumnDefinition Width="0.7*"/>
 
                                     </Grid.ColumnDefinitions>
 
@@ -343,15 +342,15 @@
 
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CodItemCarrinho}"                                                   Grid.Row="0" Grid.Column="1" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CodModelo}"                                                   Grid.Row="0" Grid.Column="2" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodCategoria}"                                                   Grid.Row="0" Grid.Column="3" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding Categoria}"                                                   Grid.Row="0" Grid.Column="3" />
 
                                     <StackLayout                                                                                                                      Grid.Row="0" Grid.Column="4" >
                                         <Label Style="{StaticResource labelGridItem}" HorizontalTextAlignment="Start"  Text="{Binding Descricao}"/>
                                     </StackLayout>
 
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding DataDisponivel}"                                                          Grid.Row="0" Grid.Column="5" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdCx}"                                                          Grid.Row="0" Grid.Column="6" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdCxTotal}"                                                          Grid.Row="0" Grid.Column="7" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdCaixa}"                                                          Grid.Row="0" Grid.Column="6" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotalNaCaixa}"                                                          Grid.Row="0" Grid.Column="7" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupCliente}"                                                          Grid.Row="0" Grid.Column="8" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupAplicado}"                                                          Grid.Row="0" Grid.Column="9" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCusto,  Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="10" />
@@ -366,104 +365,130 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <Grid Grid.Row="1" 
-                      Grid.Column="15" 
-                      BackgroundColor="White">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="2*" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <forms:CachedImage 
-                                       DownsampleToViewSize="True"  
-                                       Source="{Binding ItemSelecionado.Imagem, Converter={StaticResource Base64ParaImagem}}" Grid.Row="0"
-                                       Grid.Column="0" 
-                                       HeightRequest="200" 
-                                       HorizontalOptions="FillAndExpand"/>
-
-                    <Label Style="{StaticResource labelGridHeader}"
-                          FontAttributes="Bold"
-                           Text="GRADE" 
-                           Grid.Row="1"
-                           Grid.Column="0"/>
-
-                    <wrapLayout:WrapLayout Grid.Row="2" Grid.Column="0"
-                             ItemsSource="{Binding ItemSelecionado.Grades}">
-                        <wrapLayout:WrapLayout.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout VerticalOptions="StartAndExpand">
-
-                                        <Label Text="{Binding CodDerivacao}"
-                                               FontSize="Micro"
-                                               Style="{StaticResource labelGridHeader}" 
-                                               />
-
-                                        <Label Text="{Binding Qtd}"
-                                               FontSize="Micro"
-                                               Style="{StaticResource labelGridItem}" 
-                                               >
-                                            <Label.Triggers>
-                                                <DataTrigger TargetType="Label"
-                                                             Binding="{Binding Source={x:Static session:ConfiguracaoVisual.ExibeQtdNaGrade}}"
-                                                             Value="True">
-
-                                                    <Setter Property="Text" Value="{Binding QtdNaGrade}"/>
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                        </Label>
-
-                                    </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </wrapLayout:WrapLayout.ItemTemplate>
-                    </wrapLayout:WrapLayout>
-                </Grid>
             </Grid>
 
-            <!--ACOES SOBRE OS ITENS-->
-            <Grid Padding="5"
-                ColumnSpacing="10"
-                HorizontalOptions="End"
-                Margin="10,0"
-                >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40" />
-                </Grid.RowDefinitions>
+            <!--ACOES SOBRE OS ITENS / GRADE-->
+           <Grid ColumnSpacing="20"
+                  Padding="20,5"
+                  BackgroundColor="Transparent">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="Auto"/>   <!-- Botões -->
+                    <ColumnDefinition Width="*"/>      <!-- Grade -->
+                    <ColumnDefinition Width="200"/>    <!-- Imagem -->
                 </Grid.ColumnDefinitions>
 
 
-                <controls:FlexButton
-                            Grid.Row="0" Grid.Column="0"
-                            Text="EXCLUIR"
-                            ClickedCommand="{Binding ExcluirItemCommand}"
-                            Style="{StaticResource flexButtonAction}"
-                               />
+                <!-- ================= BOTÕES ================= -->
+                <Grid Grid.Column="0"
+                      VerticalOptions="End"
+                      Margin="0,0,20,0">
 
-                <controls:FlexButton
-                            Grid.Row="0" Grid.Column="1"
-                            Text="EDITAR"
-                            ClickedCommand="{Binding EditarItemCommand}"
-                            Style="{StaticResource flexButtonAction}"
-                               />
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
 
-                <controls:FlexButton
-                            Grid.Row="0" Grid.Column="2"
-                            Text="DESMEMBRAR"
-                            ClickedCommand="{Binding DesmembrarItemCommand}"
-                            Style="{StaticResource flexButtonAction}"
-                            IsVisible="{Binding BindingContext.OcultaBtnDesmembramento, Source={x:Reference this}}"
-                               />
+                    <controls:FlexButton
+                        Grid.Column="0"
+                        Text="EXCLUIR"
+                        ClickedCommand="{Binding ExcluirItemCommand}"
+                        Style="{StaticResource flexButtonAction}" />
+
+                    <controls:FlexButton
+                        Grid.Column="1"
+                        Text="EDITAR"
+                        ClickedCommand="{Binding EditarItemCommand}"
+                        Style="{StaticResource flexButtonAction}" />
+
+                    <controls:FlexButton
+                        Grid.Column="2"
+                        Text="DESMEMBRAR"
+                        ClickedCommand="{Binding DesmembrarItemCommand}"
+                        Style="{StaticResource flexButtonAction}"
+                        IsVisible="{Binding BindingContext.OcultaBtnDesmembramento, Source={x:Reference this}}" />
+                </Grid>
+
+
+                <!-- ================= GRADE ESTILO TABELA ================= -->
+               <Grid Grid.Column="1"
+                      HorizontalOptions="End"
+                      VerticalOptions="End">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- LINHA SUPERIOR (TAMANHOS) -->
+                    <StackLayout Grid.Row="0"
+                                 Orientation="Horizontal"
+                                 HorizontalOptions="End"
+                                 Spacing="0"
+                                 BindableLayout.ItemsSource="{Binding ItemSelecionado.Grades}">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid WidthRequest="50"
+                                      HeightRequest="30"
+                                      BackgroundColor="#8E8E8E">
+
+                                    <BoxView BackgroundColor="White"
+                                             WidthRequest="1"
+                                             HorizontalOptions="Start"/>
+
+                                    <Label Text="{Binding CodDerivacao}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           FontAttributes="Bold"
+                                           TextColor="White"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+
+
+                    <!-- LINHA INFERIOR (QUANTIDADES) -->
+                    <StackLayout Grid.Row="1"
+                                 Orientation="Horizontal"
+                                 HorizontalOptions="End"
+                                 Spacing="0"
+                                 BindableLayout.ItemsSource="{Binding ItemSelecionado.Grades}">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid WidthRequest="50"
+                                      HeightRequest="30"
+                                      BackgroundColor="#F0F0F0">
+
+                                    <BoxView BackgroundColor="#D0D0D0"
+                                             WidthRequest="1"
+                                             HorizontalOptions="Start"/>
+
+                                    <Label Text="{Binding Qtd}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           FontSize="Medium"
+                                           TextColor="#444"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+
+                </Grid>
+
+
+                <!-- ================= IMAGEM ================= -->
+                <forms:CachedImage Grid.Column="2"
+                                   WidthRequest="190"
+                                   HeightRequest="170"
+                                   Aspect="AspectFit"
+                                   VerticalOptions="EndAndExpand"
+                                   HorizontalOptions="End"
+                                   DownsampleToViewSize="True"
+                                   Source="{Binding ItemSelecionado.Imagem, Converter={StaticResource Base64ParaImagem}}" />
+
             </Grid>
 
 
