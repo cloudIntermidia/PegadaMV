@@ -134,6 +134,11 @@
     <BundleResource Include="Resources\factory.png" />
     <BundleResource Include="Resources\factory2.png" />
     <BundleResource Include="Resources\FundoCatalogo2.png" />
+    <BundleResource Include="Resources\iconComu2.png" />
+    <BundleResource Include="Resources\btn_sync.png" />
+    <BundleResource Include="Resources\btn_logoff.png" />
+    <BundleResource Include="Resources\IconMobili.png" />
+    <BundleResource Include="Resources\Novidades.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -145,7 +150,6 @@
     <BundleResource Include="Resources\GerClient.png" />
     <BundleResource Include="Resources\NaoDisp.png" />
     <BundleResource Include="Resources\sincronizacao.png" />
-    <BundleResource Include="Resources\btn_logoff.png" />
     <BundleResource Include="Resources\check.png" />
     <BundleResource Include="Resources\uncheck.png" />
     <BundleResource Include="Resources\g_cifrao_press.png" />
