@@ -78,6 +78,7 @@ namespace Pegada.Core
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<CatalogoPage, CatalogoPageViewModel>();
+            containerRegistry.RegisterForNavigation<ProntaEntregaPage, ProntaEntregaPageViewModel>();
             containerRegistry.RegisterForNavigation<SelecaoMarcaPage, SelecaoMarcaPageViewModel>();
             containerRegistry.RegisterForNavigation<CatalogoDetalheTipo1Page, CatalogoDetalheTipo1PageViewModel>();
             containerRegistry.RegisterForNavigation<CatalogoDetalheTipo2Page, CatalogoDetalheTipo2PageViewModel>();
@@ -99,6 +100,7 @@ namespace Pegada.Core
             containerRegistry.RegisterForNavigation<GerenciamentoMapPage, GerenciamentoMapPageViewModel>();
             containerRegistry.Register<AtendimentoUtility>();
             containerRegistry.RegisterForNavigation<MaisFiltroPopupView>();
+            containerRegistry.RegisterForNavigation<MaisFiltroPEPopupView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IFormCadastroClienteView, FormCadastroClienteView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IFormCadastroClienteViewModel, FormCadastroClienteViewModel>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.ICadastroClienteNovoViewModel, CadastroClienteNovoViewModel>();

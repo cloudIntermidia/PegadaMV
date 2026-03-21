@@ -139,6 +139,8 @@
     <BundleResource Include="Resources\btn_logoff.png" />
     <BundleResource Include="Resources\IconMobili.png" />
     <BundleResource Include="Resources\Novidades.png" />
+    <BundleResource Include="Resources\truck.png" />
+    <BundleResource Include="Resources\nav_pedido_expreso_branco.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
