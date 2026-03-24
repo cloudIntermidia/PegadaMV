@@ -1682,7 +1682,7 @@ namespace Pegada.Core.ViewModels
                     }
 
                     var commandFabrica = new FabricaCommand(semanaFabricas, dataMinima, DateTime.Now, PedidoSelecionado.IndValidaPrazo, ic.CodProduto, Session.ATENDIMENTO_ATUAL?.CodTabelaPreco, null);
-                    var semanas = await _semanaRepository.BuscarSemanaPorFabrica(commandFabrica);
+                    var semanas = await _semanaRepository.BuscarSemanasPorFabrica(commandFabrica);
 
                     if (semanas.Count == 0)
                     {

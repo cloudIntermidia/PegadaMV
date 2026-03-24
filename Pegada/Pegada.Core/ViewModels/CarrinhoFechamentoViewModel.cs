@@ -545,7 +545,7 @@ namespace Pegada.Core.ViewModels
             }
 
             var commandFabrica = new FabricaCommand(semanaFabricas, dataMinima, DateTime.Now, PedidoSelecionado.IndValidaPrazo, null, Session.ATENDIMENTO_ATUAL?.CodTabelaPreco, PedidoSelecionado.CodCarrinho);
-            this.Semanas = await _semanaRepository.BuscarSemanaPorFabrica(commandFabrica);
+            this.Semanas = await _semanaRepository.BuscarSemanasPorFabrica(commandFabrica);
 
             if (PedidoSelecionado.CodSemana != null && PedidoSelecionado.CodSemana != "0")
             {
