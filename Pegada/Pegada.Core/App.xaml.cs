@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using MobiliVendas.Core.Shared.Enums;
 using System.Linq;
 using MobiliVendas.Core.Views.Tablet.Carrinho;
+using MobiliVendas.Core.Views.Tablet.B2B;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Pegada.Core
@@ -101,6 +102,13 @@ namespace Pegada.Core
             containerRegistry.Register<AtendimentoUtility>();
             containerRegistry.RegisterForNavigation<MaisFiltroPopupView>();
             containerRegistry.RegisterForNavigation<MaisFiltroPEPopupView>();
+            containerRegistry.RegisterForNavigation<PedidoFacilPage>();
+
+            containerRegistry.RegisterForNavigation<AcervoDigPage>();
+            containerRegistry.RegisterForNavigation<RepSaleForcePage>();
+            containerRegistry.RegisterForNavigation<UniversidadePage>();
+
+            containerRegistry.RegisterForNavigation<MaisNavegacaoBottomView, MaisNavegacaoBottomViewModel>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IFormCadastroClienteView, FormCadastroClienteView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IFormCadastroClienteViewModel, FormCadastroClienteViewModel>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.ICadastroClienteNovoViewModel, CadastroClienteNovoViewModel>();

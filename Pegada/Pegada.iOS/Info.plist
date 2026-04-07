@@ -51,11 +51,11 @@
 		<true/>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>br.com.intermidia.pegadamobili</string>
+	<string>br.com.intermidia.pegadamobiliitm</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5</string>
+	<string>1.6</string>
 	<key>CFBundleVersion</key>
-	<string>1.5</string>
+	<string>1.6</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcons.appiconset</string>
 	<key>UIUserInterfaceStyle</key>

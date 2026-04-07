@@ -54,9 +54,9 @@
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
     <ConsolePause>false</ConsolePause>
-    <CodesignKey>iPhone Distribution: CALCADOS PEGADA NORDESTE LTDA</CodesignKey>
+    <CodesignKey>Apple Distribution: Itm Consultoria e Negocios Ltda (Z78TDPWDTK)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>PegadaMobili_08012026</CodesignProvision>
+    <CodesignProvision>PegadaMobiliItm_30032026</CodesignProvision>
     <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
@@ -141,6 +141,8 @@
     <BundleResource Include="Resources\Novidades.png" />
     <BundleResource Include="Resources\truck.png" />
     <BundleResource Include="Resources\nav_pedido_expreso_branco.png" />
+    <BundleResource Include="Resources\nav_pedidofacil.png" />
+    <BundleResource Include="Resources\maisIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
