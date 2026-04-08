@@ -29,7 +29,7 @@ namespace Pegada.Core.Repositories
                                                 {
                                                     CodModelo = command.CodModelo,
                                                     CodProdutoModelo = command.CodProdutoModelo,
-                                                    CodTabelaPreco = atendimento?.CodTabelaPreco == null ? "1" : atendimento?.CodTabelaPreco,
+                                                    CodTabelaPreco = atendimento?.CodTabelaPreco == null ? "-1" : atendimento?.CodTabelaPreco,
                                                     CodAtendimento = atendimento?.CodAtendimento,
                                                     ItensEmAtendimento = atendimento == null ? -1 : atendimento.ItensEmAtendimento,
                                                     ValidaEstoque = "-1",

@@ -532,8 +532,25 @@
                             <ffimageloading:CachedImage Grid.Row="2" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeNew, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',new.png'}" 
                                 LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
 
-                            <ffimageloading:CachedImage Grid.Row="3" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeEstrela, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',estrela_inativa.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
+                            <ffimageloading:CachedImage 
+                                                Grid.Row="3" Grid.Column="0"
+                                                DownsampleToViewSize="False" 
+                                                Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='wish_unchecked.png,wish_checked.png'}" 
+                                                LoadingPlaceholder="NaoDisp.png"
+                                                Aspect="AspectFit" 
+                                                HorizontalOptions="End"
+                                                HeightRequest="35"
+                                                WidthRequest="35"
+                                                Margin="10,0"
+                                                >
+                                <ffimageloading:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" 
+                                                  CommandParameter="{Binding .}"/>
+                                </ffimageloading:CachedImage.GestureRecognizers>
+                            </ffimageloading:CachedImage>
+
+                            <!--<ffimageloading:CachedImage Grid.Row="3" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeEstrela, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',estrela_inativa.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />-->
 
                         </Grid>
 

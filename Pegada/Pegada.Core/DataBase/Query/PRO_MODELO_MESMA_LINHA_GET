@@ -11,6 +11,7 @@
    P.PrecoVenda As PrecoSugestao,
    PRECO.CodTabelaPreco as CodTabelaPreco,
    CASE WHEN PRECO_CLIENTE.Preco IS NOT NULL THEN PRECO_CLIENTE.Preco ELSE PRECO.Preco END As PrecoVenda,
+   CASE WHEN PRECO_CLIENTE.PrecoPVL IS NOT NULL THEN PRECO_CLIENTE.PrecoPVL ELSE PRECO.PrecoPVL END AS PrecoPVL,
    P.DataInicioVendas AS DataInicioVendas,
    CASE WHEN IA.CodProduto IS NULL THEN 0 ELSE 1 END AS ItemChecadoInt,
    IFNULL((
