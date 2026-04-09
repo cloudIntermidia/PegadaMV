@@ -35,7 +35,7 @@ namespace Pegada.Core.Repositories
                                                     ValidaEstoque = "-1",
                                                     Familia = command.Familia,
                                                     RestricaoLocal = restricaoLocal,
-                                                    CodPessoa = command.CodPessoa,
+                                                    CodPessoa = atendimento?.CodTabelaPreco == null ? command.CodPessoa : "-1",
                                                     CodPessoaCD = command.CodPessoaCD,
                                                 });
             var result = await _sqlAsyncConnection.QueryAsync<ModeloCommandResult>(sql);
