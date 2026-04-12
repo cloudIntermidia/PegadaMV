@@ -108,6 +108,8 @@ namespace Pegada.Core
             containerRegistry.RegisterForNavigation<RepSaleForcePage>();
             containerRegistry.RegisterForNavigation<UniversidadePage>();
 
+            containerRegistry.RegisterForNavigation<EncaixotamentoPage, EncaixotamentoViewModel>();
+
             containerRegistry.RegisterForNavigation<MaisNavegacaoBottomView, MaisNavegacaoBottomViewModel>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IFormCadastroClienteView, FormCadastroClienteView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IFormCadastroClienteViewModel, FormCadastroClienteViewModel>();
@@ -188,6 +190,9 @@ namespace Pegada.Core
 
             containerRegistry.Register(typeof(ISelecaoAtendimentoView), typeof(SelecaoAtendimentoView));
             containerRegistry.Register(typeof(ISelecaoAtendimentoViewModel), typeof(SelecaoAtendimentoViewModel));
+
+            containerRegistry.Register(typeof(IEncaixotamentoView), typeof(EncaixotamentoPage));
+            containerRegistry.Register(typeof(IEncaixotamentoViewModel), typeof(EncaixotamentoViewModel));
 
             containerRegistry.Register(typeof(IPessoaRepository), typeof(PessoaRepository));
 

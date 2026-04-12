@@ -143,6 +143,7 @@
     <BundleResource Include="Resources\nav_pedido_expreso_branco.png" />
     <BundleResource Include="Resources\nav_pedidofacil.png" />
     <BundleResource Include="Resources\maisIcon.png" />
+    <BundleResource Include="Resources\lixeira.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />

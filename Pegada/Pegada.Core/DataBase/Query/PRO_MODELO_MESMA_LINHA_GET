@@ -51,7 +51,8 @@
     P.IDModelo,
     P.IDLinha,
     P.IDSubCategoria,
-    P.IDCategoria
+    P.IDCategoria,
+    L.Descricao AS DescricaoLinha
 
 FROM TBT_PRODUTO P 
 INNER JOIN TBT_MODELO M ON P.CodModelo = M.CodModelo
