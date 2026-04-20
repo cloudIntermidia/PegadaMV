@@ -1,49 +1,42 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+﻿<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:behavior="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              xmlns:custom="clr-namespace:MobiliVendas.Core.CustomView.Controls;assembly=MobiliVendas.Core"
-             x:Name="this"
-             x:Class="Pegada.Core.Views.Shared.NovoAtendimentoView">
-    <ContentView.Content>
-        <AbsoluteLayout>
-            <AbsoluteLayout IsVisible="True"  
-                            BackgroundColor="#000" 
-                            Opacity="0.3"
-                            AbsoluteLayout.LayoutFlags="All" 
-                            AbsoluteLayout.LayoutBounds="1,1,1,1">
-                <AbsoluteLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding BindingContext.CancelarAtendimentoCommand, Source={x:Reference this}}"/>
-                </AbsoluteLayout.GestureRecognizers>
-            </AbsoluteLayout>
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             x:Class="Pegada.Core.Views.Shared.NovoAtendimentoView"
+             x:Name="this">
 
-            <Frame 
-                 AbsoluteLayout.LayoutBounds="0.5,0.5,0.5,450"
-                 AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" 
-                 BackgroundColor="{StaticResource corBackGroundPopover}"
-                 HorizontalOptions="Center"
-                 VerticalOptions="FillAndExpand"
-                 Padding="2"
-                 HasShadow="True"
-                 CornerRadius="8"
-                 >
+    <!-- FUNDO ESCURO -->
+    <Grid BackgroundColor="#80000000">
 
-                <StackLayout Spacing="0"
-                             VerticalOptions="FillAndExpand"
-                             >
-                    <Grid Padding="30,20" 
-                      BackgroundColor="{StaticResource corCabecalhoPopover}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
+        <!-- CARD CENTRAL -->
+        <Frame BackgroundColor="LightGray"
+               CornerRadius="15"
+               Padding="0"
+               HasShadow="False"
+               BorderColor="#DADADA"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               WidthRequest="900"
+               HeightRequest="750">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+            <Grid RowSpacing="0">
 
-                        <Button Grid.Row="0" Grid.Column="0" 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+
+                <!-- HEADER -->
+                <Grid Grid.Row="0" Padding="15,10" BackgroundColor="#FAFAFA">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button 
                             FontFamily="{StaticResource RobotoNormalFont}" 
                             Text="Cancelar" 
                             BackgroundColor="Transparent" 
@@ -51,54 +44,308 @@
                             HorizontalOptions="Start" 
                             Command="{Binding BindingContext.CancelarAtendimentoCommand, Source={x:Reference this}}"/>
 
-                        <Label  Grid.Row="0" Grid.Column="1" 
-                            FontFamily="{StaticResource RobotoNormalFont}" 
-                            Text="Novo Atendimento" 
-                            FontAttributes="Bold" 
-                            TextColor="Black" 
-                            HorizontalOptions="FillAndExpand" 
-                            HorizontalTextAlignment="Center" 
-                            VerticalTextAlignment="Center"/>
+                    <Label Grid.Column="1"
+                           Margin="0,10,0,0"
+                           Text="Edição de Atendimento"
+                           HorizontalOptions="Center"
+                           FontAttributes="Bold"/>
 
-                        <Button Grid.Row="0" Grid.Column="2" 
+                    <Button Grid.Column="2" 
                             FontFamily="{StaticResource RobotoNormalFont}" 
                             Text="Salvar" 
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource corButtonBackPopover}" 
                             HorizontalOptions="End" 
                             Command="{Binding BindingContext.SalvarAtendimentoCommand, Source={x:Reference this}}"/>
+                </Grid>
+
+                <!-- CONTEÚDO -->
+                <Grid Grid.Row="1" Padding="15" RowSpacing="8">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>  <!-- Preposto -->
+                        <RowDefinition Height="Auto"/>  <!-- Cliente/Grupo -->
+                        <RowDefinition Height="Auto"/>  <!-- Filtros -->
+                        <RowDefinition Height="Auto"/>  <!-- Busca -->
+                        <RowDefinition Height="*"/>     <!-- Lista -->
+                        <RowDefinition Height="Auto"/>  <!-- tabela de preço -->
+                    </Grid.RowDefinitions>
+
+                  <custom:BotaoComVisualDropView
+                      Grid.Row="0"
+                            Label="Preposto"
+                            WidthRequest="500"
+                            HeightRequest="60"
+                            HorizontalOptions="Center"
+                            Command="{Binding BindingContext.SelecionarPrepostoCommand, Source={x:Reference this}}"
+                            Descricao="{Binding BindingContext.PrepostoSelecionado.Nome,Source={x:Reference this}}"/>
+
+                    <Frame Grid.Row="1"
+                        CornerRadius="10"
+                           Padding="2"
+                           HasShadow="False"
+                           BorderColor="#DCDCDC"
+                           BackgroundColor="#EAEAEA"
+                           HorizontalOptions="Center"
+                           WidthRequest="300">
+
+                        <Grid ColumnSpacing="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- CLIENTE -->
+                            <Frame Grid.Column="0"
+                                   CornerRadius="8"
+                                   Padding="5"
+                                   HasShadow="False"
+                                   BackgroundColor="White">
+                                <Label Text="Cliente"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontAttributes="Bold"/>
+                            </Frame>
+
+                            <!-- GRUPO -->
+                            <Label Grid.Column="1"
+                                   Text="Grupo"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   TextColor="Gray"/>
+                        </Grid>
+
+                    </Frame>
+
+                    <!-- FILTROS -->
+                    <Grid Grid.Row="2" ColumnSpacing="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                             <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Frame CornerRadius="5"
+                               Grid.Column="0"
+                               Padding="6"
+                               HeightRequest="35"
+                               HasShadow="False"
+                               BorderColor="#E0E0E0"
+                               BackgroundColor="#F7F7F7"
+                               HorizontalOptions="FillAndExpand">
+
+                             <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
+
+                                <Label Text="UF"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontSize="13"/>
+
+                                <Label Text="{Binding BindingContext.UfSelecionada.Descricao, Source={x:Reference this}}"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="12"/>
+                             </StackLayout>
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding BindingContext.FiltroUFCommand, Source={x:Reference this}}"/>
+                            </Frame.GestureRecognizers>
+
+                        </Frame>
+
+                        <Frame CornerRadius="5"
+                                Grid.Column="1"
+                               Padding="6"
+                               HeightRequest="35"
+                               HasShadow="False"
+                               BorderColor="#E0E0E0"
+                               BackgroundColor="#F7F7F7"
+                               HorizontalOptions="FillAndExpand">
+
+                             <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
+
+                                <Label Text="Cidade"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontSize="13"/>
+
+                                <Label Text="{Binding BindingContext.CidadeSelecionada.Descricao, Source={x:Reference this}}"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="12"/>
+                             </StackLayout>
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding BindingContext.FiltroCidadeCommand, Source={x:Reference this}}"/>
+                            </Frame.GestureRecognizers>
+
+                        </Frame>
+
+                        <Frame CornerRadius="5"
+                                Grid.Column="2"
+                               Padding="6"
+                               HeightRequest="35"
+                               HasShadow="False"
+                               BorderColor="#E0E0E0"
+                               BackgroundColor="#F7F7F7"
+                               HorizontalOptions="FillAndExpand">
+
+                             <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
+
+                                <Label Text="Situação"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontSize="13"/>
+
+                                <Label Text="{Binding BindingContext.SituacaoSelecionada.Descricao, Source={x:Reference this}}"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="12"/>
+                             </StackLayout>
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding BindingContext.FiltroSituacaoCommand, Source={x:Reference this}}"/>
+                            </Frame.GestureRecognizers>
+
+                        </Frame>
+
+                        <Frame CornerRadius="5"
+                                Grid.Column="3"
+                               Padding="6"
+                               HeightRequest="35"
+                               HasShadow="False"
+                               BorderColor="#E0E0E0"
+                               BackgroundColor="#F7F7F7"
+                               HorizontalOptions="FillAndExpand">
+
+                             <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
+
+                                <Label Text="Classe de Risco"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontSize="13"/>
+
+                                <Label Text="{Binding BindingContext.ClasseRiscoSelecionada.Descricao, Source={x:Reference this}}"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="12"/>
+                             </StackLayout>
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding BindingContext.FiltroClasseRiscoCommand, Source={x:Reference this}}"/>
+                            </Frame.GestureRecognizers>
+
+                        </Frame>
+
+                        <Frame CornerRadius="5"
+                                Grid.Column="4"
+                               Padding="6"
+                               HeightRequest="35"
+                               HasShadow="False"
+                               BorderColor="#E0E0E0"
+                               BackgroundColor="#F7F7F7"
+                               HorizontalOptions="FillAndExpand">
+
+                             <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
+
+                                <Label Text="Status"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontSize="13"/>
+
+                                <Label Text="{Binding BindingContext.StatusSelecionado.Descricao, Source={x:Reference this}}"
+                                       HorizontalTextAlignment="Center"
+                                        FontSize="12"/>
+                             </StackLayout>
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding BindingContext.FiltroStatusCommand, Source={x:Reference this}}"/>
+                            </Frame.GestureRecognizers>
+
+                        </Frame>
+
+                         <ffimageloading:CachedImage Grid.Column="5" BackgroundColor="Transparent"
+                                            Source="pesquisa_icone_preco.png" 
+                                            HorizontalOptions="End"
+                                            VerticalOptions="Center"
+                                            WidthRequest="30"
+                                            HeightRequest="30"
+                                            Margin="0,0,0,0"
+                                            Aspect="AspectFit">
+                        <ffimageloading:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.PesquisarClienteCommand, Source={x:Reference this}}"/>
+                        </ffimageloading:CachedImage.GestureRecognizers>
+                    </ffimageloading:CachedImage>
 
                     </Grid>
 
-                    <BoxView HeightRequest="2.5" Color="Silver" HorizontalOptions="FillAndExpand"/>
+                    <!-- BUSCA -->
+                    <Frame  Grid.Row="3"
+                               CornerRadius="5" Padding="5"
+                               HasShadow="False"
+                               BorderColor="#DCDCDC"
+                               BackgroundColor="#F7F7F7">
 
-                    <StackLayout Padding="20,20" Spacing="20">
+                        <Entry Placeholder="Razão social, nome fantasia ou CNPJ"
+                               BackgroundColor="Transparent"/>
+                    </Frame>
 
-                        <custom:BotaoComVisualDropView Label="Preposto"
-                                                       WidthRequest="150"
-                                                       Command="{Binding BindingContext.SelecionarPrepostoCommand, Source={x:Reference this}}"
-                                                       Descricao="{Binding BindingContext.PrepostoSelecionado.Nome,Source={x:Reference this}}"/>
+                    <syncfusion:SfListView Grid.Row="4"  
+                            VerticalOptions="FillAndExpand"
+                            BackgroundColor="White"
+                            ItemsSource="{Binding BindingContext.Clientes, Source={x:Reference this}}"
+                            ItemTemplate="{StaticResource ClienteSelecaoTemplate}"
+                            ItemSize="70"
+                            ItemSpacing="1"
+                            SelectionBackgroundColor="LightGray"
+                            TapCommand="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"  
+                            >
+                    </syncfusion:SfListView>
 
-                        <custom:BotaoComVisualDropView Label="Tipo Atendimento"
-                                                       WidthRequest="150"
-                                                       Command="{Binding BindingContext.SelecionarTipoAtendimentoCommand, Source={x:Reference this}}"
-                                                       Descricao="{Binding BindingContext.TipoAtendimento.Descricao,Source={x:Reference this}}"/>
-
-                        <custom:BotaoComVisualDropView Label="Cliente"
-                                                       Command="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"
-                                                       Descricao="{Binding BindingContext.ClienteSelecionado.RazaoSocial,Source={x:Reference this}}"/>
-
-
-                        <custom:BotaoComVisualDropView Label="Tabela de Preço"
-                                                        Command="{Binding BindingContext.SelecionarTabelaPrecoCommand, Source={x:Reference this}}"
-                                                        Descricao="{Binding BindingContext.CarrinhoFechamento.TabelaPreco, Source={x:Reference this}}"
+                    <custom:BotaoComVisualDropView Label="Tabela de Preço" Grid.Row="5"
+                                                   WidthRequest="500"
+                                                   HeightRequest="50"
+                                                   HorizontalOptions="Center"
+                                                   Command="{Binding BindingContext.SelecionarTabelaPrecoCommand, Source={x:Reference this}}"
+                                                   Descricao="{Binding BindingContext.CarrinhoFechamento.TabelaPreco, Source={x:Reference this}}"
                                                        />
 
-                        
-                    </StackLayout>
+                </Grid>
 
-                </StackLayout>
-            </Frame>
-        </AbsoluteLayout>
-    </ContentView.Content>
+                <!-- RODAPÉ -->
+                <Grid Grid.Row="2" Padding="5"  BackgroundColor="#FAFAFA">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Atualizar Cadastro"
+                           TextColor="#007AFF"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+
+                    <Label Grid.Column="1"
+                           Text="Transmitir Cliente"
+                           TextColor="#007AFF"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+
+                    <Label Grid.Column="2"
+                           Text="Novo Cliente"
+                           TextColor="#007AFF"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Grid>
+
+            </Grid>
+
+        </Frame>
+
+    </Grid>
+
 </ContentView>

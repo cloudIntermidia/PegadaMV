@@ -697,99 +697,86 @@
             <DataTemplate x:Key="ClienteSelecaoTemplate">
                 <ViewCell>
                     <StackLayout>
-                        <Grid Margin="1"
-                              RowSpacing="0"
-                              HeightRequest="90">
+                        <Grid Margin="5"
+                              RowSpacing="2"
+                              ColumnSpacing="5"
+                              HeightRequest="50">
+
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="25" />
-                                <RowDefinition Height="18" />
-                                <RowDefinition Height="18" />
-                                <RowDefinition Height="18" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="3*" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" 
-                                   LineBreakMode="TailTruncation" 
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="{Binding FantasiaRazaoSocial}" 
-                                   FontSize="14"/>
+                            <!-- LINHA 1 -->
+                            <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                                <Label 
+                                   Text="{Binding RazaoSocial}"
+                                   FontSize="14"
+                                   LineBreakMode="TailTruncation"
+                                   FontAttributes="Bold"/>
 
-                            <Label Grid.Row="0" Grid.Column="1" 
-                                   LineBreakMode="TailTruncation" 
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="{Binding CodPessoaCliente, StringFormat='Cód: {0}'}" 
-                                   FontSize="14" 
-                                   HorizontalOptions="EndAndExpand"/>
+                                <Label 
+                                   Text="-"
+                                   FontSize="14"
+                                   LineBreakMode="TailTruncation"
+                                   FontAttributes="Bold"/>
 
-                            <ffimageloading:CachedImage  Grid.Row="0" 
-                                                         Grid.Column="2" 
-                                                         Grid.RowSpan="2" 
-                                                         BackgroundColor="Transparent"  
-                                                         HorizontalOptions="Center"
-                                                         VerticalOptions="Center"
-                                                         HeightRequest="30"
-                                                         Aspect="AspectFit"
-                                                         Source="info.png" 
-                                                         >
+                                <Label 
+                                   Text="{Binding CNPJ}"
+                                   FontSize="14"
+                                   LineBreakMode="TailTruncation"
+                                   FontAttributes="Bold"/>
+                            </StackLayout>
+                            
+
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding CodPessoaCliente}"
+                                   FontSize="13"
+                                   HorizontalOptions="End"/>
+
+                            <ffimageloading:CachedImage Grid.Row="0"
+                                                         Grid.Column="2"
+                                                         HeightRequest="20"
+                                                         WidthRequest="20"
+                                                         Source="info.png"
+                                                         HorizontalOptions="End"
+                                                         VerticalOptions="Center">
                                 <ffimageloading:CachedImage.GestureRecognizers>
-                                    <TapGestureRecognizer  Command="{Binding InfoCommand}"  CommandParameter="{Binding .}"/>
+                                    <TapGestureRecognizer Command="{Binding InfoCommand}"
+                                                          CommandParameter="{Binding .}"/>
                                 </ffimageloading:CachedImage.GestureRecognizers>
                             </ffimageloading:CachedImage>
 
+                              <!-- LINHA 2 -->
+                              <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding NomeFantasia}"
+                                   FontSize="14"
+                                   LineBreakMode="TailTruncation"
+                                   FontAttributes="Bold"/>
 
-                            <Label Grid.Row="1" 
-                                   Grid.Column="0" 
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="{Binding CNPJ, StringFormat='CNPJ :{0}'}" 
-                                   FontSize="12"/>
 
-                            <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                                <Label  HorizontalTextAlignment="End"
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="Limite Crédito Disp.:" 
-                                   FontSize="11"/>
-                                <Label 
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="{Binding LimiteCredito, Converter={StaticResource ValorParaMoeda}}" 
-                                   FontSize="11"/>
-                            </StackLayout>
+                            <!-- LINHA 3 -->
+                            <Label Grid.Row="2" Grid.Column="0"
+                                   Text="{Binding EnderecoPrincipalCompleto}"
+                                   FontSize="12"
+                                   LineBreakMode="TailTruncation"/>
 
-                            <Label Grid.Row="2" 
-                                   Grid.Column="0"
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="{Binding EnderecoPrincipalCompleto}" 
-                                   FontSize="11" 
-                                   HorizontalOptions="StartAndExpand"/>
+                            <Label Grid.Row="2" Grid.Column="1"
+                                   Text="{Binding Cidade}"
+                                   FontSize="12"
+                                   HorizontalOptions="End"/>
 
-                            <StackLayout Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                                <Label 
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="Limite Crédito Tot.:" 
-                                   FontSize="11"/>
-                                <Label HorizontalTextAlignment="End"
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="{Binding LimiteTotal, Converter={StaticResource ValorParaMoeda}}" 
-                                   FontSize="11"/>
-                            </StackLayout>
-
-                            <StackLayout Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-                                <Label 
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="Limite Desconto:" 
-                                   FontSize="11"/>
-                                <Label HorizontalTextAlignment="End"
-                                   FontFamily="{StaticResource RobotoNormalFont}" 
-                                   Text="{Binding DescontoCliente}" 
-                                   FontSize="11"/>
-                            </StackLayout>
-
-                            
-
+                            <Label Grid.Row="2" Grid.Column="2"
+                                   Text="{Binding UF}"
+                                   FontSize="12"
+                                   HorizontalOptions="End"/>
                         </Grid>
 
                         <BoxView  HeightRequest="0.5" 
