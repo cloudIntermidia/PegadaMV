@@ -599,6 +599,9 @@ namespace Pegada.Core.ViewModels
 
                 Session.ATENDIMENTO_ATUAL = await _atendimentoUtility.CriarAtendimento(command);
                 Session.ATENDIMENTO_ATUAL.Markup = Session.MarkupPadrao;
+
+                await _atendimentoRepository.InativarAtendimentoAberto(Session.ATENDIMENTO_ATUAL.CodAtendimento);
+
                 MessagingCenter.Send<object>(this, "AtendimentoFoiAlterado");
                 await PopupNavigation.Instance.PopAllAsync();
             }
