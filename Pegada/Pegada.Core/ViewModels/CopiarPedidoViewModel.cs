@@ -434,7 +434,7 @@ namespace Pegada.Core.ViewModels
                 UserDialogs.Instance.ShowLoading("Copiando pedido");
                 CriarAtendimentoCommand atendimento = new CriarAtendimentoCommand(ClienteSelecionado.CodPessoaCliente,
                                         Session.USUARIO_LOGADO.CodUsuario, Session.USUARIO_LOGADO.CodMarca, Session.USUARIO_LOGADO.CodInstalacao,
-                                        ClienteSelecionado.Apelido, 1, PedidoSelecionado.CodCondicaoPagamento, null, null, null, null, 0, 0, null, null, 0, 0, 0, 0,PedidoSelecionado.TipoPedido);
+                                        ClienteSelecionado.Apelido, 1, PedidoSelecionado.CodCondicaoPagamento, null, null, null, null, 0, 0, null, null, 0, 0, 0, 0,PedidoSelecionado.TipoPedido, 0, 0);
 
                 var command = new CopiarCarrinhoCommand()
                 {

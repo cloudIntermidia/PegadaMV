@@ -264,7 +264,7 @@ namespace Pegada.Core.ViewModels
         }
 
 
-
+        
         private async Task CarregaPrepostos() {
             if (Session.USUARIO_LOGADO.CodTipoPessoa == "3")
             {
@@ -572,6 +572,11 @@ namespace Pegada.Core.ViewModels
 
                 //########################################################
 
+                decimal markupCliente = ClienteSelecionado.Markup;
+                if (ClienteSelecionado.PermiteAjustePreco == 1 && ClienteSelecionado.Markup == 0) {
+                    markupCliente = 1;
+                }
+
                 CriarAtendimentoCommand command = new CriarAtendimentoCommand()
                 {
 
@@ -588,6 +593,8 @@ namespace Pegada.Core.ViewModels
                     PercentualDesconto1 = CarrinhoFechamento.PercentualDesconto,
                     Controle = CarrinhoFechamento.Controle,
                     TipoPedido = CarrinhoFechamento.CodTipoPedido,
+                    Markup = markupCliente,
+                    IndAplicaMarkup = ClienteSelecionado.PermiteAjustePreco == 1 ? 1 : 0
                 };
 
                 Session.ATENDIMENTO_ATUAL = await _atendimentoUtility.CriarAtendimento(command);

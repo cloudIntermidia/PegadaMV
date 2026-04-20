@@ -291,6 +291,8 @@
                                BackgroundColor="#F7F7F7">
 
                         <Entry Placeholder="Razão social, nome fantasia ou CNPJ"
+                               x:Name="SearchBarCliente"
+                               Text="{Binding BindingContext.FiltroPesquisa, Source={x:Reference this}}"
                                BackgroundColor="Transparent"/>
                     </Frame>
 

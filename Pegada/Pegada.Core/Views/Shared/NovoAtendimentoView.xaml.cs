@@ -8,6 +8,11 @@ namespace Pegada.Core.Views.Shared
         public NovoAtendimentoView()
         {
             InitializeComponent();
+
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                SearchBarCliente.Focus();
+            });
         }
 
         public View GetContent()
