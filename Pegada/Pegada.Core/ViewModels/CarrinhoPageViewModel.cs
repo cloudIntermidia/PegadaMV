@@ -61,6 +61,13 @@ namespace Pegada.Core.ViewModels
             set { SetProperty(ref _todosItensChecados, value); }
         }
 
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { SetProperty(ref _isLoading, value); }
+        }
+
         private bool _todosCarrinhosChecados;
         public bool TodosCarrinhosChecados
         {
@@ -626,9 +633,15 @@ namespace Pegada.Core.ViewModels
 
         public async Task Load()
         {
+
+            if (IsLoading) return;
+
+            IsLoading = true;
+
             try
             {
                 Pedidos.Clear();
+                 Pedidos.Clear();
                 if (PedidoSelecionado != null)
                 {
                     PedidoSelecionado = new CarrinhoCommandResult();
@@ -659,6 +672,10 @@ namespace Pegada.Core.ViewModels
             catch (Exception ex)
             {
                 await UserDialogs.Instance.AlertAsync($"{ex.Message}", AppName, "OK");
+            }
+            finally
+            {
+                IsLoading = false;
             }
 
         }

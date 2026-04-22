@@ -112,7 +112,6 @@
     <BundleResource Include="Resources\Roboto-Medium.ttf" />
     <BundleResource Include="Resources\Roboto-Regular.ttf" />
     <BundleResource Include="Resources\SemplicitaPro.otf" />
-    <BundleResource Include="Resources\gerarpdf.png" />
     <BundleResource Include="Resources\btn_bg_off.png" />
     <BundleResource Include="Resources\btn_bg_on.png" />
     <BundleResource Include="Resources\edit.png" />
@@ -144,6 +143,9 @@
     <BundleResource Include="Resources\nav_pedidofacil.png" />
     <BundleResource Include="Resources\maisIcon.png" />
     <BundleResource Include="Resources\lixeira.png" />
+    <BundleResource Include="Resources\g_cifrao_press.png" />
+    <BundleResource Include="Resources\g_cifrao.png" />
+    <BundleResource Include="Resources\gerarpdf.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -157,8 +159,6 @@
     <BundleResource Include="Resources\sincronizacao.png" />
     <BundleResource Include="Resources\check.png" />
     <BundleResource Include="Resources\uncheck.png" />
-    <BundleResource Include="Resources\g_cifrao_press.png" />
-    <BundleResource Include="Resources\g_cifrao.png" />
     <BundleResource Include="Resources\logo.png" />
     <BundleResource Include="Resources\itm.png" />
     <BundleResource Include="Resources\info.png" />

@@ -20,7 +20,7 @@ namespace Pegada.Core.Views.Carrinho
 
         protected override async void OnAppearing()
         {
-            await viewModel.Load().ConfigureAwait(false);
+            await viewModel.Load();
             base.OnAppearing();
         }
 
