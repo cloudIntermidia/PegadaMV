@@ -14,6 +14,7 @@ using Syncfusion.ListView.XForms.iOS;
 using Syncfusion.XForms.iOS.Buttons;
 using Syncfusion.XForms.iOS.Border;
 using Syncfusion.SfNumericTextBox.XForms.iOS;
+using Syncfusion.SfCalendar.XForms.iOS;
 
 namespace Pegada.iOS
 {
@@ -55,7 +56,7 @@ namespace Pegada.iOS
             new Syncfusion.XForms.iOS.ComboBox.SfComboBoxRenderer();
             SfButtonRenderer.Init();
             SfBorderRenderer.Init();
-
+            SfCalendarRenderer.Init();
         }
 
     }

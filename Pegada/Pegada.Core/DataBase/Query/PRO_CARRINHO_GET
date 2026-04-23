@@ -63,7 +63,8 @@
 	C.OrdemCompra,
 	C.DiasBonificacao,
 	CASE WHEN C.DiasFatAntecipado IS NULL THEN CLI.DiasFatAntecipado ELSE C.DiasFatAntecipado END DiasFatAntecipado,
-    CON.QtdParcela
+    CON.QtdParcela,
+    T.TipoPedido as TipoPedidoValida
 FROM TBT_CARRINHO C 
 INNER JOIN TBT_ATENDIMENTO AT ON C.CodAtendimento = AT.CodAtendimento AND AT.IndAberto = 1
 INNER JOIN TBT_CLIENTE CLI ON CLI.CodPessoaCliente = C.CodPessoaCliente 

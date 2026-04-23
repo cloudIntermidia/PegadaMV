@@ -124,6 +124,7 @@
     <PackageReference Include="Rg.Plugins.Popup" Version="1.2.0.223" />
     <PackageReference Include="Xamarin.Forms.MaskedEntry" Version="1.0.0" />
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
+    <PackageReference Include="Syncfusion.Xamarin.SfCalendar" Version="17.3.0.14" />
   </ItemGroup>
   <ItemGroup>
     <None Update="App.xaml">

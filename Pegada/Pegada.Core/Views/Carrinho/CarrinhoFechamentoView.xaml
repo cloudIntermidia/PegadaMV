@@ -11,7 +11,7 @@
             <!-- FUNDO ESCURO -->
             <AbsoluteLayout BackgroundColor="#000"
                             Opacity="0.3"
-                            AbsoluteLayout.LayoutBounds="0.5,0.5,800,650"
+                            AbsoluteLayout.LayoutBounds="0.5,0.5,600,650"
                             AbsoluteLayout.LayoutFlags="All">
 
                 <AbsoluteLayout.GestureRecognizers>
@@ -21,7 +21,7 @@
 
             <!-- POPUP -->
             <Frame BackgroundColor="{StaticResource corBackGroundPopover}"
-                   AbsoluteLayout.LayoutBounds="0.5,0.5,800,650"
+                   AbsoluteLayout.LayoutBounds="0.5,0.5,600,650"
                    AbsoluteLayout.LayoutFlags="PositionProportional"
                    Padding="0"
                    HasShadow="True">
@@ -195,10 +195,15 @@
                             </Grid>
 
                             <!-- CLIENTE ENTREGA -->
-                            <Button Text="Cliente para entrega"
+                            <custom:BotaoComVisualDropView
+                                    HeightRequest="50"
+                                    Label="Cliente para entrega" Descricao="{Binding BindingContext.ClienteEntregaSelecionado.Descricao,Source={x:Reference this}}"
+                                    Command="{Binding BindingContext.SelecionarClienteEntregaCommand, Source={x:Reference this}}"/>
+
+                            <!--<Button Text="Cliente para entrega"
                                     BackgroundColor="#EDEDED"
                                     HeightRequest="45"
-                                    Command="{Binding BindingContext.SelecionarClienteEntregaCommand, Source={x:Reference this}}"/>
+                                    Command="{Binding BindingContext.SelecionarClienteEntregaCommand, Source={x:Reference this}}"/>-->
 
                             <!-- ATUALIZAR CONTATOS -->
                             <Button Text="Atualizar Contatos"
