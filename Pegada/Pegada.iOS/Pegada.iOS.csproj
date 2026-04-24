@@ -234,6 +234,9 @@
     <PackageReference Include="Syncfusion.Xamarin.DataGridExport">
       <Version>17.2.0.39</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.Xamarin.SfCalendar">
+      <Version>17.3.0.14</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\IntermidiaXamarin\MobiliVendas\Compartilhado\MobiliVendas.Core.Domain\MobiliVendas.Core.Domain.csproj">

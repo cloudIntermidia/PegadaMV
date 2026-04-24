@@ -46,6 +46,13 @@ namespace Pegada.Core.ViewModels
             set { SetProperty(ref _semanas, value); }
         }
 
+        private List<GenericComboResult> _clientesEntrega;
+        public List<GenericComboResult> ClientesEntrega
+        {
+            get { return _clientesEntrega; }
+            set { SetProperty(ref _clientesEntrega, value); }
+        }
+
         private SemanaResult _semanaSelecionada;
         public SemanaResult SemanaSelecionada
         {
@@ -102,6 +109,13 @@ namespace Pegada.Core.ViewModels
         {
             get { return _condicaoPagamento; }
             set { SetProperty(ref _condicaoPagamento, value); }
+        }
+
+        private GenericComboResult _clienteEntregaSelecionado;
+        public GenericComboResult ClienteEntregaSelecionado
+        {
+            get { return _clienteEntregaSelecionado; }
+            set { SetProperty(ref _clienteEntregaSelecionado, value); }
         }
 
         private decimal _percentualComissaoRep;
@@ -267,6 +281,8 @@ namespace Pegada.Core.ViewModels
         public ICommand SelecionarTipoPedidoCommand { get; set; }
         public ICommand SelecionarSemanaCommand { get; set; }
 
+        public ICommand SelecionarClienteEntregaCommand { get; set; }
+
         public ICommand SwitchFaturamentoAntecipadoCommand { get; } 
         #endregion
 
@@ -335,6 +351,8 @@ namespace Pegada.Core.ViewModels
             SelecionarTipoPedidoCommand = new Command(SelecionarTipoPedido);
             CarrinhoFechamento = new CarrinhoFechamentoCommandResult();
 
+            SelecionarClienteEntregaCommand = new Command(SelecionarClienteEntrega);
+
             SwitchFaturamentoAntecipadoCommand = new Command<bool>(OnSwitchFaturamentoAntecipado);
             // buscaDescontoFrenteCliente();
 
@@ -362,7 +380,7 @@ namespace Pegada.Core.ViewModels
             try
             {
                 IsMostraSemana = true;
-                if (PedidoSelecionado.TipoPedido == "PE") {
+                if (PedidoSelecionado.TipoPedidoValida == "PE") {
                     IsMostraSemana = false;
                 }
 
@@ -371,7 +389,7 @@ namespace Pegada.Core.ViewModels
                 await CarregaSemanas();
 
                 IsFatAntecipado = false;
-                if (PedidoSelecionado.AceitaFaturamentoAntecipado == 1) {
+                if (PedidoSelecionado.AceitaFaturamentoAntecipado == 1 && PedidoSelecionado.TipoPedidoValida != "PE") {
                     IsFatAntecipado = true;
                 }
 
@@ -379,6 +397,8 @@ namespace Pegada.Core.ViewModels
                 if (PedidoSelecionado.ClientePermiteAlterarCondi != 1) {
                     IsHabilitaEdicao = false;
                 }
+
+                await CarregaClientesEntrega();
 
 
                 List<string> camposFora = new List<string>();
@@ -527,6 +547,24 @@ namespace Pegada.Core.ViewModels
             }
         }
 
+        private async Task CarregaClientesEntrega() {
+
+            var command = new BuscarClienteCommand(Session.ATENDIMENTO_ATUAL.CodPessoaCliente);
+
+            var listaClientes = await _clienteRepository.BuscarClientesPorGrupo(command).ConfigureAwait(false);
+
+            ClientesEntrega = new List<GenericComboResult>();
+
+            foreach (var cliente in listaClientes) {
+
+                var clienteGene = new GenericComboResult();
+                clienteGene.Codigo = cliente.CodPessoaCliente;
+                clienteGene.Descricao = cliente.RazaoSocial;
+
+                ClientesEntrega.Add(clienteGene);
+            }
+        }
+
         private async Task CarregaSemanas() {
 
             var dataMinima = await _carrinhoRepository.GetDataMinimaPorPedido(PedidoSelecionado.CodCarrinho, PedidoSelecionado.CodTipoPedido);
@@ -605,23 +643,35 @@ namespace Pegada.Core.ViewModels
 
         public async void SelecionarDataEntrega()
         {
-            var data = await UserDialogs.Instance.DatePromptAsync(new DatePromptConfig() { MinimumDate = SemanaSelecionada.DataInicial, MaximumDate = SemanaSelecionada.DataFinal });
-            if (data.Ok)
-            {
 
-                DateTime dateErrada = new DateTime(0001, 1, 1, 0, 0, 0);
-                int result = DateTime.Compare(data.Value, dateErrada);
-                if (result == 0)
-                {
-                    DataEntrega = DateTime.Now.AddDays(1);
-                }
-                else
-                {
-                    DataEntrega = data.Value;
-                }
-            }
+            await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupCalendario(SelecionarDataEvent, PedidoSelecionado.TipoPedidoValida == "PE" ? DateTime.Now.AddDays(1) : SemanaSelecionada?.DataInicial, SemanaSelecionada?.DataFinal));
+            //var data = await UserDialogs.Instance.DatePromptAsync(new DatePromptConfig() { MinimumDate = PedidoSelecionado.TipoPedidoValida == "PE" ? DateTime.Now.AddDays(1) : SemanaSelecionada?.DataInicial, MaximumDate = SemanaSelecionada?.DataFinal });
+            //if (data.Ok)
+            //{
+
+            //    DateTime dateErrada = new DateTime(0001, 1, 1, 0, 0, 0);
+            //    int result = DateTime.Compare(data.Value, dateErrada);
+            //    if (result == 0)
+            //    {
+            //        DataEntrega = DateTime.Now.AddDays(1);
+            //    }
+            //    else
+            //    {
+            //        DataEntrega = data.Value;
+            //    }
+            //}
 
         }
+
+        private async void SelecionarDataEvent(object obj)
+        {
+            if (obj is DateTime dataSelecionada)
+            {
+                DataEntrega = dataSelecionada;
+            }
+            await PopupNavigation.Instance.PopAsync();
+        }
+
 
         public async void SelecionarCondicaoPagamento()
         {
@@ -651,6 +701,39 @@ namespace Pegada.Core.ViewModels
 
             await PopupNavigation.Instance.PopAsync();
         }
+
+        //####################
+
+        public async void SelecionarClienteEntrega()
+        {
+            try
+            {
+
+                await PopupNavigation.Instance.PushAsync(
+                    RgPopupUtility.GerarPopupGenerico(new ObservableCollection<GenericComboResult>(ClientesEntrega),
+                    SetClienteEntregaSelecionado,
+                    new Rectangle(0.5, 0.5, 0.75, 0.5), true, true, false));
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message);
+            }
+        }
+
+        private async void SetClienteEntregaSelecionado(object obj)
+        {
+            if (obj == null)
+            {
+                await PopupNavigation.Instance.PopAsync();
+                return;
+            }
+
+            ClienteEntregaSelecionado = obj as GenericComboResult;
+
+            await PopupNavigation.Instance.PopAsync();
+        }
+
+        //####################
 
         private void OnSwitchFaturamentoAntecipado(bool ligado)
         {

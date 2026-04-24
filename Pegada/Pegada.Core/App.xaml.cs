@@ -202,6 +202,10 @@ namespace Pegada.Core
             containerRegistry.Register(typeof(IJustificativaView), typeof(JustificativaView));
             containerRegistry.Register(typeof(IJustificativaViewModel), typeof(JustificativaViewModel));
 
+            containerRegistry.Register(typeof(ICalendarioView), typeof(CalendarioView));
+            containerRegistry.Register(typeof(ICalendarioViewModel), typeof(CalendarioViewModel));
+
+
             var unityServiceLocator = new UnityServiceLocator(containerRegistry.GetContainer());
             ServiceLocator.SetLocatorProvider(() => unityServiceLocator);
         }
