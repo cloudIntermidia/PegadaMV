@@ -13,7 +13,7 @@
     <AssemblyName>Sestini.UWP</AssemblyName>
     <DefaultLanguage>pt-BR</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -193,6 +193,8 @@
     <Content Include="pronta_entrega.png" />
     <Content Include="sapato.png" />
     <Content Include="seta_baixo_vermelha.png" />
+    <Content Include="seta_direita.png" />
+    <Content Include="seta_esquerda.png" />
     <Content Include="trofeu.png" />
     <Content Include="tv.png" />
     <Content Include="info.png" />
