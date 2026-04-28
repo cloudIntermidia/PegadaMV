@@ -83,6 +83,14 @@ namespace Pegada.Core.ViewModels
         }
 
 
+        private bool _isPrecoMostraPrecoLiquido;
+        public bool IsPrecoMostraPrecoLiquido
+        {
+            get { return _isPrecoMostraPrecoLiquido; }
+            set { SetProperty(ref _isPrecoMostraPrecoLiquido, value); }
+        }
+
+
         private bool _isMostraSemana;
         public bool IsMostraSemana
         {
@@ -283,7 +291,7 @@ namespace Pegada.Core.ViewModels
 
         public ICommand SelecionarClienteEntregaCommand { get; set; }
 
-        public ICommand SwitchFaturamentoAntecipadoCommand { get; } 
+        public ICommand SwitchFaturamentoAntecipadoCommand { get; }
         #endregion
 
         #region "Repositorios"
@@ -302,7 +310,7 @@ namespace Pegada.Core.ViewModels
         private readonly INivelRepository _nivelRepository;
         private readonly ICoeficienteRepository _coeficienteRepository;
         private readonly IPrazoAdicionalRepository _prazoAdicionalRepository;
-        
+
         #endregion
 
         #region "Construtores"
@@ -389,8 +397,12 @@ namespace Pegada.Core.ViewModels
                 await CarregaSemanas();
 
                 IsFatAntecipado = false;
-                if (PedidoSelecionado.AceitaFaturamentoAntecipado == 1 && PedidoSelecionado.TipoPedidoValida != "PE") {
+                if (PedidoSelecionado.AceitaFaturamentoAntecipado == 1 && PedidoSelecionado.TipoPedidoValida != "PE")
+                {
                     IsFatAntecipado = true;
+                }
+                else {
+                    PedidoSelecionado.AceitaFaturamentoAntecipado = 0;
                 }
 
                 IsHabilitaEdicao = true;
@@ -399,6 +411,8 @@ namespace Pegada.Core.ViewModels
                 }
 
                 await CarregaClientesEntrega();
+
+                await CarregaPrecoLiquido();
 
 
                 List<string> camposFora = new List<string>();
@@ -483,6 +497,14 @@ namespace Pegada.Core.ViewModels
             catch (Exception ex)
             {
                 await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        private async Task CarregaPrecoLiquido()
+        {
+            IsPrecoMostraPrecoLiquido = false;
+            if (PedidoSelecionado.CompraPrecoLiquido == 1) {
+                IsPrecoMostraPrecoLiquido = true;
             }
         }
 
@@ -672,7 +694,6 @@ namespace Pegada.Core.ViewModels
             await PopupNavigation.Instance.PopAsync();
         }
 
-
         public async void SelecionarCondicaoPagamento()
         {
             try
@@ -757,6 +778,16 @@ namespace Pegada.Core.ViewModels
                     await UserDialogs.Instance.AlertAsync("Prazo obrigatório.");
                     return;
                 }
+
+                if (PedidoSelecionado.TipoPedidoValida != "PE")
+                {
+                    if (SemanaSelecionada == null)
+                    {
+                        await UserDialogs.Instance.AlertAsync("Favor selecionar uma semana!");
+                        return;
+                    }
+                }
+
                 if (!DataEntrega.HasValue)
                 {
                     await UserDialogs.Instance.AlertAsync("A data de entrega é obrigatoria.");
@@ -768,6 +799,37 @@ namespace Pegada.Core.ViewModels
                     await UserDialogs.Instance.AlertAsync("A data de entrega não pode ser inferior a hoje.");
                     return;
                 }
+
+                //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+                int qtdMinimaParcela = 1;
+
+                if (CondicaoPagamento != null)
+                {
+                    qtdMinimaParcela = CondicaoPagamento.QtdParcela;
+                }
+                else
+                {
+                    qtdMinimaParcela = Convert.ToInt32(PedidoSelecionado.qtdParcela);
+                }
+
+                //Solicitação #17523 Agrupar por famila de Vendas
+                //[...]"Ver a possibilidade tirar a validade de valor mínimo nesse tipo de cliente também."
+                //if ([[Cliente paisForCliente:_carrinhoSelecionado.codPessoaCliente] intValue] == 1)
+                if (PedidoSelecionado.CodTipoPedido != "23")
+                {
+                    var valorDuplicata = PedidoSelecionado.ValorTotalLiquido / qtdMinimaParcela;
+
+                    var valorMinimoParcela = await _parametroRepository.BuscarMinimoParcelaPorTipoPedido(PedidoSelecionado.CodTipoPedido);
+
+                    if (valorDuplicata < valorMinimoParcela)
+                    {
+                        await UserDialogs.Instance.AlertAsync($"O pedido não alcançou o valor mínimo por duplicata de R${valorMinimoParcela}");
+                        return;
+                    }
+                }
+
+                //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
                 if (!string.IsNullOrEmpty(PedidoSelecionado.DiasBonificacao)) {
 
@@ -781,64 +843,100 @@ namespace Pegada.Core.ViewModels
                         await UserDialogs.Instance.AlertAsync("Prazo extra não permitido!");
                         return;
                     }
+                }
 
-                    //if (prazoAdicional.abatimentoComissao)
-                    //{
-                    //    if (!pessoa.comissao)
-                    //    {
-                    //        pessoa.comissao = [[NSDecimalNumber alloc] initWithInt: 0];
-                    //    }
-                    //    self.carrinhoSelecionado.percComissaoRep = [prazoAdicional.abatimentoComissao decimalNumberBySubtracting: pessoa.comissao];
+                if (PedidoSelecionado?.AceitaFaturamentoAntecipado == 1) {
+                    if (PedidoSelecionado.DiasFatAntecipado != 0) {
+                        if (PedidoSelecionado.DiasFatAntecipadoCliente >= PedidoSelecionado.DiasFatAntecipado)
+                        {
+                            DateTime now = DateTime.Today;
 
-                    //}
-                    //else
-                    //{
-                    //    [[[NSException alloc] initWithName: [Language getStringFromKey:@"Global_Atencao"] reason: [Language getStringFromKey:@"ECarrinho_TB_PrazoNPermitido"] userInfo: nil] raise];
-                    //}
+                            // Converte o texto para int
+                            int daysToSub = (int)PedidoSelecionado.DiasFatAntecipado;
+
+                            // Subtrai os dias da data selecionada
+                            DateTime toDate = DataEntrega.Value.Date.AddDays(-daysToSub);
+
+                            // Comparação (equivalente ao NSOrderedDescending)
+                            if (toDate > now)
+                            {
+                                //PedidoSelecionado.DiasFatAntecipado = PedidoSelecionado.DiasFatAntecipado;
+                            }
+                            else
+                            {
+                                await UserDialogs.Instance.AlertAsync($"O prazo de dias de faturamento é inválido, o prazo informado é maior do que o permitido para o cliente!");
+                                return;
+                            }
+                        }
+                        else {
+                            await UserDialogs.Instance.AlertAsync($"O prazo de dias de faturamento é inválido, o prazo informado é maior do que o permitido para o cliente!");
+                            return;
+                        }
+                    }
+                    else {
+                        await UserDialogs.Instance.AlertAsync($"O campo Dia(s) de Faturamento Antecipado deve ser preenchido!");
+                        return;
+                    }
                 }
 
 
+                if (CondicaoPagamento.Codigo != PedidoSelecionado.CodCondicaoPagamento && PedidoSelecionado.IndPrecoLiquido == 1) {
 
+                    var confirm = await UserDialogs.Instance.ConfirmAsync($"Há pedidos com preço líquido editado. Todos valores digitados serão perdidos. Deseja prosseguir?", "Atenção", "Sim", "Não");
+                    if (!confirm)
+                    {
+                        return;
+                    }
 
-                //########################################################
+                    AtualizarCarrinho();
+                }
+                else {
 
-
-                var model = new
-                {
-                    CodCarrinho = PedidoSelecionado.CodCarrinho,
-                    CodCondicaoPagamento = CondicaoPagamento?.Codigo,
-                    DataEntrega = DataEntrega.HasValue ? DataEntrega.Value.ToString("yyyy-MM-ddTHH:mm:ss") : null,
-                    CifFob = this.CifFob == "CIF" ? "C" : "F",
-                    CodTransportadora = Transportadora?.Codigo,
-                    AceitaFaturamentoAntecipado = PedidoSelecionado.AceitaFaturamentoAntecipado,
-                    AceitaFaturamentoParcial = PedidoSelecionado.AceitaFaturamentoParcial,
-                    CodSemana = SemanaSelecionada.CodSemana,
-                    PercentualComissaoRep = PercentualComissaoRep,
-                    DiasBonificacao = PedidoSelecionado.DiasBonificacao,
-                    OrdemCompra = PedidoSelecionado.OrdemCompra,
-                    DiasFatAntecipado = PedidoSelecionado?.AceitaFaturamentoAntecipado == 1 ? PedidoSelecionado.DiasFatAntecipado : 0
-                };
-
-                var columnsName = model.GetType().GetRuntimeProperties().Select(x => x.Name).ToList();
-                int rows = await _dataBaseRepository.ExecutaUpdate("TBT_CARRINHO", columnsName, new List<string>() { "CodCarrinho" }, model);
-                var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(PedidoSelecionado.CodCarrinho);
-
-
-                if (rows > 0 && atualizouCarrinho)
-                    await UserDialogs.Instance.AlertAsync("Carrinho salvo", AppName);
-                else
-                {
-                    await UserDialogs.Instance.AlertAsync("Ocorreu um erro ao tentar persistir as informações", AppName);
-                    return;
+                    AtualizarCarrinho();
                 }
 
-                MessagingCenter.Send<object>(this, "LoadCarrinho");
-                await PopupNavigation.Instance.PopAsync();
             }
             catch (Exception ex)
             {
                 await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
             }
+        }
+
+        private async void AtualizarCarrinho() {
+
+            var model = new
+            {
+                CodCarrinho = PedidoSelecionado.CodCarrinho,
+                CodCondicaoPagamento = CondicaoPagamento?.Codigo,
+                DataEntrega = DataEntrega.HasValue ? DataEntrega.Value.ToString("yyyy-MM-ddTHH:mm:ss") : null,
+                CifFob = "F",
+                CodTransportadora = Transportadora?.Codigo,
+                AceitaFaturamentoAntecipado = PedidoSelecionado.AceitaFaturamentoAntecipado,
+                AceitaFaturamentoParcial = PedidoSelecionado.AceitaFaturamentoParcial,
+                CodSemana = SemanaSelecionada.CodSemana,
+                PercentualComissaoRep = PercentualComissaoRep,
+                DiasBonificacao = PedidoSelecionado.DiasBonificacao,
+                OrdemCompra = PedidoSelecionado.OrdemCompra,
+                DiasFatAntecipado = PedidoSelecionado?.AceitaFaturamentoAntecipado == 1 ? PedidoSelecionado.DiasFatAntecipado : 0,
+                IndPrecoLiquido = PedidoSelecionado.IndPrecoLiquido,
+                CodClienteEntrega = ClienteEntregaSelecionado.Codigo
+            };
+
+            var columnsName = model.GetType().GetRuntimeProperties().Select(x => x.Name).ToList();
+            int rows = await _dataBaseRepository.ExecutaUpdate("TBT_CARRINHO", columnsName, new List<string>() { "CodCarrinho" }, model);
+            var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(PedidoSelecionado.CodCarrinho);
+
+
+            if (rows > 0 && atualizouCarrinho)
+                await UserDialogs.Instance.AlertAsync("Carrinho salvo", AppName);
+            else
+            {
+                await UserDialogs.Instance.AlertAsync("Ocorreu um erro ao tentar persistir as informações", AppName);
+                return;
+            }
+
+            MessagingCenter.Send<object>(this, "LoadCarrinho");
+            await PopupNavigation.Instance.PopAsync();
         }
 
         private async void CancelarFechamento()

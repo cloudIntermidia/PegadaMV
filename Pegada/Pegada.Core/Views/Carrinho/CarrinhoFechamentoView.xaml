@@ -29,7 +29,7 @@
                 <StackLayout Spacing="0">
 
                     <!-- HEADER -->
-                    <Grid Padding="25,18"
+                    <Grid Padding="25,7"
                           BackgroundColor="{StaticResource corCabecalhoPopover}">
 
                         <Grid.ColumnDefinitions>
@@ -62,7 +62,7 @@
 
                     <!-- CONTEÚDO -->
                     <ScrollView>
-                        <StackLayout Padding="35,25" Spacing="20">
+                        <StackLayout Padding="35,10" Spacing="20">
 
                             <!-- ALERTA -->
                             <Label Text="Atenção"
@@ -84,7 +84,7 @@
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.8*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
@@ -200,17 +200,43 @@
                                     Label="Cliente para entrega" Descricao="{Binding BindingContext.ClienteEntregaSelecionado.Descricao,Source={x:Reference this}}"
                                     Command="{Binding BindingContext.SelecionarClienteEntregaCommand, Source={x:Reference this}}"/>
 
-                            <!--<Button Text="Cliente para entrega"
-                                    BackgroundColor="#EDEDED"
-                                    HeightRequest="45"
-                                    Command="{Binding BindingContext.SelecionarClienteEntregaCommand, Source={x:Reference this}}"/>-->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-                            <!-- ATUALIZAR CONTATOS -->
-                            <Button Text="Atualizar Contatos"
+                               <Grid Grid.Column="0" ColumnSpacing="-10"
+                                     IsVisible="{Binding BindingContext.PedidoSelecionado.CompraPrecoLiquido,Source={x:Reference this}}"
+                                   VerticalOptions="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <CheckBox Scale="1.3" IsChecked="{Binding BindingContext.PedidoSelecionado.IndPrecoLiquido,Source={x:Reference this}}" />
+                                    <Label
+                                        
+                                        Grid.Column="1"
+                                        FontSize="20"
+                                        FontAttributes="None"
+                                        TextColor="#333"
+                                        Text="Preço Líquido"
+                                        VerticalTextAlignment="Center" />
+                                </Grid>
+
+
+                                <Button Grid.Column="2"
+                                    Text="Atualizar Contatos"
                                     HorizontalOptions="End"
                                     WidthRequest="200"
                                     BackgroundColor="#EDEDED"
                                     Command="{Binding BindingContext.AtualizarContatosCommand, Source={x:Reference this}}"/>
+                            </Grid>
+
+                            <!-- ATUALIZAR CONTATOS -->
+                            
 
                         </StackLayout>
                     </ScrollView>

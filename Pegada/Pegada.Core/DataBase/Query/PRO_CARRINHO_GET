@@ -53,7 +53,6 @@
 			THEN CASE WHEN CLI.indFatParcial = 1 THEN 1 ELSE 0 END
 		 ELSE C.AceitaFaturamentoParcial
 		END AS AceitaFaturamentoParcial,
-	C.AceitaFaturamentoAntecipado AS AceitaFaturamentoAntecipado,
 	C.AceitaFaturamentoAntecipado,
 	C.IndEmAlocacao,
 	CASE WHEN C.IndPedidoMae = 1 THEN 'S' ELSE 'N' END AS IndPedidoMaeUI,
@@ -62,9 +61,12 @@
     CLI.PermiteAlterarCondicao AS ClientePermiteAlterarCondi,
 	C.OrdemCompra,
 	C.DiasBonificacao,
-	CASE WHEN C.DiasFatAntecipado IS NULL THEN CLI.DiasFatAntecipado ELSE C.DiasFatAntecipado END DiasFatAntecipado,
+	C.DiasFatAntecipado DiasFatAntecipado,
+    CLI.DiasFatAntecipado DiasFatAntecipadoCliente,
     CON.QtdParcela,
-    T.TipoPedido as TipoPedidoValida
+    T.TipoPedido as TipoPedidoValida,
+    CLI.CompraPrecoLiquido,
+    C.IndPrecoLiquido
 FROM TBT_CARRINHO C 
 INNER JOIN TBT_ATENDIMENTO AT ON C.CodAtendimento = AT.CodAtendimento AND AT.IndAberto = 1
 INNER JOIN TBT_CLIENTE CLI ON CLI.CodPessoaCliente = C.CodPessoaCliente 
