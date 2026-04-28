@@ -567,8 +567,24 @@
                             </Grid.ColumnDefinitions>-->
 
                             <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Vertical" Spacing="0" IsVisible="{Binding ExibeProntaEntrega}">
-                                <ffimageloading:CachedImage  DownsampleToViewSize="False" Source="{Binding ExibeProntaEntrega, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',pronta_entrega.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="40" WidthRequest="40" Margin="10,0" />
+                                <!--<ffimageloading:CachedImage  DownsampleToViewSize="False" Source="{Binding ExibeProntaEntrega, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',pronta_entrega.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="40" WidthRequest="40" Margin="10,0" />-->
+
+                                <!--<ffimageloading:CachedImage  DownsampleToViewSize="False" Source="{Binding ExibeProntaEntrega, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',pronta_entrega.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="40" WidthRequest="40" Margin="10,0" >
+                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding DirecionarProntaEntregaCommand}" 
+                                                  CommandParameter="{Binding .}"/>
+                                    </ffimageloading:CachedImage.GestureRecognizers>
+                                </ffimageloading:CachedImage>-->
+
+                                <ffimageloading:CachedImage DownsampleToViewSize="False" Source="{Binding ExibeProntaEntrega, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',pronta_entrega.png'}" 
+                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="40" WidthRequest="40" Margin="10,0">
+                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding DirecionarProntaEntregaCommand}"
+                                                          CommandParameter="{Binding .}"/>
+                                    </ffimageloading:CachedImage.GestureRecognizers>
+                                </ffimageloading:CachedImage>
 
                                 <Label IsVisible="{Binding MostraQtdEstoque}" Margin="0,-10,0,0" HorizontalTextAlignment="Center" Text="{Binding Estoque}" FontSize="8" FontFamily="{StaticResource RobotoNormalFont}" HeightRequest="12"/>
                             </StackLayout>

@@ -189,6 +189,7 @@
     <Content Include="estrela_inativa.png" />
     <Content Include="etiqueta_promocao.png" />
     <Content Include="fora_linha.png" />
+    <Content Include="nav_pedido_expreso_branco.png" />
     <Content Include="new.png" />
     <Content Include="pronta_entrega.png" />
     <Content Include="sapato.png" />
