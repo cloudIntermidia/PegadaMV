@@ -79,6 +79,7 @@ namespace Pegada.Core
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<CatalogoPage, CatalogoPageViewModel>();
+            containerRegistry.RegisterForNavigation<CatalogoCombinacoesPage, CatalogoCombinacoesPageViewModel>();
             containerRegistry.RegisterForNavigation<ProntaEntregaPage, ProntaEntregaPageViewModel>();
             containerRegistry.RegisterForNavigation<SelecaoMarcaPage, SelecaoMarcaPageViewModel>();
             containerRegistry.RegisterForNavigation<CatalogoDetalheTipo1Page, CatalogoDetalheTipo1PageViewModel>();
