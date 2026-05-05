@@ -23,7 +23,7 @@
   <ErrorReport>prompt</ErrorReport>
   <WarningLevel>4</WarningLevel>
   <ConsolePause>false</ConsolePause>
-  <MtouchArch>i386, x86_64</MtouchArch>
+  <MtouchArch>x86_64</MtouchArch>
   <MtouchLink>SdkOnly</MtouchLink>
   <MtouchDebug>true</MtouchDebug>
   <CodesignKey>Apple Development: Rogerio Silva (G232KF2VB9)</CodesignKey>
@@ -149,6 +149,12 @@
     <BundleResource Include="Resources\g_cifrao.png" />
     <BundleResource Include="Resources\gerarpdf.png" />
     <BundleResource Include="Resources\e_a.png" />
+    <BundleResource Include="Resources\icon_catalogo_selec.png" />
+    <BundleResource Include="Resources\nav_carrinho_azul.png" />
+    <BundleResource Include="Resources\nav_negocio_azul.png" />
+    <BundleResource Include="Resources\nav_pedidofacil_azul_fix.png" />
+    <BundleResource Include="Resources\nav_pedido_expreso_azul.png" />
+    <BundleResource Include="Resources\maisIcon_azul.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
