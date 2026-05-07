@@ -919,7 +919,7 @@ namespace Pegada.Core.ViewModels
                 OrdemCompra = PedidoSelecionado.OrdemCompra,
                 DiasFatAntecipado = PedidoSelecionado?.AceitaFaturamentoAntecipado == 1 ? PedidoSelecionado.DiasFatAntecipado : 0,
                 IndPrecoLiquido = PedidoSelecionado.IndPrecoLiquido,
-                CodClienteEntrega = ClienteEntregaSelecionado.Codigo
+                CodClienteEntrega = ClienteEntregaSelecionado?.Codigo
             };
 
             var columnsName = model.GetType().GetRuntimeProperties().Select(x => x.Name).ToList();
