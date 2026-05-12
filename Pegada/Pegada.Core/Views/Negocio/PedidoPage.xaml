@@ -52,7 +52,7 @@
                                  VerticalOptions="End"
                                  Text="{Binding BindingContext.TituloVendedor, Source={x:Reference this}}"
                                  ClickedCommand="{Binding BindingContext.SelecionarVendedorCommand, Source={x:Reference this}}"
-                                    Style="{StaticResource flexButtonNiveis}"
+                                    Style="{StaticResource flexButtonFiltros}"
                                  MinimumWidthRequest="1.0"
                                />
                     <flex:FlexButton
