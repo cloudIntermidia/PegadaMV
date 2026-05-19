@@ -23,8 +23,8 @@
                 <On Platform="iOS" Value="Roboto-Bold" />
             </OnPlatform>
 
-            <x:Double x:Key="GridCellWidth">35</x:Double>
-            <x:Double x:Key="GridCellHeight">30</x:Double>
+            <x:Double x:Key="GridCellWidth">45</x:Double>
+            <x:Double x:Key="GridCellHeight">55</x:Double>
 
             <!-- Cores da aplicação -->
             <!--INICIO CORES FILTRO NIVEIS-->

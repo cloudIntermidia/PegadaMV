@@ -21,8 +21,8 @@
      I.ValorUnitario AS ValorUnitario,
 	 NULL AS Entrega,
      NULL AS IndPPK,
-	 (I.ValorUnitario * I.QtdTotal) AS ValorTotal,
-     (I.ValorUnitarioLiquido * I.QtdTotal) AS ValorTotalLiquido,
+	 (I.ValorUnitario * (IFNULL(I.QtdCaixa, 1) * I.QtdTotal)) AS ValorTotal,
+     (I.ValorUnitarioLiquido * (IFNULL(I.QtdCaixa, 1) * I.QtdTotal)) AS ValorTotalLiquido,
      (
         SELECT FP.Imagem FROM TBT_FOTO_PRODUTO FP
         INNER JOIN TBT_PRODUTO P ON FP.CodProdutoFoto = P.CodProdutoFoto 
