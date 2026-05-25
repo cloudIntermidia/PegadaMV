@@ -95,6 +95,7 @@ namespace Pegada.Core
             containerRegistry.RegisterForNavigation<Pegada.Core.Views.Negocio.PedidoPage, PedidoPageViewModel>();
             containerRegistry.RegisterForNavigation<AlocacaoProdutoPage, AlocacaoProdutoPageViewModel>();
             containerRegistry.RegisterForNavigation<TitulosPage, TitulosPageViewModel>();
+            containerRegistry.RegisterForNavigation<NotasPage, NotasPageViewModel>();
             containerRegistry.RegisterForNavigation<PreVenda, PreVendaViewModel>();
             containerRegistry.RegisterForNavigation<ConsultaEstoquePage, ConsultaEstoqueViewModel>();
             containerRegistry.RegisterForNavigation<Pegada.Core.Views.Negocio.CadastroClientePage, Pegada.Core.ViewModels.CadastroClientePageViewModel>();
@@ -165,6 +166,7 @@ namespace Pegada.Core
             containerRegistry.Register(typeof(IFotoRepository), typeof(FotoRepository));
             containerRegistry.Register(typeof(IPedidoRepository), typeof(Pegada.Core.Repositories.PedidoRepository));
             containerRegistry.Register(typeof(ITituloRepository), typeof(TituloRepository));
+            containerRegistry.Register(typeof(INotaFiscalRepository), typeof(NotaFiscalRepository));
             containerRegistry.Register(typeof(ICondicaoPagamentoRepository), typeof(CondicaoPagamentoRepository));
             containerRegistry.Register(typeof(IItemAtendimentoRepository), typeof(ItemAtendimentoRepository));
             containerRegistry.Register(typeof(IMarketingRepository), typeof(MarketingRepository));
