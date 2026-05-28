@@ -155,6 +155,8 @@
     <BundleResource Include="Resources\nav_pedidofacil_azul_fix.png" />
     <BundleResource Include="Resources\nav_pedido_expreso_azul.png" />
     <BundleResource Include="Resources\maisIcon_azul.png" />
+    <BundleResource Include="Resources\g_check_off.png" />
+    <BundleResource Include="Resources\g_check_on.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
