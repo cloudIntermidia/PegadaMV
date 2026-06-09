@@ -121,68 +121,216 @@ namespace Pegada.Core.Repositories
 
         public override async Task<WcfPedidoModelInput> BuscarCarrinhoParaTransmissao(string codCarrinho)
         {
-            var camposCarrinho = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>("PRAGMA table_info(TBT_CARRINHO);")).Select(x => x.name).ToList();
+            var camposCarrinho = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>(
+                "PRAGMA table_info(TBT_CARRINHO);"))
+                .Select(x => x.name)
+                .ToList();
+
             string sqlCamposCarrinho = string.Join(",", camposCarrinho);
-            var carrinho = (await _sqlAsyncConnection.QueryAsync<Integracao_TBT_CARRINHO>($"SELECT {sqlCamposCarrinho} FROM TBT_CARRINHO WHERE CodCarrinho = '{codCarrinho}';")).FirstOrDefault();
+
+            var carrinho = (await _sqlAsyncConnection.QueryAsync<Integracao_TBT_CARRINHO>(
+                $"SELECT {sqlCamposCarrinho} FROM TBT_CARRINHO WHERE CodCarrinho = '{codCarrinho}';"))
+                .FirstOrDefault();
+
             carrinho.CodSituacaoPedido = "3";
 
-            var camposItem = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>("PRAGMA table_info(TBT_ITEM_CARRINHO);")).Select(x => x.name).ToList();
-            string sqlCamposItem = string.Join(",", camposItem);
-            sqlCamposItem = sqlCamposItem.Substring(0, sqlCamposItem.Length);
-            var itens = await _sqlAsyncConnection.QueryAsync<TBT_ITEM_CARRINHO>($"SELECT {sqlCamposItem} FROM TBT_ITEM_CARRINHO WHERE CodCarrinho = '{codCarrinho}';");
-            var grades = await _sqlAsyncConnection.Table<TBT_GRADE_ITEM_CARRINHO>().Where(x => x.CodCarrinho == codCarrinho).ToListAsync();
+            var camposItem = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>(
+                "PRAGMA table_info(TBT_ITEM_CARRINHO);"))
+                .Select(x => x.name)
+                .ToList();
 
-            WcfPedidoModelInput retorno = new WcfPedidoModelInput();
+            string sqlCamposItem = string.Join(",", camposItem);
+
+            var itens = await _sqlAsyncConnection.QueryAsync<TBT_ITEM_CARRINHO>(
+                $"SELECT {sqlCamposItem} FROM TBT_ITEM_CARRINHO WHERE CodCarrinho = '{codCarrinho}';");
+
+            var camposItemDesc = (await _sqlAsyncConnection
+                                .QueryAsync<SqliteTableInfoCommandResult>(
+                                    "PRAGMA table_info(TBT_ITEM_CARRINHO_DESC);"))
+                                .Select(x => x.name)
+                                .ToList();
+
+            string sqlCamposItemDesc = string.Join(",", camposItemDesc);
+
+            var itensDesc = await _sqlAsyncConnection.QueryAsync<TBT_ITEM_CARRINHO_DESC>(
+                $"SELECT {sqlCamposItemDesc} FROM TBT_ITEM_CARRINHO_DESC WHERE CodCarrinho = '{codCarrinho}';");
+
+            var grades = await _sqlAsyncConnection
+                .Table<TBT_GRADE_ITEM_CARRINHO>()
+                .Where(x => x.CodCarrinho == codCarrinho)
+                .ToListAsync();
+
             foreach (var item in itens)
             {
-                item.Grades = new List<TBT_GRADE_ITEM_CARRINHO>();
-                var lstGrades = grades.Where(x => x.CodCarrinho == item.CodCarrinho && x.CodItemCarrinho == item.CodItemCarrinho).ToList();
-                if (lstGrades != null)
-                {
-                    item.Grades.AddRange(lstGrades);
-                }
+                item.Grades = grades
+                    .Where(x =>
+                        x.CodCarrinho == item.CodCarrinho &&
+                        x.CodItemCarrinho == item.CodItemCarrinho)
+                    .ToList();
             }
 
-            PEDIDOVENDA pedido = new PEDIDOVENDA();
-            pedido.Carrinho = carrinho;
-            pedido.Itens = itens;
+            var pedido = new PEDIDOVENDA
+            {
+                CODCARRINHO = carrinho.CodCarrinho,
+                CODMARCA = carrinho.CodMarca,
+                CODTABELAPRECO = carrinho.CodTabelaPreco,
+                CODTIPOPEDIDO = carrinho.CodTipoPedido,
+                CODSITUACAOPEDIDO = carrinho.CodSituacaoPedido,
 
-            retorno.PEDIDOVENDA = pedido;
-            return retorno;
+                CODPESSOAREPRESENTANTE = carrinho.CodPessoaRepresentante,
+                CODPESSOAPREPOSTO = carrinho.CodPessoaPreposto,
+                CODPESSOACLIENTE = carrinho.CodPessoaCliente,
+
+                CODUSUARIO = carrinho.CodUsuario.ToString(),
+
+                NUMEROPEDIDOCLIENTE = carrinho.OrdemCompra,
+
+                CODPEDIDO = carrinho.CodCarrinho,
+
+                CODATENDIMENTO = carrinho.CodAtendimento,
+
+                DATAEMISSAO = carrinho.DataEmissao?.ToString("yyyy-MM-dd"),
+                DATAENTREGA = carrinho.DataEntrega?.ToString("yyyy-MM-dd"),
+
+                VALORTOTAL = carrinho.ValorTotal,
+                VALORTOTALLIQUIDO = carrinho.ValorTotalLiquido,
+
+                EMAILNOTIFICACAO = carrinho.Email,
+
+                OBSERVACAO = carrinho.Observacoes,
+
+                QTDTOTAL = carrinho.QtdTotal,
+
+                CUSTOM1 = carrinho.CodSemana,
+                CUSTOM2 = carrinho.CodFabrica,
+                CUSTOM4 = carrinho.CodTransportadora,
+                CUSTOM12 = carrinho.CodAgrupamentoLinha,
+                CUSTOM20 = "IPAD",
+
+                CODINSTALACAO = carrinho.CodInstalacao,
+
+                CODCONDICAOESPECIAL = carrinho.CodCondicaoEspecial,
+                CODPAISGRADE = carrinho.CodPaisGrade,
+                CODCONDICAOPAGAMENTO = carrinho.CodCondicaoPagamento,
+
+                INDPRECOLIQUIDO = carrinho.IndPrecoLiquido,
+
+                ITENS_DESC = itensDesc.Select(d => new ITEMDESCONTO
+                {
+                    CODCARRINHO = d.CodCarrinho,
+                    SEQITEMPEDIDO = d.SeqItemPedido,
+                    CODDESCONTO = d.CodDesconto,
+                    ACUMULADOR = d.Acumulador.ToString(),
+                    PERCENTUALDESCONTO = d.PercentualDesconto
+                }).ToList(),
+
+                ITENS = itens.Select(x => new ITEMPEDIDO
+                {
+                    CODCARRINHO = x.CodCarrinho,
+                    SEQITEMPEDIDO = x.CodItemCarrinho,
+                    CODPRODUTO = x.CodProduto,
+                    CODGRADE = x.CodGrade,
+                    QTDCAIXA = x.QtdCaixa,
+                    QTDTOTAL = x.QtdTotal,
+                    VALORUNITARIO = x.ValorUnitario,
+                    VALORUNITARIOLIQUIDO = x.ValorUnitarioLiquido,
+                    PERCENTUALDESCONTO = x.PercDesc,
+                    PERCENTUALDESCONTO1 = x.PercDesc1,
+                    PERCENTUALDESCONTO2 = x.PercDesc2,
+                    PERCENTUALDESCONTO3 = x.PercDesc3,
+                    PERCENTUALDESCONTO4 = x.PercDesc4,
+                    PERCENTUALDESCONTO5 = x.PercDesc5,
+
+                    CUSTOM1 = x.QtdTotal?.ToString(),
+                    CUSTOM2 = x.NomeLoja,
+                    CUSTOM4 = x.Estabelecimento,
+                    CUSTOM5 = x.Localizacao,
+                    MARKUP = x.Markup,
+                    CODITEMPRONTAENTREGA = x.CodItemProntaEntrega,
+                    CODINSTALACAO = carrinho.CodInstalacao,
+
+                    GRADES = x.Grades?.Select(g => new GRADEPEDIDO
+                    {
+                        CODCARRINHO = g.CodCarrinho,
+                        SEQITEMPEDIDO = g.CodItemCarrinho,
+                        SEQGRADEITEMPEDIDO = g.CodGradeItemCarrinho,
+                        CODDERIVACAO = g.CodDerivacao,
+                        QTD = g.Qtd,
+                        CODINSTALACAO = carrinho.CodInstalacao
+                    }).ToList()
+                }).ToList()
+            };
+
+            return new WcfPedidoModelInput
+            {
+                PEDIDOVENDA = pedido
+            };
         }
+
+        //public override async Task<WcfPedidoModelInput> BuscarCarrinhoParaTransmissao(string codCarrinho)
+        //{
+        //    var camposCarrinho = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>("PRAGMA table_info(TBT_CARRINHO);")).Select(x => x.name).ToList();
+        //    string sqlCamposCarrinho = string.Join(",", camposCarrinho);
+        //    var carrinho = (await _sqlAsyncConnection.QueryAsync<Integracao_TBT_CARRINHO>($"SELECT {sqlCamposCarrinho} FROM TBT_CARRINHO WHERE CodCarrinho = '{codCarrinho}';")).FirstOrDefault();
+        //    carrinho.CodSituacaoPedido = "3";
+
+        //    var camposItem = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>("PRAGMA table_info(TBT_ITEM_CARRINHO);")).Select(x => x.name).ToList();
+        //    string sqlCamposItem = string.Join(",", camposItem);
+        //    sqlCamposItem = sqlCamposItem.Substring(0, sqlCamposItem.Length);
+        //    var itens = await _sqlAsyncConnection.QueryAsync<TBT_ITEM_CARRINHO>($"SELECT {sqlCamposItem} FROM TBT_ITEM_CARRINHO WHERE CodCarrinho = '{codCarrinho}';");
+        //    var grades = await _sqlAsyncConnection.Table<TBT_GRADE_ITEM_CARRINHO>().Where(x => x.CodCarrinho == codCarrinho).ToListAsync();
+
+        //    WcfPedidoModelInput retorno = new WcfPedidoModelInput();
+        //    foreach (var item in itens)
+        //    {
+        //        item.Grades = new List<TBT_GRADE_ITEM_CARRINHO>();
+        //        var lstGrades = grades.Where(x => x.CodCarrinho == item.CodCarrinho && x.CodItemCarrinho == item.CodItemCarrinho).ToList();
+        //        if (lstGrades != null)
+        //        {
+        //            item.Grades.AddRange(lstGrades);
+        //        }
+        //    }
+
+        //    PEDIDOVENDA pedido = new PEDIDOVENDA();
+        //    pedido.Carrinho = carrinho;
+        //    pedido.Itens = itens;
+
+        //    retorno.PEDIDOVENDA = pedido;
+        //    return retorno;
+        //}
 
         public override async Task<WcfPedidoModelInput> BuscarCarrinhoParaTransmissaoCancelado(string codCarrinho, string user, string motivoCancelamento = null)
         {
-            var camposCarrinho = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>("PRAGMA table_info(TBT_CARRINHO);")).Select(x => x.name).ToList();
-            string sqlCamposCarrinho = string.Join(",", camposCarrinho);
-            var carrinho = (await _sqlAsyncConnection.QueryAsync<Integracao_TBT_CARRINHO>($"SELECT {sqlCamposCarrinho} FROM TBT_CARRINHO WHERE CodCarrinho = '{codCarrinho}';")).FirstOrDefault();
-            carrinho.CodSituacaoPedido = "3";
-            //Tarefa 30914
-            carrinho.UserCancel = user;
-            carrinho.MotivoCancelamento = motivoCancelamento;
+            //var camposCarrinho = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>("PRAGMA table_info(TBT_CARRINHO);")).Select(x => x.name).ToList();
+            //string sqlCamposCarrinho = string.Join(",", camposCarrinho);
+            //var carrinho = (await _sqlAsyncConnection.QueryAsync<Integracao_TBT_CARRINHO>($"SELECT {sqlCamposCarrinho} FROM TBT_CARRINHO WHERE CodCarrinho = '{codCarrinho}';")).FirstOrDefault();
+            //carrinho.CodSituacaoPedido = "3";
+            ////Tarefa 30914
+            //carrinho.UserCancel = user;
+            //carrinho.MotivoCancelamento = motivoCancelamento;
 
-            var camposItem = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>("PRAGMA table_info(TBT_ITEM_CARRINHO);")).Select(x => x.name).ToList();
-            string sqlCamposItem = string.Join(",", camposItem);
-            sqlCamposItem = sqlCamposItem.Substring(0, sqlCamposItem.Length);
-            var itens = await _sqlAsyncConnection.QueryAsync<TBT_ITEM_CARRINHO>($"SELECT {sqlCamposItem} FROM TBT_ITEM_CARRINHO WHERE CodCarrinho = '{codCarrinho}';");
-            var grades = await _sqlAsyncConnection.Table<TBT_GRADE_ITEM_CARRINHO>().Where(x => x.CodCarrinho == codCarrinho).ToListAsync();
+            //var camposItem = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>("PRAGMA table_info(TBT_ITEM_CARRINHO);")).Select(x => x.name).ToList();
+            //string sqlCamposItem = string.Join(",", camposItem);
+            //sqlCamposItem = sqlCamposItem.Substring(0, sqlCamposItem.Length);
+            //var itens = await _sqlAsyncConnection.QueryAsync<TBT_ITEM_CARRINHO>($"SELECT {sqlCamposItem} FROM TBT_ITEM_CARRINHO WHERE CodCarrinho = '{codCarrinho}';");
+            //var grades = await _sqlAsyncConnection.Table<TBT_GRADE_ITEM_CARRINHO>().Where(x => x.CodCarrinho == codCarrinho).ToListAsync();
 
             WcfPedidoModelInput retorno = new WcfPedidoModelInput();
-            foreach (var item in itens)
-            {
-                item.Grades = new List<TBT_GRADE_ITEM_CARRINHO>();
-                var lstGrades = grades.Where(x => x.CodCarrinho == item.CodCarrinho && x.CodItemCarrinho == item.CodItemCarrinho).ToList();
-                if (lstGrades != null)
-                {
-                    item.Grades.AddRange(lstGrades);
-                }
-            }
+            //foreach (var item in itens)
+            //{
+            //    item.Grades = new List<TBT_GRADE_ITEM_CARRINHO>();
+            //    var lstGrades = grades.Where(x => x.CodCarrinho == item.CodCarrinho && x.CodItemCarrinho == item.CodItemCarrinho).ToList();
+            //    if (lstGrades != null)
+            //    {
+            //        item.Grades.AddRange(lstGrades);
+            //    }
+            //}
 
-            PEDIDOVENDA pedido = new PEDIDOVENDA();
-            pedido.Carrinho = carrinho;
-            pedido.Itens = itens;
+            //PEDIDOVENDA pedido = new PEDIDOVENDA();
+            //pedido.Carrinho = carrinho;
+            //pedido.Itens = itens;
 
-            retorno.PEDIDOVENDA = pedido;
+            //retorno.PEDIDOVENDA = pedido;
             return retorno;
         }
 

@@ -51,7 +51,12 @@
 	 I.QtdDistribuida,
 	 CASE WHEN (IFNULL(I.QtdTotal, 0) - IFNULL(CarFilho.QtdTotal, 0)) < 0 THEN 0 ELSE IFNULL(I.QtdTotal, 0) - IFNULL(CarFilho.QtdTotal, 0) END AS QtdSaldoMae,
      NA.Descricao AS Categoria,
-    I.QtdCaixa * I.QtdTotal AS QtdTotalNaCaixa
+    I.QtdCaixa * I.QtdTotal AS QtdTotalNaCaixa,
+    I.CodItemProntaEntrega,
+    I.NomeLoja,
+    I.Estabelecimento,
+    I.Localizacao,
+    I.Markup
 FROM TBT_ITEM_CARRINHO I
 LEFT JOIN TBT_CARRINHO C ON C.CodCarrinho = I.CodCarrinho
 LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodTabelaPreco = I.CodTabelaPreco AND I.CodProduto = ITP.CodProduto

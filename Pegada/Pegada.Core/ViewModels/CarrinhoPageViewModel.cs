@@ -148,7 +148,9 @@ namespace Pegada.Core.ViewModels
             CopiarCommand = new Command<CarrinhoCommandResult>(Copiar);
             EditarCommand = new Command<CarrinhoCommandResult>(Editar);
             ImportPlanilhaCommand = new Command<CarrinhoCommandResult>(ImportarPlanilha);
-            TransmitirCommand = new Command<CarrinhoCommandResult>(Transmitir);
+            TransmitirCommand = new Command<CarrinhoCommandResult>(
+                async obj => await Transmitir(obj)
+            );
             CancelarCommand = new Command(Cancelar);
             ImprimirCommand = new Command<CarrinhoCommandResult>(Imprimir);
             MarcarCarrinhoCommand = new Command<CarrinhoCommandResult>(MarcarCarrinho);
@@ -889,7 +891,7 @@ namespace Pegada.Core.ViewModels
             }
         }
 
-        private async void Transmitir(CarrinhoCommandResult obj)
+        private async Task Transmitir(CarrinhoCommandResult obj)
         {
             try
             {
@@ -943,282 +945,88 @@ namespace Pegada.Core.ViewModels
                     //}
 
 
-                    var result = await PedidoEValido(pedido);
-                    if (!result.Sucesso)
-                    {
-                        lstPedidosComErros.Add(pedido.CodCarrinho);
-                        lstPedidosComErros.AddRange(result.ListaErros);
-                        continue;
-                    }
-
-                    var clienteAtendimento = await _clienteRepository.BuscarClientePorCode(new BuscarClienteCommand(null, null, Session.ATENDIMENTO_ATUAL.CodPessoaCliente, null));
-
-                    UserDialogs.Instance.ShowLoading($"Transmitindo o cadastro do cliente novo {pedido.CodPessoaCliente} - {pedido.RazaoSocial}");
-                    if (pedido.CodPessoaCliente.Contains("."))
-                    {
-                        var clienteERP = await _clienteRepository.BuscarClienteIntegrado(pedido.CNPJ);
-                        if (clienteERP == null)
-                        {
-                            var resultTransmissaoCliente = await ServiceUtility.TransmitirCliente(_clienteRepository, _parametroSincronizacaRepository, pedido.CodPessoaCliente);
-                            if (resultTransmissaoCliente.SUCCESS.ToString().ToUpper() == "TRUE")
-                            {
-                                await _clienteRepository.AtualizarClienteIntegrado(pedido.CodPessoaCliente, resultTransmissaoCliente.CODIGO.ToString());
-                                if (!string.IsNullOrEmpty(resultTransmissaoCliente.CODIGO.ToString()))
-                                {
-                                    //Atualiza o carrinho com o codigo do cliente do erp, para não dar problema de integração.
-                                    //await _clienteRepository.AtualizarClienteNoCarrinho(pedido.CodCarrinho, resultTransmissaoCliente.CODIGO.ToString());
-                                }
-                            }
-                            else
-                            {
-                                if (resultTransmissaoCliente.CODMENSAGEM.ToString().ToUpper() == "ITM002")
-                                {
-                                    lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
-                                    lstPedidosComErrosTransmissao.Add($"Cliente {clienteAtendimento.RazaoSocial}, já esta cadastrado na Pegada, sincronize o app para receber o cliente ou entre em contato com a Pegada.");
-                                    continue;
-                                }
-                                else
-                                {
-
-                                    lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
-                                    lstPedidosComErrosTransmissao.Add("Erro na transmissão do cliente novo: EX: " + resultTransmissaoCliente.EXCEPTION.ToString());
-                                    continue;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (string.IsNullOrEmpty(clienteERP.CodPessoaCliente))
-                            {
-                                string prefix = clienteERP.CodPessoaCliente.Substring(1);
-                                if (prefix != "C")
-                                {
-                                    await _clienteRepository.AtualizarClienteIntegrado(pedido.CodPessoaCliente, clienteERP.CodPessoaCliente);
-                                }
-                            }
-                        }
-                    }
-                    UserDialogs.Instance.HideLoading();
-                    bool precisaAprovacao = false;
-
-                    //####################################################################################
-                    //Regra Politica Escolar
-                    //Verifica a data em digitação com a data de hoje
-                    bool temCondicao = false;
-
-                    var dataHoje = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-                    var dataPoliticaEscolar = await _politicaComercialRepository.BuscarDataPoliticaEscolar(dataHoje);
-
-                    //verifica se existe alguma vigente
-                    if (dataPoliticaEscolar.Count > 0)
-                    {
-                        //dentre as vigentes, verificar se escolheu é MiniVA(Mini Voltas Aulas).
-                        var politicaMiniVA = dataPoliticaEscolar.Where(x => x.CodCondicaoPagamento == pedido.CodCondicaoPagamento && x.CodCondicaoPagamento == "MV3").FirstOrDefault();
-
-                        //se escolheu
-                        if (politicaMiniVA != null)
-                        {
-                            //valida se o carrinho esta certo
-                            var validaItensMiniVA = await _carrinhoRepository.GetItensPoliticaMiniVACarrinho(pedido.CodCarrinho);
-                            //se não tiver, informa
-                            if (!validaItensMiniVA)
-                            {
-                                await UserDialogs.Instance.AlertAsync($"A condição de pagamento escolhida não pode ser utilizada no carrinho {PedidoSelecionado.CodCarrinho}, por conta da política comercial vigente, favor escolher outra condição de pagamento");
-                                return;
-                            }
-                        }
-
-                        //dentre as vigentes, verificar se escolheu é VA(Voltas Aulas).
-                        var politicaVA = dataPoliticaEscolar.Where(x => x.CodCondicaoPagamento.Contains(pedido.CodCondicaoPagamento)).FirstOrDefault();
-
-                        //se escolheu
-                        if (politicaVA != null)
-                        {
-                            //valida se o carrinho esta certo
-                            var validaItensVA = await _carrinhoRepository.GetItensPoliticaVACarrinho(pedido.CodCarrinho);
-                            //se não tiver, informa
-                            if (!validaItensVA)
-                            {
-                                await UserDialogs.Instance.AlertAsync($"A condição de pagamento escolhida não pode ser utilizada no carrinho {PedidoSelecionado.CodCarrinho}, por conta da política comercial vigente, favor escolher outra condição de pagamento");
-                                return;
-                            }
-                        }
-                    }
-
-
-                    //bool isCodPoliticaAtualizado = false;
-                    //var codPoliticaComercialUtilizado = string.Empty;
-                    //if(dataPoliticaEscolar.Count > 0)
+                    //var result = await PedidoEValido(pedido);
+                    //if (!result.Sucesso)
                     //{
-                    //    codPoliticaComercialUtilizado = dataPoliticaEscolar[0].CodPoliticaComercial;
-                    //}
-                    //else
-                    //{
-                    //    codPoliticaComercialUtilizado = string.Empty;
+                    //    lstPedidosComErros.Add(pedido.CodCarrinho);
+                    //    lstPedidosComErros.AddRange(result.ListaErros);
+                    //    continue;
                     //}
 
+                    //var clienteAtendimento = await _clienteRepository.BuscarClientePorCode(new BuscarClienteCommand(null, null, Session.ATENDIMENTO_ATUAL.CodPessoaCliente, null));
 
-                    //if (dataPoliticaEscolar.Count > 0)
+                    //UserDialogs.Instance.ShowLoading($"Transmitindo o cadastro do cliente novo {pedido.CodPessoaCliente} - {pedido.RazaoSocial}");
+                    //if (pedido.CodPessoaCliente.Contains("."))
                     //{
-                    //    //Verifica se a categoria está inclusa na TBT_POLITICA_COMERCIAL_NIVEL
-                    //    var detalhesDoProduto = await _nivelRepository.GetNiveisProduto(item.CodProduto);
-                    //    var categoriaDoProduto = detalhesDoProduto[1].CodAtributo;
-                    //    var infoPoliticaComercialNiveis = await _politicaComercialRepository.BuscarPoliticaEscolarNiveis(categoriaDoProduto, codPoliticaComercialUtilizado);
-
-                    //    if (infoPoliticaComercialNiveis.Count > 0)
+                    //    var clienteERP = await _clienteRepository.BuscarClienteIntegrado(pedido.CNPJ);
+                    //    if (clienteERP == null)
                     //    {
-                    //        itensPoliticaEscolar.Add(item.Descricao);
-
-                    //        string condPagamentoPoliticaEscolar = dataPoliticaEscolar[0].CodCondicaoPagamento;
-                    //        var condPagamento = condPagamentoPoliticaEscolar.Split(',');
-
-                    //        foreach (string cond in condPagamento)
+                    //        var resultTransmissaoCliente = await ServiceUtility.TransmitirCliente(_clienteRepository, _parametroSincronizacaRepository, pedido.CodPessoaCliente);
+                    //        if (resultTransmissaoCliente.SUCCESS.ToString().ToUpper() == "TRUE")
                     //        {
-                    //            temCondicao = pedido.CodCondicaoPagamento.Equals(cond);
-                    //            if (temCondicao)
-                    //                break;
+                    //            await _clienteRepository.AtualizarClienteIntegrado(pedido.CodPessoaCliente, resultTransmissaoCliente.CODIGO.ToString());
+                    //            if (!string.IsNullOrEmpty(resultTransmissaoCliente.CODIGO.ToString()))
+                    //            {
+                    //                //Atualiza o carrinho com o codigo do cliente do erp, para não dar problema de integração.
+                    //                //await _clienteRepository.AtualizarClienteNoCarrinho(pedido.CodCarrinho, resultTransmissaoCliente.CODIGO.ToString());
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            if (resultTransmissaoCliente.CODMENSAGEM.ToString().ToUpper() == "ITM002")
+                    //            {
+                    //                lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
+                    //                lstPedidosComErrosTransmissao.Add($"Cliente {clienteAtendimento.RazaoSocial}, já esta cadastrado na Pegada, sincronize o app para receber o cliente ou entre em contato com a Pegada.");
+                    //                continue;
+                    //            }
+                    //            else
+                    //            {
+
+                    //                lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
+                    //                lstPedidosComErrosTransmissao.Add("Erro na transmissão do cliente novo: EX: " + resultTransmissaoCliente.EXCEPTION.ToString());
+                    //                continue;
+                    //            }
                     //        }
                     //    }
                     //    else
                     //    {
-                    //        itensSemPoliticaEscolar.Add(item.Descricao);
+                    //        if (string.IsNullOrEmpty(clienteERP.CodPessoaCliente))
+                    //        {
+                    //            string prefix = clienteERP.CodPessoaCliente.Substring(1);
+                    //            if (prefix != "C")
+                    //            {
+                    //                await _clienteRepository.AtualizarClienteIntegrado(pedido.CodPessoaCliente, clienteERP.CodPessoaCliente);
+                    //            }
+                    //        }
                     //    }
+                    //}
+                    //UserDialogs.Instance.HideLoading();
 
-                    //}
-                    //if (itensPoliticaEscolar.Count > 0 && itensSemPoliticaEscolar.Count > 0)
-                    //{
-                    //    string mensagem = "O(s) item(s) ";
-                    //    foreach (var msgitem in itensSemPoliticaEscolar)
-                    //    {
-                    //        mensagem += msgitem.ToString() + ", ";
-                    //    }
-                    //    mensagem += "não estão vinculados a Política Escolar. Para continuar, faça o desmembramento de itens!";
 
-                    //    await UserDialogs.Instance.AlertAsync(mensagem, AppName, "OK");
-                    //    return;
-                    //}
-                    //else if (itensPoliticaEscolar.Count > 0 && itensSemPoliticaEscolar.Count == 0 && temCondicao)
-                    //{
-                    //    if (isCodPoliticaAtualizado == false)
-                    //    {
-                    //        isCodPoliticaAtualizado = await _carrinhoRepository.AtualizarCodPoliticaComercialCarrinho(pedido.CodCarrinho, codPoliticaComercialUtilizado) == true;
-                    //    }
-                    //}
-                    //####################################################################################
-                    //valida desconto
-                    foreach (var item in pedido.Itens)
+
+                    UserDialogs.Instance.ShowLoading($"Transmitindo o pedido {pedido.CodCarrinho}");
+                    var resultTransmissao = await ServiceUtility.TransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
+
+                    UserDialogs.Instance.HideLoading();
+                    if (resultTransmissao.SUCCESS.ToString().ToUpper() == "FALSE")
                     {
-                        if (item.PercDesc > 0)
-                        {
-                            var coefiDesconto = await _coeficienteRepository.BuscarCoeficientePorCliente(new BuscarCoeficienteCommand("DESCONTO_MAXIMO", clienteAtendimento.CodPessoaCliente, item.CodProduto));
-
-                            if (coefiDesconto != null)
-                            {
-
-                                TabelaPrecoResult condicaoPagamento = await _condicaoPagamentoRepository.BuscarCondicaoPagamento(new BuscarCondicaoPagamentoCommand() { CodCondicaoPagamento = pedido.CodCondicaoPagamento });
-                                string prazoMedio = condicaoPagamento.PrazoMedio > 0 ? condicaoPagamento.PrazoMedio.ToString() : "0";
-
-                                var coefiPrazoMedio = await _coeficienteRepository.BuscarCoeficientePrazoMedio(new BuscarCoeficienteCommand("PRAZO", clienteAtendimento.CodigoSegmento, item.CodProduto, prazoMedio));
-
-                                decimal coeficiente = coefiDesconto.Coeficiente;
-                                if (coefiPrazoMedio != null)
-                                {
-                                    if (coefiPrazoMedio.Coeficiente > 0)
-                                    {
-                                        if (Convert.ToDecimal(prazoMedio) >= 60)
-                                        {
-                                            coeficiente = coefiDesconto.Coeficiente - coefiPrazoMedio.Coeficiente;
-                                        }
-                                        else
-                                        {
-                                            coeficiente = coefiDesconto.Coeficiente + coefiPrazoMedio.Coeficiente;
-                                        }
-                                    }
-                                }
-                                var des = item.PercDesc / 100;
-                                if (des > coeficiente)
-                                {
-                                    precisaAprovacao = true;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                await UserDialogs.Instance.AlertAsync("Não foi encontrado um segmento válido no cliente para o desconto. Sincronize ou entre em contato com a Pegada.", AppName, "OK");
-                                precisaAprovacao = true;
-                                break;
-                            }
-
-                        }
-                    }
-
-
-                    if (precisaAprovacao)
-                    {
-                        List<string> listCarrinhoPendente = new List<string>();
-                        var desconto = await UserDialogs.Instance.ConfirmAsync($"O Desconto do pedido { pedido.CodCarrinho} é maior que o desconto maximo, seu pedido será enviado para aprovação.", "Deseja continuar", "Sim", "Não");
-                        if (!desconto)
-                        {
-                            return;
-                        }
-                        else
-                        {
-                            UserDialogs.Instance.ShowLoading($"Transmitindo o pedido {pedido.CodCarrinho}");
-                            var resultTransmissao = await ServiceUtility.TransmitirPedidoAprovacao(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
-                            if (resultTransmissao.SUCCESS.ToString().ToUpper() == "FALSE")
-                            {
-                                lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
-                                lstPedidosComErrosTransmissao.Add(resultTransmissao.EXCEPTION.ToString());
-                            }
-                            else
-                            {
-                                lstPedidosSemErros.Add(pedido.CodCarrinho);
-                                lstPedidosSemErros.Add(resultTransmissao.CODIGO.ToString());
-
-                                //SALVA CARRINHO TRANSMITIDO PARA ABATIMENTO DE ESTOQUE
-                                await _carrinhoRepository.CadastraCarrinhoHistorico(pedido.CodCarrinho);
-
-                                resultTransmissao.CodCarrinho = pedido.CodCarrinho;
-                                lstPedidosModel.Add(resultTransmissao);
-                                listCarrinhoPendente.Add(pedido.CodCarrinho);
-                            }
-                        }
-
-                        var service = new Pegada.Core.Services.ServiceUtility();
-                        var erros = await service.EnviarEmailAprovacao(listCarrinhoPendente);
-                        if (erros.Count() > 0)
-                        {
-                            // throw new Exception("Pedidos com erros no envio de e-mail.\n" + erros);
-                            string message = string.Join("\n", erros);
-                            await UserDialogs.Instance.AlertAsync("Erro no envio de e-mail.\n" + message, AppName, "OK");
-                        }
-
+                        lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
+                        lstPedidosComErrosTransmissao.Add(resultTransmissao.EXCEPTION.ToString());
                     }
                     else
                     {
-                        UserDialogs.Instance.ShowLoading($"Transmitindo o pedido {pedido.CodCarrinho}");
-                        var resultTransmissao = await ServiceUtility.TransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
-                        if (resultTransmissao.SUCCESS.ToString().ToUpper() == "FALSE")
-                        {
-                            lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
-                            lstPedidosComErrosTransmissao.Add(resultTransmissao.EXCEPTION.ToString());
-                        }
-                        else
-                        {
-                            lstPedidosSemErros.Add(pedido.CodCarrinho);
-                            lstPedidosSemErros.Add(resultTransmissao.CODIGO.ToString());
+                        lstPedidosSemErros.Add(pedido.CodCarrinho);
+                        lstPedidosSemErros.Add(resultTransmissao.CODIGO.ToString());
 
-                            //SALVA CARRINHO TRANSMITIDO PARA ABATIMENTO DE ESTOQUE
-                            await _carrinhoRepository.CadastraCarrinhoHistorico(pedido.CodCarrinho);
+                        //SALVA CARRINHO TRANSMITIDO PARA ABATIMENTO DE ESTOQUE
+                        await _carrinhoRepository.CadastraCarrinhoHistorico(pedido.CodCarrinho);
 
-                            resultTransmissao.CodCarrinho = pedido.CodCarrinho;
-                            lstPedidosModel.Add(resultTransmissao);
-                        }
+                        resultTransmissao.CodCarrinho = pedido.CodCarrinho;
+                        lstPedidosModel.Add(resultTransmissao);
                     }
                 }
 
-                UserDialogs.Instance.HideLoading();
-
+                
                 if (lstPedidosComErros.Count() > 0)
                 {
                     string message = string.Join("\n", lstPedidosComErros);
@@ -1228,8 +1036,12 @@ namespace Pegada.Core.ViewModels
 
                 if (lstPedidosComErrosTransmissao.Count() > 0)
                 {
-                    string message = string.Join("\n", lstPedidosComErrosTransmissao);
-                    await UserDialogs.Instance.AlertAsync("Pedidos com erro na transmissão.\n" + message, AppName, "OK");
+                    await Xamarin.Essentials.MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        string message = string.Join("\n", lstPedidosComErrosTransmissao);
+                        await UserDialogs.Instance.AlertAsync("Pedidos com erro na transmissão.\n" + message, AppName, "OK");
+                    });
+                    
                 }
 
                 if (lstPedidosSemErros.Count() > 0)
@@ -1237,7 +1049,7 @@ namespace Pegada.Core.ViewModels
 
                     foreach (var result in lstPedidosModel)
                     {
-                        await _carrinhoRepository.AtualizarPedidoImplantado(result.CODIGO.ToString(), result.SITUACAO.ToString(), result.CodCarrinho);
+                        await _carrinhoRepository.AtualizarPedidoImplantado(result.CODIGO.ToString(), "98", result.CodCarrinho);
 
                         //Atendimento não tem mais carrinho em edição,
                         //devemos fechar.
@@ -1712,15 +1524,6 @@ namespace Pegada.Core.ViewModels
             {
                 result.Sucesso = result.ListaErros.Count == 0;
                 return result;
-            }
-
-            bool isCarrinhoAlocado = false;
-            if (pedido.Itens.Count > 0) {
-
-                string codCarrinhoAlocado = pedido.Itens[0].CodCarrinhoAlocado;
-                if (!string.IsNullOrEmpty(codCarrinhoAlocado)) {
-                    isCarrinhoAlocado = true;
-                }
             }
 
 

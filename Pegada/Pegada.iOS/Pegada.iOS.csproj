@@ -157,6 +157,7 @@
     <BundleResource Include="Resources\maisIcon_azul.png" />
     <BundleResource Include="Resources\g_check_off.png" />
     <BundleResource Include="Resources\g_check_on.png" />
+    <BundleResource Include="Resources\SoPE.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
