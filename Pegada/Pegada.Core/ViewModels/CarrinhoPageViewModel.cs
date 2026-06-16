@@ -1007,6 +1007,8 @@ namespace Pegada.Core.ViewModels
                     UserDialogs.Instance.ShowLoading($"Transmitindo o pedido {pedido.CodCarrinho}");
                     var resultTransmissao = await ServiceUtility.TransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
 
+                    resultTransmissao = await ServiceUtility.ValidaTransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
+
                     UserDialogs.Instance.HideLoading();
                     if (resultTransmissao.SUCCESS.ToString().ToUpper() == "FALSE")
                     {

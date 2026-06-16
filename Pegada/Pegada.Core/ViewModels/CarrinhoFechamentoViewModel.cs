@@ -365,7 +365,7 @@ namespace Pegada.Core.ViewModels
             // buscaDescontoFrenteCliente();
 
             AceitaFatAntCommand = new Command(ChangeIsAceitaFatAntecipado);
-            IsFatAntecipado = true;
+            IsFatAntecipado = false;
 
             AceitaFatParcialCommand = new Command(ChangeIsAceitaFatParcial);
             IsFatParcial = true;

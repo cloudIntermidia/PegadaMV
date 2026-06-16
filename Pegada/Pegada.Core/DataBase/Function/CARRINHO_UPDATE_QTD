@@ -176,16 +176,16 @@ WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_CARRINHO
 SET 
-    QtdTotal =  (SELECT SUM(IC.QtdTotal) AS QtdTotal
+    QtdTotal =  (SELECT SUM(IC.QtdCaixa * IC.QtdTotal) AS QtdTotal
 	FROM TBT_ITEM_CARRINHO IC
 	WHERE IC.CodCarrinho = '@CodCarrinho' AND IC.StatusFilho IS NULL),
  
-    ValorTotal =  ( SELECT SUM(IC.QtdTotal *  IC.ValorUnitario) AS ValorTotal
+    ValorTotal =  ( SELECT SUM((IC.QtdCaixa * IC.QtdTotal) *  IC.ValorUnitario) AS ValorTotal
                 	FROM TBT_ITEM_CARRINHO IC
                 	WHERE IC.CodCarrinho = '@CodCarrinho'
 					AND IC.StatusFilho IS NULL
 				  ),
-    ValorTotalLiquido =  ( SELECT SUM(IC.QtdTotal *  IC.ValorUnitarioLiquido) AS ValorTotal
+    ValorTotalLiquido =  ( SELECT SUM((IC.QtdCaixa * IC.QtdTotal) *  IC.ValorUnitarioLiquido) AS ValorTotal
                 	FROM TBT_ITEM_CARRINHO IC
                 	WHERE IC.CodCarrinho = '@CodCarrinho'
 					AND IC.StatusFilho IS NULL

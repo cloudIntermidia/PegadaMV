@@ -79,7 +79,7 @@ LEFT JOIN TBT_SITUACAO_PEDIDO SIT ON SIT.CodSituacaoPedido = C.CodSituacaoPedido
 LEFT JOIN TBT_CONDICAO_PAGAMENTO CON ON CON.CodCondicaoPagamento = C.CodCondicaoPagamento
 LEFT JOIN TBT_TABELA_PRECO TP ON TP.CodTabelaPreco = C.CodTabelaPreco
 LEFT JOIN (
-	SELECT CodCarrinho, SUM(QtdTotal) As QtdTotal, CodDeposito
+	SELECT CodCarrinho, SUM(QtdCaixa * QtdTotal) As QtdTotal, CodDeposito
 	FROM TBT_ITEM_CARRINHO
 	GROUP BY CodCarrinho 
 ) AS IC ON IC.CodCarrinho = C.CodCarrinho

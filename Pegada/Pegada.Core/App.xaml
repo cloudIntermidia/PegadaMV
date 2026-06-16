@@ -504,7 +504,9 @@
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        IsVisible="{Binding IndPromocional}"
-                                       Text="{Binding PrecoDe, Converter={StaticResource ValorParaMoeda}}"
+                                       Text="{Binding PrecoDe,
+                                                      Converter={StaticResource ValorParaMoeda},
+                                                      StringFormat='De: {0}'}"
                                        FontSize="10"
                                        FontFamily="{StaticResource RobotoBoldFont}"
                                        TextColor="LightGray"
@@ -526,6 +528,11 @@
                                         <DataTrigger TargetType="Label"
                                                      Binding="{Binding IndPromocional}"
                                                      Value="1">
+
+                                            <Setter Property="Text"
+                                                    Value="{Binding PrecoPor,
+                                                                    Converter={StaticResource ValorParaMoeda},
+                                                                    StringFormat='Por: {0}'}"/>
 
                                             <Setter Property="TextColor"
                                                     Value="#006633"/>

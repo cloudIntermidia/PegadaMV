@@ -55,6 +55,7 @@ namespace Pegada.Core
             Current.Properties["NavigationService"] = NavigationService;
             Current.Properties["AppName"] = "Pegada";
 
+
             //var app = new MobiliVendas.Core.App();
             MobiliVendas.Core.Session.USUARIO_LOGADO = new UsuarioCommandResult();
             MobiliVendas.Core.Session.ATENDIMENTO_ATUAL = null;
