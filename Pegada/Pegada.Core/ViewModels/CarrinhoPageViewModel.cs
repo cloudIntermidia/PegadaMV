@@ -1061,6 +1061,7 @@ namespace Pegada.Core.ViewModels
                             await _atendimentoRepository.FecharAtendimento(Session.ATENDIMENTO_ATUAL.CodAtendimento);
                             Session.ATENDIMENTO_ATUAL = null;
                         }
+                        Session.QtdCar = carrinhoEmDigitacao.Count();
                     }
 
                     string message = string.Join("Pedido(s) enviado(s) com sucesso.\n", lstPedidosSemErros);

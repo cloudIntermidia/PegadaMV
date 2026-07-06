@@ -26,20 +26,20 @@ namespace Pegada.Core.Repositories
         public override async Task<List<CarrinhoCommandResult>> GetCarrinhos(BuscarCarrinhoCommand command)
         {
             //command.CodPessoaCliente = command.CodPessoaCliente.Replace(".", "").Replace("/", "").Replace("-", "");
-            string sql = ManagerQuery.MakeSql("PRO_CARRINHO_GET", "Query", command);
-            var carrinhos = await _sqlAsyncConnection.QueryAsync<CarrinhoCommandResult>(sql);
+            //string sql = ManagerQuery.MakeSql("PRO_CARRINHO_GET", "Query", command);
+            //var carrinhos = await _sqlAsyncConnection.QueryAsync<CarrinhoCommandResult>(sql);
 
-            if (carrinhos?.Count > 0)
-            {
-                foreach (var car in carrinhos)
-                {
-                    //tratamento para ajustar erro onde o carrinho fica sem o tipo de deposito.
-                    if (string.IsNullOrEmpty(car.CodDeposito)) {
-                        string codDeposito = await BuscarDepositoCarrinho(car.CodCarrinho);
-                        await AtualizaDepositoCarrinho(car.CodCarrinho, codDeposito);
-                    }
-                }
-            }
+            //if (carrinhos?.Count > 0)
+            //{
+            //    foreach (var car in carrinhos)
+            //    {
+            //        //tratamento para ajustar erro onde o carrinho fica sem o tipo de deposito.
+            //        if (string.IsNullOrEmpty(car.CodDeposito)) {
+            //            string codDeposito = await BuscarDepositoCarrinho(car.CodCarrinho);
+            //            await AtualizaDepositoCarrinho(car.CodCarrinho, codDeposito);
+            //        }
+            //    }
+            //}
 
             string sqlAtualizado = ManagerQuery.MakeSql("PRO_CARRINHO_GET", "Query", command);
             var carrinhosAtualizado = await _sqlAsyncConnection.QueryAsync<CarrinhoCommandResult>(sqlAtualizado);
