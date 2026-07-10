@@ -145,7 +145,8 @@ namespace Pegada.Core.ViewModels
             _semanaRepository = semanaRepository;
 
             PedidoTappedCommand = new Command<object>(PedidoTapped);
-            CopiarCommand = new Command<CarrinhoCommandResult>(Copiar);
+            //CopiarCommand = new Command<CarrinhoCommandResult>(Copiar);
+            CopiarCommand = new Command<CarrinhoCommandResult>(async obj => await Copiar(obj));
             EditarCommand = new Command<CarrinhoCommandResult>(Editar);
             ImportPlanilhaCommand = new Command<CarrinhoCommandResult>(ImportarPlanilha);
             TransmitirCommand = new Command<CarrinhoCommandResult>(
@@ -1551,7 +1552,7 @@ namespace Pegada.Core.ViewModels
             result.Sucesso = result.ListaErros.Count() == 0;
             return result;
         }
-        private async void Copiar(CarrinhoCommandResult obj)
+        private async Task Copiar(CarrinhoCommandResult obj)
         {
             //await UserDialogs.Instance.AlertAsync("Função indisponível.", AppName, "OK");
             //return;
@@ -1561,7 +1562,14 @@ namespace Pegada.Core.ViewModels
                 await UserDialogs.Instance.AlertAsync("Você precisa marcar um pedido para copiar.", AppName, "OK");
                 return;
             }
-            var page = RgPopupUtility.GerarPopupCopiaPedido(PedidoSelecionado);
+
+            if (Pedidos.Any(x => x.CarrinhoChecado && x.TipoPedido == "Pedido Pronta Entrega"))
+            {
+                await UserDialogs.Instance.AlertAsync("Cópia de pedido só permite Pedido Normal.", AppName, "OK");
+                return;
+            }
+
+            var page = await RgPopupUtility.GerarPopupCopiaPedido(PedidoSelecionado);
             await PopupNavigation.Instance.PushAsync(page);
         }
 

@@ -70,6 +70,7 @@
     <EmbeddedResource Include="DataBase\ALTERACOES\ATUALIZA_VERSAO" />
     <EmbeddedResource Include="DataBase\ALTERACOES\LIMPAR_FOTOS" />
     <EmbeddedResource Include="DataBase\ALTERACOES\ALTER_TBT_CARRINHO_CAMPOS_INTEGRACAO" />
+    <EmbeddedResource Include="DataBase\ALTERACOES\CREATE_INDEXES_COPIA_PEDIDO" />
     <EmbeddedResource Include="DataBase\DDL\DATA_INIT" />
     <EmbeddedResource Include="DataBase\Function\CARRINHO_UPDATE_QTD" />
     <EmbeddedResource Include="DataBase\Query\PRO_CARRINHO_GET" />

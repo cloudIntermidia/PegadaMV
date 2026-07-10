@@ -51,6 +51,12 @@ namespace Pegada.Core
                 if (!tabelaExiste)
                     await ExecutarAlteracoes("CREATE_TBT_HISTORICO_CARRINHO");
 
+                //Índices que faltavam para as tabelas de carrinho/pedido (CodCarrinho, CodPedido etc.
+                //não tinham nenhum índice), causando full table scan na query de cópia de pedido
+                //(PRO_ITEM_PEDIDO_COPIA_GET) e em outras consultas que filtram por essas colunas.
+                //Usa "CREATE INDEX IF NOT EXISTS", então é seguro/barato rodar em toda atualização.
+                await ExecutarAlteracoes("CREATE_INDEXES_COPIA_PEDIDO");
+
                 await ExecutarAlteracoes("ATUALIZA_VERSAO");
             }
             catch (Exception ex)

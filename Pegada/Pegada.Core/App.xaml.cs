@@ -126,7 +126,7 @@ namespace Pegada.Core
             containerRegistry.Register<MobiliVendas.Core.Contracts.IAlterarSenhaView, AlterarSenhaView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.ICarrinhoFechamentoView, Pegada.Core.Views.Carrinho.CarrinhoFechamentoView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.ICarrinhoFechamentoViewModel, Pegada.Core.ViewModels.CarrinhoFechamentoViewModel>();
-            containerRegistry.Register<MobiliVendas.Core.Contracts.ICopiaPedidoView, CopiarPedidoView>();
+            containerRegistry.Register<MobiliVendas.Core.Contracts.ICopiaPedidoView, Pegada.Core.Views.Shared.CopiarPedidoView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.ICopiaPedidoViewModel, Pegada.Core.ViewModels.CopiarPedidoViewModel>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IDistribuirPedidoView, DistribuirPedidoView>();
             containerRegistry.Register<MobiliVendas.Core.Contracts.IDistribuirPedidoViewModel, DistribuirPedidoViewModel>();

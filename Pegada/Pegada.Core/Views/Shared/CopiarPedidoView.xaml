@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Pegada.Core.Views.Shared.CopiarPedidoView"
+             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
+             xmlns:customViewCells="clr-namespace:MobiliVendas.Core.ViewCells;assembly=MobiliVendas.Core"
+             x:Name="this">
+  <!--
+    Tela de Cópia de Pedido do Pegada: reduzida para mostrar apenas a lista de clientes
+    (com busca), igual ao comportamento do app Objective-C. A versão completa (com seleção
+    de política comercial/tabela de preço e lista de itens) continua existindo em
+    MobiliVendas.Core.Views.Tablet.Shared.CopiarPedidoView e é usada por outros apps que
+    compartilham essa biblioteca.
+
+    Ajustes nesta revisão:
+    - SearchBar: RowDefinition Height 40 -> Auto (o UISearchBar nativo tem altura mínima
+      maior que 40, o que fazia o controle "vazar" sobre a primeira linha da ListView).
+    - Cabeçalho: Padding igualado ao do corpo (20,16 / 20,10) para alinhar as bordas
+      visuais do título com a busca e a lista.
+    - Cabeçalho: colunas Auto,*,Auto (em vez de *,*,*) para o título ficar realmente
+      centralizado independente do tamanho dos textos "Cancelar"/"Salvar".
+  -->
+  <ContentView.Content>
+        <AbsoluteLayout>
+            <AbsoluteLayout IsVisible="True"
+                            BackgroundColor="#000"
+                            Opacity="0.3"
+                            AbsoluteLayout.LayoutFlags="All"
+                            AbsoluteLayout.LayoutBounds="1,1,1,1">
+                <AbsoluteLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BindingContext.CancelarCopiaCommand, Source={x:Reference this}}"/>
+                </AbsoluteLayout.GestureRecognizers>
+            </AbsoluteLayout>
+
+            <Frame
+                 AbsoluteLayout.LayoutBounds="0.5,0.5,0.7,0.85"
+                 AbsoluteLayout.LayoutFlags="All"
+                 BackgroundColor="{StaticResource corBackGroundPopover}"
+                 HorizontalOptions="Center"
+                 VerticalOptions="FillAndExpand"
+                 Padding="2"
+                 CornerRadius="8"
+                 >
+
+                <StackLayout Spacing="0">
+                    <Grid Padding="20,16" BackgroundColor="{StaticResource corCabecalhoPopover}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Row="0" Grid.Column="0"
+                            FontFamily="{StaticResource RobotoNormalFont}"
+                            Text="Cancelar"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource corButtonBackPopover}"
+                            HorizontalOptions="Start"
+                            Padding="0"
+                            Command="{Binding BindingContext.CancelarCopiaCommand, Source={x:Reference this}}"/>
+
+                        <Label  Grid.Row="0" Grid.Column="1"
+                            FontFamily="{StaticResource RobotoNormalFont}"
+                            Text="{translator:Translate CopiaPedidoLblCopia}"
+                            FontAttributes="Bold"
+                            TextColor="Black"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"/>
+
+                        <Button Grid.Row="0" Grid.Column="2"
+                            FontFamily="{StaticResource RobotoNormalFont}"
+                            Text="Salvar"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource corButtonBackPopover}"
+                            HorizontalOptions="End"
+                            Padding="0"
+                            Command="{Binding BindingContext.SalvarCopiaCommand, Source={x:Reference this}}"/>
+                    </Grid>
+
+                    <Grid Padding="20,10" RowSpacing="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <SearchBar Grid.Row="0"
+                               BackgroundColor="White"
+                               Text="{Binding BindingContext.FiltroPesquisaCliente, Source={x:Reference this}}"
+                               Placeholder="{translator:Translate CopiaPedidoEntryRazaoNomeCNPJ}"
+                               SearchCommand="{Binding BindingContext.PesquisarClienteCommand, Source={x:Reference this}}"
+                               HorizontalOptions="FillAndExpand"
+                               VerticalOptions="Start"/>
+
+                        <ListView Grid.Row="1"
+                              VerticalOptions="FillAndExpand"
+                              HasUnevenRows="true"
+                              SeparatorVisibility="None"
+                              BackgroundColor="Transparent"
+                              SelectedItem="{Binding BindingContext.ClienteSelecionado, Source={x:Reference this}, Mode=TwoWay}"
+                              ItemsSource="{Binding BindingContext.Clientes, Source={x:Reference this}}">
+
+                            <ListView.Behaviors>
+                                <b:EventToCommandBehavior EventName="ItemTapped"
+                                                  Command="{Binding BindingContext.ClienteTappedCommand, Source={x:Reference this}}"
+                                                  EventArgsParameterPath="Item" />
+                            </ListView.Behaviors>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <customViewCells:ClienteViewCell Apelido="{Binding Apelido}"
+                                                                 CodPessoaCliente="{Binding CodPessoaCliente}"
+                                                                 InfoCommand="{Binding BindingContext.InfoCommand,Source={x:Reference this}}"
+                                                                 ClienteSelecionado="{Binding .}"
+                                                                 NomeFantasia="{Binding NomeFantasia}"
+                                                                 Localidade="{Binding Localidade}"
+                                                                 />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

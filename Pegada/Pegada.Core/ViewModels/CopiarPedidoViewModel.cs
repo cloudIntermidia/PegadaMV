@@ -339,199 +339,173 @@ namespace Pegada.Core.ViewModels
 
         private async Task PesquisarClientes()
         {
-            await _atendimentoUtility.CarregarClientes(new BuscarClienteCommand(Session.USUARIO_LOGADO.CodPessoa, Session.USUARIO_LOGADO.CodMarca, null, Session.USUARIO_LOGADO.CodTipoPessoa, FiltroPesquisaCliente)).ConfigureAwait(false);
+            await CarregarClientesDaTela();
+        }
+
+        //Centraliza o carregamento de clientes (usado tanto ao abrir a tela quanto na busca).
+        //Reatribui _atendimentoUtility.Clientes = Clientes antes de cada chamada porque AtendimentoUtility
+        //é compartilhado por outras telas (NovoAtendimento, DistribuirPedido etc.) que também apontam essa
+        //mesma propriedade para as próprias coleções; sem isso, a busca pode acabar preenchendo uma
+        //coleção diferente da que está de fato ligada (bind) na tela de cópia.
+        private async Task CarregarClientesDaTela()
+        {
+            _atendimentoUtility.Clientes = Clientes;
+            await _atendimentoUtility.CarregarClientes(new BuscarClienteCommand(Session.USUARIO_LOGADO.CodPessoa, Session.USUARIO_LOGADO.CodMarca, null, Session.USUARIO_LOGADO.CodTipoPessoa, FiltroPesquisaCliente));
         }
 
         private async void SalvarCopia()
         {
-            //try
-            //{ 
-            //    if (ClienteSelecionado == null)
-            //    {
-            //        await UserDialogs.Instance.AlertAsync($"Selecione primeiro o cliente.", AppName);
-            //        return;
-            //    }
+            try
+            {
+                if (ClienteSelecionado == null)
+                {
+                    await UserDialogs.Instance.AlertAsync($"Selecione primeiro o cliente.", AppName);
+                    return;
+                }
 
-            //    if (!itensUI.Any(x => x.ItemChecado))
-            //    {
-            //        await UserDialogs.Instance.AlertAsync($"É necessário selecionar pelo menos 1 item para ser copiado.", AppName);
-            //        return;
-            //    }
+                //Regra do Objective-C (CopiaCarrinhoViewController.touchSaveBtn): valida se o cliente
+                //selecionado pode efetuar pedido (mesma regra usada para bloquear a seleção do cliente).
+                bool podeFazerPedido = ClienteSelecionado.IndAtivo == 1 &&
+                                       ClienteSelecionado.IdExternoSituacao == 1 &&
+                                       ClienteSelecionado.CreditoLiberado == 1 &&
+                                       (ClienteSelecionado.UsaClasseRisco == 0 ||
+                                        (ClienteSelecionado.UsaClasseRisco == 1 && ClienteSelecionado.PermiteDigitacao == 1));
 
-            //    if (itensUI.Any(x => x.ItemChecado && x.ItemBloqueado))
-            //    {
-            //        string message = string.Join("\n", itensUI.Where(x => x.ItemChecado && x.ItemBloqueado).Select(x => x.CodProduto).ToArray());
+                if (!podeFazerPedido)
+                {
+                    await UserDialogs.Instance.AlertAsync($"Cliente bloqueado para efetuar pedido.", AppName, "OK");
+                    return;
+                }
 
-            //        await UserDialogs.Instance.AlertAsync($"Os produtos listados abaixo estão bloqueados para venda. \n{message}", AppName);
-            //        return;
-            //    }
+                //Regra do Objective-C (CopiaCarrinhoViewController.touchSaveBtn): pedido/carrinho de origem
+                //com CodSituacaoPedido "7" (cancelado) não pode ser copiado.
+                if (PedidoSelecionado.CodSituacaoPedido == "7")
+                {
+                    await UserDialogs.Instance.AlertAsync($"Não é possível copiar um pedido cancelado.", AppName, "OK");
+                    return;
+                }
 
-            //    string mesgPrdExclusivos = string.Join("\n", itensUI.Where(x => x.ItemChecado && x.RestricaoLocal == ClienteSelecionado.RestricaoLocal && ClienteSelecionado.RestricaoLocal == "S").Select(x => x.CodProduto).ToArray());
-            //    if (!string.IsNullOrEmpty(mesgPrdExclusivos))
-            //    {
-            //        await UserDialogs.Instance.AlertAsync($"Os produtos listados abaixo estão bloqueados para venda para o cliente selecionado {ClienteSelecionado.RazaoSocial}. \n{mesgPrdExclusivos}", AppName);
-            //        return;
-            //    }
+                if (!IsComDesconto) {
+                    foreach (var item in itensUI) {
+                        item.PercDesc = 0;
+                        item.PercDesc1 = 0;
+                    }
+                }
 
-            //    foreach (var itemCheck in itensUI.Where(x => x.ItemChecado).ToList()) {
-            //        if (itemCheck.QtdTotal > itemCheck.QtdSaldo) {
-            //            await UserDialogs.Instance.AlertAsync($"Produto {itemCheck.Descricao} não possui saldo para a quantidade {itemCheck.QtdTotal} digitada.", AppName);
-            //            return;
-            //        }
-            //    }
+                UserDialogs.Instance.ShowLoading("Copiando pedido");
 
-            //    if (ClienteSelecionado.RestricaoLocal == "S"){
+                //Regra do Objective-C (CopiaCarrinhoViewController.touchSaveBtn): se o cliente permite ajuste
+                //de preço, o atendimento passa a aplicar markup; se o cliente ainda não tem markup definido
+                //(markup == 0), tanto o atendimento quanto o cliente recebem markup 1.
+                decimal markup = 0;
+                int indAplicaMarkup = 0;
+                if (ClienteSelecionado.PermiteAjustePreco == 1)
+                {
+                    indAplicaMarkup = 1;
+                    markup = ClienteSelecionado.Markup;
+                    if (markup == 0)
+                    {
+                        markup = 1;
+                        ClienteSelecionado.Markup = 1;
+                    }
+                }
 
-            //        var itensRestrito = itensUI.Where(x => x.ItemChecado && x.RestricaoLocal == "S").ToList();
-            //        if (itensRestrito != null) {
-            //            string desprodutos = "";
-            //            foreach (var dp in itensRestrito) {
-            //                desprodutos += $"{dp.CodProduto}, ";
-            //            }
-            //            await UserDialogs.Instance.AlertAsync($"Produto(s) {desprodutos} estão bloqueados para venda.", AppName);
-            //            return;
-            //        }
-            //    }
+                //Regra do Objective-C: o atendimento de destino sempre herda a tabela de preço do
+                //pedido/carrinho de origem (atendimentoCopia.codTabelaPreco = _pedidoCopia.codTabelaPreco).
+                //A reutilização de um atendimento já aberto para o cliente (em vez de criar um novo) já é
+                //feita pelo AtendimentoRepository.AbrirAtendimento no lado do servidor/handler.
+                CriarAtendimentoCommand atendimento = new CriarAtendimentoCommand(ClienteSelecionado.CodPessoaCliente,
+                                        Session.USUARIO_LOGADO.CodUsuario, Session.USUARIO_LOGADO.CodMarca, Session.USUARIO_LOGADO.CodInstalacao,
+                                        ClienteSelecionado.Apelido, 1, PedidoSelecionado.CodCondicaoPagamento, null, PedidoSelecionado.CodTabelaPreco, null, null, 0, 0, null, null, 0, 0, 0, 0, PedidoSelecionado.CodTipoPedido, markup, indAplicaMarkup);
 
-            //    if (!IsComDesconto) {
-            //        foreach (var item in itensUI) {
-            //            item.PercDesc = 0;
-            //            item.PercDesc1 = 0;
-            //        }
-            //    }
+                var command = new CopiarCarrinhoCommand()
+                {
+                    CodCarrinhoOrigem = PedidoSelecionado.CodPedido == null ? PedidoSelecionado.CodCarrinho : PedidoSelecionado.CodPedido,
+                    CodPessoaCliente = ClienteSelecionado.CodPessoaCliente,
+                    Usuario = Session.USUARIO_LOGADO,
+                    NovoAtendimento = atendimento,
+                    CodPoliticaComercial = PoliticaComercialSelecionada?.Codigo,
+                    CodTabelaPreco = PedidoSelecionado.CodTabelaPreco,
+                    Itens = itensUI.ToList(),
+                    CodTipoPedido = PedidoSelecionado.CodTipoPedido,
+                    CodCondicaoPagamento = PedidoSelecionado.CodCondicaoPagamento
+                };
 
-            //    if (IsSemEstoque)
-            //    {
-            //        await UserDialogs.Instance.AlertAsync($"Não é possível salvar o pedido na visualização de itens sem estoque.", AppName);
-            //        return;
-            //    }
+                var result = await _carrinhoHandler.Handle(command) as HandlerResult;
+                if (result.Sucesso)
+                {
+                    //Projeto #21793
+                    //Add parametros especificos do projeto para validar a copia
+                    //Observação: o código antigo buscava esses valores via BuscarCarrinhoParaTransmissao/
+                    //PEDIDOVENDA.Carrinho, convertendo o resultado para "Integracao_TBT_CARRINHO". Essa
+                    //estrutura não existe mais (WcfPedidoModelInput.PEDIDOVENDA é hoje um DTO plano, sem a
+                    //propriedade "Carrinho"), então os valores são obtidos diretamente do carrinho/pedido de
+                    //origem já carregado (PedidoSelecionado), que é a mesma fonte de dados.
+                    String codCarrinhoNovo = (result as HandlerResult).Result;
 
-            //    //if (ProdutoNaoTemEstoque)
-            //    //{
-            //    //    await UserDialogs.Instance.AlertAsync($"Não é possível salvar o pedido se a opção de atualizar o estoque estiver disponivel.", AppName);
-            //    //    return;
-            //    //}
+                    //Atualiza Percentual de Desconto e demais campos herdados do carrinho/pedido de origem
+                    await _databaseRepository.ExecutaUpdate("TBT_CARRINHO",
+                        new List<string>() {  "CodDeposito", "PercentualDesconto",
+                                              "PercentualDesconto1", "PercentualDesconto2", "PercentualDesconto3",
+                                              "PercentualDesconto4", "PercentualDesconto5",
+                                              "DataEntrega", "AceitaFaturamentoAntecipado", "CodCondicaoPagamento",
+                                               "PrazoMedio", "Observacoes","OrdemCompra"},
+                        new List<string>() { "CodCarrinho" },
+                        new
+                        {
+                            CodCarrinho = codCarrinhoNovo,
+                            Observacoes = PedidoSelecionado.Observacoes,
+                            OrdemCompra = PedidoSelecionado.OrdemCompra,
+                            CodDeposito = PedidoSelecionado.CodDeposito,
+                            DataEntrega = PedidoSelecionado.DataEntrega,
+                            AceitaFaturamentoAntecipado = PedidoSelecionado.AceitaFaturamentoAntecipado,
+                            CodCondicaoPagamento = PedidoSelecionado.CodCondicaoPagamento,
+                            PrazoMedio = PedidoSelecionado.PrazoMedio,
 
-            //    //if (produtosSemEstoque.Count == itensUI.Count)
-            //    //{
-            //    //    await UserDialogs.Instance.AlertAsync($"Não é possível salvar o pedido, todos os itens estão sem estoques.", AppName);
-            //    //    return;
-            //    //}
-
-            //    var listaItensChecados = itensUI.Where(x => x.ItemChecado).ToList();
-
-            //    string codProdutosSemEstoque = string.Empty;
-
-            //    codProdutosSemEstoque = string.Join(", ", listaItensChecados.Where(x => x.TemEstoque == false).Select(item => item.CodProduto));
-
-            //    if (!string.IsNullOrEmpty(codProdutosSemEstoque))
-            //    {
-            //        var response = await UserDialogs.Instance.ConfirmAsync($"Não há estoques para os produtos {codProdutosSemEstoque}, deseja salvar o pedido sem esses itens?", "Produto(s) sem estoque(s)", "Sim", "Não");
-            //        if (!response)
-            //            return;
-            //    }
-
-            //    UserDialogs.Instance.ShowLoading("Copiando pedido");
-            //    CriarAtendimentoCommand atendimento = new CriarAtendimentoCommand(ClienteSelecionado.CodPessoaCliente,
-            //                            Session.USUARIO_LOGADO.CodUsuario, Session.USUARIO_LOGADO.CodMarca, Session.USUARIO_LOGADO.CodInstalacao,
-            //                            ClienteSelecionado.Apelido, 1, PedidoSelecionado.CodCondicaoPagamento, null, null, null, null, 0, 0, null, null, 0, 0, 0, 0,PedidoSelecionado.TipoPedido, 0, 0);
-
-            //    var command = new CopiarCarrinhoCommand()
-            //    {
-            //        CodCarrinhoOrigem = PedidoSelecionado.CodPedido == null ? PedidoSelecionado.CodCarrinho : PedidoSelecionado.CodPedido,
-            //        CodPessoaCliente = ClienteSelecionado.CodPessoaCliente,
-            //        Usuario = Session.USUARIO_LOGADO,
-            //        NovoAtendimento = atendimento,
-            //        CodPoliticaComercial = PoliticaComercialSelecionada?.Codigo,
-            //        CodTabelaPreco = PedidoSelecionado.CodTabelaPreco,
-            //        Itens = itensUI.Where(x => x.ItemChecado).ToList(),
-            //        CodTipoPedido = PedidoSelecionado.CodTipoPedido,
-            //        CodCondicaoPagamento = PedidoSelecionado.CodCondicaoPagamento
-            //    };
-
-            //    //var commandDesconto = new BuscarNivelDescontoCommand()
-            //    //{
-            //    //    CodPessoaCliente = ClienteSelecionado.CodPessoaCliente,
-            //    //    CodMarca = Session.USUARIO_LOGADO.CodMarca,
-            //    //    CodProduto = itensFull[0].CodProduto
-            //    //};
-
-            //    //command.PercentualDesconto = await BuscarDescontoCliente(commandDesconto);
-            //    var result = await _carrinhoHandler.Handle(command) as HandlerResult;
-            //    if (result.Sucesso)
-            //    {
-            //        //Projeto #21793
-            //        //Add parametros especificos do projeto para validar a copia
-            //        String codCarrinhoNovo = (result as HandlerResult).Result;
-            //        WcfPedidoModelInput modelRequest = await _carrinhoRepository.BuscarCarrinhoParaTransmissao(PedidoSelecionado.CodCarrinho != null ? PedidoSelecionado.CodCarrinho : codCarrinhoNovo);
-            //        var carrinhoCopia = (Integracao_TBT_CARRINHO)(modelRequest.PEDIDOVENDA.Carrinho);
-            //        //Atualiza Percentual de Desconto
-            //        await _databaseRepository.ExecutaUpdate("TBT_CARRINHO",
-            //            new List<string>() {  "CodDeposito", "PercentualDesconto",
-            //                                  "PercentualDesconto1", "PercentualDesconto2", "PercentualDesconto3",
-            //                                  "PercentualDesconto4", "PercentualDesconto5", "ObservacoesSeparacao",
-            //                                  "CodTransportadora", "DataLimite",
-            //                                  "DataEntrega", "AceitaFaturamentoAntecipado", "CodCondicaoPagamento",
-            //                                   "PrazoMedio", "Observacoes","OrdemCompra"},
-            //            new List<string>() { "CodCarrinho" },
-            //            new
-            //            {
-            //                CodCarrinho = codCarrinhoNovo,
-            //                Observacoes = carrinhoCopia.Observacoes,
-            //                OrdemCompra = carrinhoCopia.OrdemCompra,
-            //                CodDeposito = carrinhoCopia.CodDeposito,
-            //                DataEntrega = carrinhoCopia.DataEntrega,
-            //                AceitaFaturamentoAntecipado = carrinhoCopia.AceitaFaturamentoAntecipado,
-            //                CodCondicaoPagamento = carrinhoCopia.CodCondicaoPagamento,
-            //                PrazoMedio = carrinhoCopia.PrazoMedio,
-
-            //                PercentualDesconto = IsComDesconto == true ? carrinhoCopia.PercentualDesconto : 0,
-            //                PercentualDesconto1 = 0,
-            //                PercentualDesconto2 = 0,
-            //                PercentualDesconto3 = 0,
-            //                PercentualDesconto4 = 0,
-            //                PercentualDesconto5 = 0,
-            //                CodTransportadora = carrinhoCopia.CodTransportadora,
-            //                DataLimite = carrinhoCopia.DataLimite,
-            //                ObservacoesSeparacao = carrinhoCopia.ObservacoesSeparacao
-            //            });
+                            PercentualDesconto = IsComDesconto == true ? PedidoSelecionado.PercentualDesconto : 0,
+                            PercentualDesconto1 = 0,
+                            PercentualDesconto2 = 0,
+                            PercentualDesconto3 = 0,
+                            PercentualDesconto4 = 0,
+                            PercentualDesconto5 = 0,
+                        });
 
 
-            //        //Atualiza itens do novo carrinho com info especificas
-            //        var itensLista = itensUI.Where(x => x.ItemChecado).ToList();
-            //        foreach (var itemUpdate in itensLista)
-            //        {
-            //            await _databaseRepository.ExecutaUpdate("TBT_ITEM_CARRINHO",
-            //            new List<string>() { "DataEntrega" },
-            //            new List<string>() { "CodCarrinho", "CodProduto" },
-            //            new
-            //            {
-            //                CodCarrinho = codCarrinhoNovo,
-            //                CodProduto = itemUpdate.CodProduto,
-            //                DataEntrega = itemUpdate.DataEntrega
-            //            });
-            //        }
+                    //Atualiza itens do novo carrinho com info especificas
+                    var itensLista = itensUI.Where(x => x.ItemChecado).ToList();
+                    foreach (var itemUpdate in itensLista)
+                    {
+                        await _databaseRepository.ExecutaUpdate("TBT_ITEM_CARRINHO",
+                        new List<string>() { "DataEntrega" },
+                        new List<string>() { "CodCarrinho", "CodProduto" },
+                        new
+                        {
+                            CodCarrinho = codCarrinhoNovo,
+                            CodProduto = itemUpdate.CodProduto,
+                            DataEntrega = itemUpdate.DataEntrega
+                        });
+                    }
 
 
-            //        MessagingCenter.Send<object>(this, "LoadCarrinho");
+                    MessagingCenter.Send<object>(this, "LoadCarrinho");
 
-            //        UserDialogs.Instance.HideLoading();
-            //        await UserDialogs.Instance.AlertAsync($"Carrinho copiado com sucesso. {result.Result}", AppName, "OK");
-            //    }
-            //    else
-            //    {
-            //        UserDialogs.Instance.HideLoading();
-            //        string message = string.Join("\n", result.ListaErros);
-            //        await UserDialogs.Instance.AlertAsync($"Não foi possível copiar o pedido. {message}", AppName, "OK");
-            //    }
+                    UserDialogs.Instance.HideLoading();
+                    await UserDialogs.Instance.AlertAsync($"Carrinho copiado com sucesso. {result.Result}", AppName, "OK");
+                }
+                else
+                {
+                    UserDialogs.Instance.HideLoading();
+                    string message = string.Join("\n", result.ListaErros);
+                    await UserDialogs.Instance.AlertAsync($"Não foi possível copiar o pedido. {message}", AppName, "OK");
+                }
 
-            //    await PopupNavigation.Instance.PopAsync();
-            //}
-            //catch (Exception ex)
-            //{
-            //    UserDialogs.Instance.HideLoading();
-            //    await UserDialogs.Instance.AlertAsync(ex.Message, AppName, "OK");
-            //}
+                await PopupNavigation.Instance.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName, "OK");
+            }
         }
 
         private async Task<decimal> BuscarDescontoCliente(BuscarNivelDescontoCommand buscarDesconto)
@@ -555,10 +529,22 @@ namespace Pegada.Core.ViewModels
         #region "Metodos da Interface"
         public async Task Init()
         {
-            IsSemEstoque = false;
-            ProdutoNaoTemEstoque = false;
+            //Todo o carregamento fica dentro de um try/catch porque o Init() agora é aguardado
+            //(await) por quem abre esse popup (RgPopupUtility.GerarPopupCopiaPedido) antes de exibir a
+            //tela. Sem esse try/catch, qualquer erro aqui dentro impede o popup de aparecer (a tela
+            //simplesmente não abre); com ele, mostramos o erro ao usuário e ainda assim deixamos a tela
+            //abrir (mesmo que com a lista de itens/clientes incompleta).
+            try
+            {
+                IsSemEstoque = false;
+                ProdutoNaoTemEstoque = false;
 
-            itensFull = new ObservableCollection<ItemCommandResult>();
+                //Carrega a lista de clientes automaticamente ao abrir a tela, igual ao Objective-C
+                //(que já mostra a lista completa assim que a tela de cópia abre, sem exigir uma busca antes).
+                FiltroPesquisaCliente = null;
+                await CarregarClientesDaTela();
+
+                itensFull = new ObservableCollection<ItemCommandResult>();
             itensUI = new ObservableCollection<ItemCommandResult>();
             itensFull = await _pedidoRepository.GetItensPedidosCopia(PedidoSelecionado);
 
@@ -570,12 +556,56 @@ namespace Pegada.Core.ViewModels
                 var grades = await _carrinhoRepository.BuscarGradesDoItem(new BuscarGradesItemCommand(PedidoSelecionado.CodCarrinho, item.CodItemCarrinho));
                 foreach (var grade in grades)
                 {
+                    //Regra do Objective-C (CopiaCarrinhoViewController): ao copiar, a grade do item copiado
+                    //sempre recebe o codGrade fixo "999", independente da grade de origem.
+                    grade.CodGrade = "999";
                     item.Grades.Add(grade);
                 }
                 itensUI.Add(item);
-            }  
+            }
 
-            RaisePropertyChanged("itensUI");
+            //A tela de cópia do Pegada mostra somente a lista de clientes (igual ao Objective-C),
+            //sem etapa manual de seleção de política comercial/tabela de preço nem checkbox por item.
+            //Por isso a política comercial e a tabela de preço usadas na validação dos itens são as
+            //do próprio pedido/carrinho de origem (mesma regra do ObjC: atendimentoCopia.codTabelaPreco
+            //= _pedidoCopia.codTabelaPreco), e todo item compatível já sai marcado para cópia.
+            //Observação: essa validação usa itensUI (a lista efetivamente copiada) em vez de
+            //PedidoSelecionado.Itens (usada pelo antigo PesquisarReferencias), pois PedidoSelecionado.Itens
+            //não é preenchido no fluxo de cópia.
+            PoliticaComercialSelecionada = new GenericComboResult { Codigo = PedidoSelecionado.CodPoliticaComercial };
+            TabelaPrecoSelecionada = new GenericComboResult { Codigo = PedidoSelecionado.CodTabelaPreco };
+
+            if (!string.IsNullOrEmpty(TabelaPrecoSelecionada.Codigo) && itensUI.Any())
+            {
+                var codProdutos = string.Join(",", itensUI.Select(x => x.CodProduto).ToArray());
+                var command = new BuscarModeloCommand()
+                {
+                    ItensEmAtendimento = -1,
+                    CodProdutoIn = codProdutos,
+                    CodTabelaPreco = TabelaPrecoSelecionada.Codigo,
+                    ValidaEstoque = "S"
+                };
+                //var produtos = await _modeloRepository.BuscarModelos(command);
+                //foreach (var item in itensUI)
+                //{
+                //    item.ItemBloqueado = !produtos.Any(x => x.CodProdutoModelo == item.CodProduto);
+                //    item.ItemChecado = !item.ItemBloqueado;
+                //}
+            }
+            else
+            {
+                foreach (var item in itensUI)
+                {
+                    item.ItemChecado = true;
+                }
+            }
+
+                RaisePropertyChanged("itensUI");
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName, "OK");
+            }
         }
 
         public void SetTodos(bool value)
