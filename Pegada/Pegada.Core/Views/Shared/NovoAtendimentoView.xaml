@@ -6,6 +6,114 @@
              x:Class="Pegada.Core.Views.Shared.NovoAtendimentoView"
              x:Name="this">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <!-- Modelo local (não usa o ClienteSelecaoTemplate global de App.xaml, para não afetar a tela
+                 de Seleção de Cliente): checkbox à esquerda (btnCheckCliente, EdicaoAtendimentoTableViewCell)
+                 + Código Cliente numa coluna própria com largura fixa (para não truncar, como cliente.code em
+                 SelecaoClienteViewController/EdicaoAtendimentoViewController) + linha de Endereço
+                 (enderecoClienteLabel, também presente nas duas telas do PegadaIOS e que faltava aqui). -->
+            <DataTemplate x:Key="ClienteAtendimentoCheckTemplate">
+                <ViewCell>
+                    <StackLayout>
+                        <Grid Margin="1"
+                              RowSpacing="0"
+                              HeightRequest="90">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="20" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ffimageloading:CachedImage Grid.Row="0"
+                                                         Grid.Column="0"
+                                                         Grid.RowSpan="3"
+                                                         BackgroundColor="Transparent"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         HeightRequest="26"
+                                                         Aspect="AspectFit"
+                                                         IsVisible="{Binding BindingContext.ModoAtualizacaoCadastro, Source={x:Reference this}}"
+                                                         Source="{Binding UiChecked, Converter={StaticResource BoleanoParaImagem}}">
+                                <ffimageloading:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.MarcarClienteCommand, Source={x:Reference this}}" CommandParameter="{Binding .}"/>
+                                </ffimageloading:CachedImage.GestureRecognizers>
+                            </ffimageloading:CachedImage>
+
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   LineBreakMode="TailTruncation"
+                                   FontFamily="{StaticResource RobotoNormalFont}"
+                                   Text="{Binding Apelido}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
+                                   FontSize="14"/>
+                            <Label Grid.Row="0" Grid.Column="2"
+                                   LineBreakMode="NoWrap"
+                                   FontFamily="{StaticResource RobotoNormalFont}"
+                                   Text="{Binding CodPessoaCliente}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
+                                   FontSize="14"
+                                   HorizontalTextAlignment="End"
+                                   HorizontalOptions="Fill"/>
+
+                            <ffimageloading:CachedImage Grid.Row="0"
+                                                         Grid.Column="3"
+                                                         Grid.RowSpan="3"
+                                                         BackgroundColor="Transparent"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         HeightRequest="35"
+                                                         Aspect="AspectFit"
+                                                         Source="info.png">
+                                <ffimageloading:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding InfoCommand}" CommandParameter="{Binding .}"/>
+                                </ffimageloading:CachedImage.GestureRecognizers>
+                            </ffimageloading:CachedImage>
+
+                            <Label Grid.Row="1" Grid.Column="1"
+                                   LineBreakMode="TailTruncation"
+                                   FontFamily="{StaticResource RobotoNormalFont}"
+                                   Text="{Binding NomeFantasia}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='#666666,Red'}"
+                                   FontSize="12"/>
+
+                            <Label Grid.Row="1" Grid.Column="2"
+                                   LineBreakMode="NoWrap"
+                                   FontFamily="{StaticResource RobotoNormalFont}"
+                                   Text="{Binding Localidade}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='#666666,Red'}"
+                                   FontSize="12"
+                                   HorizontalTextAlignment="End"
+                                   HorizontalOptions="Fill"/>
+
+                            <!-- Equivalente a enderecoClienteLabel (SelecaoClienteViewController /
+                                 EdicaoAtendimentoViewController, PegadaIOS) - faltava nesta tela. -->
+                            <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                                   LineBreakMode="TailTruncation"
+                                   FontFamily="{StaticResource RobotoNormalFont}"
+                                   Text="{Binding EnderecoPrincipalCompleto}"
+                                   TextColor="Gray"
+                                   FontSize="11"/>
+
+                        </Grid>
+
+                        <BoxView HeightRequest="0.5"
+                                 HorizontalOptions="FillAndExpand"
+                                 Color="Black"/>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
     <!-- FUNDO ESCURO -->
     <Grid BackgroundColor="#80000000">
 
@@ -296,11 +404,11 @@
                                BackgroundColor="Transparent"/>
                     </Frame>
 
-                    <syncfusion:SfListView Grid.Row="4"  
+                    <syncfusion:SfListView Grid.Row="4"
                             VerticalOptions="FillAndExpand"
                             BackgroundColor="White"
                             ItemsSource="{Binding BindingContext.Clientes, Source={x:Reference this}}"
-                            ItemTemplate="{StaticResource ClienteSelecaoTemplate}"
+                            ItemTemplate="{StaticResource ClienteAtendimentoCheckTemplate}"
                             ItemSize="70"
                             ItemSpacing="1"
                             SelectionBackgroundColor="LightGray"
@@ -326,22 +434,37 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Text="Atualizar Cadastro"
+                    <Label Text="{Binding BindingContext.TextoBotaoAtualizarCadastro, Source={x:Reference this}}"
                            TextColor="#007AFF"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding BindingContext.AtualizarCadastroCommand, Source={x:Reference this}}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
 
                     <Label Grid.Column="1"
-                           Text="Transmitir Cliente"
+                           Text="{Binding BindingContext.TextoBotaoTransmitir, Source={x:Reference this}}"
                            TextColor="#007AFF"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding BindingContext.TransmitirClienteCommand, Source={x:Reference this}}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
 
                     <Label Grid.Column="2"
                            Text="Novo Cliente"
                            TextColor="#007AFF"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding BindingContext.NovoClienteCommand, Source={x:Reference this}}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
                 </Grid>
 
             </Grid>

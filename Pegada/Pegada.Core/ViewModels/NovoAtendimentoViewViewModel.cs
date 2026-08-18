@@ -5,6 +5,7 @@ using MobiliVendas.Core.Domain.Commands.Inputs;
 using MobiliVendas.Core.Domain.Commands.Results;
 using MobiliVendas.Core.Domain.Repositories;
 using MobiliVendas.Core.Domain.StaticObject;
+using MobiliVendas.Core.Services;
 using MobiliVendas.Core.Utils;
 using MobiliVendas.Core.ViewModels;
 using Prism.Commands;
@@ -126,10 +127,31 @@ namespace Pegada.Core.ViewModels
         public string FiltroPesquisa
         {
             get { return filtroPesquisa; }
-            set { SetProperty(ref filtroPesquisa, value); }
+            set
+            {
+                SetProperty(ref filtroPesquisa, value);
+
+                // Equivalente ao -updateClientesWithSearch: (EdicaoAtendimentoViewController, PegadaIOS):
+                // filtro em memória sobre a lista já carregada, aplicado a cada tecla digitada.
+                FiltrarClientes();
+            }
         }
 
         public ObservableCollection<ClienteCommandResult> Clientes { get; set; }
+
+        private List<ClienteCommandResult> ListaClientesOriginal;
+
+        // Equivalente a "_atualizaClienteCheked" (EdicaoAtendimentoViewController, PegadaIOS): liga/desliga
+        // o modo de seleção com checkbox para atualização de situação comercial.
+        private bool _modoAtualizacaoCadastro;
+        public bool ModoAtualizacaoCadastro
+        {
+            get { return _modoAtualizacaoCadastro; }
+            set { SetProperty(ref _modoAtualizacaoCadastro, value); }
+        }
+
+        public string TextoBotaoAtualizarCadastro => ModoAtualizacaoCadastro ? "Cancelar" : "Atualizar Cadastro";
+        public string TextoBotaoTransmitir => ModoAtualizacaoCadastro ? "Atualizar Selecionados" : "Transmitir Cliente";
 
         #endregion
 
@@ -139,6 +161,7 @@ namespace Pegada.Core.ViewModels
         private readonly ITabelaPrecoRepository _tabelaPrecoRepository;
         private readonly IParametroRepository _parametroRepository;
         private readonly IPessoaRepository _pessoaRepository;
+        private readonly IParametroSincronizacaoRepository _parametroSincronizacaRepository;
         private readonly AtendimentoUtility _atendimentoUtility;
         #endregion
 
@@ -163,6 +186,17 @@ namespace Pegada.Core.ViewModels
         public ICommand FiltroClasseRiscoCommand { get; set; }
         public ICommand FiltroStatusCommand { get; set; }
 
+        // Equivalentes aos botões da toolbar do EdicaoAtendimentoViewController (PegadaIOS):
+        // "Novo Cliente" (abre o cadastro) e "Transmitir Cliente" (envia cadastros novos pendentes, ou
+        // atualiza a situação comercial dos selecionados quando ModoAtualizacaoCadastro está ligado).
+        public ICommand NovoClienteCommand { get; set; }
+        public ICommand TransmitirClienteCommand { get; set; }
+
+        // Equivalentes a "touchAtualizarCancelarSituacaoCadastroClientes" e "cell:didCheckEdicaoAtendimento:"
+        // (EdicaoAtendimentoViewController / EdicaoAtendimentoTableViewCell, PegadaIOS).
+        public ICommand AtualizarCadastroCommand { get; set; }
+        public ICommand MarcarClienteCommand { get; set; }
+
         private readonly ICoeficienteRepository _coeficienteRepository;
         private readonly ICondicaoPagamentoRepository _condicaoPagamentoRepository;
         #endregion
@@ -176,11 +210,12 @@ namespace Pegada.Core.ViewModels
             AtendimentoUtility atendimentoUtility,
             ICoeficienteRepository coeficienteRepository,
             ICondicaoPagamentoRepository condicaoPagamento,
-            IPessoaRepository pessoaRepository
+            IPessoaRepository pessoaRepository,
+            IParametroSincronizacaoRepository parametroSincronizacaRepository
             )
         {
             CarrinhoFechamento = new CarrinhoFechamentoCommandResult();
-            CarrinhoFechamento.TabelaPreco = "Tabela de Preço"; 
+            CarrinhoFechamento.TabelaPreco = "Tabela de Preço";
 
             _clienteRepository = clienteRepository;
             _atendimentoRepository = atendimentoRepository;
@@ -191,6 +226,7 @@ namespace Pegada.Core.ViewModels
             _coeficienteRepository = coeficienteRepository;
             _condicaoPagamentoRepository = condicaoPagamento;
             _pessoaRepository = pessoaRepository;
+            _parametroSincronizacaRepository = parametroSincronizacaRepository;
 
             SalvarAtendimentoCommand = new DelegateCommand<object>(SalvarAtendimento);
             CancelarAtendimentoCommand = new DelegateCommand<object>(FecharPopupAtendimento);
@@ -212,7 +248,10 @@ namespace Pegada.Core.ViewModels
 
             SelecionarTipoAtendimentoCommand = new Command(SelecionarTipoAtendimento);
 
-            
+            NovoClienteCommand = new Command(async () => await NovoCliente());
+            TransmitirClienteCommand = new Command(async () => await TransmitirClientes());
+            AtualizarCadastroCommand = new Command(AlternarModoAtualizacaoCadastro);
+            MarcarClienteCommand = new Command<object>(MarcarCliente);
 
             Clientes = new ObservableCollection<ClienteCommandResult>();
 
@@ -263,8 +302,47 @@ namespace Pegada.Core.ViewModels
             CarregarClientes(command);
         }
 
+        // Equivalente a -updateClientesWithSearch: (EdicaoAtendimentoViewController, PegadaIOS): filtra
+        // em memória a lista já carregada (ListaClientesOriginal), sem nova consulta ao banco.
+        private void FiltrarClientes()
+        {
+            if (ListaClientesOriginal == null)
+                return;
 
-        
+            if (string.IsNullOrWhiteSpace(FiltroPesquisa))
+            {
+                Clientes.Clear();
+
+                foreach (var item in ListaClientesOriginal)
+                    Clientes.Add(item);
+
+                return;
+            }
+
+            string texto = FiltroPesquisa.ToLower();
+
+            var filtrados = ListaClientesOriginal.Where(x =>
+                   (!string.IsNullOrEmpty(x.RazaoSocial) &&
+                    x.RazaoSocial.ToLower().Contains(texto))
+
+                || (!string.IsNullOrEmpty(x.NomeFantasia) &&
+                    x.NomeFantasia.ToLower().Contains(texto))
+
+                || (!string.IsNullOrEmpty(x.CNPJ) &&
+                    x.CNPJ.ToLower().Contains(texto))
+
+                || (!string.IsNullOrEmpty(x.Cidade) &&
+                    x.Cidade.ToLower().Contains(texto))
+            ).ToList();
+
+            Clientes.Clear();
+
+            foreach (var item in filtrados)
+                Clientes.Add(item);
+        }
+
+
+
         private async Task CarregaPrepostos() {
             if (Session.USUARIO_LOGADO.CodTipoPessoa == "3")
             {
@@ -318,6 +396,11 @@ namespace Pegada.Core.ViewModels
                         }
                     });
                 }
+
+                // Equivalente a "self.allClientes" (EdicaoAtendimentoViewController, PegadaIOS): base usada
+                // pelo filtro de pesquisa em memória (FiltrarClientes), separada da consulta ao banco.
+                ListaClientesOriginal = listaClientes ?? new List<ClienteCommandResult>();
+
                 UserDialogs.Instance.HideLoading();
             }
             catch (Exception ex)
@@ -433,6 +516,10 @@ namespace Pegada.Core.ViewModels
 
             CidadeSelecionada = obj as GenericComboResult;
 
+            // Equivalente a -setCidadeSelecionada: (EdicaoAtendimentoViewController, PegadaIOS): recarrega
+            // a lista de clientes assim que a cidade é escolhida.
+            PesquisarCliente();
+
             RaisePropertyChanged("PrepostoSelecionado");
             await PopupNavigation.Instance.PopAsync();
         }
@@ -447,6 +534,9 @@ namespace Pegada.Core.ViewModels
             }
 
             SituacaoSelecionada = obj as GenericComboResult;
+
+            // Equivalente a -setSituacaoClienteSelecionada: (EdicaoAtendimentoViewController, PegadaIOS).
+            PesquisarCliente();
 
             RaisePropertyChanged("PrepostoSelecionado");
             await PopupNavigation.Instance.PopAsync();
@@ -463,6 +553,9 @@ namespace Pegada.Core.ViewModels
 
             ClasseRiscoSelecionada = obj as GenericComboResult;
 
+            // Equivalente a -setClasseRiscoSelecionada: (EdicaoAtendimentoViewController, PegadaIOS).
+            PesquisarCliente();
+
             RaisePropertyChanged("PrepostoSelecionado");
             await PopupNavigation.Instance.PopAsync();
         }
@@ -477,6 +570,9 @@ namespace Pegada.Core.ViewModels
             }
 
             StatusSelecionado = obj as GenericComboResult;
+
+            // Equivalente a -setStatusSelecionado: (EdicaoAtendimentoViewController, PegadaIOS).
+            PesquisarCliente();
 
             RaisePropertyChanged("PrepostoSelecionado");
             await PopupNavigation.Instance.PopAsync();
@@ -536,9 +632,185 @@ namespace Pegada.Core.ViewModels
         }
 
 
+        // Equivalente a "touchInfoBtn"/segue "InfoCliente" (EdicaoAtendimentoViewController, PegadaIOS).
         private async void VisualizarInfoCliente(object obj)
         {
-            //await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupInfoCliente(_clienteSelecionado));
+            try
+            {
+                var cliente = obj as ClienteCommandResult;
+                if (cliente == null)
+                    return;
+
+                cliente.EnderecoPrincipal = await _clienteRepository.BuscarEnderecoPrincipal(cliente.CodPessoaCliente);
+                cliente.EnderecoCobranca = await _clienteRepository.BuscarEnderecoCobranca(cliente.CodPessoaCliente);
+                await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupInfoCliente(cliente));
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        // Equivalente ao botão "Novo Cliente" da toolbar (EdicaoAtendimentoViewController, PegadaIOS).
+        // Fecha o popup de Novo Atendimento antes de abrir o cadastro: FormCadastroClienteView é aberto via
+        // PushModalAsync (pilha padrão do Xamarin.Forms), que fica visualmente ABAIXO da camada do
+        // Rg.Plugins.Popup - com o popup ainda aberto, a tela de cadastro nasce atrás dele. Mesmo padrão já
+        // usado em SelecaoClienteViewModel.NovoCliente. Ao fechar o cadastro (cancelar ou salvar), reabre o
+        // Novo Atendimento - como a tela é recriada do zero, ela já carrega a lista de clientes atualizada
+        // do banco, então um cliente recém-cadastrado já aparece nela sem passo extra.
+        private async Task NovoCliente()
+        {
+            await PopupNavigation.Instance.PopAsync();
+            await RgPopupUtility.AbrirCadastroCliente(ReabrirNovoAtendimento);
+        }
+
+        private async void ReabrirNovoAtendimento()
+        {
+            await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupAtendimento());
+        }
+
+        // Equivalente a "touchTransmitirClientes" (EdicaoAtendimentoViewController, PegadaIOS): fora do modo
+        // de seleção, transmite os cadastros de clientes novos pendentes; dentro do modo "Atualizar Cadastro",
+        // atualiza a situação comercial dos clientes marcados.
+        private async Task TransmitirClientes()
+        {
+            if (ModoAtualizacaoCadastro)
+            {
+                await AtualizarSituacaoComercialSelecionados();
+                return;
+            }
+
+            try
+            {
+                var confirm = await UserDialogs.Instance.ConfirmAsync("Esta ação irá transmitir todos os cadastros de clientes novos, deseja prosseguir?", "Transmitir", "Sim", "Não");
+                if (!confirm)
+                    return;
+
+                var listClientes = await _clienteRepository.BuscarClientesTransmitir(new BuscarClienteCommand(Session.USUARIO_LOGADO.CodPessoa, Session.USUARIO_LOGADO.CodMarca, null, Session.USUARIO_LOGADO.CodTipoPessoa, FiltroPesquisa)).ConfigureAwait(false);
+
+                if (listClientes.Count > 0)
+                {
+                    UserDialogs.Instance.ShowLoading("Transmitindo o cadastros...");
+                    foreach (var cliente in listClientes)
+                    {
+                        if (cliente.CodPessoaCliente.Contains("."))
+                        {
+                            var clienteERP = await _clienteRepository.BuscarClienteIntegrado(cliente.CNPJ);
+                            if (clienteERP == null)
+                            {
+                                var resultTransmissaoCliente = await ServiceUtility.TransmitirCliente(_clienteRepository, _parametroSincronizacaRepository, cliente.CodPessoaCliente);
+                                if (resultTransmissaoCliente.SUCCESS.ToString().ToUpper() == "TRUE")
+                                {
+                                    await _clienteRepository.AtualizarClienteIntegrado(cliente.CodPessoaCliente, resultTransmissaoCliente.CODIGO.ToString());
+                                }
+                            }
+                        }
+                    }
+                    UserDialogs.Instance.HideLoading();
+
+                    await UserDialogs.Instance.AlertAsync("Cadastros enviados com sucesso!", AppName);
+                }
+                else
+                {
+                    await UserDialogs.Instance.AlertAsync("Nenhum cadastro encontrado para transmissão.", AppName);
+                }
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        // Equivalente a "touchAtualizarCancelarSituacaoCadastroClientes" (EdicaoAtendimentoViewController,
+        // PegadaIOS): liga/desliga o modo de seleção com checkbox na lista.
+        private void AlternarModoAtualizacaoCadastro()
+        {
+            ModoAtualizacaoCadastro = !ModoAtualizacaoCadastro;
+
+            if (!ModoAtualizacaoCadastro)
+                LimparSelecaoClientes();
+
+            RaisePropertyChanged(nameof(TextoBotaoAtualizarCadastro));
+            RaisePropertyChanged(nameof(TextoBotaoTransmitir));
+        }
+
+        // Equivalente a "limpaSelecao" (EdicaoAtendimentoViewController, PegadaIOS).
+        private void LimparSelecaoClientes()
+        {
+            foreach (var cliente in Clientes)
+                cliente.UiChecked = false;
+
+            if (ListaClientesOriginal != null)
+                foreach (var cliente in ListaClientesOriginal)
+                    cliente.UiChecked = false;
+        }
+
+        // Equivalente a "cell:didCheckEdicaoAtendimento:" (EdicaoAtendimentoTableViewCell, PegadaIOS).
+        private void MarcarCliente(object obj)
+        {
+            if (obj is ClienteCommandResult cliente)
+                cliente.UiChecked = !cliente.UiChecked;
+        }
+
+        // Equivalente ao ramo "_atualizaClienteCheked == YES" de "touchTransmitirClientes"
+        // (EdicaoAtendimentoViewController, PegadaIOS): atualiza a situação comercial dos clientes marcados
+        // via webservice e grava o retorno no banco local.
+        private async Task AtualizarSituacaoComercialSelecionados()
+        {
+            try
+            {
+                var selecionados = Clientes.Where(c => c.UiChecked).ToList();
+                if (selecionados.Count == 0)
+                {
+                    await UserDialogs.Instance.AlertAsync("Selecione pelo menos um cliente para atualizar a situação comercial.", "Atualização de situação comercial");
+                    return;
+                }
+
+                UserDialogs.Instance.ShowLoading("Atualizando situação comercial...");
+
+                var resultado = await ServiceUtility.AtualizarSituacaoComercialClientes(_parametroSincronizacaRepository, selecionados.Select(c => c.CodPessoaCliente).ToList());
+
+                bool sucesso = resultado != null && resultado.Any(item =>
+                    item.TryGetValue("SUCCESS", out var valor) && string.Equals(valor?.ToString(), "TRUE", StringComparison.OrdinalIgnoreCase));
+
+                UserDialogs.Instance.HideLoading();
+
+                if (sucesso)
+                {
+                    foreach (var item in resultado)
+                    {
+                        if (!item.TryGetValue("CODPESSOACLIENTE", out var codObj) || codObj == null)
+                            continue;
+
+                        int.TryParse(item.TryGetValue("CREDITOLIBERADO", out var cred) ? cred?.ToString() : null, out int creditoLiberado);
+                        int.TryParse(item.TryGetValue("INDATIVO", out var ativo) ? ativo?.ToString() : null, out int indAtivo);
+                        int.TryParse(item.TryGetValue("USACLASSERISCO", out var usa) ? usa?.ToString() : null, out int usaClasseRisco);
+                        string codSituacaoCliente = item.TryGetValue("CODSITUACAOCLIENTE", out var sit) ? sit?.ToString() : null;
+                        string codClasseRisco = item.TryGetValue("CODCLASSERISCO", out var classe) ? classe?.ToString() : null;
+
+                        await _clienteRepository.AtualizarSituacaoComercialCliente(codObj.ToString(), codSituacaoCliente, creditoLiberado, indAtivo, codClasseRisco, usaClasseRisco);
+                    }
+
+                    await UserDialogs.Instance.AlertAsync("Atualização realizada com sucesso.", "Atualização de situação comercial");
+
+                    ModoAtualizacaoCadastro = false;
+                    RaisePropertyChanged(nameof(TextoBotaoAtualizarCadastro));
+                    RaisePropertyChanged(nameof(TextoBotaoTransmitir));
+                    LimparSelecaoClientes();
+
+                    PesquisarCliente();
+                }
+                else
+                {
+                    await UserDialogs.Instance.AlertAsync("Ocorreu um erro ao realizar a atualização.", "Atualização de situação comercial");
+                }
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
         }
 
         private async void SalvarAtendimento(object obj)
