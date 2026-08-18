@@ -83,6 +83,7 @@
             <converters:StringFiltroParaImagem x:Key="StringFiltroParaImagem"/>
             <converters:ConverterExcMoeda x:Key="ConverterExcMoeda"/>
             <converters:FormatDataQuinzena x:Key="FormatDataQuinzena"/>
+            <converters:SituacaoClienteParaTextoConverter x:Key="SituacaoClienteParaTextoConverter"/>
             
 
 

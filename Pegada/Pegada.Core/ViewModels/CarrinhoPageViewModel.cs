@@ -894,10 +894,12 @@ namespace Pegada.Core.ViewModels
 
         private async Task Transmitir(CarrinhoCommandResult obj)
         {
+            TransmissaoLogger.Log("===== Transmitir: início =====");
             try
             {
                 if (!Pedidos.Any(x => x.CarrinhoChecado))
                 {
+                    TransmissaoLogger.Log("Transmitir: nenhum pedido selecionado, abortando.");
                     await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 1 pedido para transmitir", AppName, "OK");
                     return;
                 }
@@ -905,6 +907,7 @@ namespace Pegada.Core.ViewModels
                 var confirm = await UserDialogs.Instance.ConfirmAsync($"Deseja realmente transmitir o(os) pedido(os) selecionado(os)?", "Transmitir", "Sim", "Não");
                 if (!confirm)
                 {
+                    TransmissaoLogger.Log("Transmitir: usuário cancelou a confirmação.");
                     return;
                 }
 
@@ -1005,14 +1008,18 @@ namespace Pegada.Core.ViewModels
 
 
 
+                    TransmissaoLogger.Log($"Transmitir: iniciando transmissão do pedido {pedido.CodCarrinho}.");
                     UserDialogs.Instance.ShowLoading($"Transmitindo o pedido {pedido.CodCarrinho}");
                     var resultTransmissao = await ServiceUtility.TransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
+                    TransmissaoLogger.Log($"Transmitir: TransmitirPedido {pedido.CodCarrinho} retornou SUCCESS={resultTransmissao?.SUCCESS} CODIGO={resultTransmissao?.CODIGO} EXCEPTION={resultTransmissao?.EXCEPTION}");
 
                     resultTransmissao = await ServiceUtility.ValidaTransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
+                    TransmissaoLogger.Log($"Transmitir: ValidaTransmitirPedido {pedido.CodCarrinho} retornou SUCCESS={resultTransmissao?.SUCCESS} CODIGO={resultTransmissao?.CODIGO} EXCEPTION={resultTransmissao?.EXCEPTION}");
 
                     UserDialogs.Instance.HideLoading();
                     if (resultTransmissao.SUCCESS.ToString().ToUpper() == "FALSE")
                     {
+                        TransmissaoLogger.Log($"Transmitir: pedido {pedido.CodCarrinho} com erro na transmissão: {resultTransmissao.EXCEPTION}");
                         lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
                         lstPedidosComErrosTransmissao.Add(resultTransmissao.EXCEPTION.ToString());
                     }
@@ -1023,6 +1030,7 @@ namespace Pegada.Core.ViewModels
 
                         //SALVA CARRINHO TRANSMITIDO PARA ABATIMENTO DE ESTOQUE
                         await _carrinhoRepository.CadastraCarrinhoHistorico(pedido.CodCarrinho);
+                        TransmissaoLogger.Log($"Transmitir: pedido {pedido.CodCarrinho} transmitido com sucesso, histórico cadastrado.");
 
                         resultTransmissao.CodCarrinho = pedido.CodCarrinho;
                         lstPedidosModel.Add(resultTransmissao);
@@ -1069,9 +1077,12 @@ namespace Pegada.Core.ViewModels
                     await UserDialogs.Instance.AlertAsync(message, AppName);
                     await Load();
                 }
+
+                TransmissaoLogger.Log("===== Transmitir: fim =====");
             }
             catch (Exception ex)
             {
+                TransmissaoLogger.LogErro("Transmitir: exceção não tratada", ex);
                 UserDialogs.Instance.HideLoading();
                 await UserDialogs.Instance.AlertAsync(ex.Message, AppName, "OK");
             }

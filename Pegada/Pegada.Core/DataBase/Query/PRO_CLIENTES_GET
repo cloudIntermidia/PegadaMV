@@ -1,4 +1,4 @@
-﻿SELECT c.CodPessoaCliente AS CodPessoaCliente,
+SELECT c.CodPessoaCliente AS CodPessoaCliente,
        c.RazaoSocial AS RazaoSocial,
        c.NomeFantasia AS NomeFantasia,
        c.CNPJ AS CNPJ,
@@ -17,17 +17,44 @@
        ec.UF AS UF,
        ec.Latitude AS Latitude,
        ec.Longitude AS Longitude,
-	   NULL AS Representante, 
+	   NULL AS Representante,
        c.UltimoPedido,
 	   C.TipoVenda,
 	   IFNULL(C.IndBloqueioPedido, 0) As IndBloqueioPedido,
 	   IFNULL(C.IndBloqueioFaturamento, 0) As IndBloqueioFaturamento,
 	   IFNULL(C.IndBloqueioExpedicao, 0) As IndBloqueioExpedicao,
 	   IFNULL(C.LimiteCredito,0) AS LimiteCredito,
+	   IFNULL(C.LimiteCreditoTotal,0) AS LimiteTotal,
 	   ec.Endereco || CASE WHEN ec.Complemento IS NULL OR RTRIM(ec.Complemento) = '' THEN ' - ' ELSE ', ' || ec.Complemento || ' - '  END || ec.Bairro || ', ' || ec.Cidade || ' - ' || ec.Uf AS EnderecoPrincipalCompleto,
 	   CASE WHEN CP.Codigo IS NOT NULL THEN 1 else 0 END AS IsCategoriaValida,
 	   C.CodigoSegmento,
-	   S.Descricao AS Categoria
+	   S.Descricao AS Categoria,
+	   C.CodClasseRisco,
+	   C.CodCondicaoPagamento,
+	   C.Suframa,
+	   C.Homepage,
+	   C.Banco,
+	   C.Agencia,
+	   C.Conta,
+	   C.NomeBanco,
+	   C.NomeTitularConta,
+	   C.TipoChavePix,
+	   C.ChavePix,
+	   C.DataValidadeSuframa,
+	   C.IndFaturaContaOrdem,
+	   C.DiasFatAntecipado,
+	   C.CodPais,
+	   IFNULL(C.IndFatParcial, 0) AS IndFatParcial,
+	   IFNULL(C.IndFatAntecipado, 0) AS IndFatAntecipado,
+	   IFNULL(C.CompraPrecoLiquido, 0) AS CompraPrecoLiquido,
+	   IFNULL(C.IndAtivo, 0) AS IndAtivo,
+	   IFNULL(C.CreditoLiberado, 0) AS CreditoLiberado,
+	   IFNULL(C.PermiteAjustePreco, 0) AS PermiteAjustePreco,
+	   IFNULL(CR.PermiteDigitacao, 0) AS PermiteDigitacao,
+	   CR.Descricao AS DescricaoClasseRisco,
+	   CPG.Descricao AS CondicaoPagamentoDescricao,
+	   IFNULL(C.LimiteCreditoGrupo,0) AS LimiteCreditoGrupo,
+	   IFNULL(C.LimiteFaturamento,0) AS LimiteFaturamento
   FROM TBT_CLIENTE c
        INNER JOIN TBT_PESSOA p ON c.CodPessoaCliente = p.CodPessoa
        LEFT JOIN TBT_ENDERECO_CLIENTE ec ON c.CodPessoaCliente = ec.CodPessoaCliente AND ec.IndPrincipal = 1
@@ -36,24 +63,26 @@
 			WHERE CP.Tipo = 'DESCONTO_MAXIMO'
 	   ) CP ON CP.Codigo = C.CodigoSegmento
 	   LEFT JOIN TBT_SEGMENTO S ON S.CodSegmento = C.CodigoSegmento
+	   LEFT JOIN TBT_CLASSE_RISCO CR ON CR.CodClasseRisco = C.CodClasseRisco
+	   LEFT JOIN TBT_CONDICAO_PAGAMENTO CPG ON CPG.CodCondicaoPagamento = C.CodCondicaoPagamento
  WHERE  (
-			('@CodTipoPessoa' <> '1' 
+			('@CodTipoPessoa' <> '1'
 				AND EXISTS (
 					   SELECT *
 						 FROM TBT_MARCA_CLIENTE MC
-						WHERE MC.CodPessoaCliente = C.CodPessoaCliente AND 
+						WHERE MC.CodPessoaCliente = C.CodPessoaCliente AND
 							  MC.CodMarca = '@CodMarca' AND
-							  (MC.CodPessoaRepresentante = '@CodPessoaVendedor' OR 
+							  (MC.CodPessoaRepresentante = '@CodPessoaVendedor' OR
 							   MC.CodPessoaVendedor = '@CodPessoaVendedor'
 					)
-				) 
+				)
 			   OR
-			   ('@CodTipoPessoa' = '1' AND 
+			   ('@CodTipoPessoa' = '1' AND
 				   EXISTS(
 						SELECT * FROM TBT_GERENTE_VENDEDOR GV
 						INNER JOIN TBT_MARCA_CLIENTE MC ON GV.CodPessoaRepresentante = MC.CodPessoaRepresentante
-						WHERE MC.CodPessoaCliente = C.CodPessoaCliente 
-						AND MC.CodMarca = '@CodMarca' 
+						WHERE MC.CodPessoaCliente = C.CodPessoaCliente
+						AND MC.CodMarca = '@CodMarca'
 						AND GV.CodPessoaGerente = '@CodPessoaVendedor'
 
 				   )
@@ -62,11 +91,11 @@
        )
         AND (
                 '-1' = '@CodPessoaCliente' OR  c.CodPessoaCliente = '@CodPessoaCliente'
-            ) 
+            )
 		AND (
-                '-1' = '@FiltroPesquisa' OR 
-				(	
-					c.RazaoSocial like '%@FiltroPesquisa%'  OR 
+                '-1' = '@FiltroPesquisa' OR
+				(
+					c.RazaoSocial like '%@FiltroPesquisa%'  OR
 					c.NomeFantasia like '%@FiltroPesquisa%' OR
 					c.Cnpj like '%@FiltroPesquisa%' OR
 					c.CodPessoaCliente like '%@FiltroPesquisa%' OR
@@ -75,7 +104,7 @@
 					ec.Complemento like '%@FiltroPesquisa%' OR
 					ec.Cidade like '%@FiltroPesquisa%'
 				)
-			) 
+			)
 --        AND NOT EXISTS(
 --            SELECT 1 FROM TBT_CLIENTE CC
 --            WHERE CC.CodPessoaCliente = p.CodPessoaERP

@@ -6,16 +6,19 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
+             xmlns:controls="clr-namespace:MobiliVendas.Core.CustomView.Controls.SegmentedControl;assembly=MobiliVendas.Core"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              mc:Ignorable="d"
              x:Class="Pegada.Core.Views.Negocio.CadastroClientePage"
              x:Name="this">
     <ContentPage.Content>
-        <AbsoluteLayout VerticalOptions="FillAndExpand" 
+        <AbsoluteLayout VerticalOptions="FillAndExpand"
                     HorizontalOptions="FillAndExpand">
 
-            <StackLayout AbsoluteLayout.LayoutFlags="All" 
-                  AbsoluteLayout.LayoutBounds="0,0,1,0.92" 
-                  BackgroundColor="#DCDCDC" 
+            <StackLayout AbsoluteLayout.LayoutFlags="All"
+                  AbsoluteLayout.LayoutBounds="0,0,1,0.92"
+                  BackgroundColor="#DCDCDC"
                   VerticalOptions="FillAndExpand"
                   Spacing="0">
 
@@ -27,14 +30,14 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
 
                     <flex:FlexButton
                         Grid.Row="0" Grid.Column="0"
                         WidthRequest="350"
                         HorizontalOptions="Start"
-                        Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}, Converter={x:StaticResource TextSubText}, ConverterParameter='CLIENTE'}"
+                        Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}, Converter={x:StaticResource TextSubText}, ConverterParameter='Selecionar Cliente'}"
                         ClickedCommand="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"
                         Style="{StaticResource flexButtonFiltros}"
                         />
@@ -44,13 +47,6 @@
                              HorizontalOptions="End"
                              IsVisible="{Binding BindingContext.MantemCadastro, Source={x:Reference this}}">
 
-                        <flex:FlexButton
-                        Text="TRANSMITIR CADASTROS"
-                        HorizontalOptions="End"
-                        ClickedCommand="{Binding BindingContext.TransmitirClienteCommand, Source={x:Reference this}}"
-                        Style="{StaticResource flexButtonFiltros}"
-                        />
-
                         <flex:FlexButton IsVisible="True"
                             Text="EDITAR CADASTRO"
                             HorizontalOptions="End"
@@ -58,7 +54,14 @@
                             Style="{StaticResource flexButtonFiltros}"
                             />
 
-                        <flex:FlexButton IsVisible="True" 
+                        <flex:FlexButton
+                        Text="TRANSMITIR CLIENTE"
+                        HorizontalOptions="End"
+                        ClickedCommand="{Binding BindingContext.TransmitirClienteCommand, Source={x:Reference this}}"
+                        Style="{StaticResource flexButtonFiltros}"
+                        />
+
+                        <flex:FlexButton IsVisible="True"
                             Text="NOVO CLIENTE"
                             HorizontalOptions="End"
                             ClickedCommand="{Binding BindingContext.CadastrarClienteNovoCommand, Source={x:Reference this}}"
@@ -68,555 +71,827 @@
 
                 </Grid>
 
+                <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <StackLayout Spacing="0">
 
+                <!-- ===================== CARD PRINCIPAL (Dados do Cliente + Endereço + Outros) ===================== -->
                 <Grid BackgroundColor="White"
-                      VerticalOptions="FillAndExpand"
                       HorizontalOptions="FillAndExpand"
-                      Padding="20" 
-                      RowSpacing="5"
+                      Padding="20,15"
+                      RowSpacing="4"
                       >
-
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.4*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0"
-                       Grid.Column="0"
-                       Text="DADOS DO CLIENTE"
-                       FontFamily="{StaticResource RobotoBoldFont}"
-                       FontAttributes="Bold"
-                       TextColor="Black"
-                       FontSize="18"
-                       />
+                    <!-- Dados do Cliente: -->
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="Dados do Cliente:"
+                           FontFamily="{StaticResource RobotoBoldFont}"
+                           FontAttributes="Bold"
+                           TextColor="Gray"
+                           FontSize="16"
+                           />
 
-                    <Label Grid.Row="0"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
+                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Bloqueio de Pedido: " 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.IndBloqueioPedido, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
+                                <Span Text="Razão Social: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Nome Fantasia: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.NomeFantasia, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
-                    <Label Grid.Row="1"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
+                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Razão Social: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
+                                <Span Text="CNPJ: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.CNPJ, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Inscrição Estadual: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.InscricaoEstadual, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
-                    <Label Grid.Row="1"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
+                    <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Bloqueio de Faturamento: " 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.IndBloqueioFaturamento, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
+                                <Span Text="Email NFE: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EmailNFE, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
-                    <Label Grid.Row="2"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
+                    <Label Grid.Row="4" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Nome Fantasia: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.NomeFantasia, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
+                                <Span Text="Representante: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.Representante, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
-                    <Label Grid.Row="2"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
+                    <Label Grid.Row="5" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Bloqueio de Expedição: " 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.IndBloqueioExpedicao, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
+                                <Span Text="Home Page: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.Homepage, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="5" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Suframa: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.Suframa, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="5" Grid.Column="2" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Validade de Suframa: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.DataValidadeSuframa, Source={x:Reference this}, StringFormat='{0:dd/MM/yyyy}'}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
-                    <Label Grid.Row="3"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
+                    <Label Grid.Row="6" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="CNPJ: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.CNPJ, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="4"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Inscrição Estadual: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.InscricaoEstadual, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="3"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Limite de desconto: " 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.DescontoCliente, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="4"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Limite de crédito: " 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.LimiteCredito, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="5"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Prazo Médio: " 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.Prazo, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="5"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Rede: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.Rede, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="6"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Representante: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.Representante, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="7"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Contato: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.Contato, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="8"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Categoria Cliente: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.Categoria, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-
-                    <Label Grid.Row="9"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="E-mail: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.Email, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="10"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="E-mail NFE: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EmailNFE, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="11"
-                       Grid.Column="0"
-                       Text="ENDEREÇO"
-                       FontFamily="{StaticResource RobotoBoldFont}"
-                       FontAttributes="Bold"
-                       TextColor="Black"
-                       FontSize="18"
-                       />
-
-                    <Label Grid.Row="12"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Logradouro: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.EnderecoUI, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="12"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Telefone 1: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Telefone, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="13"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Complemento: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Complemento, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="13"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Telefone 2: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Fax, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="14"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Cidade: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Cidade, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="14"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="UF: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.UF, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="15"
-                       Grid.Column="0"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Bairro: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Bairro, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="15"
-                       Grid.Column="1"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="CEP: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.CEP, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="16"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
-                       LineBreakMode="TailTruncation"
-                    >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Último pedido: " 
-                                  FontFamily="{StaticResource RobotoBoldFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Black"/>
-
-                                <Span Text="{Binding BindingContext.Cliente.UltimoPedido, Source={x:Reference this}}" 
-                                  FontFamily="{StaticResource RobotoNormalFont}"
-                                  FontSize="Micro" 
-                                  FontAttributes="Bold"
-                                  TextColor="Red"
-                                  />
+                                <Span Text="Rede: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.RedeCliente, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
 
                 </Grid>
+
+                <!-- ===================== ABAS DE ENDEREÇO ===================== -->
+                <Grid BackgroundColor="White" HorizontalOptions="FillAndExpand" Padding="0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+
+                    <controls:SegmentedControl x:Name="SegmentedEndereco"
+                                               SelectedTextColor="Black"
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                TintColor="#555"
+                                                OnSegmentSelected="SegmentedControl_OnSegmentSelectedEndereco">
+                        <controls:SegmentedControl.Children>
+                            <controls:SegmentedControlOption Text="Endereço Principal:" />
+                            <controls:SegmentedControlOption Text="Endereço de Cobrança: (Opcional)" />
+                            <controls:SegmentedControlOption Text="Endereço de Entrega: (Opcional)" />
+                            <controls:SegmentedControlOption Text="Dados Bancários" />
+                        </controls:SegmentedControl.Children>
+                    </controls:SegmentedControl>
+
+                </Grid>
+
+                <!-- Endereço Principal -->
+                <Grid x:Name="GridEnderecoPrincipal"
+                      IsVisible="True"
+                      BackgroundColor="White"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="20,4,20,10"
+                      RowSpacing="4"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Rua/Av.: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.EnderecoUI, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Complemento: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Complemento, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Cidade: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Cidade, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Pais: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="UF: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.UF, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Telefone: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Telefone, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Bairro: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Bairro, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="CEP: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.CEP, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Fax: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Fax, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Grid>
+
+                <!-- Endereço de Cobrança -->
+                <Grid x:Name="GridEnderecoCobranca"
+                      IsVisible="False"
+                      BackgroundColor="White"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="20,4,20,10"
+                      RowSpacing="4"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Rua/Av.: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.EnderecoUI, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Complemento: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Complemento, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Cidade: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Cidade, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Pais: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="UF: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.UF, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Telefone: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Telefone, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Bairro: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Bairro, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="CEP: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.CEP, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Grid>
+
+                <!-- Endereço de Entrega -->
+                <Grid x:Name="GridEnderecoEntrega"
+                      IsVisible="False"
+                      BackgroundColor="White"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="20,4,20,10"
+                      RowSpacing="4"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Rua/Av.: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Complemento: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Cidade: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Pais: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="UF: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Telefone: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Bairro: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="CEP: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
+                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Grid>
+
+                <!-- Dados Bancários -->
+                <Grid x:Name="GridDadosBancarios"
+                      IsVisible="False"
+                      BackgroundColor="White"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="20,4,20,10"
+                      RowSpacing="4"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Código Bancário: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.Banco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Nome do Banco: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.NomeBanco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Agência: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.Agencia, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Conta Corrente: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.Conta, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Nome do Titular: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.NomeTitularConta, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Tipo Chave Pix: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.TipoChavePix, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="3" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Chave Pix: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.ChavePix, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </Grid>
+
+                <BoxView HeightRequest="1" Color="#DDDDDD" BackgroundColor="White" Margin="20,0"/>
+
+                <!-- ===================== OUTROS ===================== -->
+                <Grid BackgroundColor="White"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="20,10"
+                      RowSpacing="6"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="22"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="34"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="Outros:"
+                           FontFamily="{StaticResource RobotoBoldFont}"
+                           FontAttributes="Bold"
+                           TextColor="Gray"
+                           FontSize="16"
+                           />
+
+                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Condição de Pagamentos: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.CondicaoPagamentoDescricao, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Sit. Comercial: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.CodSituacaoCliente, Source={x:Reference this}, Converter={StaticResource SituacaoClienteParaTextoConverter}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Limite de Cred. Grupo - Ped: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.LimiteCreditoGrupo, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Limite de Cred .Grupo - Fat: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.LimiteFaturamento, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Limite de Cred. Cliente - Ped: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.LimiteCredito, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Grid.Row="3" Grid.Column="1" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Limite de Cred. Cliente - Fat: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.LimiteTotal, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <Label Grid.Row="4" Grid.Column="0" LineBreakMode="TailTruncation">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Classe de Risco: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{Binding BindingContext.Cliente.DescricaoClasseRisco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <!-- Linha de indicadores (checkboxes) -->
+                    <StackLayout Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Orientation="Horizontal"
+                                 Spacing="18"
+                                 VerticalOptions="Center">
+
+                        <StackLayout Orientation="Horizontal" Spacing="4">
+                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
+                                Source="{Binding BindingContext.Cliente.IndFatParcial, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
+                            <Label Text="Fat. Parcial" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Spacing="4">
+                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
+                                Source="{Binding BindingContext.Cliente.IndFatAntecipado, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
+                            <Label Text="Fat. Antecipado" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Spacing="4">
+                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
+                                Source="{Binding BindingContext.Cliente.CompraPrecoLiquido, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
+                            <Label Text="Preço Liquido" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Spacing="4">
+                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
+                                Source="{Binding BindingContext.Cliente.IndAtivo, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
+                            <Label Text="Ativo" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Spacing="4">
+                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
+                                Source="{Binding BindingContext.Cliente.PermiteDigitacao, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
+                            <Label Text="Permite Digitação" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Spacing="4">
+                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
+                                Source="{Binding BindingContext.Cliente.PermiteAjustePreco, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
+                            <Label Text="Permite Ajuste Preço" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Spacing="4">
+                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
+                                Source="{Binding BindingContext.Cliente.CreditoLiberado, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
+                            <Label Text="Credito Liberado" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+
+                    </StackLayout>
+
+                </Grid>
+
+                <!-- ===================== CONTATOS / CONTATOS GRUPO / REFERÊNCIAS ===================== -->
+                <Grid BackgroundColor="White"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="0,10,0,0"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+
+                    <controls:SegmentedControl x:Name="SegmentedContato"
+                                               SelectedTextColor="Black"
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                TintColor="#555"
+                                                OnSegmentSelected="SegmentedControl_OnSegmentSelectedContato">
+                        <controls:SegmentedControl.Children>
+                            <controls:SegmentedControlOption Text="Contatos" />
+                            <controls:SegmentedControlOption Text="Contatos Grupo" />
+                            <controls:SegmentedControlOption Text="Referências" />
+                        </controls:SegmentedControl.Children>
+                    </controls:SegmentedControl>
+
+                    <flex:FlexButton x:Name="ButtonNovoContatoReferencia"
+                        Grid.Row="0" Grid.Column="1"
+                        Text="NOVO CONTATO"
+                        ClickedCommand="{Binding BindingContext.NovoContatoCommand, Source={x:Reference this}}"
+                        Style="{StaticResource flexButtonFiltros}"
+                        />
+
+                </Grid>
+
+                <!-- Cabeçalho de colunas: Nome | E-mail | Telefone | Cargo | Data Nasc. | Status -->
+                <Grid x:Name="GridHeaderContato"
+                      IsVisible="True"
+                      BackgroundColor="#808080"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="10,6"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.6*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.3*"/>
+                        <ColumnDefinition Width="1.3*"/>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Text="Nome" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="1" Text="E-mail" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="2" Text="Telefone" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="3" Text="Cargo" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="4" Text="Data Nasc." FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="5" Text="Status" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                </Grid>
+
+                <!-- Cabeçalho de colunas: Referências -->
+                <Grid x:Name="GridHeaderReferencia"
+                      IsVisible="False"
+                      BackgroundColor="#808080"
+                      HorizontalOptions="FillAndExpand"
+                      Padding="10,6"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Text="Referência" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="1" Text="Contato" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="2" Text="Telefone" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                </Grid>
+
+                <!-- Lista: Contatos -->
+                <syncfusion:SfListView x:Name="ListViewContatos"
+                      IsVisible="True"
+                      BackgroundColor="White"
+                      HeightRequest="220"
+                      Padding="10,0"
+                      ItemSize="30"
+                      ItemSpacing="2"
+                      ItemsSource="{Binding BindingContext.Contatos, Source={x:Reference this}}"
+                      TapCommand="{Binding BindingContext.EditarContatoCommand, Source={x:Reference this}}">
+                    <syncfusion:SfListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.6*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition Width="1.1*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="{Binding Nome}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="1" Text="{Binding Email}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="2" Text="{Binding Telefone}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="3" Text="{Binding Cargo}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="4" Text="{Binding DataNascimento}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="5" Text="{Binding Status}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </syncfusion:SfListView.ItemTemplate>
+                </syncfusion:SfListView>
+
+                <!-- Lista: Contatos Grupo -->
+                <syncfusion:SfListView x:Name="ListViewContatosGrupo"
+                      IsVisible="False"
+                      BackgroundColor="White"
+                      HeightRequest="220"
+                      Padding="10,0"
+                      ItemSize="30"
+                      ItemSpacing="2"
+                      ItemsSource="{Binding BindingContext.ContatosGrupo, Source={x:Reference this}}">
+                    <syncfusion:SfListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.6*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition Width="1.1*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="{Binding Nome}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="1" Text="{Binding Email}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="2" Text="{Binding Telefone}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="3" Text="{Binding Cargo}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="4" Text="{Binding DataNascimento}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="5" Text="{Binding Status}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </syncfusion:SfListView.ItemTemplate>
+                </syncfusion:SfListView>
+
+                <!-- Lista: Referências -->
+                <syncfusion:SfListView x:Name="ListViewReferencias"
+                      IsVisible="False"
+                      BackgroundColor="White"
+                      HeightRequest="220"
+                      Padding="10,0,10,20"
+                      ItemSize="30"
+                      ItemSpacing="2">
+                    <!-- TODO: Cliente.Referencias ainda não existe no model -->
+                    <syncfusion:SfListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="{Binding Nome}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="1" Text="{Binding Contato}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                    <Label Grid.Column="2" Text="{Binding Telefone}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </syncfusion:SfListView.ItemTemplate>
+                </syncfusion:SfListView>
+
+                </StackLayout>
+                </ScrollView>
             </StackLayout>
         </AbsoluteLayout>
     </ContentPage.Content>

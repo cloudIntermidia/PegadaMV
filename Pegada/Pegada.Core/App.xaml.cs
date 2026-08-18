@@ -162,6 +162,7 @@ namespace Pegada.Core
             containerRegistry.Register(typeof(ITabelaPrecoRepository), typeof(TabelaPrecoRepository));
             containerRegistry.Register(typeof(IDerivacaoGradeRepository), typeof(DerivacaoGradeRepository));
             containerRegistry.Register(typeof(IClienteRepository), typeof(Pegada.Core.Repositories.ClienteRepository));
+            containerRegistry.Register(typeof(IContatoRepository), typeof(ContatoRepository));
             containerRegistry.Register(typeof(IAtendimentoRepository), typeof(AtendimentoRepository));
             containerRegistry.Register(typeof(ICarrinhoRepository), typeof(Pegada.Core.Repositories.CarrinhoRepository));
             containerRegistry.Register(typeof(IFotoRepository), typeof(FotoRepository));
