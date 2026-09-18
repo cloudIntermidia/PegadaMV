@@ -1,14 +1,16 @@
-﻿SELECT 
+﻿SELECT
                D.CodDerivacao,
                0 AS Qtd,
-               D.Descricao,
+               CASE WHEN '@CodPais' = '1' THEN D.Descricao ELSE DP.DescricaoDerivacao END AS Descricao,
+               CASE WHEN '@CodPais' = '1' THEN NULL ELSE D.Descricao END AS DescricaoOriginal,
                g.CodGrade
  FROM TBT_GRADE G
-JOIN TBT_DERIVACAO_GRADE DG ON G.CodGrade = DG.CodGrade 
+JOIN TBT_DERIVACAO_GRADE DG ON G.CodGrade = DG.CodGrade
 AND DG.IndAtivo = 1
 JOIN TBT_DERIVACAO D ON D.CodDerivacao = DG.CodDerivacao
 JOIN TBT_MODELO M ON M.CodGrade = G.CodGrade
-JOIN TBT_PRODUTO P ON P.CodModelo = M.CodModelo 
+JOIN TBT_PRODUTO P ON P.CodModelo = M.CodModelo
 AND P.CodProduto = '@CodProduto'
+LEFT JOIN TBT_DERIVACAO_PAIS DP ON DP.CodDerivacao = D.CodDerivacao AND DP.CodPais = '@CodPais'
 GROUP BY  D.codderivacao
 ORDER BY CAST (D.descricao AS DECIMAL) ASC;
