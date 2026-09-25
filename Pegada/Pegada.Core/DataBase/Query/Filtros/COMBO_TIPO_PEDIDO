@@ -1,0 +1,9 @@
+SELECT '-1' AS Codigo,
+       '(TODOS)' AS Descricao,
+       0 AS Ordem
+UNION
+SELECT TP.CodTipoPedido AS Codigo,
+       TP.Descricao AS Descricao,
+       1 AS Ordem
+  FROM TBT_TIPO_PEDIDO TP
+ ORDER BY Ordem, Descricao

@@ -1,0 +1,30 @@
+-- PegadaIOS (GradeItemPedido gradesForItemPedidoProducao:andClientePais:), para todos os itens do pedido/carrinho de uma vez.
+-- País 1 (BR): descrição da derivação; outro país: descrição do país (DERIVACAO_PAIS) e a original BR em DescricaoOriginal.
+SELECT T.* FROM (
+SELECT G.CodItemPedido AS ItemChave,
+       G.CodGradeItemPedido AS CodGradeItem,
+       G.CodDerivacao AS CodDerivacao,
+       G.Qtd AS Qtd,
+       CASE WHEN '@CodPais' = '1' THEN D.Descricao ELSE IFNULL(DP.DescricaoDerivacao, D.Descricao) END AS Descricao,
+       CASE WHEN '@CodPais' = '1' THEN NULL ELSE D.Descricao END AS DescricaoOriginal
+  FROM TBT_GRADE_ITEM_PEDIDO G
+       INNER JOIN TBT_DERIVACAO D ON D.CodDerivacao = G.CodDerivacao
+       LEFT JOIN TBT_DERIVACAO_PAIS DP ON DP.CodDerivacao = D.CodDerivacao AND DP.CodPais = '@CodPais'
+ WHERE '@Origem' <> 'C'
+   AND G.CodPedido = '@Codigo'
+   AND (G.Excluido IS NULL OR G.Excluido = 0)
+UNION ALL
+SELECT G.CodItemCarrinho AS ItemChave,
+       G.CodGradeItemCarrinho AS CodGradeItem,
+       G.CodDerivacao AS CodDerivacao,
+       G.Qtd AS Qtd,
+       CASE WHEN '@CodPais' = '1' THEN D.Descricao ELSE IFNULL(DP.DescricaoDerivacao, D.Descricao) END AS Descricao,
+       CASE WHEN '@CodPais' = '1' THEN NULL ELSE D.Descricao END AS DescricaoOriginal
+  FROM TBT_GRADE_ITEM_CARRINHO G
+       INNER JOIN TBT_DERIVACAO D ON D.CodDerivacao = G.CodDerivacao
+       LEFT JOIN TBT_DERIVACAO_PAIS DP ON DP.CodDerivacao = D.CodDerivacao AND DP.CodPais = '@CodPais'
+ WHERE '@Origem' = 'C'
+   AND G.CodCarrinho = '@Codigo'
+   AND (G.Excluido IS NULL OR G.Excluido = 0)
+) T
+ ORDER BY CAST(T.ItemChave AS INTEGER), CAST(T.CodGradeItem AS INTEGER);

@@ -28,6 +28,7 @@
            TP.Descricao AS TipoPedido,
            SP.OrdemExibicao AS OrdemExibicao,
            G.Descricao AS GrupoCliente,
+           CLI.CodGrupoCliente AS CodGrupoCliente,
            CLI.NomeFantasia AS NomeFantasia,
            E.Endereco AS ClienteLogradouro,  
            E.UF AS ClienteUF,  
@@ -69,9 +70,15 @@
 			 ALOCADO.ValorAlocado,
 			 P.CodDeposito AS CodDeposito,
 			 P.MotivoCancelamento As MotivoCancelamento,
-			 P.JustificativaDesconto
+			 P.JustificativaDesconto,
+				 (SELECT SUM(I.QtdCaixa * I.QtdTotal) FROM TBT_ITEM_CARRINHO I WHERE I.CodCarrinho = P.CodCarrinho) AS QtdTotalItens,
+				 (SELECT SUM(I.QtdCaixa * I.QtdTotal * I.ValorUnitario) FROM TBT_ITEM_CARRINHO I WHERE I.CodCarrinho = P.CodCarrinho) AS ValorTotalItens,
+				 (SELECT SUM(I.QtdCaixa * I.QtdTotal * I.ValorUnitarioLiquido) FROM TBT_ITEM_CARRINHO I WHERE I.CodCarrinho = P.CodCarrinho) AS ValorTotalLiquido,
+				 TP.TipoPedido AS TipoPedidoSigla,
+				 (SELECT SUM(I.QtdCaixa * I.QtdTotal) FROM TBT_ITEM_CARRINHO I WHERE I.CodCarrinho = P.CodCarrinho AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento')))) AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento')))) AND ('-1' = '@FiltroGenero' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '1' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGenero')))) AND ('-1' = '@FiltroPublico' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '2' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroPublico')))) AND ('-1' = '@FiltroLinha' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '6' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroLinha')))) AND ('-1' = '@Referencia' OR I.CodProduto LIKE '%@Referencia%') ) AS QtdTotalItensFiltrados,
+				 (SELECT SUM(I.QtdCaixa * I.QtdTotal * I.ValorUnitario) FROM TBT_ITEM_CARRINHO I WHERE I.CodCarrinho = P.CodCarrinho AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento')))) AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento')))) AND ('-1' = '@FiltroGenero' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '1' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGenero')))) AND ('-1' = '@FiltroPublico' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '2' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroPublico')))) AND ('-1' = '@FiltroLinha' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '6' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroLinha')))) AND ('-1' = '@Referencia' OR I.CodProduto LIKE '%@Referencia%') ) AS ValorTotalItensFiltrados
       FROM TBT_CARRINHO P
-           INNER JOIN TBT_ITEM_CARRINHO IP ON P.CodCarrinho = IP.CodCarrinho
+           LEFT JOIN TBT_ITEM_CARRINHO IP ON P.CodCarrinho = IP.CodCarrinho
            LEFT JOIN TBT_GRADE_ITEM_CARRINHO GIP ON IP.CodCarrinho = GIP.CodCarrinho AND IP.CodItemCarrinho = GIP.CodItemCarrinho
     	   LEFT JOIN TBT_MARCA MARCA ON RTRIM(MARCA.CodMarca) = P.CodMarca
            LEFT JOIN TBT_SITUACAO_PEDIDO SP ON SP.CodSituacaoPedido = P.CodSituacaoPedido
@@ -133,6 +140,10 @@
                     WHERE PED.CodCarrinho = P.CodCarrinho
                     OR  PED.CodPedido = P.CodPedido
                )
+    AND P.CodSituacaoPedido NOT IN ('77')
+    AND '-1' = '@NotaFiscal'
+    AND ('-1' = '@DataCadastroInicial' OR P.DataEmissao >= '@DataCadastroInicial')
+    AND ('-1' = '@DataCadastroFinal' OR P.DataEmissao <= '@DataCadastroFinal')
     AND ('-1' = '@Referencia' OR 
            EXISTS (
                 SELECT *
@@ -149,11 +160,24 @@
     AND ('-1' = '@DataEntregaInicial' OR P.DataEntrega >= '@DataEntregaInicial')
     AND ('-1' = '@DataEntregaFinal' OR P.DataEntrega <= '@DataEntregaFinal')
     AND ('-1' = '@NumeroPedido' OR P.CodCarrinho like '%@NumeroPedido%')
-    AND ('-1' = '@Tipo' OR TP.CodTipoPedido = '@Tipo') 
+    AND ('-1' = '@Tipo' OR TP.CodTipoPedido IN (FUNCTION_SPLIT('@Tipo'))) 
     AND ('-1' = '@CodGrupoCliente' OR CLI.CodGrupoCliente = '@CodGrupoCliente') 
 	AND ('-1' = '@CodPessoaCliente' OR CLI.CodPessoaCliente IN (FUNCTION_SPLIT('@CodPessoaCliente')))
-    AND ('-1' = '@CodPessoaVendedor' OR P.CodPessoaRepresentante IN (FUNCTION_SPLIT('@CodPessoaVendedor')))
+    AND ('-1' = '@CodPessoaVendedor' OR P.CodPessoaPreposto IN (FUNCTION_SPLIT('@CodPessoaVendedor')))
     AND ('-1' = '@CodMarca' OR P.CodMarca = '@CodMarca') 
+    AND ('-1' = '@OrdemCompra' OR P.OrdemCompra like '%@OrdemCompra%')
+    AND ('-1' = '@FiltroGenero' AND '-1' = '@FiltroPublico' AND '-1' = '@FiltroGrupoSegmento' AND '-1' = '@FiltroSegmento' AND '-1' = '@FiltroLinha'
+         OR EXISTS (
+            SELECT 1
+              FROM TBT_ITEM_CARRINHO IFL
+             WHERE IFL.CodCarrinho = P.CodCarrinho
+            AND ('-1' = '@FiltroGenero' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '1' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGenero'))))
+            AND ('-1' = '@FiltroPublico' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '2' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroPublico'))))
+            AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento'))))
+            AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento'))))
+            AND ('-1' = '@FiltroLinha' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '6' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroLinha'))))
+         )
+        )
     GROUP BY P.CodCarrinho, P.CodPedido
 
     UNION
@@ -187,6 +211,7 @@
            TP.Descricao AS TipoPedido,
            SP.OrdemExibicao AS OrdemExibicao,
            G.Descricao AS GrupoCliente,
+           CLI.CodGrupoCliente AS CodGrupoCliente,
            CLI.NomeFantasia AS NomeFantasia,
            E.Endereco AS ClienteLogradouro,  
            E.UF AS ClienteUF,  
@@ -223,7 +248,13 @@
 		   NULL AS ValorAlocado,
 		   NULL AS CodDeposito,
 		   C.MotivoCancelamento As MotivoCancelamento,
-		   NULL AS JustificativaDesconto
+		   NULL AS JustificativaDesconto,
+			   (SELECT SUM(I.QtdCaixa * I.QtdTotal) FROM TBT_ITEM_PEDIDO I WHERE I.CodPedido = P.CodPedido) AS QtdTotalItens,
+			   (SELECT SUM(I.QtdCaixa * I.QtdTotal * I.ValorUnitario) FROM TBT_ITEM_PEDIDO I WHERE I.CodPedido = P.CodPedido) AS ValorTotalItens,
+			   (SELECT SUM(I.QtdCaixa * I.QtdTotal * I.ValorUnitarioLiquido) FROM TBT_ITEM_PEDIDO I WHERE I.CodPedido = P.CodPedido) AS ValorTotalLiquido,
+				 TP.TipoPedido AS TipoPedidoSigla,
+				 (SELECT SUM(I.QtdCaixa * I.QtdTotal) FROM TBT_ITEM_PEDIDO I WHERE I.CodPedido = P.CodPedido AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento')))) AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento')))) AND ('-1' = '@FiltroGenero' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '1' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGenero')))) AND ('-1' = '@FiltroPublico' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '2' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroPublico')))) AND ('-1' = '@FiltroLinha' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '6' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroLinha')))) AND ('-1' = '@Referencia' OR I.CodProduto LIKE '%@Referencia%') ) AS QtdTotalItensFiltrados,
+				 (SELECT SUM(I.QtdCaixa * I.QtdTotal * I.ValorUnitario) FROM TBT_ITEM_PEDIDO I WHERE I.CodPedido = P.CodPedido AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento')))) AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento')))) AND ('-1' = '@FiltroGenero' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '1' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGenero')))) AND ('-1' = '@FiltroPublico' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '2' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroPublico')))) AND ('-1' = '@FiltroLinha' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = I.CodProduto AND NP.CodNivel = '6' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroLinha')))) AND ('-1' = '@Referencia' OR I.CodProduto LIKE '%@Referencia%') ) AS ValorTotalItensFiltrados
       FROM TBT_PEDIDO P
            INNER JOIN TBT_ITEM_PEDIDO IP ON P.CodPedido = IP.CodPedido
            LEFT JOIN TBT_GRADE_ITEM_PEDIDO GIP ON IP.CodPedido = GIP.CodPedido AND IP.CodItemPedido = GIP.CodItemPedido
@@ -282,11 +313,26 @@
     AND ('-1' = '@DataEntregaFinal' OR P.DataEntrega <= '@DataEntregaFinal')
     AND ('-1' = '@NumeroPedido' OR P.CodPedido like '%@NumeroPedido%')
     AND ('-1' = '@NotaFiscal' OR IP.NumeroNf like '%@NotaFiscal%')
-    AND ('-1' = '@Tipo' OR TP.CodTipoPedido = '@Tipo') 
+    AND ('-1' = '@DataCadastroInicial' OR P.DataCadastro >= '@DataCadastroInicial')
+    AND ('-1' = '@DataCadastroFinal' OR P.DataCadastro <= '@DataCadastroFinal')
+    AND ('-1' = '@Tipo' OR TP.CodTipoPedido IN (FUNCTION_SPLIT('@Tipo'))) 
     AND ('-1' = '@CodGrupoCliente' OR CLI.CodGrupoCliente = '@CodGrupoCliente') 
     AND ('-1' = '@CodPessoaCliente' OR CLI.CodPessoaCliente IN (FUNCTION_SPLIT('@CodPessoaCliente')))
-    AND ('-1' = '@CodPessoaVendedor' OR P.CodPessoaRepresentante IN (FUNCTION_SPLIT('@CodPessoaVendedor')))
+    AND ('-1' = '@CodPessoaVendedor' OR P.CodPessoaPreposto IN (FUNCTION_SPLIT('@CodPessoaVendedor')))
     AND ('-1' = '@CodMarca' OR P.CodMarca = '@CodMarca') 
+    AND ('-1' = '@OrdemCompra' OR P.OrdemCompra like '%@OrdemCompra%')
+    AND ('-1' = '@FiltroGenero' AND '-1' = '@FiltroPublico' AND '-1' = '@FiltroGrupoSegmento' AND '-1' = '@FiltroSegmento' AND '-1' = '@FiltroLinha'
+         OR EXISTS (
+            SELECT 1
+              FROM TBT_ITEM_PEDIDO IFL
+             WHERE IFL.CodPedido = P.CodPedido
+            AND ('-1' = '@FiltroGenero' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '1' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGenero'))))
+            AND ('-1' = '@FiltroPublico' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '2' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroPublico'))))
+            AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento'))))
+            AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento'))))
+            AND ('-1' = '@FiltroLinha' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IFL.CodProduto AND NP.CodNivel = '6' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroLinha'))))
+         )
+        )
     GROUP BY P.CodCarrinho, P.CodPedido
 ) T
-ORDER BY T.DataEmissao DESC, CAST(T.CodPedido AS INTEGER) DESC;
+ORDER BY T.DataEntrega DESC, T.CodPedido;

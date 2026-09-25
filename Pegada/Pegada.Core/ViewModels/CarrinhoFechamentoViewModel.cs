@@ -1,4 +1,7 @@
 ﻿using Acr.UserDialogs;
+using Rg.Plugins.Popup.Pages;
+using Pegada.Core.Views.Carrinho;
+using CommonServiceLocator;
 using Pegada.Core.Repositories;
 using MobiliVendas.Core;
 using MobiliVendas.Core.Contracts;
@@ -80,6 +83,20 @@ namespace Pegada.Core.ViewModels
         {
             get { return _isFatParcial; }
             set { SetProperty(ref _isFatParcial, value); }
+        }
+
+        // iOS (diasFatAntecipado): campo só numérico, máscara "999" (até 3 dígitos), vazio quando não há valor.
+        private string _diasFatAntecipadoTexto;
+        public string DiasFatAntecipadoTexto
+        {
+            get { return _diasFatAntecipadoTexto; }
+            set
+            {
+                string digitos = new string((value ?? string.Empty).Where(char.IsDigit).Take(3).ToArray());
+                SetProperty(ref _diasFatAntecipadoTexto, digitos);
+                if (digitos != value)
+                    RaisePropertyChanged(nameof(DiasFatAntecipadoTexto));
+            }
         }
 
 
@@ -280,6 +297,16 @@ namespace Pegada.Core.ViewModels
         public ICommand AceitaFatParcialCommand { get; set; }
         public ICommand CancelarFechamentoCommand { get; set; }
         public ICommand SalvarFechamentoCommand { get; set; }
+        public ICommand AtualizarContatosCommand { get; set; }
+
+        // Contato do cliente (EdicaoCarrinhoViewController do PegadaIOS: flagContatoPendente / lblContatoPendente / btnSalvar.enabled).
+        private bool _contatoPendente;
+        public bool ContatoPendente
+        {
+            get { return _contatoPendente; }
+            set { SetProperty(ref _contatoPendente, value); RaisePropertyChanged(nameof(SalvarHabilitado)); }
+        }
+        public bool SalvarHabilitado => !ContatoPendente;
         public ICommand SelecionarCondicaoPagamentoCommand { get; set; }
         public ICommand SelecionarDataEntregaCommand { get; set; }
         public ICommand SelecionarDataLimiteCommand { get; set; }
@@ -310,6 +337,7 @@ namespace Pegada.Core.ViewModels
         private readonly INivelRepository _nivelRepository;
         private readonly ICoeficienteRepository _coeficienteRepository;
         private readonly IPrazoAdicionalRepository _prazoAdicionalRepository;
+        private readonly IContatoRepository _contatoRepository;
 
         #endregion
 
@@ -328,6 +356,7 @@ namespace Pegada.Core.ViewModels
                     , ICoeficienteRepository coeficienteRepository
                     , ISemanaRepository semanaRepository
                     , IPrazoAdicionalRepository prazoAdicionalRepository
+                    , IContatoRepository contatoRepository
                     )
                    : base(null, null)
         {
@@ -346,10 +375,12 @@ namespace Pegada.Core.ViewModels
             _coeficienteRepository = coeficienteRepository;
             _semanaRepository = semanaRepository;
             _prazoAdicionalRepository = prazoAdicionalRepository;
+            _contatoRepository = contatoRepository;
 
 
             CancelarFechamentoCommand = new Command(CancelarFechamento);
             SalvarFechamentoCommand = new Command(SalvarFechamento);
+            AtualizarContatosCommand = new Command(AtualizarContatos);
             SelecionarDataEntregaCommand = new Command(SelecionarDataEntrega);
             SelecionarTipoFreteCommand = new Command(SelecionarTipoFrete);
             SelecionarTransportadoraCommand = new Command(SelecionarTransportadora);
@@ -387,6 +418,8 @@ namespace Pegada.Core.ViewModels
         {
             try
             {
+                await ValidarContato();
+
                 IsMostraSemana = true;
                 if (PedidoSelecionado.TipoPedidoValida == "PE") {
                     IsMostraSemana = false;
@@ -395,15 +428,6 @@ namespace Pegada.Core.ViewModels
                 await CarregaCondicaoPagamento();
 
                 await CarregaSemanas();
-
-                IsFatAntecipado = false;
-                if (PedidoSelecionado.AceitaFaturamentoAntecipado == 1 && PedidoSelecionado.TipoPedidoValida != "PE")
-                {
-                    IsFatAntecipado = true;
-                }
-                else {
-                    PedidoSelecionado.AceitaFaturamentoAntecipado = 0;
-                }
 
                 IsHabilitaEdicao = true;
                 if (PedidoSelecionado.ClientePermiteAlterarCondi != 1) {
@@ -454,28 +478,22 @@ namespace Pegada.Core.ViewModels
                         {
                             Transportadora = (await _transportadoraRepository.BuscarTransportadoras(new BuscarTransportadoraCommand() { CodTransportadora = item.ColumnValue })).FirstOrDefault();
                         }
-                        //else if (item.ColumnName == "AceitaFaturamentoAntecipado")
-                        //{
-                        //    if (item.ColumnValue == null)
-                        //    {
-                        //        IsFatAntecipado = true;
-                        //    }
-                        //    else
-                        //    {
-                        //        IsFatAntecipado = item.ColumnValue == "1" ? true : false;
-                        //    }
-                        //}
-                        //else if (item.ColumnName == "AceitaFaturamentoParcial")
-                        //{
-                        //    if (item.ColumnValue == null)
-                        //    {
-                        //        IsFatParcial = true;
-                        //    }
-                        //    else
-                        //    {
-                        //        IsFatParcial = item.ColumnValue == "1" ? true : false;
-                        //    }
-                        //}
+                        // carregaTela (iOS): no carrinho "2" = sim e "1" = não. Parcial: se ainda não preenchido, segue o cadastro do cliente.
+                        else if (item.ColumnName == "AceitaFaturamentoAntecipado")
+                        {
+                            IsFatAntecipado = item.ColumnValue == "2" && PedidoSelecionado.TipoPedidoValida != "PE";
+                        }
+                        else if (item.ColumnName == "AceitaFaturamentoParcial")
+                        {
+                            IsFatParcial = string.IsNullOrEmpty(item.ColumnValue)
+                                ? PedidoSelecionado.AceitaFaturamentoParcial == 1
+                                : item.ColumnValue == "2";
+                        }
+                        else if (item.ColumnName == "CodClienteEntrega")
+                        {
+                            if (!string.IsNullOrEmpty(item.ColumnValue))
+                                ClienteEntregaSelecionado = await BuscarClienteEntrega(item.ColumnValue);
+                        }
                         else if (item.ColumnName == "CodTipoPedido")
                         {
                             if (item.ColumnValue != "1")
@@ -493,12 +511,38 @@ namespace Pegada.Core.ViewModels
                     }
                 }
 
+                // iOS: com fat. antecipado ligado mostra os dias gravados; senão o campo fica vazio.
+                DiasFatAntecipadoTexto = IsFatAntecipado && PedidoSelecionado.DiasFatAntecipado > 0
+                    ? ((int)PedidoSelecionado.DiasFatAntecipado).ToString()
+                    : string.Empty;
+
+                // iOS: a semana selecionada define o dia de faturamento; o dia gravado no carrinho (acima) prevalece.
+                if (!DataEntrega.HasValue && SemanaSelecionada != null)
+                    DataEntrega = SemanaSelecionada.DataInicial;
+
             }
             catch (Exception ex)
             {
                 await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
             }
         }
+
+        private async Task<GenericComboResult> BuscarClienteEntrega(string codCliente)
+        {
+            var doCombo = ClientesEntrega?.FirstOrDefault(c => c.Codigo == codCliente);
+            if (doCombo != null)
+                return doCombo;
+
+            // iOS: clienteWithCodCliente — o cliente de entrega gravado aparece mesmo fora da lista do combo.
+            var cli = await _clienteRepository.BuscarClientePorCode(new BuscarClienteCommand(null, null, codCliente, null));
+            if (cli == null)
+                return null;
+
+            return new GenericComboResult { Codigo = cli.CodPessoaCliente, Descricao = cli.RazaoSocial };
+        }
+
+        private string TabelaPrecoCarrinho =>
+            string.IsNullOrEmpty(PedidoSelecionado?.CodTabelaPreco) ? Session.ATENDIMENTO_ATUAL?.CodTabelaPreco : PedidoSelecionado.CodTabelaPreco;
 
         private async Task CarregaPrecoLiquido()
         {
@@ -512,9 +556,10 @@ namespace Pegada.Core.ViewModels
         {
 
             var condicoesTmp = new List<GenericComboResult>();
+            // iOS: condicaoPagamentoForTabelaPreco:_carrinhoSelecionado.codTabelaPreco (tabela do próprio carrinho).
             var command = new BuscarCondicaoPagamentoCommand()
             {
-                CodTabelaPreco = Session.ATENDIMENTO_ATUAL.CodTabelaPreco
+                CodTabelaPreco = TabelaPrecoCarrinho
             };
             CondicoesPagamento = await _condicaoPagamentoRepository.BuscarCondicoesParaFechamento(command);
 
@@ -526,7 +571,8 @@ namespace Pegada.Core.ViewModels
 
             //#############################
 
-            if (condicaoDoCliente != null && CondicaoPagamento == null)
+            // iOS: usa a condição do cliente só quando o carrinho ainda não tem condição (a do carrinho é carregada mais adiante no Init).
+            if (condicaoDoCliente != null && CondicaoPagamento == null && string.IsNullOrEmpty(PedidoSelecionado.CodCondicaoPagamento))
             {
 
                 CondicaoPagamento = condicaoDoCliente;
@@ -604,7 +650,7 @@ namespace Pegada.Core.ViewModels
                 semanaFabricas.Add(sf);
             }
 
-            var commandFabrica = new FabricaCommand(semanaFabricas, dataMinima, DateTime.Now, PedidoSelecionado.IndValidaPrazo, null, Session.ATENDIMENTO_ATUAL?.CodTabelaPreco, PedidoSelecionado.CodCarrinho);
+            var commandFabrica = new FabricaCommand(semanaFabricas, dataMinima, DateTime.Now, PedidoSelecionado.IndValidaPrazo, null, TabelaPrecoCarrinho, PedidoSelecionado.CodCarrinho);
             this.Semanas = await _semanaRepository.BuscarSemanasPorFabrica(commandFabrica);
 
             if (PedidoSelecionado.CodSemana != null && PedidoSelecionado.CodSemana != "0")
@@ -665,6 +711,12 @@ namespace Pegada.Core.ViewModels
 
         public async void SelecionarDataEntrega()
         {
+            // touchDiaFaturamento (iOS): fora de pronta entrega o dia de faturamento depende da semana escolhida.
+            if (SemanaSelecionada == null && PedidoSelecionado.TipoPedidoValida != "PE")
+            {
+                await UserDialogs.Instance.AlertAsync("É necessário que seja selecionado antes a opção de semana!", "Atenção");
+                return;
+            }
 
             await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupCalendario(SelecionarDataEvent, PedidoSelecionado.TipoPedidoValida == "PE" ? DateTime.Now.AddDays(1) : SemanaSelecionada?.DataInicial, SemanaSelecionada?.DataFinal));
             //var data = await UserDialogs.Instance.DatePromptAsync(new DatePromptConfig() { MinimumDate = PedidoSelecionado.TipoPedidoValida == "PE" ? DateTime.Now.AddDays(1) : SemanaSelecionada?.DataInicial, MaximumDate = SemanaSelecionada?.DataFinal });
@@ -768,14 +820,71 @@ namespace Pegada.Core.ViewModels
             }
         }
 
+        // -loadValidaContato: cliente nacional (sem endereço EX) precisa de um contato ativo que receba cópia do boleto/pedido
+        // (e o cliente precisa ter e-mail) e esse contato precisa ter telefone; senão o contato fica pendente e o Salvar é bloqueado.
+        private async Task ValidarContato()
+        {
+            try
+            {
+                string codCliente = PedidoSelecionado?.CodPessoaCliente;
+                ContatoPendente = false;
+                if (string.IsNullOrEmpty(codCliente))
+                    return;
+
+                if (await _contatoRepository.ClienteEhNacional(codCliente))
+                {
+                    var contato = await _contatoRepository.BuscarContatoBoleto(codCliente);
+                    if (contato == null || contato.Telefone == null)
+                        ContatoPendente = true;
+                }
+            }
+            catch (Exception)
+            {
+                // iOS: falha na validação não bloqueia o fechamento.
+            }
+        }
+
+        // touchAtualizarContatos: abre a tela de contatos do cliente do carrinho; ao voltar, revalida (reloadContato).
+        private async void AtualizarContatos()
+        {
+            try
+            {
+                var view = new ContatoClienteView();
+                var viewModel = ServiceLocator.Current.GetInstance<ContatoClienteViewModel>();
+                view.BindingContext = viewModel;
+                string nome = string.IsNullOrEmpty(PedidoSelecionado.RazaoSocial) ? PedidoSelecionado.CodPessoaCliente : PedidoSelecionado.RazaoSocial;
+                viewModel.Init(PedidoSelecionado.CodPessoaCliente, nome, ValidarContato);
+
+                await PopupNavigation.Instance.PushAsync(new PopupPage { Content = view });
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, "Atenção");
+            }
+        }
+
         private async void SalvarFechamento()
         {
             try
             {
+                if (ContatoPendente)
+                {
+                    await UserDialogs.Instance.AlertAsync("Não foi possível salvar o carrinho, existe pendências com o cliente. Verifique no campo abaixo em Atualizar Contatos.", "Atenção");
+                    return;
+                }
+
+
+                // imputValues (iOS): itens sem grade impedem o fechamento.
+                var itensSemGrade = await _dataBaseRepository.GetString("TBT_ITEM_CARRINHO", "COUNT(*)", $"CodCarrinho = '{PedidoSelecionado.CodCarrinho}' AND ItemSemGrade = 1");
+                if (int.TryParse(itensSemGrade, out int qtdSemGrade) && qtdSemGrade > 0)
+                {
+                    await UserDialogs.Instance.AlertAsync("Há itens nesse carrinho que não possuem grade. É preciso que seja preenchida a grade para o fechamento.", "Atenção");
+                    return;
+                }
 
                 if (CondicaoPagamento == null)
                 {
-                    await UserDialogs.Instance.AlertAsync("Prazo obrigatório.");
+                    await UserDialogs.Instance.AlertAsync("Favor selecionar uma condição de pagamento!", "Atenção");
                     return;
                 }
 
@@ -783,102 +892,100 @@ namespace Pegada.Core.ViewModels
                 {
                     if (SemanaSelecionada == null)
                     {
-                        await UserDialogs.Instance.AlertAsync("Favor selecionar uma semana!");
+                        await UserDialogs.Instance.AlertAsync("Favor selecionar uma semana!", "Atenção");
                         return;
                     }
                 }
 
                 if (!DataEntrega.HasValue)
                 {
-                    await UserDialogs.Instance.AlertAsync("A data de entrega é obrigatoria.");
+                    await UserDialogs.Instance.AlertAsync("Favor selecionar o dia de faturamento!", "Atenção");
                     return;
                 }
 
-                if (DataEntrega.Value < DateTime.Now)
+                // iOS compara com hoje à meia-noite: faturar hoje é permitido.
+                if (DataEntrega.Value.Date < DateTime.Today)
                 {
-                    await UserDialogs.Instance.AlertAsync("A data de entrega não pode ser inferior a hoje.");
+                    await UserDialogs.Instance.AlertAsync("Data de faturamento inválida!", "Atenção");
                     return;
                 }
 
                 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-                int qtdMinimaParcela = 1;
-
-                if (CondicaoPagamento != null)
-                {
-                    qtdMinimaParcela = CondicaoPagamento.QtdParcela;
-                }
-                else
-                {
-                    qtdMinimaParcela = Convert.ToInt32(PedidoSelecionado.qtdParcela);
-                }
+                int qtdMinimaParcela = CondicaoPagamento.QtdParcela;
 
                 //Solicitação #17523 Agrupar por famila de Vendas
                 //[...]"Ver a possibilidade tirar a validade de valor mínimo nesse tipo de cliente também."
                 //if ([[Cliente paisForCliente:_carrinhoSelecionado.codPessoaCliente] intValue] == 1)
                 if (PedidoSelecionado.CodTipoPedido != "23")
                 {
-                    var valorDuplicata = PedidoSelecionado.ValorTotalLiquido / qtdMinimaParcela;
+                    var valorDuplicata = qtdMinimaParcela > 0 ? PedidoSelecionado.ValorTotalLiquido / qtdMinimaParcela : PedidoSelecionado.ValorTotalLiquido;
 
                     var valorMinimoParcela = await _parametroRepository.BuscarMinimoParcelaPorTipoPedido(PedidoSelecionado.CodTipoPedido);
 
                     if (valorDuplicata < valorMinimoParcela)
                     {
-                        await UserDialogs.Instance.AlertAsync($"O pedido não alcançou o valor mínimo por duplicata de R${valorMinimoParcela}");
+                        await UserDialogs.Instance.AlertAsync($"O pedido não alcançou o valor mínimo por duplicata de R${valorMinimoParcela:0.00}!", "Atenção");
                         return;
                     }
                 }
 
                 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-                if (!string.IsNullOrEmpty(PedidoSelecionado.DiasBonificacao)) {
-
-                    var prazoAdicional = await _prazoAdicionalRepository.BuscaPrazoAdicional(new BuscarPrazoAdicionalCommand(PedidoSelecionado.CodTipoPedido, PedidoSelecionado.DiasBonificacao));
-
-                    if (prazoAdicional?.AbatimentoComissao > 0)
+                // Dias de bonificação: vazio ou "0" não valida; senão o prazo precisa existir e abate a comissão do representante.
+                // Sem dias de bonificação a comissão do carrinho segue como está.
+                decimal? percentualComissao = PedidoSelecionado.PercentualComissaoRep;
+                string diasBonificacao = PedidoSelecionado.DiasBonificacao?.Trim();
+                if (!string.IsNullOrEmpty(diasBonificacao) && diasBonificacao != "0")
+                {
+                    var prazoAdicional = await _prazoAdicionalRepository.BuscaPrazoAdicional(new BuscarPrazoAdicionalCommand(PedidoSelecionado.CodTipoPedido, diasBonificacao));
+                    if (prazoAdicional == null)
                     {
-                        PercentualComissaoRep = prazoAdicional.AbatimentoComissao;
+                        await UserDialogs.Instance.AlertAsync("Prazo extra não permitido!", "Atenção");
+                        return;
                     }
-                    else {
-                        await UserDialogs.Instance.AlertAsync("Prazo extra não permitido!");
+
+                    decimal comissaoRep = 0;
+                    var comissaoTexto = await _dataBaseRepository.GetString("TBT_PESSOA", "Comissao", $"CodPessoa = '{PedidoSelecionado.CodPessoaRepresentante}'");
+                    if (!string.IsNullOrEmpty(comissaoTexto))
+                        decimal.TryParse(comissaoTexto.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out comissaoRep);
+
+                    percentualComissao = prazoAdicional.AbatimentoComissao - comissaoRep;
+                    PercentualComissaoRep = percentualComissao.Value;
+                }
+
+                int diasFatAntecipado = 0;
+                if (IsFatAntecipado)
+                {
+                    if (string.IsNullOrWhiteSpace(DiasFatAntecipadoTexto))
+                    {
+                        await UserDialogs.Instance.AlertAsync("O campo Dia(s) de Faturamento Antecipado deve ser preenchido!", "Atenção");
+                        return;
+                    }
+
+                    diasFatAntecipado = int.Parse(DiasFatAntecipadoTexto);
+
+                    // O prazo informado não pode passar do permitido no cadastro do cliente.
+                    if (PedidoSelecionado.DiasFatAntecipadoCliente < diasFatAntecipado)
+                    {
+                        await UserDialogs.Instance.AlertAsync("O prazo de dias de faturamento é inválido, o prazo informado é maior do que o permitido para o cliente!", "Atenção");
+                        return;
+                    }
+
+                    // Dia de faturamento menos os dias antecipados precisa ser posterior a hoje.
+                    if (DataEntrega.Value.Date.AddDays(-diasFatAntecipado) <= DateTime.Today)
+                    {
+                        await UserDialogs.Instance.AlertAsync("O prazo de dias de faturamento é inválido!", "Atenção");
                         return;
                     }
                 }
 
-                if (PedidoSelecionado?.AceitaFaturamentoAntecipado == 1) {
-                    if (PedidoSelecionado.DiasFatAntecipado != 0) {
-                        if (PedidoSelecionado.DiasFatAntecipadoCliente >= PedidoSelecionado.DiasFatAntecipado)
-                        {
-                            DateTime now = DateTime.Today;
-
-                            // Converte o texto para int
-                            int daysToSub = (int)PedidoSelecionado.DiasFatAntecipado;
-
-                            // Subtrai os dias da data selecionada
-                            DateTime toDate = DataEntrega.Value.Date.AddDays(-daysToSub);
-
-                            // Comparação (equivalente ao NSOrderedDescending)
-                            if (toDate > now)
-                            {
-                                //PedidoSelecionado.DiasFatAntecipado = PedidoSelecionado.DiasFatAntecipado;
-                            }
-                            else
-                            {
-                                await UserDialogs.Instance.AlertAsync($"O prazo de dias de faturamento é inválido, o prazo informado é maior do que o permitido para o cliente!");
-                                return;
-                            }
-                        }
-                        else {
-                            await UserDialogs.Instance.AlertAsync($"O prazo de dias de faturamento é inválido, o prazo informado é maior do que o permitido para o cliente!");
-                            return;
-                        }
-                    }
-                    else {
-                        await UserDialogs.Instance.AlertAsync($"O campo Dia(s) de Faturamento Antecipado deve ser preenchido!");
-                        return;
-                    }
+                var quantidadeMinima = await _parametroRepository.BuscarParametroPorTipoPedido(PedidoSelecionado.CodTipoPedido, "4");
+                if (PedidoSelecionado.QtdTotal < quantidadeMinima)
+                {
+                    await UserDialogs.Instance.AlertAsync($"O pedido não alcançou a quantidade mínima de {quantidadeMinima:0.##}. ", "Atenção");
+                    return;
                 }
-
 
                 if (CondicaoPagamento.Codigo != PedidoSelecionado.CodCondicaoPagamento && PedidoSelecionado.IndPrecoLiquido == 1) {
 
@@ -887,23 +994,20 @@ namespace Pegada.Core.ViewModels
                     {
                         return;
                     }
-
-                    AtualizarCarrinho();
                 }
-                else {
 
-                    AtualizarCarrinho();
-                }
+                await AtualizarCarrinho(percentualComissao, diasFatAntecipado);
 
             }
             catch (Exception ex)
             {
-                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+                await UserDialogs.Instance.AlertAsync($"Não foi possível salvar o carrinho.\n{ex.Message}", "Atenção");
             }
         }
 
-        private async void AtualizarCarrinho() {
+        private async Task AtualizarCarrinho(decimal? percentualComissao, int diasFatAntecipado) {
 
+            // No carrinho "2" = sim e "1" = não (iOS: aceitaFatParcial / aceitaFaturamentoAntecipado).
             var model = new
             {
                 CodCarrinho = PedidoSelecionado.CodCarrinho,
@@ -911,13 +1015,13 @@ namespace Pegada.Core.ViewModels
                 DataEntrega = DataEntrega.HasValue ? DataEntrega.Value.ToString("yyyy-MM-ddTHH:mm:ss") : null,
                 CifFob = "F",
                 CodTransportadora = Transportadora?.Codigo,
-                AceitaFaturamentoAntecipado = PedidoSelecionado.AceitaFaturamentoAntecipado,
-                AceitaFaturamentoParcial = PedidoSelecionado.AceitaFaturamentoParcial,
-                CodSemana = SemanaSelecionada.CodSemana,
-                PercentualComissaoRep = PercentualComissaoRep,
+                AceitaFaturamentoAntecipado = IsFatAntecipado ? "2" : "1",
+                AceitaFaturamentoParcial = IsFatParcial ? "2" : "1",
+                CodSemana = SemanaSelecionada?.CodSemana,
+                PercentualComissaoRep = percentualComissao,
                 DiasBonificacao = PedidoSelecionado.DiasBonificacao,
                 OrdemCompra = PedidoSelecionado.OrdemCompra,
-                DiasFatAntecipado = PedidoSelecionado?.AceitaFaturamentoAntecipado == 1 ? PedidoSelecionado.DiasFatAntecipado : 0,
+                DiasFatAntecipado = IsFatAntecipado ? diasFatAntecipado : 0,
                 IndPrecoLiquido = PedidoSelecionado.IndPrecoLiquido,
                 CodClienteEntrega = ClienteEntregaSelecionado?.Codigo
             };

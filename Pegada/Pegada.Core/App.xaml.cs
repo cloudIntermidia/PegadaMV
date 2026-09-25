@@ -63,6 +63,10 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.TELA_INICIAL = "CatalogoPage";
             MobiliVendas.Core.Session.UsaMetas = false;
             MobiliVendas.Core.Session.MultiMarca = true;
+            MobiliVendas.Core.Session.NavegacaoBottomIconeComTexto = true;
+            MobiliVendas.Core.Session.PedidoUsaRegrasIOS = true;
+            MobiliVendas.Core.Session.NotasUsaRegrasIOS = true;
+            MobiliVendas.Core.Session.SincronizacaoUsaMenuIOS = true;
             MobiliVendas.Core.ConfiguracaoVisual.IsCaixaUnica = true;
             MobiliVendas.Core.Session.DATATEMPLATES_CONFIG = new List<MobiliVendas.Core.Models.DataTemplateConfiguracao>()
             {

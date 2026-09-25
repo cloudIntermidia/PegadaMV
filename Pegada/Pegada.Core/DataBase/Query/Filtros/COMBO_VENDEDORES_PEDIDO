@@ -1,0 +1,31 @@
+SELECT '-1' AS Codigo,
+       '(TODOS)' AS Descricao,
+       0 AS Ordem
+UNION
+SELECT DISTINCT
+       PES.CodPessoa AS Codigo,
+       PES.CodPessoa || ' - ' || PES.Nome AS Descricao,
+       1 AS Ordem
+  FROM TBT_PESSOA PES
+ WHERE PES.CodTipoPessoa = '3'
+   AND EXISTS (
+           SELECT *
+             FROM TBT_PEDIDO P
+            WHERE P.CodPessoaPreposto = PES.CodPessoa
+              AND EXISTS (
+                      SELECT *
+                        FROM TBT_MARCA_CLIENTE MC
+                       WHERE MC.CodPessoaRepresentante = CASE WHEN '@CodTipoPessoa' = '2'
+                                                              THEN '@CodPessoa'
+                                                              ELSE (SELECT P2.CodPessoa
+                                                                      FROM TBT_PESSOA P2
+                                                                     WHERE P2.CodPessoa IN (SELECT MC2.CodPessoaRepresentante
+                                                                                              FROM TBT_MARCA_CLIENTE MC2
+                                                                                             WHERE MC2.CodPessoaVendedor = '@CodPessoa')
+                                                                     LIMIT 1)
+                                                         END
+                         AND P.CodPessoaCliente = MC.CodPessoaCliente
+                         AND MC.CodMarca = '1'
+                  )
+       )
+ ORDER BY Ordem, Descricao

@@ -1,0 +1,19 @@
+SELECT '-1' AS Codigo,
+       '(TODOS)' AS Descricao,
+       0 AS Ordem
+UNION
+SELECT GC.CodGrupoCliente AS Codigo,
+       GC.Descricao AS Descricao,
+       1 AS Ordem
+  FROM TBT_GRUPO_CLIENTE GC
+       INNER JOIN TBT_CLIENTE C ON C.CodGrupoCliente = GC.CodGrupoCliente
+       JOIN TBT_SITUACAO_CLIENTE SC ON SC.CodSituacaoCliente = C.CodSituacaoCliente
+       JOIN TBT_CLASSE_RISCO CR ON CR.CodClasseRisco = C.CodClasseRisco
+ WHERE EXISTS (
+           SELECT CodPessoaCliente
+             FROM TBT_MARCA_CLIENTE MC
+            WHERE MC.CodPessoaCliente = C.CodPessoaCliente
+              AND ( ('@CodTipoPessoa' = '3' AND MC.CodPessoaVendedor = '@CodPessoa') OR (MC.CodPessoaRepresentante = '@CodPessoa') )
+       )
+ GROUP BY GC.CodGrupoCliente
+ ORDER BY Ordem, Descricao

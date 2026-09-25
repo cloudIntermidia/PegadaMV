@@ -1,0 +1,49 @@
+SELECT '@Origem' AS Origem,
+       X.CondicaoPagamento,
+       X.DiasBonificacao,
+       X.Semana,
+       X.Transportadora,
+       X.Redespacho,
+       X.Observacoes,
+       X.FatParcial,
+       X.FatAntecipado,
+       X.DiasFatAntecipado,
+       X.PrecoLiquido
+  FROM (
+        -- Carrinho (Pedido.m do PegadaIOS, ramo CARRINHO): Antecipado = 2, Parcial = 1, Preço líquido = 1
+        SELECT CP.Descricao AS CondicaoPagamento,
+               C.DiasBonificacao AS DiasBonificacao,
+               C.CodSemana AS Semana,
+               (SELECT T.Nome FROM TBT_PESSOA T
+                 WHERE T.CodPessoa = CASE WHEN C.CodTransportadora LIKE 'T%' THEN C.CodTransportadora ELSE 'T' || C.CodTransportadora END
+                   AND T.IndAtivo = '1') AS Transportadora,
+               NULL AS Redespacho,
+               C.Observacoes AS Observacoes,
+               CASE WHEN C.AceitaFaturamentoParcial = 1 THEN 1 ELSE 0 END AS FatParcial,
+               CASE WHEN C.AceitaFaturamentoAntecipado = 2 THEN 1 ELSE 0 END AS FatAntecipado,
+               C.DiasFatAntecipado AS DiasFatAntecipado,
+               CASE WHEN C.IndPrecoLiquido = 1 THEN 1 ELSE 0 END AS PrecoLiquido
+          FROM TBT_CARRINHO C
+               LEFT JOIN TBT_CONDICAO_PAGAMENTO CP ON CP.CodCondicaoPagamento = C.CodCondicaoPagamento
+         WHERE '@Origem' = 'C'
+           AND C.CodCarrinho = '@Codigo'
+        UNION ALL
+        -- Pedido (ramo PEDIDO): sem dias de fat. antecipado, preço líquido e redespacho na listagem do iOS
+        SELECT CP.Descricao AS CondicaoPagamento,
+               P.DiasBonificacao AS DiasBonificacao,
+               P.CodSemana AS Semana,
+               (SELECT T.Nome FROM TBT_PESSOA T
+                 WHERE T.CodPessoa = CASE WHEN P.CodTransportadora LIKE 'T%' THEN P.CodTransportadora ELSE 'T' || P.CodTransportadora END
+                   AND T.IndAtivo = '1') AS Transportadora,
+               NULL AS Redespacho,
+               P.Observacoes AS Observacoes,
+               CASE WHEN P.AcePar = 1 THEN 1 ELSE 0 END AS FatParcial,
+               CASE WHEN P.IndFaturamentoAntecipado = 2 THEN 1 ELSE 0 END AS FatAntecipado,
+               NULL AS DiasFatAntecipado,
+               0 AS PrecoLiquido
+          FROM TBT_PEDIDO P
+               LEFT JOIN TBT_CONDICAO_PAGAMENTO CP ON CP.CodCondicaoPagamento = P.CodCondicaoPagamento
+         WHERE '@Origem' <> 'C'
+           AND P.CodPedido = '@Codigo'
+       ) X
+ LIMIT 1;

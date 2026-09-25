@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Pegada.Core.Views.Carrinho.ContatoClienteView"
+             x:Name="this">
+
+    <!--
+        Espelha a cena ContatoViewController do PegadaIOS (900x415): barra "Voltar", cabeçalho e lista de contatos
+        (Nome | E-mail | Telefone | Cargo | Data Nasc. | Recebe cópia), "E-mail Cliente" + "Salvar E-mail",
+        aviso "*Preencha o campo E-mail." e botões "Editar Contato" / "Adicionar Contato".
+    -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="contatoCabecalho" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#808080" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="NoWrap" />
+            </Style>
+            <Style x:Key="contatoCelula" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <AbsoluteLayout>
+
+            <!-- FUNDO ESCURO -->
+            <AbsoluteLayout BackgroundColor="#000" Opacity="0.3"
+                            AbsoluteLayout.LayoutBounds="0,0,1,1"
+                            AbsoluteLayout.LayoutFlags="All" />
+
+            <Frame AbsoluteLayout.LayoutBounds="0.5,0.5,900,415"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   Padding="0" HasShadow="True" CornerRadius="10" IsClippedToBounds="True"
+                   BackgroundColor="#EFEFF4">
+
+                <AbsoluteLayout>
+
+                    <!-- Barra do título -->
+                    <BoxView AbsoluteLayout.LayoutBounds="0,0,900,50" BackgroundColor="#E1E3E6" />
+                    <Label AbsoluteLayout.LayoutBounds="10,10,156,30" Text="Voltar" FontSize="17" TextColor="#007AFF"
+                           VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.VoltarCommand, Source={x:Reference this}}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label AbsoluteLayout.LayoutBounds="200,10,500,30" Text="Contatos" FontSize="17" TextColor="Black"
+                           FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+
+                    <!-- Cabeçalho da lista -->
+                    <Grid AbsoluteLayout.LayoutBounds="0,51,900,21" BackgroundColor="White" ColumnSpacing="1" RowSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="228" />
+                            <ColumnDefinition Width="226" />
+                            <ColumnDefinition Width="112" />
+                            <ColumnDefinition Width="123" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="Nome" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="1" Text="E-mail" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="2" Text="Telefone" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="3" Text="Cargo" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="4" Text="Data Nasc." FontSize="13" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="5" Text="Recebe cópia" FontSize="13" Style="{StaticResource contatoCabecalho}" />
+                    </Grid>
+
+                    <!-- Lista -->
+                    <ListView AbsoluteLayout.LayoutBounds="5,72,890,206" BackgroundColor="White"
+                              RowHeight="28" SeparatorVisibility="Default"
+                              ItemTapped="OnContatoTapped"
+                              ItemsSource="{Binding BindingContext.Contatos, Source={x:Reference this}}"
+                              SelectedItem="{Binding BindingContext.ContatoSelecionado, Source={x:Reference this}, Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid ColumnSpacing="1" RowSpacing="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="223" />
+                                            <ColumnDefinition Width="226" />
+                                            <ColumnDefinition Width="112" />
+                                            <ColumnDefinition Width="123" />
+                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Text="{Binding Nome}" Style="{StaticResource contatoCelula}" />
+                                        <Label Grid.Column="1" Text="{Binding Email}" Style="{StaticResource contatoCelula}" />
+                                        <Label Grid.Column="2" Text="{Binding TelefoneUI}" Style="{StaticResource contatoCelula}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding TelefonePendente}" Value="True">
+                                                    <Setter Property="TextColor" Value="Red" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Grid.Column="3" Text="{Binding Cargo}" Style="{StaticResource contatoCelula}" />
+                                        <Label Grid.Column="4" Text="{Binding DataNascimento, StringFormat='{0:dd/MM/yyyy}'}" Style="{StaticResource contatoCelula}" />
+                                        <Label Grid.Column="5" Text="{Binding RecebeCopiaUI}" Style="{StaticResource contatoCelula}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding RecebeCopiaPendente}" Value="True">
+                                                    <Setter Property="TextColor" Value="Red" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <!-- E-mail do cliente -->
+                    <Label AbsoluteLayout.LayoutBounds="10,295,323,25" Text="E-mail Cliente" FontSize="17" TextColor="Black" />
+                    <Entry AbsoluteLayout.LayoutBounds="10,320,443,30" FontSize="14" BackgroundColor="White" Keyboard="Email"
+                           Text="{Binding BindingContext.EmailCliente, Source={x:Reference this}}" />
+                    <Button AbsoluteLayout.LayoutBounds="461,320,103,30" Text="Salvar E-mail" FontSize="13"
+                            BackgroundColor="#F0F0F5" TextColor="#007AFF" Padding="0"
+                            Command="{Binding BindingContext.SalvarEmailCommand, Source={x:Reference this}}" />
+                    <Label AbsoluteLayout.LayoutBounds="10,347,323,19" Text="*Preencha o campo E-mail." FontSize="13"
+                           TextColor="#FF2600"
+                           IsVisible="{Binding BindingContext.EmailPendente, Source={x:Reference this}}" />
+
+                    <!-- Ações -->
+                    <Button AbsoluteLayout.LayoutBounds="547,379,150,30" Text="Editar Contato"
+                            BackgroundColor="#F0F0F5" TextColor="#007AFF" Padding="0"
+                            Command="{Binding BindingContext.EditarContatoCommand, Source={x:Reference this}}" />
+                    <Button AbsoluteLayout.LayoutBounds="713,379,150,30" Text="Adicionar Contato"
+                            BackgroundColor="#F0F0F5" TextColor="#007AFF" Padding="0"
+                            Command="{Binding BindingContext.AdicionarContatoCommand, Source={x:Reference this}}" />
+
+                </AbsoluteLayout>
+            </Frame>
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

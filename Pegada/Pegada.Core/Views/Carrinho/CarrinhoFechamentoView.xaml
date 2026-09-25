@@ -57,6 +57,7 @@
                                 BackgroundColor="Transparent"
                                 TextColor="{StaticResource corButtonBackPopover}"
                                 HorizontalOptions="End"
+                                IsEnabled="{Binding BindingContext.SalvarHabilitado, Source={x:Reference this}}"
                                 Command="{Binding BindingContext.SalvarFechamentoCommand, Source={x:Reference this}}"/>
                     </Grid>
 
@@ -74,18 +75,18 @@
                                    TextColor="Red"
                                    HorizontalTextAlignment="Center"/>
 
-                            <Label Text="{Binding BindingContext.PedidoSelecionado.NumeroPedido, Source={x:Reference this}}"
+                            <Label Text="{Binding BindingContext.PedidoSelecionado.CodCarrinho, Source={x:Reference this}}"
                                    TextColor="Red"
                                    FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"/>
 
                             <!-- LINHA PRAZO / BONIF / SEMANA -->
-                            <Grid ColumnSpacing="15">
+                            <Grid ColumnSpacing="10">
 
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.85*"/>
                                     <ColumnDefinition Width="0.8*"/>
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="1.4*"/>
                                 </Grid.ColumnDefinitions>
 
                                 <custom:BotaoComVisualDropView
@@ -160,19 +161,12 @@
                                 <Switch Grid.Row="1"
                                         Grid.Column="0"
                                         HorizontalOptions="End"
-                                        IsToggled="{Binding BindingContext.PedidoSelecionado.AceitaFaturamentoParcial, Source={x:Reference this}}"/>
+                                        IsToggled="{Binding BindingContext.IsFatParcial, Source={x:Reference this}, Mode=TwoWay}"/>
 
                                 <Switch Grid.Row="1"
                                         Grid.Column="1"
                                         HorizontalOptions="End"
-                                        IsToggled="{Binding BindingContext.PedidoSelecionado.AceitaFaturamentoAntecipado, Source={x:Reference this}}">
-                                      <Switch.Behaviors>
-                                          <xct:EventToCommandBehavior
-                                              EventName="Toggled"
-                                              Command="{Binding BindingContext.SwitchFaturamentoAntecipadoCommand, Source={x:Reference this}}"
-                                              EventArgsParameterPath="Value"/>
-                                      </Switch.Behaviors>
-                                  </Switch>
+                                        IsToggled="{Binding BindingContext.IsFatAntecipado, Source={x:Reference this}, Mode=TwoWay}"/>
 
                                 <!-- CAMPO DIAS FATURAMENTO ANTECIPADO -->
                                 <StackLayout Grid.Row="0"
@@ -185,10 +179,10 @@
                                     <Label Text="Dias Fat. Antecipado"
                                            FontSize="Small"/>
 
-                                    <Entry Placeholder="0"
-                                           Keyboard="Numeric"
+                                    <Entry Keyboard="Numeric"
+                                           MaxLength="3"
                                            WidthRequest="120"
-                                           Text="{Binding BindingContext.PedidoSelecionado.DiasFatAntecipado, Source={x:Reference this}}"/>
+                                           Text="{Binding BindingContext.DiasFatAntecipadoTexto, Source={x:Reference this}, Mode=TwoWay}"/>
         
                                 </StackLayout>
 
@@ -227,12 +221,22 @@
                                 </Grid>
 
 
-                                <Button Grid.Column="2"
-                                    Text="Atualizar Contatos"
-                                    HorizontalOptions="End"
-                                    WidthRequest="200"
-                                    BackgroundColor="#EDEDED"
-                                    Command="{Binding BindingContext.AtualizarContatosCommand, Source={x:Reference this}}"/>
+                                <!-- Atualizar Contatos (iOS: view 141x44 com o botão dentro; a "borda" fica vermelha com contato pendente) -->
+                                <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="10" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Label Text="(Contato pendente)" FontSize="14" TextColor="#FF2600" VerticalOptions="Center"
+                                           IsVisible="{Binding BindingContext.ContatoPendente, Source={x:Reference this}}" />
+                                    <Frame Padding="2" CornerRadius="4" HasShadow="False" WidthRequest="204" HeightRequest="48"
+                                           BackgroundColor="Transparent" BorderColor="Transparent">
+                                        <Frame.Triggers>
+                                            <DataTrigger TargetType="Frame" Binding="{Binding BindingContext.ContatoPendente, Source={x:Reference this}}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="Red" />
+                                            </DataTrigger>
+                                        </Frame.Triggers>
+                                        <Button Text="Atualizar Contatos"
+                                                BackgroundColor="#EDEDED"
+                                                Command="{Binding BindingContext.AtualizarContatosCommand, Source={x:Reference this}}"/>
+                                    </Frame>
+                                </StackLayout>
                             </Grid>
 
                             <!-- ATUALIZAR CONTATOS -->

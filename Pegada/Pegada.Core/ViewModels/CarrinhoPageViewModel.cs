@@ -1,4 +1,7 @@
 ﻿using Acr.UserDialogs;
+using CommonServiceLocator;
+using Pegada.Core.Views.Carrinho;
+using Rg.Plugins.Popup.Pages;
 using MobiliVendas.Core;
 using MobiliVendas.Core.Contracts;
 using MobiliVendas.Core.Domain.Commands.Handlers;
@@ -441,6 +444,19 @@ namespace Pegada.Core.ViewModels
                     }
 
                     ItemSelecionado = itens[0];
+
+                    // PegadaIOS (EdicaoGradeItemCarrinho): itens comuns editam a grade pela tela "Alteração de Grade";
+                    // kit e pedido mãe seguem o fluxo anterior.
+                    if (itens.All(x => x.CodKit == null && x.PedidoMae == null))
+                    {
+                        var edicaoGrade = ServiceLocator.Current.GetInstance<EdicaoGradeItemViewModel>();
+                        if (await edicaoGrade.Init(PedidoSelecionado, itens))
+                        {
+                            await PopupNavigation.Instance.PushAsync(new PopupPage { Content = new EdicaoGradeItemView { BindingContext = edicaoGrade } });
+                        }
+                        return;
+                    }
+
                     if (itens.Count == 1)
                     {
                         if (ItemSelecionado.CodKit != null && ItemSelecionado.PedidoMae == null)
@@ -917,6 +933,8 @@ namespace Pegada.Core.ViewModels
                 List<string> itensPoliticaEscolar = new List<string>();
                 List<string> itensSemPoliticaEscolar = new List<string>();
                 List<WcfModelResult> lstPedidosModel = new List<WcfModelResult>();
+                // Pedidos transmitidos com sucesso: recebem o e-mail automático (carrinhosTransmitidos do PegadaIOS).
+                var pedidosTransmitidos = new List<CarrinhoCommandResult>();
                 foreach (var pedido in Pedidos.Where(x => x.CarrinhoChecado))
                 {
 
@@ -1034,6 +1052,13 @@ namespace Pegada.Core.ViewModels
 
                         resultTransmissao.CodCarrinho = pedido.CodCarrinho;
                         lstPedidosModel.Add(resultTransmissao);
+
+                        // iOS: cliente novo (código com ".") aguarda o cadastro no ERP e não recebe o e-mail do pedido.
+                        if (pedido.CodPessoaCliente == null || !pedido.CodPessoaCliente.Contains("."))
+                        {
+                            pedido.CodPedido = resultTransmissao.CODIGO.ToString();
+                            pedidosTransmitidos.Add(pedido);
+                        }
                     }
                 }
 
@@ -1076,6 +1101,10 @@ namespace Pegada.Core.ViewModels
                     string message = string.Join("Pedido(s) enviado(s) com sucesso.\n", lstPedidosSemErros);
                     await UserDialogs.Instance.AlertAsync(message, AppName);
                     await Load();
+
+                    // enviaPedidosPorEmail (iOS): ao confirmar a mensagem de sucesso, oferece o envio do PDF por e-mail ao cliente.
+                    if (pedidosTransmitidos.Count > 0)
+                        await ServiceLocator.Current.GetInstance<Pegada.Core.Services.PedidoEmailAutomatico>().EnviarAsync(pedidosTransmitidos);
                 }
 
                 TransmissaoLogger.Log("===== Transmitir: fim =====");

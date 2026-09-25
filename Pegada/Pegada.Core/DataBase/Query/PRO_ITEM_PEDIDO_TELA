@@ -1,0 +1,112 @@
+SELECT B.*
+  FROM (
+    -- PegadaIOS (ItemPedido itensForPedido:filtros:): itens do pedido/carrinho com os filtros do painel "+ Filtros"
+    SELECT IP.CodItemPedido AS CodItemPedido,
+           IP.CodItemPedido AS CodItemCarrinho,
+           IP.CodPedido AS CodPedido,
+           IP.CodPedido AS CodCarrinho,
+       IP.CodProduto AS CodProduto,
+       P.CodMarca AS CodMarca,
+       -- PegadaIOS: sem produto cadastrado, modelo = 1º trecho do código e descrição "PRODUTO INDISPONÍVEL (COR x)"
+       CASE WHEN P.CodModelo IS NOT NULL THEN P.CodModelo
+            WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, 1, instr(IP.CodProduto, '-') - 1)
+            ELSE IP.CodProduto END AS CodModelo,
+       CASE WHEN P.CodModelo IS NOT NULL THEN P.DescricaoCompleta
+            WHEN instr(IP.CodProduto, '-') > 0 THEN 'PRODUTO INDISPONÍVEL (COR ' ||
+                 CASE WHEN instr(CASE WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, instr(IP.CodProduto, '-') + 1) ELSE NULL END, '-') > 0 THEN substr(CASE WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, instr(IP.CodProduto, '-') + 1) ELSE NULL END, 1, instr(CASE WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, instr(IP.CodProduto, '-') + 1) ELSE NULL END, '-') - 1) ELSE CASE WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, instr(IP.CodProduto, '-') + 1) ELSE NULL END END || ')'
+            ELSE 'PRODUTO INDISPONÍVEL (' || IP.CodProduto || ')' END AS Descricao,
+       NULLIF(CAST(IP.QtdCaixa AS INTEGER), 0) AS QtdCx,
+       NULLIF(CAST(IP.QtdTotal AS INTEGER), 0) AS QtdCxTotal,
+       IP.QtdCaixa AS QtdCaixa,
+       IP.QtdTotal AS QtdTotal,
+       IP.ValorUnitario AS ValorUnitario,
+       IP.ValorUnitarioLiquido AS ValorUnitarioLiquido,
+       IP.ValorUnitario * (IP.QtdTotal * IP.QtdCaixa) AS ValorTotal,
+       IP.ValorUnitarioLiquido * (IP.QtdTotal * IP.QtdCaixa) AS ValorTotalLiquido,
+       -- PegadaIOS (ProdutoCatalogo imagem): foto do produto se PossuiFoto = 1, senão a do modelo; a mais recente (ID DESC)
+       (SELECT FP.Imagem FROM TBT_FOTO_PRODUTO FP
+         WHERE FP.CodProdutoFoto = CASE WHEN P.PossuiFoto = 1 THEN P.CodProdutoFoto ELSE MOD.CodProdutoFoto END
+         ORDER BY FP.ID DESC LIMIT 1) AS Imagem,
+           IP.NumeroNF AS NotaFiscal,
+           (SELECT NF.DataEmissao FROM TBT_NOTA_FISCAL NF
+             WHERE NF.CodEmpresa = IP.CodEmpresa AND NF.NumeroNF = IP.NumeroNF AND NF.SerieNF = IP.SerieNF LIMIT 1) AS DataEmissaoNF,
+           (SELECT SP.Descricao FROM TBT_PEDIDO PE
+              JOIN TBT_SITUACAO_PEDIDO SP ON SP.CodSituacaoPedido = PE.CodSituacaoPedido
+             WHERE PE.CodPedido = IP.CodPedido) AS SituacaoItem,
+           NULL AS Fabrica,
+           NULL AS PercComissaoItem,
+           NULL AS MarkupCliente,
+           NULL AS MarkupAplicado,
+           'P' AS DescTipo,
+           IFNULL(IP.PerDs1, 0) || ';' || IFNULL(IP.PerDs2, 0) || ';' || IFNULL(IP.PerDs3, 0) || ';' || IFNULL(IP.PerDs4, 0) AS DescPerc
+      FROM TBT_ITEM_PEDIDO IP
+           LEFT JOIN TBT_PRODUTO P ON P.CodProduto = IP.CodProduto
+           LEFT JOIN TBT_MODELO MOD ON MOD.CodModelo = P.CodModelo AND MOD.CodMarca = P.CodMarca
+     WHERE '@Origem' <> 'C'
+       AND IP.CodPedido = '@Codigo'
+       AND (IP.Excluido IS NULL OR IP.Excluido = 0)
+    AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento'))))
+    AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento'))))
+    AND ('-1' = '@FiltroGenero' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '1' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGenero'))))
+    AND ('-1' = '@FiltroPublico' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '2' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroPublico'))))
+    AND ('-1' = '@FiltroLinha' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '6' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroLinha'))))
+    AND ('-1' = '@Referencia' OR IP.CodProduto LIKE '%@Referencia%' OR P.CodModelo LIKE '%@Referencia%')
+
+    UNION ALL
+    SELECT IP.CodItemCarrinho AS CodItemPedido,
+           IP.CodItemCarrinho AS CodItemCarrinho,
+           IP.CodCarrinho AS CodPedido,
+           IP.CodCarrinho AS CodCarrinho,
+       IP.CodProduto AS CodProduto,
+       P.CodMarca AS CodMarca,
+       -- PegadaIOS: sem produto cadastrado, modelo = 1º trecho do código e descrição "PRODUTO INDISPONÍVEL (COR x)"
+       CASE WHEN P.CodModelo IS NOT NULL THEN P.CodModelo
+            WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, 1, instr(IP.CodProduto, '-') - 1)
+            ELSE IP.CodProduto END AS CodModelo,
+       CASE WHEN P.CodModelo IS NOT NULL THEN P.DescricaoCompleta
+            WHEN instr(IP.CodProduto, '-') > 0 THEN 'PRODUTO INDISPONÍVEL (COR ' ||
+                 CASE WHEN instr(CASE WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, instr(IP.CodProduto, '-') + 1) ELSE NULL END, '-') > 0 THEN substr(CASE WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, instr(IP.CodProduto, '-') + 1) ELSE NULL END, 1, instr(CASE WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, instr(IP.CodProduto, '-') + 1) ELSE NULL END, '-') - 1) ELSE CASE WHEN instr(IP.CodProduto, '-') > 0 THEN substr(IP.CodProduto, instr(IP.CodProduto, '-') + 1) ELSE NULL END END || ')'
+            ELSE 'PRODUTO INDISPONÍVEL (' || IP.CodProduto || ')' END AS Descricao,
+       NULLIF(CAST(IP.QtdCaixa AS INTEGER), 0) AS QtdCx,
+       NULLIF(CAST(IP.QtdTotal AS INTEGER), 0) AS QtdCxTotal,
+       IP.QtdCaixa AS QtdCaixa,
+       IP.QtdTotal AS QtdTotal,
+       IP.ValorUnitario AS ValorUnitario,
+       IP.ValorUnitarioLiquido AS ValorUnitarioLiquido,
+       IP.ValorUnitario * (IP.QtdTotal * IP.QtdCaixa) AS ValorTotal,
+       IP.ValorUnitarioLiquido * (IP.QtdTotal * IP.QtdCaixa) AS ValorTotalLiquido,
+       -- PegadaIOS (ProdutoCatalogo imagem): foto do produto se PossuiFoto = 1, senão a do modelo; a mais recente (ID DESC)
+       (SELECT FP.Imagem FROM TBT_FOTO_PRODUTO FP
+         WHERE FP.CodProdutoFoto = CASE WHEN P.PossuiFoto = 1 THEN P.CodProdutoFoto ELSE MOD.CodProdutoFoto END
+         ORDER BY FP.ID DESC LIMIT 1) AS Imagem,
+           NULL AS NotaFiscal,
+           NULL AS DataEmissaoNF,
+           (SELECT SP.Descricao FROM TBT_CARRINHO C0
+              JOIN TBT_SITUACAO_PEDIDO SP ON SP.CodSituacaoPedido = C0.CodSituacaoPedido
+             WHERE C0.CodCarrinho = IP.CodCarrinho) AS SituacaoItem,
+           NULL AS Fabrica,
+           NULL AS PercComissaoItem,
+           (SELECT CASE WHEN C1.Markup IS NULL OR C1.Markup = '' THEN NULL ELSE REPLACE(printf('%.2f', C1.Markup), '.', ',') END
+              FROM TBT_CARRINHO C1 WHERE C1.CodCarrinho = IP.CodCarrinho) AS MarkupCliente,
+           CASE WHEN IP.Markup IS NULL OR IP.Markup = '' THEN NULL ELSE REPLACE(printf('%.2f', IP.Markup), '.', ',') END AS MarkupAplicado,
+           'C' AS DescTipo,
+           IFNULL(IP.PercDesc1, 0) || ';' || IFNULL((SELECT GROUP_CONCAT(D.PercentualDesconto, ';')
+                                                       FROM TBT_ITEM_CARRINHO_DESC D
+                                                      WHERE D.CodCarrinho = IP.CodCarrinho
+                                                        AND D.SeqItemPedido = IP.CodItemCarrinho), '') AS DescPerc
+      FROM TBT_ITEM_CARRINHO IP
+           LEFT JOIN TBT_PRODUTO P ON P.CodProduto = IP.CodProduto
+           LEFT JOIN TBT_MODELO MOD ON MOD.CodModelo = P.CodModelo AND MOD.CodMarca = P.CodMarca
+     WHERE '@Origem' = 'C'
+       AND IP.CodCarrinho = '@Codigo'
+       AND (IP.Excluido IS NULL OR IP.Excluido = 0)
+    AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento'))))
+    AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento'))))
+    AND ('-1' = '@FiltroGenero' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '1' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGenero'))))
+    AND ('-1' = '@FiltroPublico' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '2' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroPublico'))))
+    AND ('-1' = '@FiltroLinha' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '6' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroLinha'))))
+    AND ('-1' = '@Referencia' OR IP.CodProduto LIKE '%@Referencia%' OR P.CodModelo LIKE '%@Referencia%')
+
+  ) B
+ WHERE B.CodItemPedido NOT LIKE '%.%'
+ ORDER BY CAST(B.CodItemPedido AS INTEGER);

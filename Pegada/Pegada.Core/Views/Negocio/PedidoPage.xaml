@@ -1,997 +1,843 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-             xmlns:wrap="clr-namespace:MobiliVendas.Core.CustomView.Layouts.WrapLayout;assembly=MobiliVendas.Core"
              prism:ViewModelLocator.AutowireViewModel="True"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:session="clr-namespace:MobiliVendas.Core;assembly=MobiliVendas.Core"
-             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             x:Name="this"
-             x:Class="Pegada.Core.Views.Negocio.PedidoPage"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
-             >
+             xmlns:conv="clr-namespace:Pegada.Core.Converters"
+             x:Name="this"
+             x:Class="Pegada.Core.Views.Negocio.PedidoPage">
+
+    <!--
+        Layout espelhado da tela PedidoViewController do PegadaIOS (MainStoryboard, cena 1024x610):
+          - barra de filtros (45)         : Representante | Vendedor | Grupo | Cliente | Buscar Criticados | + Filtros | Consultar
+          - lista de pedidos (234)        : cabeçalho (30) + linhas (50)
+          - barra de totais (35)          : Qtd Pedidos | Qtd Total Itens | Valor Total
+          - itens do pedido (restante)    : cabeçalho + linhas (30) + grade (esquerda) + foto (direita)
+          - painel "+ Filtros" (320 de largura, à direita, sobre a tela)
+        As larguras das colunas são proporcionais às posições (x, largura) do storyboard.
+    -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <conv:DataOuTextoConverter x:Key="DataOuTexto" />
+
+            <!-- Botões brancos (IMButton / IMComboButton do PegadaIOS) -->
+            <Style x:Key="pedBotao" TargetType="flex:FlexButton">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="ForegroundColor" Value="#555555" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="White" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="HighlightForegroundColor" Value="#555555" />
+                <Setter Property="HighlightBackgroundColor" Value="#E5E5E5" />
+                <Setter Property="HighlightBorderColor" Value="#E5E5E5" />
+                <Setter Property="MaxLines" Value="1" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+
+            <!-- Cabeçalho da grade do item: cinza 50%, texto branco 14 -->
+            <Style x:Key="pedGradeCabecalho" TargetType="Label">
+                <Setter Property="WidthRequest" Value="31.5" />
+                <Setter Property="HeightRequest" Value="21" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#808080" />
+                <Setter Property="LineBreakMode" Value="NoWrap" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Tela "Informações" do pedido: rótulos em negrito 12, valores 12 -->
+            <Style x:Key="pedInfoRotulo" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="pedInfoValor" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Cabeçalhos das listas: negrito, branco, fundo cinza 50% -->
+            <Style x:Key="pedCabecalho" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#808080" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="MaxLines" Value="2" />
+                <Setter Property="Margin" Value="0,0,1,0" />
+            </Style>
+
+            <!-- Células das listas -->
+            <Style x:Key="pedCelula" TargetType="Label">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <!-- Textos da barra de totais -->
+            <Style x:Key="pedTotal" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <!-- Painel de filtros -->
+            <Style x:Key="pedFiltroRotulo" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <AbsoluteLayout>
-        <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
-                AbsoluteLayout.LayoutFlags="All">
 
-            <!--FILTROS-->
-            <Grid RowSpacing="10" ColumnSpacing="10" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
+        <Grid AbsoluteLayout.LayoutBounds="0,0,1,1"
+              AbsoluteLayout.LayoutFlags="All"
+              BackgroundColor="White"
+              RowSpacing="0"
+              ColumnSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="45" />
+                <RowDefinition Height="234" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
+            <!-- ============ BARRA DE FILTROS (eqA-25-6fg) ============ -->
+            <Grid Grid.Row="0" BackgroundColor="#D9D9D9" ColumnSpacing="0" RowSpacing="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="340" />
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="152" />
+                    <ColumnDefinition Width="152" />
+                    <ColumnDefinition Width="152" />
+                    <ColumnDefinition Width="158" />
+                    <ColumnDefinition Width="121" />
+                    <ColumnDefinition Width="145" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!--VENDEDOR, CLIENTE, GRUPO, SITUAÇÃO-->
-                <Grid Grid.Row="0" 
-                      Grid.Column="0" 
-                      ColumnSpacing="1" 
-                      RowSpacing="1" 
-                      HorizontalOptions="StartAndExpand" 
-                      VerticalOptions="EndAndExpand" 
-                      Margin="10,0,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
+                <!-- Representante -->
+                <flex:FlexButton Grid.Column="0"
+                                 Style="{StaticResource pedBotao}"
+                                 WidthRequest="150" HeightRequest="33"
+                                 Margin="0,0,0,2"
+                                 IsEnabled="{Binding BindingContext.RepresentanteHabilitado, Source={x:Reference this}}"
+                                 Text="{translator:Translate PedidoTela_PedidoVC_Representante}" />
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-
-                    
-                    <flex:FlexButton Grid.Row="0" Grid.Column="0" 
-                                 VerticalOptions="End"
+                <!-- Vendedor -->
+                <flex:FlexButton Grid.Column="1"
+                                 Style="{StaticResource pedBotao}"
+                                 WidthRequest="150" HeightRequest="33"
+                                 Margin="0,0,0,2" MaxLines="2"
+                                 IsEnabled="{Binding BindingContext.VendedorHabilitado, Source={x:Reference this}}"
                                  Text="{Binding BindingContext.TituloVendedor, Source={x:Reference this}}"
-                                 ClickedCommand="{Binding BindingContext.SelecionarVendedorCommand, Source={x:Reference this}}"
-                                    Style="{StaticResource flexButtonFiltros}"
-                                 MinimumWidthRequest="1.0"
-                               />
-                    <flex:FlexButton
-                                Grid.Row="0" Grid.Column="1" 
-                                VerticalOptions="End"
-                                Text="{Binding BindingContext.TituloCliente, Source={x:Reference this}}"
-                                ClickedCommand="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonFiltros}"
-                               />
-                    <flex:FlexButton
-                                Grid.Row="1" Grid.Column="0" 
-                                Text="{Binding BindingContext.GrupoSelecionado.Descricao, Source={x:Reference this}, Converter={x:StaticResource TextSubText}, ConverterParameter='GRUPO'}"
-                                ClickedCommand="{Binding BindingContext.SelecionarGrupoCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonFiltros}"
-                               />
-                    <flex:FlexButton
-                                Grid.Row="1" Grid.Column="1" 
-                                Text="{Binding BindingContext.TituloSituacao, Source={x:Reference this}}"
-                                ClickedCommand="{Binding BindingContext.SelecionarSituacaoCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonFiltros}"
-                               />
-                </Grid>
+                                 ClickedCommand="{Binding BindingContext.SelecionarVendedorCommand, Source={x:Reference this}}" />
 
-                <!--FILTROS-->
-                <Grid Grid.Row="0" Grid.Column="1" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
+                <!-- Grupo -->
+                <flex:FlexButton Grid.Column="2"
+                                 Style="{StaticResource pedBotao}"
+                                 WidthRequest="150" HeightRequest="33"
+                                 Margin="0,0,0,2" MaxLines="2"
+                                 Text="{Binding BindingContext.TituloGrupo, Source={x:Reference this}}"
+                                 ClickedCommand="{Binding BindingContext.SelecionarGrupoCommand, Source={x:Reference this}}" />
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
+                <!-- Cliente -->
+                <flex:FlexButton Grid.Column="3"
+                                 Style="{StaticResource pedBotao}"
+                                 WidthRequest="150" HeightRequest="33"
+                                 Margin="0,0,0,2" MaxLines="2"
+                                 Text="{Binding BindingContext.TituloCliente, Source={x:Reference this}}"
+                                 ClickedCommand="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}" />
 
-                    <!--FILTRAR POR DATA DE EMISSAO-->
-                    <StackLayout Grid.Row="0" Grid.Column="0" 
-                            HorizontalOptions="FillAndExpand">
+                <!-- Buscar Criticados -->
+                <flex:FlexButton Grid.Column="4"
+                                 Style="{StaticResource pedBotao}"
+                                 WidthRequest="113" HeightRequest="33"
+                                 Margin="0,0,0,2"
+                                 FontSize="11" FontAttributes="None" MaxLines="2"
+                                 Text="Buscar Criticados"
+                                 ClickedCommand="{Binding BindingContext.BuscarCriticadosCommand, Source={x:Reference this}}" />
 
-                        <StackLayout Orientation="Horizontal" 
-                                 Spacing="5" 
-                                 HeightRequest="20"
-                                 HorizontalOptions="Center"
-                                 >
+                <!-- + Filtros (abre o painel lateral) -->
+                <flex:FlexButton Grid.Column="5"
+                                 x:Name="BtnFiltros"
+                                 Style="{StaticResource pedBotao}"
+                                 WidthRequest="142" HeightRequest="30"
+                                 Margin="0,3,0,0"
+                                 Text="{translator:Translate PedidoTela_PEVC_Filtros}" />
 
-                            <ffimageloading:CachedImage Aspect="AspectFit" 
-                                                    Source="{Binding BindingContext.FiltrarDataEmissao, Source={x:Reference this}, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" 
-                                                    HeightRequest="20">
-                                <ffimageloading:CachedImage.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BindingContext.FiltrarDataEmissaoCommand, Source={x:Reference this}}"/>
-                                </ffimageloading:CachedImage.GestureRecognizers>
-                            </ffimageloading:CachedImage>
-                            
-                            <Label Text="Filtrar por data de emissão" 
-                               FontAttributes="Bold" 
-                               TextColor="#5A5A5A" 
-                               VerticalTextAlignment="Center" 
-                               HorizontalTextAlignment="Start" 
-                               FontSize="12" />
-                            
-                        </StackLayout>
-                        <StackLayout Spacing="5" 
-                                 HeightRequest="40"
-                                 Orientation="Horizontal" 
-                                 HorizontalOptions="CenterAndExpand"
-                                 >
-
-                            <flex:FlexButton
-                                Text="{Binding BindingContext.Filtro.DataEmissaoInicial, Source={x:Reference this}, StringFormat='Início &#10; {0:dd-MM-yyyy}'}"
-                                ClickedCommand="{Binding BindingContext.SelecionarDataEmissaoCommand, Source={x:Reference this}}"
-                                ClickedCommandParameter="INICIO"
-                                Style="{StaticResource flexButtonFiltros}"
-                                WidthRequest="110"
-                               />
-
-                            <flex:FlexButton
-                                Text="{Binding BindingContext.Filtro.DataEmissaoFinal, Source={x:Reference this}, StringFormat='Fim &#10; {0:dd-MM-yyyy}'}"
-                                IsEnabled="{Binding BindingContext.FiltrarDataEmissao, Source={x:Reference this}}"    
-                                ClickedCommand="{Binding BindingContext.SelecionarDataEmissaoCommand, Source={x:Reference this}}"
-                                ClickedCommandParameter="FIM"
-                                Style="{StaticResource flexButtonFiltros}"
-                                WidthRequest="110"
-                               />
-
-                        </StackLayout>
-                    </StackLayout>
-                    
-                    <!--FILTRAR POR DATA DE ENTREGA-->
-                    <StackLayout Grid.Row="0" Grid.Column="1"
-                             HorizontalOptions="FillAndExpand">
-                        <StackLayout Orientation="Horizontal" 
-                                 Spacing="5" 
-                                 HeightRequest="20"
-                                 HorizontalOptions="Center">
-                            
-                            <ffimageloading:CachedImage Aspect="AspectFit" 
-                                                    Source="{Binding BindingContext.FiltrarDataEntrega, Source={x:Reference this}, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" 
-                                                    HeightRequest="20">
-                                <ffimageloading:CachedImage.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BindingContext.FiltrarDataEntregaCommand, Source={x:Reference this}}"/>
-                                </ffimageloading:CachedImage.GestureRecognizers>
-                            </ffimageloading:CachedImage>
-                            
-                            <Label Text="{Binding BindingContext.LblDataEntregaUI, Source={x:Reference this}, StringFormat='Filtrar por data de {0}'}"
-                               FontAttributes="Bold" 
-                               TextColor="#5A5A5A"
-                               VerticalTextAlignment="Center" HorizontalTextAlignment="Start" FontSize="12" />                        
-                            
-                        </StackLayout>
-                        
-                        <StackLayout Spacing="5" 
-                                 HeightRequest="40"
-                                 Orientation="Horizontal" 
-                                 HorizontalOptions="CenterAndExpand">
-
-                            <flex:FlexButton
-                                Text="{Binding BindingContext.Filtro.DataEntregaInicial, Source={x:Reference this}, StringFormat='Início &#10; {0:dd-MM-yyyy}'}"
-                                ClickedCommand="{Binding BindingContext.SelecionarDataEntregaCommand, Source={x:Reference this}}"
-                                ClickedCommandParameter="INICIO"
-                                Style="{StaticResource flexButtonFiltros}"
-                                WidthRequest="110"
-                               />
-
-                            <flex:FlexButton
-                                Text="{Binding BindingContext.Filtro.DataEntregaFinal, Source={x:Reference this}, StringFormat='Fim &#10; {0:dd-MM-yyyy}'}"
-                                ClickedCommand="{Binding BindingContext.SelecionarDataEntregaCommand, Source={x:Reference this}}"
-                                ClickedCommandParameter="FIM"
-                                Style="{StaticResource flexButtonFiltros}"
-                                WidthRequest="110"
-                               />
-
-                        </StackLayout>
-                    </StackLayout>
-
-                    <!--PEDIDO, NOTA FISCAL E REFERENCIA-->
-                    <StackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                             Orientation="Horizontal"
-                             HorizontalOptions="CenterAndExpand">
-
-                        <Entry 
-                       Placeholder="Pedido" 
-                       Text="{Binding BindingContext.Filtro.CodCarrinho, Source={x:Reference this}}"
-                       WidthRequest="120"
-                       VerticalOptions="End"
+                <!-- Ícone de filtro ativo (oculto até haver filtro aplicado) -->
+                <Image Grid.Column="5"
+                       x:Name="IconeFiltroAtivo"
+                       Source="sem_grade.png"
+                       IsVisible="{Binding BindingContext.FiltroAtivo, Source={x:Reference this}}"
+                       WidthRequest="26" HeightRequest="26"
+                       Margin="10,0,0,0"
                        HorizontalOptions="Start"
-                       HorizontalTextAlignment="Center"/>
+                       VerticalOptions="Center"
+                       InputTransparent="True" />
 
-                        <Entry 
-                       Placeholder="Nota Fiscal" 
-                       Text="{Binding BindingContext.Filtro.NotaFiscal, Source={x:Reference this}}"
-                       WidthRequest="120"
-                       VerticalOptions="End"
-                       HorizontalOptions="Start"
-                       HorizontalTextAlignment="Center"/>
-                        <Entry 
-                       Placeholder="Referência" 
-                       Text="{Binding BindingContext.Filtro.Referencia, Source={x:Reference this}}"
-                       WidthRequest="120"
-                       VerticalOptions="End"
-                       HorizontalOptions="Start"
-                       HorizontalTextAlignment="Center"/>
-
-                    </StackLayout>
-                </Grid>
-
-                <!--BOTÃO CONSULTAR-->
-                <Grid Grid.Row="0" Grid.Column="2" VerticalOptions="EndAndExpand" HorizontalOptions="EndAndExpand" Margin="0,0,10,0"> 
-                    
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    
-                    <!--BOTÃO CONSULTAR-->
-                    <flex:FlexButton Grid.Row="0" Grid.Column="0"
-                                Text="CONSULTAR"
-                                HorizontalOptions="End"
-                                ClickedCommand="{Binding BindingContext.ConsultarCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonNiveis}"/>
-                    
-                </Grid>
-
+                <!-- Consultar -->
+                <flex:FlexButton Grid.Column="6"
+                                 Style="{StaticResource pedBotao}"
+                                 WidthRequest="142" HeightRequest="30"
+                                 Margin="0,3,0,0"
+                                 Text="{translator:Translate PedidoTela_PEVC_Consultar}"
+                                 ClickedCommand="{Binding BindingContext.ConsultarCommand, Source={x:Reference this}}" />
             </Grid>
-            
-            <!-- Grid de Pedidos -->
-            <Grid ColumnSpacing="1" 
-                  RowSpacing="0" >
+
+            <!-- ============ LISTA DE PEDIDOS (fV1-EY-8ed) ============ -->
+            <Grid Grid.Row="1" RowSpacing="0" ColumnSpacing="0" BackgroundColor="White">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="55" />
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="1.6*" />
-                    <ColumnDefinition Width="4*" />
-                    <!--<ColumnDefinition Width="*" />-->
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="0.8*" />
-                    <ColumnDefinition Width="0.8*" />
-                    <ColumnDefinition Width="0.8*" />
-                    <!--<ColumnDefinition Width="*" />-->
-                    <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="1.5*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2.3*" />
-                    <ColumnDefinition Width="2.3*" />
-                </Grid.ColumnDefinitions>
+                <!-- Cabeçalho -->
+                <Grid Grid.Row="0" ColumnSpacing="0" RowSpacing="0" Margin="0,1,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="35*" />
+                        <ColumnDefinition Width="33*" />
+                        <ColumnDefinition Width="91*" />
+                        <ColumnDefinition Width="81*" />
+                        <ColumnDefinition Width="76*" />
+                        <ColumnDefinition Width="211*" />
+                        <ColumnDefinition Width="73*" />
+                        <ColumnDefinition Width="47*" />
+                        <ColumnDefinition Width="62*" />
+                        <ColumnDefinition Width="67*" />
+                        <ColumnDefinition Width="66*" />
+                        <ColumnDefinition Width="42*" />
+                        <ColumnDefinition Width="71*" />
+                        <ColumnDefinition Width="69*" />
+                    </Grid.ColumnDefinitions>
 
-                <!--Header-->
-                <Label Style="{StaticResource labelGridHeader}" Text="Pedido AFV"       Grid.Row="0" Grid.Column="0" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Pedido ERP"       Grid.Row="0" Grid.Column="1" />
-                <Label Style="{StaticResource labelGridHeader}" Text="{Binding BindingContext.LblClienteUI, Source={x:Reference this}}"      Grid.Row="0" Grid.Column="2" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Desc"     Grid.Row="0" Grid.Column="3" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Fat Antec."     Grid.Row="0" Grid.Column="4" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Fat Parc."     Grid.Row="0" Grid.Column="5" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Ped Mãe"     Grid.Row="0" Grid.Column="6" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Cond Pgto"   Grid.Row="0" Grid.Column="7" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Situação"     Grid.Row="0" Grid.Column="8" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Emissão"      Grid.Row="0" Grid.Column="9" />
-                <Label Style="{StaticResource labelGridHeader}" Text="{Binding BindingContext.LblDataEntregaUI, Source={x:Reference this}}"      Grid.Row="0" Grid.Column="10" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Qtd Pedido"   Grid.Row="0" Grid.Column="11" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Tot Líq Orig" Grid.Row="0" Grid.Column="12"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Total Saldo" Grid.Row="0" Grid.Column="13"/>
-                <!--Header-->
+                    <Label Grid.Column="0" Style="{StaticResource pedCabecalho}" FontSize="14" />
+                    <!-- Marca/desmarca todos -->
+                    <Image Grid.Column="0"
+                           Source="{Binding BindingContext.TodosPedidosChecados, Source={x:Reference this}, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='atendimento_uncheck.png,atendimento_check.png'}"
+                           WidthRequest="22" HeightRequest="22"
+                           HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.MarcarTodosPedidosCommand, Source={x:Reference this}}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Label Grid.Column="1" Style="{StaticResource pedCabecalho}" FontSize="14" Text="{translator:Translate PedidoTela_Info}" />
+                    <Label Grid.Column="2" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_PedidoAFV}" />
+                    <Label Grid.Column="3" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_PedidoERP}" />
+                    <Label Grid.Column="4" Style="{StaticResource pedCabecalho}" FontSize="12" Text="{translator:Translate PedidoTela_PedidoVC_OrdemCompra}" />
+                    <Label Grid.Column="5" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_Cliente}" />
+                    <Label Grid.Column="6" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_CondPgto}" />
+                    <Label Grid.Column="7" Style="{StaticResource pedCabecalho}" FontSize="12" Text="{translator:Translate PedidoTela_PedidoVC_TipoPedido}" />
+                    <Label Grid.Column="8" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_Situacao}" />
+                    <Label Grid.Column="9" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_Emissao}" />
+                    <Label Grid.Column="10" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_CarrinhoTB_Faturamento}" />
+                    <Label Grid.Column="11" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_Qtd}" />
+                    <Label Grid.Column="12" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_Total}" />
+                    <Label Grid.Column="13" Style="{StaticResource pedCabecalho}" Margin="0" Text="{translator:Translate PedidoTela_PedidoVC_TotalLiq}" />
+                </Grid>
 
-                <syncfusion:SfListView Grid.Row="1"  
-                          Grid.Column="0" 
-                          Grid.ColumnSpan="14"
-                      HeightRequest="255"
-                      TapCommand="{Binding BindingContext.PedidoTappedCommand, Source={x:Reference this}}"
-                      ItemsSource="{Binding BindingContext.Pedidos, Source={x:Reference this}}">
-
-                    <!--<ListView.Behaviors>
-                        <b:EventToCommandBehavior EventName="ItemTapped" 
-                                              Command="{Binding BindingContext.PedidoTappedCommand, Source={x:Reference this}}"
-                                              EventArgsParameterPath="Item" />
-                    </ListView.Behaviors>-->
-
+                <!-- Linhas (PedidoCell, altura 50) -->
+                <syncfusion:SfListView Grid.Row="1"
+                                       ItemSize="50"
+                                       SelectionMode="None"
+                                       TapCommand="{Binding BindingContext.PedidoTappedCommand, Source={x:Reference this}}"
+                                       ItemsSource="{Binding BindingContext.Pedidos, Source={x:Reference this}}">
                     <syncfusion:SfListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid ColumnSpacing="1" HeightRequest="45">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="45" />
-                                    </Grid.RowDefinitions>
+                                <Grid ColumnSpacing="0" RowSpacing="0" HeightRequest="50" BackgroundColor="Transparent">
+                                    <!-- Cor da linha por situação (colorForStatus): 7 vermelho, 8 verde, 9 amarelo -->
+                                    <Grid.Triggers>
+                                        <DataTrigger TargetType="Grid" Binding="{Binding CodSituacaoPedido}" Value="7">
+                                            <Setter Property="BackgroundColor" Value="#FF0000" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Grid" Binding="{Binding CodSituacaoPedido}" Value="8">
+                                            <Setter Property="BackgroundColor" Value="#00FF00" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Grid" Binding="{Binding CodSituacaoPedido}" Value="9">
+                                            <Setter Property="BackgroundColor" Value="#FFFF00" />
+                                        </DataTrigger>
+                                        <!-- Linha selecionada: cinza claro (vale sobre a cor da situação) -->
+                                        <DataTrigger TargetType="Grid" Binding="{Binding Selecionado}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="#D9D9D9" />
+                                        </DataTrigger>
+                                    </Grid.Triggers>
 
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="1.6*" />
-                                        <ColumnDefinition Width="4*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="0.8*" />
-                                        <ColumnDefinition Width="0.8*" />
-                                        <ColumnDefinition Width="0.8*" />
-                                        <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="1.5*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="2.3*" />
-                                        <ColumnDefinition Width="2.3*" />
+                                        <ColumnDefinition Width="35*" />
+                                        <ColumnDefinition Width="33*" />
+                                        <ColumnDefinition Width="91*" />
+                                        <ColumnDefinition Width="81*" />
+                                        <ColumnDefinition Width="76*" />
+                                        <ColumnDefinition Width="211*" />
+                                        <ColumnDefinition Width="73*" />
+                                        <ColumnDefinition Width="47*" />
+                                        <ColumnDefinition Width="62*" />
+                                        <ColumnDefinition Width="67*" />
+                                        <ColumnDefinition Width="66*" />
+                                        <ColumnDefinition Width="42*" />
+                                        <ColumnDefinition Width="71*" />
+                                        <ColumnDefinition Width="69*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="0" Spacing="0">
-                                        <Label Style="{StaticResource labelGridItem}" Text="{Binding CodCarrinho}" FontSize="8"  VerticalOptions="EndAndExpand"/>
-                                        <Label Style="{StaticResource labelGridItem}" Text="{Binding CodPedidoOrigem}" FontSize="8"  VerticalOptions="StartAndExpand"/>
-                                    </StackLayout>
-                                    
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodPedido}"   Grid.Row="0" Grid.Column="1" />
+                                    <!-- Check do pedido -->
+                                    <Image Grid.Column="0"
+                                           Source="{Binding CarrinhoChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='atendimento_uncheck.png,atendimento_check.png'}"
+                                           WidthRequest="22" HeightRequest="22"
+                                           HorizontalOptions="Center" VerticalOptions="Center">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.ChecarPedidoCommand, Source={x:Reference this}}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
 
-                                    <StackLayout Orientation="Vertical" Grid.Row="0"  Grid.Column="2" Spacing="0">
-                                        <Label Style="{StaticResource labelGridItem}" Text="{Binding RazaoSocial}" FontSize="8" VerticalOptions="EndAndExpand" />
-                                        <Label Style="{StaticResource labelGridItem}" Text="{Binding Categoria}" FontSize="8" VerticalOptions="StartAndExpand" />
-                                    </StackLayout>
+                                    <!-- Info (botão "i" cinza): seleciona a linha e abre as informações do pedido -->
+                                    <Label Grid.Column="1" Text="ⓘ" FontSize="22" TextColor="#AAAAAA"
+                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.InfoPedidoCommand, Source={x:Reference this}}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
 
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DescontoUI}"    Grid.Row="0" Grid.Column="3" FontSize="12" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding AceitaFaturamentoAntecipadoUI}"    Grid.Row="0" Grid.Column="4" FontSize="12" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding AceitaFaturamentoParcialUI}"    Grid.Row="0" Grid.Column="5" FontSize="12" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding IndPedidoMae}"    Grid.Row="0" Grid.Column="6" FontSize="12" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CondicaoPagamento}" Grid.Row="0" Grid.Column="7" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}"    Grid.Row="0" Grid.Column="8" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEmissao, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="9"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="10" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}"   Grid.Row="0" Grid.Column="11" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="12" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding TotalSaldo, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="13" />
+                                    <Label Grid.Column="2" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding CodCarrinho}" />
+                                    <Label Grid.Column="3" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding CodPedido}" />
+                                    <Label Grid.Column="4" Style="{StaticResource pedCelula}" Margin="0,4,0,9" FontSize="11" Text="{Binding OrdemCompra}" />
 
+                                    <!-- Cliente: "Razão Social-CNPJ: ..." (a linha "REDE:" do iOS não tem origem no banco do MV) -->
+                                    <Label Grid.Column="5" Style="{StaticResource pedCelula}" FontSize="9"
+                                           Margin="0,4,0,9" VerticalTextAlignment="Start"
+                                           MaxLines="3" Text="{Binding ClienteUI}" />
+
+                                    <Label Grid.Column="6" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding CondicaoPagamento}" />
+                                    <Label Grid.Column="7" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding TipoPedido}" />
+                                    <Label Grid.Column="8" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding Situacao}" />
+                                    <Label Grid.Column="9" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding DataEmissao, StringFormat='{0:dd/MM/yyyy}'}" />
+                                    <Label Grid.Column="10" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" />
+                                    <Label Grid.Column="11" Style="{StaticResource pedCelula}" Margin="0,4,0,9" FontSize="11" Text="{Binding QtdTotalItens}" />
+                                    <Label Grid.Column="12" Style="{StaticResource pedCelula}" Margin="0,4,0,9" FontSize="11" Text="{Binding ValorTotalItens, Converter={StaticResource ValorParaMoeda}}" />
+                                    <Label Grid.Column="13" Style="{StaticResource pedCelula}" Margin="0,4,0,9" FontSize="11" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}" />
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
                     </syncfusion:SfListView.ItemTemplate>
                 </syncfusion:SfListView>
-                
-                <StackLayout Grid.Row="2" Grid.Column="0" 
-                             BackgroundColor="White"
-                             Orientation="Vertical"
-                             Grid.ColumnSpan="14"
-                             Margin="0,0,0,0"
-                             Spacing="0">
-
-                    <BoxView BackgroundColor="Black" Color="Silver" HeightRequest="0.5" HorizontalOptions="FillAndExpand" />
-
-                    <Grid VerticalOptions="CenterAndExpand" 
-                          Margin="10,1,0,0" 
-                          ColumnSpacing="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
-                        </Grid.RowDefinitions>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="70" />
-                            <ColumnDefinition Width="2.5*" />
-                            <ColumnDefinition Width="2*" />
-                        </Grid.ColumnDefinitions>
-
-                        <!--IMPRIMIR-->                     
-                        <flex:FlexButton Grid.Column="0" Grid.Row="0"
-                            x:Name="BtnImprimir"             
-                            Text="IMPRIMIR"
-                            FontSize="8"             
-                            HorizontalOptions="StartAndExpand"
-                            ClickedCommand="{Binding BindingContext.ImprimirCommand, Source={x:Reference this}}"
-                            Style="{StaticResource flexButtonFiltros}"
-                            />
-                        <!--PLANILHA-->
-                        <flex:FlexButton Grid.Column="1" Grid.Row="0"
-                            x:Name="BtnExcel"             
-                            Text="PLANILHA"
-                            FontSize="8"
-                            HorizontalOptions="StartAndExpand"
-                            ClickedCommand="{Binding BindingContext.ExcelCommand, Source={x:Reference this}}"
-                            Style="{StaticResource flexButtonFiltros}"
-                            />
-
-                        <!--COPIAR-->
-                        <flex:FlexButton Grid.Column="2" Grid.Row="0"
-                                Text="COPIAR"
-                                HorizontalOptions="StartAndExpand"
-                                FontSize="8"
-                                ClickedCommand="{Binding BindingContext.CopiarCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonFiltros}"/>
-
-                        <flex:FlexButton Grid.Column="3" Grid.Row="0"
-                                x:Name="BtnCancelarAlocado"
-                                Text="Cancelar Alocado"
-                                FontSize="8"
-                                HorizontalOptions="StartAndExpand"
-                                ClickedCommand="{Binding BindingContext.CancelarAlocadoCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonFiltros}"/>
-
-
-                        <flex:FlexButton Grid.Column="3" Grid.Row="0"
-                                         IsVisible="{Binding BindingContext.IsAprovacao, Source={x:Reference this}}"
-                                         Text="Aprovar"
-                                         HorizontalOptions="StartAndExpand"
-                                         FontSize="8"
-                                         ClickedCommand="{Binding BindingContext.AprovarCommand, Source={x:Reference this}}"
-                                         Style="{StaticResource flexButtonFiltros}">
-                            <flex:FlexButton.Triggers>
-                                <!--<DataTrigger 
-                                         TargetType="flex:FlexButton"
-                                         Binding="{Binding BindingContext.PedidoSelecionado.CodSituacaoPedido, Source={x:Reference this}}" 
-                                         Value="5">
-
-                                    <Setter Property="IsVisible" Value="True"/>
-                                </DataTrigger>-->
-                            </flex:FlexButton.Triggers>
-                        </flex:FlexButton>
-
-                        <!--DISTRIBUIR PEDIDO MAE-->
-                        <flex:FlexButton Grid.Column="4" Grid.Row="0"
-                                x:Name="BtnDistribuir"
-                                Text="DISTRIBUIR PEDIDO MÃE"
-                                HorizontalOptions="StartAndExpand"
-                                FontSize="8"
-                                ClickedCommand="{Binding BindingContext.DistribuirPedidoMaeCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonFiltros}"/>
-
-                        <flex:FlexButton Grid.Column="4" Grid.Row="0"
-                                         IsVisible="{Binding BindingContext.IsAprovacao, Source={x:Reference this}}"
-                                         Text="Reprovar"
-                                         HorizontalOptions="StartAndExpand"
-                                         ClickedCommand="{Binding BindingContext.ReprovarCommand, Source={x:Reference this}}"
-                                         FontSize="8"
-                                         Style="{StaticResource flexButtonFiltros}">
-                            <flex:FlexButton.Triggers>
-                                <!--<DataTrigger 
-                                         TargetType="flex:FlexButton"
-                                         Binding="{Binding BindingContext.PedidoSelecionado.CodSituacaoPedido, Source={x:Reference this}}" 
-                                         Value="5">
-
-                                    <Setter Property="IsVisible" Value="True"/>
-                                </DataTrigger>-->
-                            </flex:FlexButton.Triggers>
-                        </flex:FlexButton>
-                        <!--ALTERAR-->
-                        <flex:FlexButton Grid.Column="5" Grid.Row="0"
-                                         IsVisible="false"
-                                         Text="ALTERAR"
-                                         HorizontalOptions="StartAndExpand"
-                                         ClickedCommand="{Binding BindingContext.AlterarCommand, Source={x:Reference this}}"
-                                         FontSize="8"
-                                         Style="{StaticResource flexButtonFiltros}">
-                            <flex:FlexButton.Triggers>
-                                <DataTrigger 
-                                         TargetType="flex:FlexButton"
-                                         Binding="{Binding BindingContext.PedidoSelecionado.CodSituacaoPedido, Source={x:Reference this}}" 
-                                         Value="99">
-
-                                    <Setter Property="IsVisible" Value="True"/>
-                                </DataTrigger>
-                            </flex:FlexButton.Triggers>
-                        </flex:FlexButton>
-
-                        <flex:FlexButton Grid.Column="5" Grid.Row="0"
-                                         IsVisible="false"
-                                         Text="ALTERAR"
-                                         HorizontalOptions="StartAndExpand"
-                                         ClickedCommand="{Binding BindingContext.AlterarCommand, Source={x:Reference this}}"
-                                         FontSize="8"
-                                         Style="{StaticResource flexButtonFiltros}">
-                            <flex:FlexButton.Triggers>
-                                <DataTrigger 
-                                         TargetType="flex:FlexButton"
-                                         Binding="{Binding BindingContext.PedidoSelecionado.CodSituacaoPedido, Source={x:Reference this}}" 
-                                         Value="91">
-
-                                    <Setter Property="IsVisible" Value="True"/>
-                                </DataTrigger>
-                            </flex:FlexButton.Triggers>
-                        </flex:FlexButton>
-
-
-                        <!--VER CRITICAS-->
-                        <flex:FlexButton Grid.Column="6" Grid.Row="0"
-                                         IsVisible="false"
-                                         Text="VER CRITICAS"
-                                         HorizontalOptions="StartAndExpand"
-                                         FontSize="8"
-                                         ClickedCommand="{Binding BindingContext.VerCriticasCommand, Source={x:Reference this}}"
-                                         Style="{StaticResource flexButtonFiltros}">
-                            <flex:FlexButton.Triggers>
-                                <DataTrigger 
-                                         TargetType="flex:FlexButton"
-                                         Binding="{Binding BindingContext.PedidoSelecionado.CodSituacaoPedido, Source={x:Reference this}}" 
-                                         Value="99">
-
-                                    <Setter Property="IsVisible" Value="True"/>
-                                </DataTrigger>
-                            </flex:FlexButton.Triggers>
-                        </flex:FlexButton>
-
-                        <flex:FlexButton Grid.Column="7" Grid.Row="0"
-                                         IsVisible="{Binding BindingContext.IsGerente, Source={x:Reference this}}"
-                                         FontSize="8"
-                                         Text="Cancelar"
-                                         HorizontalOptions="StartAndExpand"
-                                         ClickedCommand="{Binding BindingContext.CancelarCommand, Source={x:Reference this}}"
-                                         Style="{StaticResource flexButtonFiltros}">
-                        </flex:FlexButton>
-
-                        <flex:FlexButton Grid.Column="8" Grid.Row="0"
-                                IsVisible="{Binding BindingContext.IsForcarImplantacao, Source={x:Reference this}}"
-                                Text="FORÇAR INTEG."
-                                HorizontalOptions="StartAndExpand"
-                                FontSize="8"
-                                ClickedCommand="{Binding BindingContext.ForcarImplantacaoCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonFiltros}"/>
-
-                        <flex:FlexButton Grid.Column="8" Grid.Row="0"
-                                IsVisible="{Binding BindingContext.IsVerJustificativa, Source={x:Reference this}}"
-                                Text="VER JUSTI. DESC."
-                                HorizontalOptions="StartAndExpand"
-                                FontSize="7"
-                                ClickedCommand="{Binding BindingContext.VerJustificativaCommand, Source={x:Reference this}}"
-                                Style="{StaticResource flexButtonFiltros}"/>
-
-                        <Grid Grid.Column="9" Grid.Row="0" Grid.ColumnSpan="3" RowSpacing="2" Margin="0,0,20,0"
-                          ColumnSpacing="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="10" />
-                                <RowDefinition Height="10" />
-                                <RowDefinition Height="10" />
-                                <RowDefinition Height="5" />
-                                <RowDefinition Height="10" />
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="2*" />
-                            </Grid.ColumnDefinitions>
-
-                            <!--TXT TOTAL-->
-                            <Label  Grid.Column="0" Grid.Row="0"
-                                Text="Total Distr:"
-                                HorizontalTextAlignment="Center"
-                                VerticalTextAlignment="Center"
-                                FontAttributes="Bold"  
-                                TextColor="Black"
-                                FontSize="9"
-                                HorizontalOptions="EndAndExpand"/>
-
-                            <Label  Grid.Column="0" Grid.Row="1" 
-                                Text="Total Saldo:"
-                                HorizontalTextAlignment="Center"
-                                VerticalTextAlignment="Center"
-                                FontAttributes="Bold"  
-                                TextColor="Black"
-                                FontSize="9"
-                                HorizontalOptions="EndAndExpand"/>
-
-                            <Label  Grid.Column="0" Grid.Row="2" 
-                                Text="Total:"
-                                HorizontalTextAlignment="Center"
-                                VerticalTextAlignment="Center"
-                                FontAttributes="Bold"  
-                                TextColor="Black"
-                                FontSize="9"
-                                HorizontalOptions="EndAndExpand"/>
-
-                            <BoxView Color="Silver" HeightRequest="0.5"
-                                     WidthRequest="500"
-                                     VerticalOptions="Center"
-                                     HorizontalOptions="Center"
-                                     Margin="0,0,-200,0"
-                                     Grid.Column="0" Grid.Row="3"
-                                     ></BoxView>
-                            
-                            <Label  Grid.Column="0" Grid.Row="4" 
-                                Text="Total Aloc:"
-                                HorizontalTextAlignment="Center"
-                                VerticalTextAlignment="Center"
-                                FontAttributes="Bold"  
-                                TextColor="Black"
-                                FontSize="9"
-                                HorizontalOptions="EndAndExpand"/>
-
-                            <!--TOTAIS Distr-->
-                            <Label      Grid.Row="0" Grid.Column="1" FontSize="9"
-                                        Text="{Binding BindingContext.QtdTotalDistribuido, Source={x:Reference this}}"
-                                        VerticalTextAlignment="Center"
-                                        HorizontalTextAlignment="Center"
-                                        FontAttributes="Bold" 
-                                        HorizontalOptions="EndAndExpand"/>
-
-                            <Label      Grid.Row="0" Grid.Column="2" FontSize="9"
-                                        Text="{Binding BindingContext.ValorTotalDistribuido, Source={x:Reference this}, Converter={StaticResource ValorParaMoeda}}"
-                                        VerticalTextAlignment="Center"
-                                        HorizontalTextAlignment="Center"
-                                        FontAttributes="Bold" 
-                                        HorizontalOptions="EndAndExpand"/>
-                            
-                            <!--TOTAIS Saldo-->
-                            <Label      Grid.Row="1" Grid.Column="1" FontSize="9"
-                                        Text="{Binding BindingContext.QtdTotalSaldo, Source={x:Reference this}}"
-                                        VerticalTextAlignment="Center"
-                                        HorizontalTextAlignment="Center"
-                                        FontAttributes="Bold" 
-                                        HorizontalOptions="EndAndExpand"/>
-
-                            <Label      Grid.Row="1" Grid.Column="2" FontSize="9"
-                                        Text="{Binding BindingContext.ValorTotalSaldo, Source={x:Reference this}, Converter={StaticResource ValorParaMoeda}}"
-                                        VerticalTextAlignment="Center"
-                                        HorizontalTextAlignment="Center"
-                                        FontAttributes="Bold" 
-                                        HorizontalOptions="EndAndExpand"/>
-
-                            <!--TOTAIS liquido-->
-                            <Label      Grid.Row="2" Grid.Column="1"  FontSize="9"
-                                        Text="{Binding BindingContext.QtdTotalPedidos, Source={x:Reference this}}"
-                                        VerticalTextAlignment="Center"
-                                        HorizontalTextAlignment="Center"
-                                        FontAttributes="Bold" 
-                                        HorizontalOptions="EndAndExpand"/>
-
-                            <Label      Grid.Row="2" Grid.Column="2"  FontSize="9"
-                                        Text="{Binding BindingContext.ValorTotalPedidos, Source={x:Reference this}, Converter={StaticResource ValorParaMoeda}}"
-                                        VerticalTextAlignment="Center"
-                                        HorizontalTextAlignment="Center"
-                                        FontAttributes="Bold" 
-                                        HorizontalOptions="EndAndExpand"/>
-
-                            <!--TOTAIS Aloc-->
-                            <Label      Grid.Row="4" Grid.Column="1"  FontSize="9"
-                                        Text="{Binding BindingContext.QtdTotalAlocado, Source={x:Reference this}}"
-                                        FontAttributes="Bold" 
-                                        HorizontalTextAlignment="End"
-                                        VerticalTextAlignment="Center"
-                                        HorizontalOptions="EndAndExpand"/>
-
-                            <Label      Grid.Row="4" Grid.Column="2"  FontSize="9"
-                                        Text="{Binding BindingContext.ValorTotalAlocado, Source={x:Reference this}, Converter={StaticResource ValorParaMoeda}}"
-                                        FontAttributes="Bold" 
-                                        HorizontalTextAlignment="End"
-                                        VerticalTextAlignment="Center"
-                                        HorizontalOptions="EndAndExpand"/>
-
-                        </Grid>
-                        
-                    </Grid>
-                </StackLayout>                
             </Grid>
 
-            <!--Grid de itens-->
-            <Grid ColumnSpacing="1" RowSpacing="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <!-- ============ AÇÕES DO PEDIDO ============
+                 Botões no lugar do menu de long-press do PegadaIOS (PedidoViewController.longPressPedido), como na tela de Carrinho.
+                 Só aparecem as opções que o pedido selecionado permite (situação e tipo PE), na mesma ordem do menu do iOS:
+                   situação 99: PE -> Editar, Ver Crítica, Copiar, Excel | demais -> Editar, Ver Crítica, Imprimir, Copiar, E-mail, Excel
+                   outras:      PE -> Imprimir, E-mail, Excel          | demais -> (situação 1: + Cópia) Imprimir, E-mail, Excel -->
+            <ScrollView Grid.Row="2" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" BackgroundColor="#F2F2F2"
+                        FlowDirection="RightToLeft">
+                <StackLayout Orientation="Horizontal" Spacing="8" Padding="10,5" VerticalOptions="Center">
+                    <flex:FlexButton FlowDirection="LeftToRight" Style="{StaticResource flexButtonAction}" WidthRequest="130" HeightRequest="38" FontSize="11"
+                                     Text="{translator:Translate PedidoTela_Global_Editar}"
+                                     IsVisible="{Binding BindingContext.AcaoEditarVisivel, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.AlterarCommand, Source={x:Reference this}}" />
+                    <flex:FlexButton FlowDirection="LeftToRight" Style="{StaticResource flexButtonAction}" WidthRequest="130" HeightRequest="38" FontSize="11"
+                                     Text="{translator:Translate PedidoTela_Global_VerCritica}"
+                                     IsVisible="{Binding BindingContext.AcaoVerCriticaVisivel, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.VerCriticasCommand, Source={x:Reference this}}" />
+                    <flex:FlexButton FlowDirection="LeftToRight" Style="{StaticResource flexButtonAction}" WidthRequest="130" HeightRequest="38" FontSize="11"
+                                     Text="{translator:Translate PedidoTela_Global_Imprimir}"
+                                     IsVisible="{Binding BindingContext.AcaoImprimirVisivel, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.ImprimirCommand, Source={x:Reference this}}" />
+                    <flex:FlexButton FlowDirection="LeftToRight" Style="{StaticResource flexButtonAction}" WidthRequest="130" HeightRequest="38" FontSize="11"
+                                     Text="{translator:Translate PedidoTela_Global_Copia}"
+                                     IsVisible="{Binding BindingContext.AcaoCopiarVisivel, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.CopiarCommand, Source={x:Reference this}}" />
+                    <flex:FlexButton FlowDirection="LeftToRight" Style="{StaticResource flexButtonAction}" WidthRequest="140" HeightRequest="38" FontSize="11"
+                                     Text="{translator:Translate PedidoTela_Global_EnviarPEmail}"
+                                     IsVisible="{Binding BindingContext.AcaoImprimirVisivel, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.EnviarEmailCommand, Source={x:Reference this}}" />
+                    <flex:FlexButton FlowDirection="LeftToRight" Style="{StaticResource flexButtonAction}" WidthRequest="170" HeightRequest="38" FontSize="11"
+                                     Text="Enviar como Excel por E-mail"
+                                     IsVisible="{Binding BindingContext.AcaoExcelEmailVisivel, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.EnviarExcelCommand, Source={x:Reference this}}" />
+                </StackLayout>
+            </ScrollView>
 
+            <!-- ============ BARRA DE TOTAIS (NpZ-4C-jvU) ============ -->
+            <Grid Grid.Row="3" BackgroundColor="#AAAAAA" ColumnSpacing="0" RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="2.5*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="144" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="129" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="78" />
+                    <ColumnDefinition Width="99" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="0.7*" />
-                    <ColumnDefinition Width="0.7*" />
-                    <ColumnDefinition Width="0.7*" />
-                    <ColumnDefinition Width="0.7*" />
-                    <ColumnDefinition Width="1.0*" />
-                    <ColumnDefinition Width="1.0*" />
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
 
+                <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource pedTotal}"
+                       Text="{translator:Translate PedidoTela_PedidoVC_QtdPedidos}" />
+                <Label Grid.Row="0" Grid.Column="3" Style="{StaticResource pedTotal}"
+                       Text="{Binding BindingContext.Pedidos.Count, Source={x:Reference this}}" />
 
-                <!--Header-->
-                <Label Style="{StaticResource labelGridHeader}" Text="Item"              Grid.Row="0" Grid.Column="0"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Descrição"         Grid.Row="0" Grid.Column="1"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Entrega"           Grid.Row="0" Grid.Column="2"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Dt Aloc"           Grid.Row="0" Grid.Column="3"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Car Destino"        Grid.Row="0" Grid.Column="4"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Qtd"               Grid.Row="0" Grid.Column="5" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Qtd Dist"          Grid.Row="0" Grid.Column="6" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Alocado"           Grid.Row="0" Grid.Column="7"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Saldo"             Grid.Row="0" Grid.Column="8" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Nota"              Grid.Row="0" Grid.Column="9" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Status"            Grid.Row="0" Grid.Column="10" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Desc Perm."        Grid.Row="0" Grid.Column="11" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Desc Aplic."       Grid.Row="0" Grid.Column="12" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Desc Exce."        Grid.Row="0" Grid.Column="13" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Unit. Liq."  Grid.Row="0" Grid.Column="14" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total Líq"   Grid.Row="0" Grid.Column="15" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Aloc"              Grid.Row="0" Grid.Column="16"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Foto"              Grid.Row="0" Grid.Column="17"/>
-                
-                <!--Header-->
+                <Label Grid.Row="0" Grid.Column="5" Style="{StaticResource pedTotal}"
+                       Text="{translator:Translate PedidoTela_PedidoVC_QtdTotalItens}" />
+                <!-- Com itens filtrados o valor desloca para alinhar com a 2ª linha (PegadaIOS: x 473 / 795, senão 400 / 690) -->
+                <Label Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="2" Style="{StaticResource pedTotal}"
+                       Text="{Binding BindingContext.QtdTotalPedidos, Source={x:Reference this}}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Value="True"
+                                     Binding="{Binding BindingContext.TotaisFiltradosVisiveis, Source={x:Reference this}}">
+                            <Setter Property="Margin" Value="73,0,0,0" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
 
+                <Label Grid.Row="0" Grid.Column="8" Style="{StaticResource pedTotal}"
+                       Text="{translator:Translate PedidoTela_PedidoVC_ValorTotal}" />
+                <Label Grid.Row="0" Grid.Column="9" Style="{StaticResource pedTotal}"
+                       Text="{Binding BindingContext.ValorTotalPedidos, Source={x:Reference this}, Converter={StaticResource ValorParaMoeda}}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Value="True"
+                                     Binding="{Binding BindingContext.TotaisFiltradosVisiveis, Source={x:Reference this}}">
+                            <Setter Property="Margin" Value="105,0,0,0" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
 
-                <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="18"
-                          HeightRequest="230"
+                <!-- Totais dos itens filtrados (aparecem só quando há filtro de situação, nível de produto ou referência) -->
+                <Label Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource pedTotal}"
+                       IsVisible="{Binding BindingContext.TotaisFiltradosVisiveis, Source={x:Reference this}}"
+                       Text="{translator:Translate PedidoTela_PedidoVC_QtdTotalItensFiltrados}" />
+                <Label Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2" Style="{StaticResource pedTotal}" Margin="70,0,0,0"
+                       IsVisible="{Binding BindingContext.TotaisFiltradosVisiveis, Source={x:Reference this}}"
+                       Text="{Binding BindingContext.QtdTotalItensFiltrados, Source={x:Reference this}}" />
+                <Label Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Style="{StaticResource pedTotal}"
+                       IsVisible="{Binding BindingContext.TotaisFiltradosVisiveis, Source={x:Reference this}}"
+                       Text="{translator:Translate PedidoTela_PedidoVC_ValorTotalItensFiltrados}" />
+                <Label Grid.Row="1" Grid.Column="9" Style="{StaticResource pedTotal}" Margin="105,0,0,0"
+                       IsVisible="{Binding BindingContext.TotaisFiltradosVisiveis, Source={x:Reference this}}"
+                       Text="{Binding BindingContext.ValorTotalItensFiltrados, Source={x:Reference this}, Converter={StaticResource ValorParaMoeda}}" />
+            </Grid>
+
+            <!-- ============ ITENS DO PEDIDO (Zzv-4n-Rp6 / ItemPedidoTableViewController) ============ -->
+            <Grid Grid.Row="4" RowSpacing="0" ColumnSpacing="0" BackgroundColor="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="109" />
+                </Grid.RowDefinitions>
+
+                <!-- Cabeçalho -->
+                <Grid Grid.Row="0" ColumnSpacing="0" RowSpacing="0" BackgroundColor="#D9D9D9">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="34*" />
+                        <ColumnDefinition Width="60*" />
+                        <ColumnDefinition Width="171*" />
+                        <ColumnDefinition Width="76*" />
+                        <ColumnDefinition Width="61*" />
+                        <ColumnDefinition Width="61*" />
+                        <ColumnDefinition Width="61*" />
+                        <ColumnDefinition Width="31*" />
+                        <ColumnDefinition Width="41*" />
+                        <ColumnDefinition Width="41*" />
+                        <ColumnDefinition Width="41*" />
+                        <ColumnDefinition Width="51*" />
+                        <ColumnDefinition Width="49*" />
+                        <ColumnDefinition Width="61*" />
+                        <ColumnDefinition Width="53*" />
+                        <ColumnDefinition Width="66*" />
+                        <ColumnDefinition Width="66*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_IPedidoTVC_Item}" />
+                    <Label Grid.Column="1" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_IPedidoTVC_Modelo}" />
+                    <Label Grid.Column="2" Style="{StaticResource pedCabecalho}" FontSize="14" Text="{translator:Translate PedidoTela_IPedidoTVC_Descricao}" />
+                    <Label Grid.Column="3" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_IPedidoTVC_Fabrica}" />
+                    <Label Grid.Column="4" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_IPedidoTVC_SituacaoItem}" />
+                    <Label Grid.Column="5" Style="{StaticResource pedCabecalho}" FontSize="12" Text="{translator:Translate PedidoTela_IPedidoTVC_NF}" />
+                    <Label Grid.Column="6" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_IPedidoTVC_EmissaoNF}" />
+                    <Label Grid.Column="7" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_IPedidoTVC_Cxs}" />
+                    <Label Grid.Column="8" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_IPedidoTVC_TotalCxs}" />
+                    <Label Grid.Column="9" Style="{StaticResource pedCabecalho}" Text="{translator:Translate PedidoTela_IPedidoTVC_Comissao}" />
+                    <Label Grid.Column="10" Style="{StaticResource pedCabecalho}" FontSize="12" Text="Markup Cliente" />
+                    <Label Grid.Column="11" Style="{StaticResource pedCabecalho}" FontSize="12" Text="Markup Aplicado" />
+                    <Label Grid.Column="12" Style="{StaticResource pedCabecalho}" FontSize="12" Text="{translator:Translate PedidoTela_IPedidoTVC_Preco}" />
+                    <Label Grid.Column="13" Style="{StaticResource pedCabecalho}" Text="Desc.Total" />
+                    <Label Grid.Column="14" Style="{StaticResource pedCabecalho}" FontSize="12" Text="{translator:Translate PedidoTela_IPedidoTVC_PrecoLiquido}" />
+                    <Label Grid.Column="15" Style="{StaticResource pedCabecalho}" FontSize="12" Text="{translator:Translate PedidoTela_IPedidoTVC_ValorTotal}" />
+                    <Label Grid.Column="16" Style="{StaticResource pedCabecalho}" FontSize="12" Margin="0" Text="{translator:Translate PedidoTela_IPedidoTVC_ValorTotalLiq}" />
+                </Grid>
+
+                <!-- Linhas (ItemPedidoCell, altura 30) -->
+                <ListView Grid.Row="1"
+                          RowHeight="30"
                           SeparatorVisibility="Default"
+                          SelectedItem="{Binding BindingContext.ItemSelecionado, Source={x:Reference this}, Mode=OneWay}"
                           ItemsSource="{Binding BindingContext.PedidoSelecionado.Itens, Source={x:Reference this}}">
-
                     <ListView.Behaviors>
-                        <b:EventToCommandBehavior EventName="ItemTapped" 
-                                              Command="{Binding BindingContext.ItemTappedCommand, Source={x:Reference this}}"
-                                              EventArgsParameterPath="Item" />
+                        <b:EventToCommandBehavior EventName="ItemTapped"
+                                                  Command="{Binding BindingContext.ItemTappedCommand, Source={x:Reference this}}"
+                                                  EventArgsParameterPath="Item" />
                     </ListView.Behaviors>
-
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid ColumnSpacing="1"
-                                      HeightRequest="40">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="40" />
-                                    </Grid.RowDefinitions>
-
+                                <Grid ColumnSpacing="0" RowSpacing="0" HeightRequest="30">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.5*" />
-                                        <ColumnDefinition Width="2.5*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="0.5*" />
-                                        <ColumnDefinition Width="0.5*" />
-                                        <ColumnDefinition Width="0.5*" />
-                                        <ColumnDefinition Width="0.5*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="0.7*" />
-                                        <ColumnDefinition Width="0.7*" />
-                                        <ColumnDefinition Width="0.7*" />
-                                        <ColumnDefinition Width="0.7*" />
-                                        <ColumnDefinition Width="1.0*" />
-                                        <ColumnDefinition Width="1.0*" />
-                                        <ColumnDefinition Width="0.5*" />
-                                        <ColumnDefinition Width="0.5*" />
+                                        <ColumnDefinition Width="34*" />
+                                        <ColumnDefinition Width="60*" />
+                                        <ColumnDefinition Width="171*" />
+                                        <ColumnDefinition Width="76*" />
+                                        <ColumnDefinition Width="61*" />
+                                        <ColumnDefinition Width="61*" />
+                                        <ColumnDefinition Width="61*" />
+                                        <ColumnDefinition Width="31*" />
+                                        <ColumnDefinition Width="41*" />
+                                        <ColumnDefinition Width="41*" />
+                                        <ColumnDefinition Width="41*" />
+                                        <ColumnDefinition Width="51*" />
+                                        <ColumnDefinition Width="49*" />
+                                        <ColumnDefinition Width="61*" />
+                                        <ColumnDefinition Width="53*" />
+                                        <ColumnDefinition Width="66*" />
+                                        <ColumnDefinition Width="66*" />
                                     </Grid.ColumnDefinitions>
 
-
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodItemPedido}"                               Grid.Row="0" Grid.Column="0"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding Descricao}"                                   Grid.Row="0" Grid.Column="1"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodDeposito, Converter={StaticResource FormatDataQuinzena}}"  Grid.Row="0" Grid.Column="2"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding StatusEstoque}"  Grid.Row="0" Grid.Column="2" IsVisible="{Binding IndStatusEstoque}" BackgroundColor="White"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataAlocacao, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="3"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodCarrinhoDist}"                             Grid.Row="0" Grid.Column="4"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}"             Grid.Row="0" Grid.Column="5"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdDistribuida}"       Grid.Row="0" Grid.Column="6"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdDisponivel}"        Grid.Row="0" Grid.Column="7"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdSaldo}"             Grid.Row="0" Grid.Column="8"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding NotaFiscal}"           Grid.Row="0" Grid.Column="9"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding StatusFilho}"           Grid.Row="0" Grid.Column="10"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PercDescPermitido}"    Grid.Row="0" Grid.Column="11"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PercDesc}"             Grid.Row="0" Grid.Column="12"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PercDescExcedido}"     Grid.Row="0" Grid.Column="13"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCustoComDesconto, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="14"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="15"/>
-
-                                    <ffimageloading:CachedImage 
-                                                Grid.Row="0" 
-                                                Grid.Column="16"
-                                                IsVisible="{Binding IsEF}"
-                                                Source="tipo_exibicao2_on.png" 
-                                                LoadingPlaceholder="NaoDisp.png"
-                                                Aspect="AspectFill" 
-                                                HorizontalOptions="Center"
-                                                VerticalOptions="Center"
-                                                HeightRequest="20"
-                                                WidthRequest="20"
-                                                >
-                                        <ffimageloading:CachedImage.GestureRecognizers>
-                                            <TapGestureRecognizer NumberOfTapsRequired="1"  Command="{Binding OpenDashBoardCommand}" CommandParameter="{Binding .}"/>
-                                        </ffimageloading:CachedImage.GestureRecognizers>
-                                    </ffimageloading:CachedImage>
-
-                                    <ffimageloading:CachedImage 
-                                                Grid.Row="0" 
-                                                Grid.Column="17"
-                                                DownsampleToViewSize="False" 
-                                                Source="camera_icon.png" 
-                                                LoadingPlaceholder="NaoDisp.png"
-                                                Aspect="AspectFill" 
-                                                HorizontalOptions="Start"
-                                                VerticalOptions="Center"
-                                                HeightRequest="40"
-                                                WidthRequest="40"
-                                                >
-                                        <ffimageloading:CachedImage.GestureRecognizers>
-                                            <TapGestureRecognizer NumberOfTapsRequired="1"  Command="{Binding ZoomCommand}" CommandParameter="{Binding .}"/>
-                                        </ffimageloading:CachedImage.GestureRecognizers>
-                                    </ffimageloading:CachedImage>
-
+                                    <Label Grid.Column="0" Style="{StaticResource pedCelula}" Text="{Binding CodItemPedido}" />
+                                    <Label Grid.Column="1" Style="{StaticResource pedCelula}" Text="{Binding CodModelo}" />
+                                    <Label Grid.Column="2" Style="{StaticResource pedCelula}" MaxLines="3" Text="{Binding Descricao}" />
+                                    <Label Grid.Column="3" Style="{StaticResource pedCelula}" Text="{Binding Fabrica}" />
+                                    <Label Grid.Column="4" Style="{StaticResource pedCelula}" Text="{Binding SituacaoItem}" />
+                                    <Label Grid.Column="5" Style="{StaticResource pedCelula}" Text="{Binding NotaFiscal}" />
+                                    <Label Grid.Column="6" Style="{StaticResource pedCelula}" Text="{Binding DataEmissaoNF, StringFormat='{0:dd/MM/yyyy}'}" />
+                                    <Label Grid.Column="7" Style="{StaticResource pedCelula}" Text="{Binding QtdCx}" />
+                                    <Label Grid.Column="8" Style="{StaticResource pedCelula}" Text="{Binding QtdCxTotal}" />
+                                    <Label Grid.Column="9" Style="{StaticResource pedCelula}" Text="{Binding PercComissaoItem}" />
+                                    <Label Grid.Column="10" Style="{StaticResource pedCelula}" Text="{Binding MarkupCliente}" />
+                                    <Label Grid.Column="11" Style="{StaticResource pedCelula}" Text="{Binding MarkupAplicado}" />
+                                    <Label Grid.Column="12" Style="{StaticResource pedCelula}" Text="{Binding ValorUnitario, Converter={StaticResource ValorParaMoeda}}" />
+                                    <Label Grid.Column="13" Style="{StaticResource pedCelula}" Text="{Binding DescontoTotalUI}" />
+                                    <Label Grid.Column="14" Style="{StaticResource pedCelula}" Text="{Binding ValorUnitarioLiquido, Converter={StaticResource ValorParaMoeda}}" />
+                                    <Label Grid.Column="15" Style="{StaticResource pedCelula}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}" />
+                                    <Label Grid.Column="16" Style="{StaticResource pedCelula}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}" />
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <!--<Grid Grid.Row="1" 
-                    Grid.Column="12" 
-                      IsVisible="False"
-                    BackgroundColor="White">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
+                <!-- Grade do item (esquerda, 623 de largura) e foto do produto (direita, 361 de largura) -->
+                <Grid Grid.Row="2" ColumnSpacing="0" RowSpacing="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="623*" />
+                        <ColumnDefinition Width="40*" />
+                        <ColumnDefinition Width="361*" />
                     </Grid.ColumnDefinitions>
 
-                    --><!--IMAGEM--><!--
-                    <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0"
-                                                DownsampleToViewSize="True"  
-                                                Aspect="AspectFit"
-                                                Source="{Binding BindingContext.ItemSelecionado.Imagem, Source={x:Reference this}, Converter={StaticResource Base64ParaImagem}}"  
-                                                HeightRequest="70" 
-                                                HorizontalOptions="FillAndExpand"/>
-                    
-                    <Label Style="{StaticResource labelGridHeader}"
-                           Text="GRADE" 
-                           Grid.Row="1" Grid.Column="0"/>
-
-                    <Grid Grid.Row="2" Grid.Column="0" RowSpacing="0"
-                          
-                          BackgroundColor="White">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="2*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Label Grid.Row="1" Grid.Column="0"
-                               IsVisible="{Binding BindingContext.PedidoSelecionado.Itens, Source={x:Reference this}, Converter={StaticResource  ColecaoTemDados}}"
-                               Text="Original"
-                               HorizontalTextAlignment="End"
-                               Style="{StaticResource labelGridItem}" 
-                               FontSize="Micro"/>
-
-                        <Label Grid.Row="2" Grid.Column="0"
-                               IsVisible="{Binding BindingContext.PedidoSelecionado.Itens, Source={x:Reference this}, Converter={StaticResource  ColecaoTemDados}}"
-                               Text="Entregue"
-                               HorizontalTextAlignment="End"
-                               Style="{StaticResource labelGridItem}" 
-                               FontSize="Micro"/>
-
-                        <Label Grid.Row="3" Grid.Column="0"
-                               IsVisible="{Binding BindingContext.PedidoSelecionado.Itens, Source={x:Reference this}, Converter={StaticResource  ColecaoTemDados}}"
-                               Text="Cancelado"
-                               HorizontalTextAlignment="End"
-                               Style="{StaticResource labelGridItem}" 
-                               FontSize="Micro"/>
-
-                        <Label Grid.Row="4" Grid.Column="0"
-                               IsVisible="{Binding BindingContext.PedidoSelecionado.Itens, Source={x:Reference this}, Converter={StaticResource  ColecaoTemDados}}"
-                               Text="A Entregar"
-                               HorizontalTextAlignment="End"
-                               Style="{StaticResource labelGridItem}" 
-                               FontSize="Micro"/>
-
-                        <Label Grid.Row="5" Grid.Column="0"
-                               IsVisible="{Binding BindingContext.PedidoSelecionado.Itens, Source={x:Reference this}, Converter={StaticResource  ColecaoTemDados}}"
-                               Text="Embalada"
-                               HorizontalTextAlignment="End"
-                               Style="{StaticResource labelGridItem}" 
-                               FontSize="Micro"/>
-                        
-                        <Label Grid.Row="6" Grid.Column="0"
-                               IsVisible="{Binding BindingContext.PedidoSelecionado.Itens, Source={x:Reference this}, Converter={StaticResource  ColecaoTemDados}}"
-                               Text="Devolvido"
-                               HorizontalTextAlignment="End"
-                               Style="{StaticResource labelGridItemSmall}" 
-                               FontSize="Micro"/>
-                        
-                        <ScrollView Grid.Row="0" Grid.Column="1" Grid.RowSpan="7"
-                                    IsVisible="False"
-                                    Orientation="Horizontal"
-                                    Margin="0,0,5,0"
-                                    Padding="0">
-
-                            <wrap:WrapLayout ItemsSource="{Binding BindingContext.ItemSelecionado.Grades, Source={x:Reference this}}">
-                                <wrap:WrapLayout.ItemTemplate>
+                    <!-- Grade: 1ª coluna com o país ("BR"; cliente estrangeiro: "BR" e "EX"), depois uma coluna por tamanho:
+                         [tamanho BR original] / tamanho do país / quantidade (linhas de 21) -->
+                    <ScrollView Grid.Column="0" Orientation="Horizontal" VerticalOptions="Start" Margin="0,20,0,0"
+                                HorizontalScrollBarVisibility="Never"
+                                IsVisible="{Binding BindingContext.GradeVisivel, Source={x:Reference this}}">
+                        <StackLayout Orientation="Horizontal" Spacing="1" HeightRequest="65">
+                            <StackLayout Spacing="1" WidthRequest="31.5">
+                                <Label Style="{StaticResource pedGradeCabecalho}" FontAttributes="None" Text="BR" />
+                                <Label Style="{StaticResource pedGradeCabecalho}" FontAttributes="None" Text="EX"
+                                       IsVisible="{Binding BindingContext.GradeEstrangeira, Source={x:Reference this}}" />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="1"
+                                         BindableLayout.ItemsSource="{Binding BindingContext.ItemSelecionado.Grades, Source={x:Reference this}}">
+                                <BindableLayout.ItemTemplate>
                                     <DataTemplate>
-                                        <ViewCell>
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
-
-                                                <Label Grid.Row="0"
-                                                   Grid.Column="0"
-                                                   Text="{Binding CodDerivacao}"
-                                                   Style="{StaticResource labelGridHeader}" 
-                                                   FontSize="12"/>
-
-                                                <Label Grid.Row="1"
-                                                       Grid.Column="0" 
-                                                       Text="{Binding Qtd}"
-                                                       FontSize="Micro"
-                                                       Style="{StaticResource labelGridItemSmall}" 
-                                                       >
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label"
-                                                                      Binding="{Binding Source={x:Static session:ConfiguracaoVisual.ExibeQtdNaGrade}}"
-                                                                      Value="True">
-
-                                                            <Setter Property="Text" Value="{Binding QtdNaGrade}"/>
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
-
-                                                <Label Grid.Row="2"
-                                                   Grid.Column="0"
-                                                   Text="{Binding QtdEntregue}"
-                                                   Style="{StaticResource labelGridItemSmall}" 
-                                                   FontSize="Micro"/>
-
-                                                <Label Grid.Row="3"
-                                                   Grid.Column="0"
-                                                   Text="{Binding QtdCancelado}"
-                                                   Style="{StaticResource labelGridItemSmall}" 
-                                                   FontSize="Micro"/>
-
-                                                <Label Grid.Row="4"
-                                                   Grid.Column="0"
-                                                   Text="{Binding QtdAEntregar}"                                                   
-                                                   Style="{StaticResource labelGridItemSmall}" 
-                                                   FontSize="Micro"/>
-
-                                                <Label Grid.Row="5"
-                                                   Grid.Column="0"
-                                                   Text="{Binding QtdMultipla}"                                                   
-                                                   Style="{StaticResource labelGridItemSmall}" 
-                                                   FontSize="Micro"/>
-
-                                                <Label Grid.Row="6"
-                                                   Grid.Column="0"
-                                                   Text="{Binding QtdDevolvido}"                                                   
-                                                   Style="{StaticResource labelGridItemSmall}" 
-                                                   FontSize="Micro"/>
-                                            </Grid>
-                                        </ViewCell>
+                                        <StackLayout Spacing="1" WidthRequest="31.5">
+                                            <Label Style="{StaticResource pedGradeCabecalho}" FontAttributes="None"
+                                                   Text="{Binding DescricaoOriginal}"
+                                                   IsVisible="{Binding BindingContext.GradeEstrangeira, Source={x:Reference this}}" />
+                                            <Label Style="{StaticResource pedGradeCabecalho}" Text="{Binding Descricao}" />
+                                            <Label WidthRequest="31.5" HeightRequest="21"
+                                                   Text="{Binding Qtd, StringFormat='{0:0;-0;}'}"
+                                                   FontSize="14" FontAttributes="Bold" TextColor="DarkGray"
+                                                   HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                        </StackLayout>
                                     </DataTemplate>
-                                </wrap:WrapLayout.ItemTemplate>
-                            </wrap:WrapLayout>
-                        </ScrollView>                    
-                    </Grid>
-                </Grid>-->
-            </Grid>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </StackLayout>
+                    </ScrollView>
 
-        </StackLayout>
+                    <!-- Foto do produto do item selecionado (produto/modelo; sem foto: "NaoDisp") -->
+                    <Image Grid.Column="2" Aspect="AspectFit" VerticalOptions="Start" HeightRequest="89"
+                           Source="{Binding BindingContext.ItemSelecionado.Imagem, Source={x:Reference this}, Converter={StaticResource Base64ParaImagem}}" />
+                    <Image Grid.Column="2" Aspect="AspectFit" VerticalOptions="Start" HeightRequest="89" Source="NaoDisp.png"
+                           IsVisible="{Binding BindingContext.FotoIndisponivel, Source={x:Reference this}}" />
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <!-- ============ PAINEL "+ FILTROS" (FiltroPedidoViewController, 320 de largura) ============ -->
+        <Grid x:Name="PainelFiltros"
+              AbsoluteLayout.LayoutBounds="1,0,320,1"
+              AbsoluteLayout.LayoutFlags="XProportional,HeightProportional"
+              BackgroundColor="#D3D3D3"
+              IsClippedToBounds="True"
+              IsVisible="False">
+            <Grid.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Up" Swiped="OnPainelFiltrosSwipedUp" />
+            </Grid.GestureRecognizers>
+
+            <!-- Moldura: borda branca de 4 pt com cantos arredondados; começa acima do topo para que só as laterais e a base apareçam -->
+            <Frame Margin="8,-8,8,9" Padding="4" CornerRadius="5" HasShadow="False"
+                   BackgroundColor="White" BorderColor="White" InputTransparent="True">
+                <Frame Padding="0" CornerRadius="3" HasShadow="False"
+                       BackgroundColor="#D3D3D3" BorderColor="#D3D3D3" />
+            </Frame>
+
+            <ScrollView>
+                <AbsoluteLayout WidthRequest="320" HeightRequest="601">
+
+                    <Label AbsoluteLayout.LayoutBounds="0,11,320,24"
+                           Text="{translator:Translate PedidoTela_PEVC_FiltrosTitle}"
+                           FontSize="17" FontAttributes="Bold" TextColor="Black"
+                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+
+                    <!-- PedidoTela_PedidoVC_Emissao -->
+                    <Label AbsoluteLayout.LayoutBounds="33,32,64,28" Style="{StaticResource pedFiltroRotulo}"
+                           HorizontalTextAlignment="Start"
+                           Text="{translator:Translate PedidoTela_PedidoVC_Emissao}" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="99,32,82,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="82" HeightRequest="28"
+                                     Text="{Binding BindingContext.Filtro.DataEmissaoInicial, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnInicio}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarDataEmissaoCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="INICIO" />
+                    <Label AbsoluteLayout.LayoutBounds="181,32,26,28" Style="{StaticResource pedFiltroRotulo}"
+                           HorizontalTextAlignment="Center"
+                           Text="{translator:Translate PedidoTela_TituloVC_lblA}" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="207,32,80,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="80" HeightRequest="28"
+                                     Text="{Binding BindingContext.Filtro.DataEmissaoFinal, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnFim}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarDataEmissaoCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="FIM" />
+
+                    <!-- PedidoTela_PedidoVC_Entrega -->
+                    <Label AbsoluteLayout.LayoutBounds="33,64,64,28" Style="{StaticResource pedFiltroRotulo}"
+                           HorizontalTextAlignment="Start"
+                           Text="{translator:Translate PedidoTela_PedidoVC_Entrega}" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="99,64,82,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="82" HeightRequest="28"
+                                     Text="{Binding BindingContext.Filtro.DataEntregaInicial, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnInicio}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarDataEntregaCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="INICIO" />
+                    <Label AbsoluteLayout.LayoutBounds="181,64,26,28" Style="{StaticResource pedFiltroRotulo}"
+                           HorizontalTextAlignment="Center"
+                           Text="{translator:Translate PedidoTela_TituloVC_lblA}" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="207,64,80,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="80" HeightRequest="28"
+                                     Text="{Binding BindingContext.Filtro.DataEntregaFinal, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnFim}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarDataEntregaCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="FIM" />
+
+                    <!-- PedidoTela_FiltroPedido_cadastro -->
+                    <Label AbsoluteLayout.LayoutBounds="33,96,64,28" Style="{StaticResource pedFiltroRotulo}"
+                           HorizontalTextAlignment="Start"
+                           Text="{translator:Translate PedidoTela_FiltroPedido_cadastro}" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="99,96,82,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="82" HeightRequest="28"
+                                     Text="{Binding BindingContext.Filtro.DataCadastroInicial, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnInicio}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarDataCadastroCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="INICIO" />
+                    <Label AbsoluteLayout.LayoutBounds="181,96,26,28" Style="{StaticResource pedFiltroRotulo}"
+                           HorizontalTextAlignment="Center"
+                           Text="{translator:Translate PedidoTela_TituloVC_lblA}" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="207,96,80,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="80" HeightRequest="28"
+                                     Text="{Binding BindingContext.Filtro.DataCadastroFinal, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnFim}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarDataCadastroCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="FIM" />
+
+                    <!-- Combos com botão de limpar: Situação, Tipo, Grupo Segmento, Segmento, Gênero, Público, Linha -->
+                    <BoxView AbsoluteLayout.LayoutBounds="33,129,254,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,129,214,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="214" HeightRequest="35" CornerRadius="0" MaxLines="2" FontSize="12"
+                                     Text="{Binding BindingContext.TituloSituacao, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarSituacaoCommand, Source={x:Reference this}}" />
+                    <Image AbsoluteLayout.LayoutBounds="254,133,27,27" Source="deleteFilter.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.LimparSituacaoCommand, Source={x:Reference this}}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <BoxView AbsoluteLayout.LayoutBounds="33,172,254,35" Color="#E6E6E6" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,172,214,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                                     MaxLines="2" FontSize="12"
+                                     Text="{Binding BindingContext.TituloTipo, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarTipoCommand, Source={x:Reference this}}" />
+                    <Image AbsoluteLayout.LayoutBounds="254,176,27,27" Source="deleteFilter.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.LimparTipoCommand, Source={x:Reference this}}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <BoxView AbsoluteLayout.LayoutBounds="33,215,254,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,215,214,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                                     MaxLines="2" FontSize="12"
+                                     Text="{Binding BindingContext.TituloGrupoSegmento, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="3" />
+                    <Image AbsoluteLayout.LayoutBounds="254,219,27,27" Source="deleteFilter.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="3" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <BoxView AbsoluteLayout.LayoutBounds="33,259,254,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,259,214,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                                     MaxLines="2" FontSize="12"
+                                     Text="{Binding BindingContext.TituloSegmento, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="4" />
+                    <Image AbsoluteLayout.LayoutBounds="254,263,27,27" Source="deleteFilter.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="4" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <BoxView AbsoluteLayout.LayoutBounds="33,302,254,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,302,214,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                                     MaxLines="2" FontSize="12"
+                                     Text="{Binding BindingContext.TituloGenero, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="1" />
+                    <Image AbsoluteLayout.LayoutBounds="254,306,27,27" Source="deleteFilter.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="1" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <BoxView AbsoluteLayout.LayoutBounds="33,345,254,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,345,214,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                                     MaxLines="2" FontSize="12"
+                                     Text="{Binding BindingContext.TituloPublico, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="2" />
+                    <Image AbsoluteLayout.LayoutBounds="254,349,27,27" Source="deleteFilter.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="2" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <BoxView AbsoluteLayout.LayoutBounds="33,388,254,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,388,214,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                                     MaxLines="2" FontSize="12"
+                                     Text="{Binding BindingContext.TituloLinha, Source={x:Reference this}}"
+                                     ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
+                                     ClickedCommandParameter="6" />
+                    <Image AbsoluteLayout.LayoutBounds="254,392,27,27" Source="deleteFilter.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="6" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <!-- Campos de texto -->
+                    <Entry AbsoluteLayout.LayoutBounds="33,432,254,30" FontSize="14" BackgroundColor="White"
+                           Placeholder="{translator:Translate PedidoTela_FiltroPedido_ordemCompra}"
+                           Text="{Binding BindingContext.Filtro.OrdemCompra, Source={x:Reference this}}" />
+                    <Entry AbsoluteLayout.LayoutBounds="33,465,254,30" FontSize="14" BackgroundColor="White"
+                           Placeholder="{translator:Translate PedidoTela_TituloVC_notaFiscal}"
+                           Text="{Binding BindingContext.Filtro.NotaFiscal, Source={x:Reference this}}" />
+                    <Entry AbsoluteLayout.LayoutBounds="33,498,254,30" FontSize="14" BackgroundColor="White"
+                           Placeholder="{translator:Translate PedidoTela_PDFNotaFiscalVC_Numero}"
+                           Text="{Binding BindingContext.Filtro.CodCarrinho, Source={x:Reference this}}" />
+                    <Entry AbsoluteLayout.LayoutBounds="33,532,254,30" FontSize="14" BackgroundColor="White"
+                           Placeholder="{translator:Translate PedidoTela_CadasClientes_Referencias}"
+                           Text="{Binding BindingContext.Filtro.Referencia, Source={x:Reference this}}" />
+
+                    <!-- Consultar / Limpar -->
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="34,565,123,30" Style="{StaticResource pedBotao}"
+                                     WidthRequest="123" HeightRequest="30"
+                                     Text="{translator:Translate PedidoTela_PEVC_Consultar}"
+                                     ClickedCommand="{Binding BindingContext.ConsultarCommand, Source={x:Reference this}}" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="165,565,123,30" Style="{StaticResource pedBotao}"
+                                     WidthRequest="123" HeightRequest="30"
+                                     Text="{translator:Translate PedidoTela_Global_Limpar}"
+                                     ClickedCommand="{Binding BindingContext.LimparFiltrosCommand, Source={x:Reference this}}" />
+                </AbsoluteLayout>
+            </ScrollView>
+        </Grid>
+
+        <!-- "Informações" do pedido (InformacoesPedidoViewController do PegadaIOS, formSheet 400x430) -->
+        <Grid x:Name="PainelInfoPedido"
+              AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"
+              IsVisible="{Binding BindingContext.InfoPedidoVisivel, Source={x:Reference this}}" BackgroundColor="#80000000">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer />
+            </Grid.GestureRecognizers>
+            <Frame HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="400" HeightRequest="430"
+                   Padding="0" CornerRadius="10" HasShadow="False" IsClippedToBounds="True" BackgroundColor="#EFEFF4">
+                <AbsoluteLayout WidthRequest="400" HeightRequest="430" BindingContext="{Binding BindingContext.InfoPedido, Source={x:Reference this}}">
+                    <Label AbsoluteLayout.LayoutBounds="20,11,360,21" FontSize="17" HorizontalTextAlignment="Center" TextColor="Black" Text="{translator:Translate PedidoTela_InfoPedido_Info}" />
+                    <Label AbsoluteLayout.LayoutBounds="14,11,80,21" FontSize="17" TextColor="#007AFF"
+                           Text="{translator:Translate PedidoTela_Global_Voltar}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.FecharInfoPedidoCommand, Source={x:Reference this}}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label AbsoluteLayout.LayoutBounds="20,54,138,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_PedCliente}" />
+                    <Label AbsoluteLayout.LayoutBounds="159,54,221,21" Style="{StaticResource pedInfoValor}" Text="{Binding BindingContext.InfoPedidoNumero, Source={x:Reference this}}" />
+                    <Label AbsoluteLayout.LayoutBounds="20,79,138,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_Prazo}" />
+                    <Label AbsoluteLayout.LayoutBounds="159,79,221,21" Style="{StaticResource pedInfoValor}" Text="{Binding CondicaoPagamento}" />
+                    <Label AbsoluteLayout.LayoutBounds="20,104,138,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_DiasBonif}" />
+                    <Label AbsoluteLayout.LayoutBounds="159,104,221,21" Style="{StaticResource pedInfoValor}" Text="{Binding DiasBonificacao}" />
+                    <Label AbsoluteLayout.LayoutBounds="20,129,138,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_Semana}" />
+                    <Label AbsoluteLayout.LayoutBounds="159,129,221,21" Style="{StaticResource pedInfoValor}" Text="{Binding Semana}" />
+                    <Label AbsoluteLayout.LayoutBounds="20,154,138,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_Transp}" />
+                    <Label AbsoluteLayout.LayoutBounds="159,151,221,26" Style="{StaticResource pedInfoValor}" Text="{Binding Transportadora}" />
+                    <Label AbsoluteLayout.LayoutBounds="20,179,138,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_Redesp}" />
+                    <Label AbsoluteLayout.LayoutBounds="159,179,221,21" Style="{StaticResource pedInfoValor}" Text="{Binding Redespacho}" />
+                    <Switch AbsoluteLayout.LayoutBounds="20,222,51,31" InputTransparent="True" OnColor="#2B77C6" IsToggled="{Binding FatParcial, Mode=OneWay}" />
+                    <Label AbsoluteLayout.LayoutBounds="77,227,141,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_FatParc}" />
+                    <Switch AbsoluteLayout.LayoutBounds="226,222,51,31" InputTransparent="True" OnColor="#2B77C6" IsToggled="{Binding PrecoLiquido, Mode=OneWay}" />
+                    <Label AbsoluteLayout.LayoutBounds="283,227,110,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_PrecoLiq}" />
+                    <Switch AbsoluteLayout.LayoutBounds="20,262,51,31" InputTransparent="True" OnColor="#2B77C6" IsToggled="{Binding FatAntecipado, Mode=OneWay}" />
+                    <Label AbsoluteLayout.LayoutBounds="77,267,205,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_FatAntec}" />
+                    <Label AbsoluteLayout.LayoutBounds="38,296,162,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_DiasFatAntec}" HorizontalTextAlignment="End" IsVisible="{Binding FatAntecipado}" />
+                    <Label AbsoluteLayout.LayoutBounds="207,296,116,21" Style="{StaticResource pedInfoValor}" Text="{Binding DiasFatAntecipado}" IsVisible="{Binding FatAntecipado}" />
+                    <Label AbsoluteLayout.LayoutBounds="20,348,138,21" Style="{StaticResource pedInfoRotulo}" Text="{translator:Translate PedidoTela_InfoPedido_Obser}" />
+                    <Label AbsoluteLayout.LayoutBounds="20,369,360,61" Style="{StaticResource pedInfoValor}" BackgroundColor="#99FFFFFF" VerticalTextAlignment="Start" Text="{Binding Observacoes}" />
+                </AbsoluteLayout>
+            </Frame>
+        </Grid>
     </AbsoluteLayout>
 </ContentPage>

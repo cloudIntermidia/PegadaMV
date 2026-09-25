@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using MobiliVendas.Core;
 using MobiliVendas.Core.Contracts;
 using Xamarin.Forms;
@@ -12,36 +12,28 @@ namespace Pegada.Core.Views.Negocio
         public PedidoPage()
         {
             InitializeComponent();
-            BtnImprimir.IsEnabled = false;
-            MessagingCenter.Subscribe<object, bool>(this, "BtnImprimirPedido", EnableBtnImprimir, null);
 
-            MessagingCenter.Subscribe<object, bool>(this, "BtnDistribuirPedido", EnableBtnDistribuir, null);
-
-            MessagingCenter.Subscribe<object, bool>(this, "BtnCancelarPedido", EnableBtnCancelar, null);
-            //EnableBtnForcarImplantação();
+            // "+ Filtros": abre o painel lateral (o botão fica desabilitado enquanto o painel está aberto,
+            // igual ao PegadaIOS, e volta ao fechar com o gesto de deslizar para cima).
+            BtnFiltros.ClickedCommand = new Command(AbrirPainelFiltros);
         }
 
-        private void EnableBtnImprimir(object arg1, bool flag)
+        private void AbrirPainelFiltros()
         {
-            BtnImprimir.IsEnabled = flag;
-        }
-        
-        private void EnableBtnDistribuir(object arg1, bool flag)
-        {
-            BtnDistribuir.IsEnabled = flag;
-            BtnDistribuir.IsVisible = flag;
+            PainelFiltros.IsVisible = true;
+            BtnFiltros.IsEnabled = false;
         }
 
-        private void EnableBtnCancelar(object arg1, bool flag)
+        private void FecharPainelFiltros()
         {
-            BtnDistribuir.IsVisible = !flag;
-            BtnCancelarAlocado.IsVisible = flag;
+            PainelFiltros.IsVisible = false;
+            BtnFiltros.IsEnabled = true;
         }
-        //private void EnableBtnForcarImplantação()
-        //{
-        //    BtnForcarImplantação.IsVisible = Session.USUARIO_LOGADO.PermiteForcarImplantacao;
-        //    //BtnForcarImplantação.IsVisible = true;
-        //}
+
+        private void OnPainelFiltrosSwipedUp(object sender, SwipedEventArgs e)
+        {
+            FecharPainelFiltros();
+        }
 
         public View GetContent()
         {
