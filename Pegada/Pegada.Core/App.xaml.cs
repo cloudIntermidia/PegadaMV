@@ -67,6 +67,7 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.PedidoUsaRegrasIOS = true;
             MobiliVendas.Core.Session.NotasUsaRegrasIOS = true;
             MobiliVendas.Core.Session.SincronizacaoUsaMenuIOS = true;
+            MobiliVendas.Core.Session.CatalogoFiltrosUsaLayoutIOS = true;
             MobiliVendas.Core.ConfiguracaoVisual.IsCaixaUnica = true;
             MobiliVendas.Core.Session.DATATEMPLATES_CONFIG = new List<MobiliVendas.Core.Models.DataTemplateConfiguracao>()
             {
