@@ -91,7 +91,9 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid BackgroundColor="{Binding IndBloqueado, Converter={StaticResource BoleanoParaCor},ConverterParameter='Red,White'}"
+                                <!-- Transparente (não White) quando liberado, para o cinza da seleção da linha aparecer
+                                     inteiro, igual à lista de itens. -->
+                                <Grid BackgroundColor="{Binding IndBloqueado, Converter={StaticResource BoleanoParaCor},ConverterParameter='Red,Transparent'}"
                                       VerticalOptions="Center"
                                       HeightRequest="30">
                                     <Grid.RowDefinitions>
@@ -233,19 +235,19 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="35" />
                     <ColumnDefinition Width="35" />
-                    <ColumnDefinition Width="0.6*"/>
-                    <ColumnDefinition Width="0.8*"/>
-                    <ColumnDefinition Width="1.5*"/>
-                    <ColumnDefinition Width="0.8*"/>
-                    <ColumnDefinition Width="0.4*"/>
-                    <ColumnDefinition Width="0.4*"/>
-                    <ColumnDefinition Width="0.3*"/>
-                    <ColumnDefinition Width="0.3*"/>
-                    <ColumnDefinition Width="0.6*"/>
                     <ColumnDefinition Width="0.5*"/>
                     <ColumnDefinition Width="0.6*"/>
-                    <ColumnDefinition Width="0.7*"/>
-                    <ColumnDefinition Width="0.7*"/>
+                    <ColumnDefinition Width="1.4*"/>
+                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="0.4*"/>
+                    <ColumnDefinition Width="0.4*"/>
+                    <ColumnDefinition Width="0.4*"/>
+                    <ColumnDefinition Width="0.4*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="0.6*"/>
                     <!--<ColumnDefinition Width="60" />-->
                 </Grid.ColumnDefinitions>
 
@@ -309,19 +311,19 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="35" />
                                         <ColumnDefinition Width="35" />
-                                        <ColumnDefinition Width="0.6*"/>
-                                        <ColumnDefinition Width="0.8*"/>
-                                        <ColumnDefinition Width="1.5*"/>
-                                        <ColumnDefinition Width="0.8*"/>
-                                        <ColumnDefinition Width="0.4*"/>
-                                        <ColumnDefinition Width="0.4*"/>
-                                        <ColumnDefinition Width="0.3*"/>
-                                        <ColumnDefinition Width="0.3*"/>
-                                        <ColumnDefinition Width="0.6*"/>
                                         <ColumnDefinition Width="0.5*"/>
                                         <ColumnDefinition Width="0.6*"/>
-                                        <ColumnDefinition Width="0.7*"/>
-                                        <ColumnDefinition Width="0.7*"/>
+                                        <ColumnDefinition Width="1.4*"/>
+                                        <ColumnDefinition Width="0.6*"/>
+                                        <ColumnDefinition Width="0.4*"/>
+                                        <ColumnDefinition Width="0.4*"/>
+                                        <ColumnDefinition Width="0.4*"/>
+                                        <ColumnDefinition Width="0.4*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.6*"/>
+                                        <ColumnDefinition Width="0.6*"/>
 
                                     </Grid.ColumnDefinitions>
 
