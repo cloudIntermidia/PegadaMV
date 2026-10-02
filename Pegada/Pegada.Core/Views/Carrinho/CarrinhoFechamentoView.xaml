@@ -2,6 +2,7 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:custom="clr-namespace:MobiliVendas.Core.CustomView.Controls;assembly=MobiliVendas.Core" xmlns:xct="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
              x:Class="Pegada.Core.Views.Carrinho.CarrinhoFechamentoView"
              x:Name="this">
 
@@ -39,21 +40,21 @@
                         </Grid.ColumnDefinitions>
 
                         <Button Grid.Column="0"
-                                Text="Voltar"
+                                Text="{translator:Translate PedidoTela_Global_Voltar}"
                                 BackgroundColor="Transparent"
                                 TextColor="{StaticResource corButtonBackPopover}"
                                 HorizontalOptions="Start"
                                 Command="{Binding BindingContext.CancelarFechamentoCommand,Source={x:Reference this}}"/>
 
                         <Label Grid.Column="1"
-                               Text="Edição de Carrinho"
+                               Text="{translator:Translate FechamentoTitulo}"
                                FontAttributes="Bold"
                                FontSize="20"
                                HorizontalTextAlignment="Center"
                                VerticalTextAlignment="Center"/>
 
                         <Button Grid.Column="2"
-                                Text="Salvar"
+                                Text="{translator:Translate GlobalBtnSalvar}"
                                 BackgroundColor="Transparent"
                                 TextColor="{StaticResource corButtonBackPopover}"
                                 HorizontalOptions="End"
@@ -66,12 +67,12 @@
                         <StackLayout Padding="35,10" Spacing="20">
 
                             <!-- ALERTA -->
-                            <Label Text="Atenção"
+                            <Label Text="{translator:Translate GlobalTituloAtencao}"
                                    TextColor="Red"
                                    FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"/>
 
-                            <Label Text="Os dados alterados nesta tela serão aplicados a todos os pedidos abaixo:"
+                            <Label Text="{translator:Translate FechamentoLblAtualizacaoDados}"
                                    TextColor="Red"
                                    HorizontalTextAlignment="Center"/>
 
@@ -92,11 +93,11 @@
                                 <custom:BotaoComVisualDropView
                                     IsEnabled="{Binding BindingContext.IsHabilitaEdicao, Source={x:Reference this}}"
                                     Grid.Row="0" Grid.Column="0"
-                                    Label="Prazo" Descricao="{Binding BindingContext.CondicaoPagamento.Descricao,Source={x:Reference this}}"
+                                    Label="{translator:Translate FechamentoBtnPrazo}" Descricao="{Binding BindingContext.CondicaoPagamento.Descricao,Source={x:Reference this}}"
                                     Command="{Binding BindingContext.SelecionarCondicaoPagamentoCommand, Source={x:Reference this}}"/>
 
                                 <StackLayout Grid.Column="1">
-                                    <Label Text="Dias Bonificação"/>
+                                    <Label Text="{translator:Translate FechamentoLblDiasBonificacao}"/>
                                     <Entry Keyboard="Numeric"
                                            Text="{Binding BindingContext.PedidoSelecionado.DiasBonificacao, Source={x:Reference this}}"/>
                                 </StackLayout>
@@ -104,7 +105,7 @@
                                 <custom:BotaoComVisualDropView
                                     Grid.Row="0" Grid.Column="2"
                                     IsVisible="{Binding BindingContext.IsMostraSemana, Source={x:Reference this}}"
-                                    Label="Semana" Descricao="{Binding BindingContext.SemanaSelecionada.Descricao,Source={x:Reference this}}"
+                                    Label="{translator:Translate ProdutoDetalheBtnSemana}" Descricao="{Binding BindingContext.SemanaSelecionada.Descricao,Source={x:Reference this}}"
                                     Command="{Binding BindingContext.SelecionarSemanaCommand, Source={x:Reference this}}"/>
 
 
@@ -120,11 +121,11 @@
 
                                 <custom:BotaoComVisualDropView
                                     Grid.Row="0" Grid.Column="0"
-                                    Label="Dia de faturamento" Descricao="{Binding BindingContext.DataEntrega,Source={x:Reference this}, StringFormat='{0:dd-MM-yyyy}'}"
+                                    Label="{translator:Translate FechamentoBtnDiaFaturamento}" Descricao="{Binding BindingContext.DataEntrega,Source={x:Reference this}, StringFormat='{0:dd-MM-yyyy}'}"
                                     Command="{Binding BindingContext.SelecionarDataEntregaCommand, Source={x:Reference this}}"/>
 
                                 <StackLayout Grid.Column="1">
-                                    <Label Text="Pedido cliente (O.C.)"/>
+                                    <Label Text="{translator:Translate FechamentoLblPedidoCliente}"/>
                                     <Entry Text="{Binding BindingContext.PedidoSelecionado.OrdemCompra, Source={x:Reference this}}" MaxLength="29"/>
                                 </StackLayout>
 
@@ -149,12 +150,12 @@
                                 <!-- LABELS -->
                                 <Label Grid.Row="0"
                                        Grid.Column="0"
-                                       Text="Aceita faturamento parcial?"
+                                       Text="{translator:Translate FechamentoLblAceitaFatParcial}"
                                        HorizontalTextAlignment="End"/>
 
                                 <Label Grid.Row="0"
                                        Grid.Column="1"
-                                       Text="Aceita faturamento antecipado?"
+                                       Text="{translator:Translate FechamentoLblAceitaFatAntecipado}"
                                        HorizontalTextAlignment="End"/>
 
                                 <!-- SWITCHES -->
@@ -176,7 +177,7 @@
                                              IsVisible="{Binding BindingContext.IsFatAntecipado, Source={x:Reference this}}"
                                              >
 
-                                    <Label Text="Dias Fat. Antecipado"
+                                    <Label Text="{translator:Translate FechamentoLblDiasFatAntecipado}"
                                            FontSize="Small"/>
 
                                     <Entry Keyboard="Numeric"
@@ -191,7 +192,7 @@
                             <!-- CLIENTE ENTREGA -->
                             <custom:BotaoComVisualDropView
                                     HeightRequest="50"
-                                    Label="Cliente para entrega" Descricao="{Binding BindingContext.ClienteEntregaSelecionado.Descricao,Source={x:Reference this}}"
+                                    Label="{translator:Translate FechamentoBtnClienteEntrega}" Descricao="{Binding BindingContext.ClienteEntregaSelecionado.Descricao,Source={x:Reference this}}"
                                     Command="{Binding BindingContext.SelecionarClienteEntregaCommand, Source={x:Reference this}}"/>
 
                             <Grid>
@@ -216,14 +217,14 @@
                                         FontSize="20"
                                         FontAttributes="None"
                                         TextColor="#333"
-                                        Text="Preço Líquido"
+                                        Text="{translator:Translate FechamentoLblPrecoLiquido}"
                                         VerticalTextAlignment="Center" />
                                 </Grid>
 
 
                                 <!-- Atualizar Contatos (iOS: view 141x44 com o botão dentro; a "borda" fica vermelha com contato pendente) -->
                                 <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="10" HorizontalOptions="End" VerticalOptions="Center">
-                                    <Label Text="(Contato pendente)" FontSize="14" TextColor="#FF2600" VerticalOptions="Center"
+                                    <Label Text="{translator:Translate FechamentoLblContatoPendente}" FontSize="14" TextColor="#FF2600" VerticalOptions="Center"
                                            IsVisible="{Binding BindingContext.ContatoPendente, Source={x:Reference this}}" />
                                     <Frame Padding="2" CornerRadius="4" HasShadow="False" WidthRequest="204" HeightRequest="48"
                                            BackgroundColor="Transparent" BorderColor="Transparent">
@@ -232,7 +233,7 @@
                                                 <Setter Property="BackgroundColor" Value="Red" />
                                             </DataTrigger>
                                         </Frame.Triggers>
-                                        <Button Text="Atualizar Contatos"
+                                        <Button Text="{translator:Translate FechamentoBtnAtualizarContatos}"
                                                 BackgroundColor="#EDEDED"
                                                 Command="{Binding BindingContext.AtualizarContatosCommand, Source={x:Reference this}}"/>
                                     </Frame>

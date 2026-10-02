@@ -8,6 +8,7 @@
              xmlns:wrapLayout="clr-namespace:MobiliVendas.Core.CustomView.Layouts.WrapLayout;assembly=MobiliVendas.Core"
              xmlns:session="clr-namespace:MobiliVendas.Core;assembly=MobiliVendas.Core"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="Pegada.Core.Views.Carrinho.CarrinhoPage"
              x:Name="this">
@@ -61,16 +62,16 @@
                 </StackLayout>
 
 
-                <Label Style="{StaticResource labelGridHeader}" Text="Pedido AFV"   Grid.Row="0" Grid.Column="1"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Preposto"      Grid.Row="0" Grid.Column="2"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Cliente"      Grid.Row="0" Grid.Column="3"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Cond. Pgto"   Grid.Row="0" Grid.Column="4"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Tipo"  Grid.Row="0" Grid.Column="5"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Situação"  Grid.Row="0" Grid.Column="6"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Faturamento"  Grid.Row="0" Grid.Column="7"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Qtd"   Grid.Row="0" Grid.Column="8"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total"     Grid.Row="0" Grid.Column="9"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Líquido"      Grid.Row="0" Grid.Column="10"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderPedidoAFV}"   Grid.Row="0" Grid.Column="1"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderPreposto}"      Grid.Row="0" Grid.Column="2"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderCliente}"      Grid.Row="0" Grid.Column="3"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderCondPagto}"   Grid.Row="0" Grid.Column="4"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderTipo}"  Grid.Row="0" Grid.Column="5"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderSituacao}"  Grid.Row="0" Grid.Column="6"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderFaturamento}"  Grid.Row="0" Grid.Column="7"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderQtd}"   Grid.Row="0" Grid.Column="8"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderValorTotal}"     Grid.Row="0" Grid.Column="9"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderValorLiquido}"      Grid.Row="0" Grid.Column="10"/>
 
                 <!--Header-->
 
@@ -178,19 +179,19 @@
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="2"
-                            Text="CANCELAR"
+                            Text="{translator:Translate CarrinhoBtnCancelar}"
                             ClickedCommand="{Binding CancelarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="3"
-                            Text="IMPRIMIR"
+                            Text="{translator:Translate CarrinhoBtnImprimir}"
                             ClickedCommand="{Binding ImprimirCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="4"
-                            Text="COPIAR"
+                            Text="{translator:Translate CarrinhoBtnCopiar}"
                             ClickedCommand="{Binding CopiarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
@@ -208,13 +209,13 @@
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="5"
-                            Text="FECHAMENTO"
+                            Text="{translator:Translate CarrinhoBtnFinalizar}"
                             ClickedCommand="{Binding EditarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
                                 Grid.Row="0" Grid.Column="6"
-                                Text="TRANSMITIR"
+                                Text="{translator:Translate CarrinhoBtnTransmitir}"
                                 ClickedCommand="{Binding TransmitirCommand}"
                                 Style="{StaticResource flexButtonAction}"/>
 
@@ -265,21 +266,21 @@
                         </forms:CachedImage.GestureRecognizers>
                     </forms:CachedImage>
                 </StackLayout>
-                <Label Style="{StaticResource labelGridHeader}" Text="Item"             Grid.Row="0" Grid.Column="1"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Modelo"        Grid.Row="0" Grid.Column="2" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Categoria"        Grid.Row="0" Grid.Column="3" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Descrição"        Grid.Row="0" Grid.Column="4" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderItem}"             Grid.Row="0" Grid.Column="1"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderModelo}"        Grid.Row="0" Grid.Column="2" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderCategoria}"        Grid.Row="0" Grid.Column="3" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderDescricao}"        Grid.Row="0" Grid.Column="4" />
 
-                <Label Style="{StaticResource labelGridHeader}" Text="Dt. Disponível"        Grid.Row="0" Grid.Column="5" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Cxs"        Grid.Row="0" Grid.Column="6" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Qtd Total Cxs"      Grid.Row="0" Grid.Column="7"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Markup Cliente"            Grid.Row="0" Grid.Column="8"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Markup Aplicado" Grid.Row="0" Grid.Column="9"/>
-                <Label Style="{StaticResource labelGridHeader}" Text="Preço"      Grid.Row="0" Grid.Column="10" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Desc. Total"      Grid.Row="0" Grid.Column="11" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Preço Líq."      Grid.Row="0" Grid.Column="12" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total"      Grid.Row="0" Grid.Column="13" />
-                <Label Style="{StaticResource labelGridHeader}" Text="Valor Total Líq"      Grid.Row="0" Grid.Column="14" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderDataDisp}"        Grid.Row="0" Grid.Column="5" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderCx}"        Grid.Row="0" Grid.Column="6" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderTotCx}"      Grid.Row="0" Grid.Column="7"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderMarkupCliente}"            Grid.Row="0" Grid.Column="8"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderMarkupAplicado}" Grid.Row="0" Grid.Column="9"/>
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderPreco}"      Grid.Row="0" Grid.Column="10" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderDescTotal}"      Grid.Row="0" Grid.Column="11" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderPrecoLiq}"      Grid.Row="0" Grid.Column="12" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoHeaderValorTotal}"      Grid.Row="0" Grid.Column="13" />
+                <Label Style="{StaticResource labelGridHeader}" Text="{translator:Translate CarrinhoItemHeaderValorTotLiq}"      Grid.Row="0" Grid.Column="14" />
                 <!--<Label Style="{StaticResource labelGridHeader}" Text="Foto"             Grid.Row="0" Grid.Column="15"/>-->
                 <!--Header-->
 
@@ -392,19 +393,19 @@
 
                     <controls:FlexButton
                         Grid.Column="0"
-                        Text="EXCLUIR"
+                        Text="{translator:Translate CarrinhoBtnExcluir}"
                         ClickedCommand="{Binding ExcluirItemCommand}"
                         Style="{StaticResource flexButtonAction}" />
 
                     <controls:FlexButton
                         Grid.Column="1"
-                        Text="EDITAR"
+                        Text="{translator:Translate CarrinhoBtnEditar}"
                         ClickedCommand="{Binding EditarItemCommand}"
                         Style="{StaticResource flexButtonAction}" />
 
                     <controls:FlexButton
                         Grid.Column="2"
-                        Text="DESMEMBRAR"
+                        Text="{translator:Translate GlobalBtnDesmembrar}"
                         ClickedCommand="{Binding DesmembrarItemCommand}"
                         Style="{StaticResource flexButtonAction}"
                         IsVisible="{Binding BindingContext.OcultaBtnDesmembramento, Source={x:Reference this}}" />

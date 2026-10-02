@@ -194,11 +194,11 @@ namespace Pegada.Core.ViewModels
         {
             if (!Pedidos.Any(x => x.CarrinhoChecado))
             {
-                await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 1 pedido para Bloquear", AppName, "OK");
+                await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarUmPedidoBloquear"), AppName, "OK");
                 return;
             }
 
-            var confirm = await UserDialogs.Instance.ConfirmAsync($"Deseja realmente bloquear o(os) pedido(os) selecionado(os)?", "Cancelar", "Sim", "Não");
+            var confirm = await UserDialogs.Instance.ConfirmAsync(T("CarrinhoPageVMMessageDesejaRealmenteBloquear"), T("GlobalTituloAtencao"), T("PegCadClienteBtnSim"), T("PegCadClienteBtnNao"));
             if (!confirm)
             {
                 return;
@@ -207,7 +207,7 @@ namespace Pegada.Core.ViewModels
             var list = Pedidos.Where(x => x.CarrinhoChecado).ToList();
             await _carrinhoRepository.BloquearCarrinhos(list);
 
-            await UserDialogs.Instance.AlertAsync("Os pedidos foram alterados com sucesso.", AppName, "OK");
+            await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessagePedidosForamAlteradosSucesso"), AppName, "OK");
             await Load();
         }
 
@@ -242,13 +242,13 @@ namespace Pegada.Core.ViewModels
             {
                 if (!PedidoSelecionado.Itens.Any(x => x.ItemChecado))
                 {
-                    await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 1 item para desmembrar", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgItemParaDesmembrar"), T("GlobalTituloAtencao"), "OK");
                     return;
                 }
 
                 if (!PedidoSelecionado.Itens.Any(x => !x.ItemChecado))
                 {
-                    await UserDialogs.Instance.AlertAsync("Você não pode desmembrar todos os itens do carrinho", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgNaoPodeDesmembrarTodos"), T("GlobalTituloAtencao"), "OK");
                     return;
                 }
 
@@ -302,11 +302,11 @@ namespace Pegada.Core.ViewModels
             if (carrinhos?.Count > 1)
             {
                 carrinhos.Remove(PedidoSelecionado.CodCarrinho);
-                carrinhos.Insert(0, "NOVO CARRINHO");
-                opcaoSelecionada = await UserDialogs.Instance.ActionSheetAsync(AppName, "Cancelar", null, null, carrinhos.ToArray());
+                carrinhos.Insert(0, new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoDesmembrarNovoCarrinho"));
+                opcaoSelecionada = await UserDialogs.Instance.ActionSheetAsync(AppName, new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoBtnCancelar"), null, null, carrinhos.ToArray());
             }
 
-            if (opcaoSelecionada == "Cancelar")
+            if (opcaoSelecionada == new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoBtnCancelar"))
                 return;
             else
             {
@@ -314,7 +314,7 @@ namespace Pegada.Core.ViewModels
                 itens.ForEach(x => x.Grades = PedidoSelecionado.Itens.Where(o => o.CodProduto == x.CodProduto).FirstOrDefault().Grades);
 
                 DesmembrarCarrinhoCommand command = new DesmembrarCarrinhoCommand(
-                    string.IsNullOrEmpty(opcaoSelecionada) || opcaoSelecionada == "NOVO CARRINHO" ? string.Empty : opcaoSelecionada,
+                    string.IsNullOrEmpty(opcaoSelecionada) || opcaoSelecionada == new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoDesmembrarNovoCarrinho") ? string.Empty : opcaoSelecionada,
                     Session.USUARIO_LOGADO,
                     Session.ATENDIMENTO_ATUAL,
                     itens,
@@ -338,13 +338,13 @@ namespace Pegada.Core.ViewModels
                     var result = await _carrinhoHandler.Handle(excluirCommand) as HandlerResult;
                     if (result.Sucesso)
                     {
-                        await UserDialogs.Instance.AlertAsync($"Desmembramento concluído com sucesso.", AppName, "OK");
+                        await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageDesmembramentoSucesso"), AppName, "OK");
                         await Load();
                     }
                     else
                     {
                         string message = string.Join("\n", result.ListaErros);
-                        await UserDialogs.Instance.AlertAsync($"Ocorreu um erro ao desmembrar itens. \n{message}", AppName, "OK");
+                        await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMenssageErroAoDesmembrar")} \n{message}", AppName, "OK");
                     }
                 }
             }
@@ -382,11 +382,11 @@ namespace Pegada.Core.ViewModels
             if (carrinhos?.Count > 1)
             {
                 carrinhos.Remove(PedidoSelecionado.CodCarrinho);
-                carrinhos.Insert(0, "NOVO CARRINHO");
-                opcaoSelecionada = await UserDialogs.Instance.ActionSheetAsync(AppName, "Cancelar", null, null, carrinhos.ToArray());
+                carrinhos.Insert(0, new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoDesmembrarNovoCarrinho"));
+                opcaoSelecionada = await UserDialogs.Instance.ActionSheetAsync(AppName, new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoBtnCancelar"), null, null, carrinhos.ToArray());
             }
 
-            if (opcaoSelecionada == "Cancelar")
+            if (opcaoSelecionada == new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoBtnCancelar"))
                 return;
             else
             {
@@ -394,7 +394,7 @@ namespace Pegada.Core.ViewModels
                 itens.ForEach(x => x.Grades = PedidoSelecionado.Itens.Where(o => o.CodProduto == x.CodProduto).FirstOrDefault().Grades);
 
                 DesmembrarCarrinhoCommand command = new DesmembrarCarrinhoCommand(
-                    string.IsNullOrEmpty(opcaoSelecionada) || opcaoSelecionada == "NOVO CARRINHO" ? string.Empty : opcaoSelecionada,
+                    string.IsNullOrEmpty(opcaoSelecionada) || opcaoSelecionada == new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoDesmembrarNovoCarrinho") ? string.Empty : opcaoSelecionada,
                     Session.USUARIO_LOGADO,
                     Session.ATENDIMENTO_ATUAL,
                     itens,
@@ -418,13 +418,13 @@ namespace Pegada.Core.ViewModels
                     var result = await _carrinhoHandler.Handle(excluirCommand) as HandlerResult;
                     if (result.Sucesso)
                     {
-                        await UserDialogs.Instance.AlertAsync($"Desmembramento concluído com sucesso.", AppName, "OK");
+                        await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageDesmembramentoSucesso"), AppName, "OK");
                         await Load();
                     }
                     else
                     {
                         string message = string.Join("\n", result.ListaErros);
-                        await UserDialogs.Instance.AlertAsync($"Ocorreu um erro ao desmembrar itens. \n{message}", AppName, "OK");
+                        await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMenssageErroAoDesmembrar")} \n{message}", AppName, "OK");
                     }
                 }
             }
@@ -439,7 +439,7 @@ namespace Pegada.Core.ViewModels
 
                     if (itens.Count == 0)
                     {
-                        await UserDialogs.Instance.AlertAsync("Marque um item para edição.", AppName);
+                        await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgMarqueItemEdicao"), AppName);
                         return;
                     }
 
@@ -469,7 +469,7 @@ namespace Pegada.Core.ViewModels
                             var kits = await _kitRepository.BuscarKits(filtros);
                             var estoques = await _produtoRepository.BuscarEstoques(new BuscarEstoquesCommand() { CodProduto = ItemSelecionado.CodKit, CodDeposito = null });
                             if (estoques.Count == 0) {
-                                throw new Exception("Produto" + ItemSelecionado.CodKit + " não possui estoque.");
+                                throw new Exception(string.Format(T("CarrinhoMsgProdutoSemEstoque"), ItemSelecionado.CodKit));
                             }
                             ItemSelecionado.QtdTotal = ItemSelecionado.QtdTotal / kits.Where(x => x.CodProduto == ItemSelecionado.CodProduto).FirstOrDefault().Qtd;
                             ItemSelecionado.Grades.FirstOrDefault().Qtd = (int)ItemSelecionado.QtdTotal;
@@ -487,7 +487,7 @@ namespace Pegada.Core.ViewModels
                         {
                             if (!CrossConnectivity.Current.IsConnected)
                             {
-                                await UserDialogs.Instance.AlertAsync($"Identificamos você está sem conexão a internet,\nfavor conectar a internet para buscar o estoque do pedido mãe.", AppName, "OK");
+                                await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgSemInternetPedidoMae"), AppName, "OK");
                                 return;
                             }
                         }
@@ -515,7 +515,7 @@ namespace Pegada.Core.ViewModels
                                 var estoques = await _produtoRepository.BuscarEstoques(new BuscarEstoquesCommand() { CodProduto = ItemSelecionado.CodKit, CodDeposito = ItemSelecionado.CodDeposito });
                                 if (estoques.Count == 0)
                                 {
-                                    throw new Exception("Produto" + ItemSelecionado.CodKit + " não possui estoque.");
+                                    throw new Exception(string.Format(T("CarrinhoMsgProdutoSemEstoque"), ItemSelecionado.CodKit));
                                 }
 
                                 ItemSelecionado.QtdTotal = ItemSelecionado.QtdTotal / qtdNoKit;
@@ -534,7 +534,7 @@ namespace Pegada.Core.ViewModels
                             {
                                 if (!CrossConnectivity.Current.IsConnected)
                                 {
-                                    await UserDialogs.Instance.AlertAsync($"Identificamos você está sem conexão a internet,\nfavor conectar a internet para buscar o estoque do pedido mãe.", AppName, "OK");
+                                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgSemInternetPedidoMae"), AppName, "OK");
                                     return;
                                 }
                             }
@@ -544,7 +544,7 @@ namespace Pegada.Core.ViewModels
                         }
                         else
                         {
-                            await UserDialogs.Instance.AlertAsync("Marque somente 1 item para edição.", AppName);
+                            await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgMarqueSomenteUmItemEdicao"), AppName);
                         }
                     }
                 }
@@ -560,14 +560,14 @@ namespace Pegada.Core.ViewModels
             {
                 if (!PedidoSelecionado.Itens.Any(x => x.ItemChecado))
                 {
-                    await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 1 item para excluir", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgSelecioneItemExcluir"), AppName, "OK");
                     return;
                 }
 
                 string messageKits = string.Empty;
                 string strProdKits = string.Empty;
                 List<string> lstProdutosDoKit = null;
-                var resp = await UserDialogs.Instance.ConfirmAsync("Deseja realmente excluir o item ?", AppName, "Sim", "Não");
+                var resp = await UserDialogs.Instance.ConfirmAsync(T("CarrinhoMsgConfirmaExcluirItens"), T("GlobalTituloAtencao"), T("PegCadClienteBtnSim"), T("PegCadClienteBtnNao"));
                 if (resp)
                 {
                     var itensMarcados = PedidoSelecionado.Itens.Where(x => x.ItemChecado).ToList();
@@ -579,14 +579,14 @@ namespace Pegada.Core.ViewModels
                             {
                                 lstProdutosDoKit = PedidoSelecionado.Itens.Where(x => x.CodKit == item.CodKit && x.CodDeposito == item.CodDeposito && !x.ItemChecado).Select(x => x.CodProduto).ToList();
                                 strProdKits = string.Join(",", lstProdutosDoKit);
-                                messageKits += $"Você não marcou o(os) item(ns) '({strProdKits})' que pertencem ao kit/pack '{item.CodKit}' do produto '{item.CodProduto}'.\n";
+                                messageKits += string.Format(T("CarrinhoMsgKitItemNaoMarcado"), strProdKits, item.CodKit, item.CodProduto) + "\n";
                             }
                         }
                     }
 
                     if (!string.IsNullOrEmpty(messageKits))
                     {
-                        var confirm = await UserDialogs.Instance.ConfirmAsync($"{messageKits}. Para excluir itens, o kit/pack todo deve excluído, confirma a exclusão de todos os itens do kit?", AppName, "SIM", "NÃO");
+                        var confirm = await UserDialogs.Instance.ConfirmAsync($"{messageKits}. {T("CarrinhoMsgConfirmaExclusaoKit")}", AppName, T("PegCadClienteBtnSim"), T("PegCadClienteBtnNao"));
                         if (!confirm)
                         {
                             return;
@@ -608,7 +608,7 @@ namespace Pegada.Core.ViewModels
 
                     if (!PedidoSelecionado.Itens.Any(x => !x.ItemChecado))
                     {
-                        await UserDialogs.Instance.AlertAsync("Para excluir todos os itens do carrinho vá em cancelar carrinho", AppName, "OK");
+                        await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageExcluirTodosItensCarrinho"), AppName, "OK");
                         return;
                     }
 
@@ -622,12 +622,12 @@ namespace Pegada.Core.ViewModels
                     var result = await _carrinhoHandler.HandleExclusaoItens(command);
                     if (result is CarrinhoCommandResult || (result is HandlerResult && ((HandlerResult)result).Sucesso))
                     {
-                        await UserDialogs.Instance.AlertAsync($"Item(ns) excluído(os) com sucesso.", AppName, "OK");
+                        await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgItensExcluidos"), AppName, "OK");
                         await Load();
                     }
                     else
                     {
-                        await UserDialogs.Instance.AlertAsync($"Ocorreu um erro ao excluir item.", AppName, "OK");
+                        await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgErroExcluirItem"), AppName, "OK");
                     }
                 }
             }
@@ -735,19 +735,19 @@ namespace Pegada.Core.ViewModels
                 var result = await _carrinhoHandler.Handle(command) as HandlerResult;
                 if (result.Sucesso)
                 {
-                    await UserDialogs.Instance.AlertAsync($"Carrinho copiado com sucesso. Carrinho {result.Result}", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMessageCarrinhoCopiadoSucesso")} {result.Result}", AppName, "OK");
                 }
                 else
                 {
                     string message = string.Join("\n", result.ListaErros);
-                    await UserDialogs.Instance.AlertAsync($"Não foi possível copiar o pedido. {message}", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMessageNaoFoiPossivelCopiarPedido")} {message}", AppName, "OK");
                 }
 
                 await PopupNavigation.Instance.PopAsync();
             }
             catch (Exception ex)
             {
-                await UserDialogs.Instance.AlertAsync($"Não foi possível copiar o pedido. {ex.Message}", AppName, "OK");
+                await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMessageNaoFoiPossivelCopiarPedido")} {ex.Message}", AppName, "OK");
             }
         }
 
@@ -757,7 +757,7 @@ namespace Pegada.Core.ViewModels
             {
                 if (!Pedidos.Any(x => x.CarrinhoChecado))
                 {
-                    await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos '1' pedido para imprimir", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarUmPedidoImprimir"), AppName, "OK");
                     return;
                 }
                 await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupImpressao(Pedidos.Where(x => x.CarrinhoChecado).ToList()));
@@ -774,11 +774,11 @@ namespace Pegada.Core.ViewModels
             {
                 if (!Pedidos.Any(x => x.CarrinhoChecado))
                 {
-                    await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 1 pedido para Cancelar", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgSelecioneCarrinhoCancelar"), T("GlobalTituloAtencao"), "OK");
                     return;
                 }
 
-                var confirm = await UserDialogs.Instance.ConfirmAsync($"Deseja realmente cancelar o(s) pedido(s) selecionado(s)?", "Cancelar", "Sim", "Não");
+                var confirm = await UserDialogs.Instance.ConfirmAsync(T("CarrinhoMsgConfirmaCancelar"), T("GlobalTituloAtencao"), T("PegCadClienteBtnSim"), T("PegCadClienteBtnNao"));
                 if (!confirm)
                 {
                     return;
@@ -799,7 +799,7 @@ namespace Pegada.Core.ViewModels
                             }
                             else
                             {
-                                await UserDialogs.Instance.AlertAsync($"Não foi possível cancelar o carrinho {item.CodCarrinho}, tente novamente mais tarde.", AppName, "OK");
+                                await UserDialogs.Instance.AlertAsync(string.Format(T("CarrinhoMsgNaoFoiPossivelCancelarCarrinho"), item.CodCarrinho), AppName, "OK");
                                 return;
                             }
                         }
@@ -832,15 +832,15 @@ namespace Pegada.Core.ViewModels
                         message += string.Join("\n", item.ListaErros);
                     }
 
-                    await UserDialogs.Instance.AlertAsync($"Não foi possível cancelar o(os) pedido(os). {message}", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMessageNaoFoiPossivelCancelarPedidos")}. {message}", AppName, "OK");
                 }
 
-                await UserDialogs.Instance.AlertAsync("Carrinho cancelado com sucesso.", AppName, "OK");
+                await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageCarrinhoCancelado"), AppName, "OK");
                 await Load();
             }
             catch (Exception ex)
             {
-                await UserDialogs.Instance.AlertAsync($"Não foi possível cancelar o pedido. {ex.Message}", AppName, "OK");
+                await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMessageNaoFoiPossivelCancelarPedido")} {ex.Message}", AppName, "OK");
             }
 
         }
@@ -857,7 +857,7 @@ namespace Pegada.Core.ViewModels
 
                 if (Pedidos.Where(x => x.CarrinhoChecado).Count() != 1)
                 {
-                    await UserDialogs.Instance.AlertAsync("Você deve selecionar 1 pedido para editar", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarUmPedidoPEditar"), AppName, "OK");
                     return;
                 }
 
@@ -884,19 +884,19 @@ namespace Pegada.Core.ViewModels
                 string usuarioLiberadoTeste = await _parametroRepository.BuscarValorParametro(ParametrosSistema.USUARIOPARAMETRO);
                 if (liberaImportacao == "N" && Session.USUARIO_LOGADO.CodPessoa != usuarioLiberadoTeste)
                 {
-                    await UserDialogs.Instance.AlertAsync("Este recurso não está habilitado", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgRecursoNaoHabilitado"), AppName, "OK");
                     return;
                 }
 
                 if (Device.RuntimePlatform != Device.UWP)
                 {
-                    await UserDialogs.Instance.AlertAsync("Este recurso está habilitado somente para ambiente Windows", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgRecursoSomenteWindows"), AppName, "OK");
                     return;
                 }
 
                 if (Session.ATENDIMENTO_ATUAL == null)
                 {
-                    await UserDialogs.Instance.AlertAsync("Você precisa de um atendimento em aberto para importar uma planilha", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgAtendimentoParaImportar"), AppName, "OK");
                     return;
                 }
                 await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupImportarPlanilha());
@@ -916,11 +916,11 @@ namespace Pegada.Core.ViewModels
                 if (!Pedidos.Any(x => x.CarrinhoChecado))
                 {
                     TransmissaoLogger.Log("Transmitir: nenhum pedido selecionado, abortando.");
-                    await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 1 pedido para transmitir", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgSelecioneCarrinhoTransmissao"), T("GlobalTituloAtencao"), "OK");
                     return;
                 }
 
-                var confirm = await UserDialogs.Instance.ConfirmAsync($"Deseja realmente transmitir o(os) pedido(os) selecionado(os)?", "Transmitir", "Sim", "Não");
+                var confirm = await UserDialogs.Instance.ConfirmAsync(T("CarrinhoMsgConfirmaTransmitir"), T("CarrinhoTituloTransmissao"), T("PegCadClienteBtnSim"), T("PegCadClienteBtnNao"));
                 if (!confirm)
                 {
                     TransmissaoLogger.Log("Transmitir: usuário cancelou a confirmação.");
@@ -1027,7 +1027,7 @@ namespace Pegada.Core.ViewModels
 
 
                     TransmissaoLogger.Log($"Transmitir: iniciando transmissão do pedido {pedido.CodCarrinho}.");
-                    UserDialogs.Instance.ShowLoading($"Transmitindo o pedido {pedido.CodCarrinho}");
+                    UserDialogs.Instance.ShowLoading($"{T("CarrinhoPageVMMessageTransmitindoPedido")} {pedido.CodCarrinho}");
                     var resultTransmissao = await ServiceUtility.TransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
                     TransmissaoLogger.Log($"Transmitir: TransmitirPedido {pedido.CodCarrinho} retornou SUCCESS={resultTransmissao?.SUCCESS} CODIGO={resultTransmissao?.CODIGO} EXCEPTION={resultTransmissao?.EXCEPTION}");
 
@@ -1066,7 +1066,7 @@ namespace Pegada.Core.ViewModels
                 if (lstPedidosComErros.Count() > 0)
                 {
                     string message = string.Join("\n", lstPedidosComErros);
-                    await UserDialogs.Instance.AlertAsync("Pedidos incompletos.\n" + message, AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessagePedidoIncompleto") + "\n" + message, T("CarrinhoTituloTransmissao"), "OK");
                 }
 
 
@@ -1075,7 +1075,7 @@ namespace Pegada.Core.ViewModels
                     await Xamarin.Essentials.MainThread.InvokeOnMainThreadAsync(async () =>
                     {
                         string message = string.Join("\n", lstPedidosComErrosTransmissao);
-                        await UserDialogs.Instance.AlertAsync("Pedidos com erro na transmissão.\n" + message, AppName, "OK");
+                        await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessagePedidoComErroTransmissao") + "\n" + message, T("CarrinhoTituloTransmissao"), "OK");
                     });
                     
                 }
@@ -1098,7 +1098,7 @@ namespace Pegada.Core.ViewModels
                         Session.QtdCar = carrinhoEmDigitacao.Count();
                     }
 
-                    string message = string.Join("Pedido(s) enviado(s) com sucesso.\n", lstPedidosSemErros);
+                    string message = string.Join(T("CarrinhoMsgPedidosEnviadosSucesso") + "\n", lstPedidosSemErros);
                     await UserDialogs.Instance.AlertAsync(message, AppName);
                     await Load();
 
@@ -1599,13 +1599,13 @@ namespace Pegada.Core.ViewModels
 
             if (!Pedidos.Any(x => x.CarrinhoChecado))
             {
-                await UserDialogs.Instance.AlertAsync("Você precisa marcar um pedido para copiar.", AppName, "OK");
+                await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessagePrecisaMarcarPedido"), AppName, "OK");
                 return;
             }
 
             if (Pedidos.Any(x => x.CarrinhoChecado && x.TipoPedido == "Pedido Pronta Entrega"))
             {
-                await UserDialogs.Instance.AlertAsync("Cópia de pedido só permite Pedido Normal.", AppName, "OK");
+                await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgCopiaSomentePedidoNormal"), AppName, "OK");
                 return;
             }
 
@@ -1707,7 +1707,7 @@ namespace Pegada.Core.ViewModels
                                     var possui = pedidoFilho.Itens.Where(x => x.CodProduto == item.CodProduto && x.CodDeposito == item.CodDeposito).FirstOrDefault();
                                     if (possui != null)
                                     {
-                                        await UserDialogs.Instance.AlertAsync($"Não foi possível realizar o agrupamento dos pedidos selecionados, pois dentre eles há um pedido distribuído de um pedido mãe com a mesma referência {item.CodProduto}.", "Aviso", "OK");
+                                        await UserDialogs.Instance.AlertAsync(string.Format(T("CarrinhoMsgAgruparPedidoMae"), item.CodProduto), T("GlobalTituloAviso"), "OK");
                                         return;
                                     }
                                 }
@@ -1821,7 +1821,7 @@ namespace Pegada.Core.ViewModels
 
                                 //atualiza itens carrinho
                                 await _carrinhoRepository.AtualizaItensImediatosAgrupados(result.Result);
-                                await UserDialogs.Instance.AlertAsync("Os pedidos foram agrupados com sucesso", AppName, "OK");
+                                await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessagePedidosForamAgrupados"), AppName, "OK");
                                 await Load();
                                 return;
                             }
@@ -1829,12 +1829,12 @@ namespace Pegada.Core.ViewModels
                             {
                                 var model = result as HandlerResult;
                                 string message = string.Join("\n", result.ListaErros);
-                                await UserDialogs.Instance.AlertAsync($"Ocorreu um erro ao agrupar os pedidos. \n{message}", AppName, "OK");
+                                await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMessageErroaoAgrupar")} \n{message}", AppName, "OK");
                             }
                         }
                         else
                         {
-                            await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 2 pedidos validos", AppName, "OK");
+                            await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarDoisPedidosValidos"), AppName, "OK");
                         }
 
                     }
@@ -1890,7 +1890,7 @@ namespace Pegada.Core.ViewModels
                             }
                             else
                             {
-                                await UserDialogs.Instance.AlertAsync("Os pedidos precisam ser do mesmo tipo", AppName, "OK");
+                                await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessagePedidodsPrecisamSerMesmoTipo"), AppName, "OK");
                             }
                         }
                         if (listaPedidos.Count > 1)
@@ -1910,7 +1910,7 @@ namespace Pegada.Core.ViewModels
                             if (result != null && result.Sucesso)
                             {
 
-                                await UserDialogs.Instance.AlertAsync("Os pedidos foram agrupados com sucesso", AppName, "OK");
+                                await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessagePedidosForamAgrupados"), AppName, "OK");
                                 await Load();
                                 return;
                             }
@@ -1918,18 +1918,18 @@ namespace Pegada.Core.ViewModels
                             {
                                 var model = result as HandlerResult;
                                 string message = string.Join("\n", result.ListaErros);
-                                await UserDialogs.Instance.AlertAsync($"Ocorreu um erro ao agrupar os pedidos. \n{message}", AppName, "OK");
+                                await UserDialogs.Instance.AlertAsync($"{T("CarrinhoPageVMMessageErroaoAgrupar")} \n{message}", AppName, "OK");
                             }
                         }
                         else
                         {
-                            await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 2 pedidos validos", AppName, "OK");
+                            await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarDoisPedidosValidos"), AppName, "OK");
                         }
                     }
                 }
                 else
                 {
-                    await UserDialogs.Instance.AlertAsync("Você deve selecionar pelo menos 2 pedidos para Agrupar", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarDoisPedidosPAgrupar"), AppName, "OK");
                 }
             }
             catch (Exception ex)
@@ -1945,5 +1945,7 @@ namespace Pegada.Core.ViewModels
                 _printService.OpenPdf(path);
         }
         #endregion
+
+        private static string T(string chave) => new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage(chave);
     }
 }

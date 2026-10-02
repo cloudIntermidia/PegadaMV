@@ -9,6 +9,7 @@
              xmlns:controls="clr-namespace:MobiliVendas.Core.CustomView.Controls.SegmentedControl;assembly=MobiliVendas.Core"
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
              mc:Ignorable="d"
              x:Class="Pegada.Core.Views.Negocio.CadastroClientePage"
              x:Name="this">
@@ -37,7 +38,7 @@
                         Grid.Row="0" Grid.Column="0"
                         WidthRequest="350"
                         HorizontalOptions="Start"
-                        Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}, Converter={x:StaticResource TextSubText}, ConverterParameter='Selecionar Cliente'}"
+                        Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}, Converter={x:StaticResource TextSubText}, ConverterParameter={translator:Translate PegCadClienteBtnSelecionarCliente}}"
                         ClickedCommand="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"
                         Style="{StaticResource flexButtonFiltros}"
                         />
@@ -48,21 +49,21 @@
                              IsVisible="{Binding BindingContext.MantemCadastro, Source={x:Reference this}}">
 
                         <flex:FlexButton IsVisible="True"
-                            Text="EDITAR CADASTRO"
+                            Text="{translator:Translate PegCadClienteBtnEditarCadastro}"
                             HorizontalOptions="End"
                             ClickedCommand="{Binding BindingContext.EditarClienteCommand, Source={x:Reference this}}"
                             Style="{StaticResource flexButtonFiltros}"
                             />
 
                         <flex:FlexButton
-                        Text="TRANSMITIR CLIENTE"
+                        Text="{translator:Translate EdicaoAtendimentoBtnTransmitirCliente}"
                         HorizontalOptions="End"
                         ClickedCommand="{Binding BindingContext.TransmitirClienteCommand, Source={x:Reference this}}"
                         Style="{StaticResource flexButtonFiltros}"
                         />
 
                         <flex:FlexButton IsVisible="True"
-                            Text="NOVO CLIENTE"
+                            Text="{translator:Translate SelecaoClienteBtnNovoCliente}"
                             HorizontalOptions="End"
                             ClickedCommand="{Binding BindingContext.CadastrarClienteNovoCommand, Source={x:Reference this}}"
                             Style="{StaticResource flexButtonFiltros}"
@@ -98,7 +99,7 @@
 
                     <!-- Dados do Cliente: -->
                     <Label Grid.Row="0" Grid.Column="0"
-                           Text="Dados do Cliente:"
+                           Text="{translator:Translate PegCadClienteLblDadosCliente}"
                            FontFamily="{StaticResource RobotoBoldFont}"
                            FontAttributes="Bold"
                            TextColor="Gray"
@@ -108,7 +109,7 @@
                     <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Razão Social: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblRazaoSocial}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -116,7 +117,7 @@
                     <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Nome Fantasia: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblNomeFantasia}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.NomeFantasia, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -125,7 +126,7 @@
                     <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="CNPJ: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCNPJ}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.CNPJ, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -133,7 +134,7 @@
                     <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Inscrição Estadual: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblIE}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.InscricaoEstadual, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -142,7 +143,7 @@
                     <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Email NFE: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblEmailNFE}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EmailNFE, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -151,7 +152,7 @@
                     <Label Grid.Row="4" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Representante: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblRepresentante}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.Representante, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -160,7 +161,7 @@
                     <Label Grid.Row="5" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Home Page: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblHomePage}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.Homepage, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -168,7 +169,7 @@
                     <Label Grid.Row="5" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Suframa: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblSuframa}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.Suframa, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -176,7 +177,7 @@
                     <Label Grid.Row="5" Grid.Column="2" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Validade de Suframa: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblValidadeSuframa}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.DataValidadeSuframa, Source={x:Reference this}, StringFormat='{0:dd/MM/yyyy}'}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -185,7 +186,7 @@
                     <Label Grid.Row="6" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Rede: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblRede}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.RedeCliente, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -209,10 +210,10 @@
                                                 TintColor="#555"
                                                 OnSegmentSelected="SegmentedControl_OnSegmentSelectedEndereco">
                         <controls:SegmentedControl.Children>
-                            <controls:SegmentedControlOption Text="Endereço Principal:" />
-                            <controls:SegmentedControlOption Text="Endereço de Cobrança: (Opcional)" />
-                            <controls:SegmentedControlOption Text="Endereço de Entrega: (Opcional)" />
-                            <controls:SegmentedControlOption Text="Dados Bancários" />
+                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoPrincipal}" />
+                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoCobranca}" />
+                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoEntrega}" />
+                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegDadosBancarios}" />
                         </controls:SegmentedControl.Children>
                     </controls:SegmentedControl>
 
@@ -241,7 +242,7 @@
                     <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Rua/Av.: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblRuaAv}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.EnderecoUI, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -249,7 +250,7 @@
                     <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Complemento: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblComplemento}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Complemento, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -258,7 +259,7 @@
                     <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Cidade: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCidade}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Cidade, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -266,7 +267,7 @@
                     <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Pais: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblPais}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -275,7 +276,7 @@
                     <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="UF: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblUF}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.UF, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -284,7 +285,7 @@
                     <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Telefone: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Telefone, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -292,7 +293,7 @@
                     <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Bairro: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblBairro}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Bairro, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -300,7 +301,7 @@
                     <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="CEP: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCEP}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.CEP, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -309,7 +310,7 @@
                     <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Fax: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblFax}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Fax, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -338,7 +339,7 @@
                     <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Rua/Av.: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblRuaAv}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.EnderecoUI, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -346,7 +347,7 @@
                     <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Complemento: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblComplemento}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Complemento, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -355,7 +356,7 @@
                     <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Cidade: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCidade}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Cidade, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -363,7 +364,7 @@
                     <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Pais: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblPais}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -372,7 +373,7 @@
                     <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="UF: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblUF}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.UF, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -381,7 +382,7 @@
                     <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Telefone: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Telefone, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -389,7 +390,7 @@
                     <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Bairro: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblBairro}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Bairro, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -397,7 +398,7 @@
                     <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="CEP: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCEP}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.CEP, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -426,7 +427,7 @@
                     <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Rua/Av.: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblRuaAv}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -435,7 +436,7 @@
                     <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Complemento: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblComplemento}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -445,7 +446,7 @@
                     <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Cidade: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCidade}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -454,7 +455,7 @@
                     <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Pais: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblPais}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -463,7 +464,7 @@
                     <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="UF: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblUF}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -473,7 +474,7 @@
                     <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Telefone: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -482,7 +483,7 @@
                     <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Bairro: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblBairro}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -491,7 +492,7 @@
                     <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="CEP: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCEP}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
                                 <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
@@ -522,7 +523,7 @@
                     <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Código Bancário: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCodBancario}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.Banco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -530,7 +531,7 @@
                     <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Nome do Banco: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblNomeBanco}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.NomeBanco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -539,7 +540,7 @@
                     <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Agência: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblAgencia}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.Agencia, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -547,7 +548,7 @@
                     <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Conta Corrente: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblContaCorrente}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.Conta, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -556,7 +557,7 @@
                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Nome do Titular: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblNomeTitular}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.NomeTitularConta, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -565,7 +566,7 @@
                     <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Tipo Chave Pix: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblTipoChavePix}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.TipoChavePix, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -573,7 +574,7 @@
                     <Label Grid.Row="3" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Chave Pix: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblChavePix}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.ChavePix, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -602,7 +603,7 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0"
-                           Text="Outros:"
+                           Text="{translator:Translate PegCadClienteLblOutros}"
                            FontFamily="{StaticResource RobotoBoldFont}"
                            FontAttributes="Bold"
                            TextColor="Gray"
@@ -612,7 +613,7 @@
                     <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Condição de Pagamentos: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblCondPagamentos}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.CondicaoPagamentoDescricao, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -620,7 +621,7 @@
                     <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Sit. Comercial: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblSitComercial}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.CodSituacaoCliente, Source={x:Reference this}, Converter={StaticResource SituacaoClienteParaTextoConverter}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -629,7 +630,7 @@
                     <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Limite de Cred. Grupo - Ped: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblLimiteCredGrupoPed}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.LimiteCreditoGrupo, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -637,7 +638,7 @@
                     <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Limite de Cred .Grupo - Fat: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblLimiteCredGrupoFat}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.LimiteFaturamento, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -646,7 +647,7 @@
                     <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Limite de Cred. Cliente - Ped: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblLimiteCredClientePed}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.LimiteCredito, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -654,7 +655,7 @@
                     <Label Grid.Row="3" Grid.Column="1" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Limite de Cred. Cliente - Fat: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblLimiteCredClienteFat}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.LimiteTotal, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -663,7 +664,7 @@
                     <Label Grid.Row="4" Grid.Column="0" LineBreakMode="TailTruncation">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Classe de Risco: " FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
+                                <Span Text="{translator:Translate PegCadClienteLblClasseRisco}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
                                 <Span Text="{Binding BindingContext.Cliente.DescricaoClasseRisco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
                             </FormattedString>
                         </Label.FormattedText>
@@ -678,43 +679,43 @@
                         <StackLayout Orientation="Horizontal" Spacing="4">
                             <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
                                 Source="{Binding BindingContext.Cliente.IndFatParcial, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="Fat. Parcial" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                            <Label Text="{translator:Translate PegCadClienteChkFatParcial}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal" Spacing="4">
                             <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
                                 Source="{Binding BindingContext.Cliente.IndFatAntecipado, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="Fat. Antecipado" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                            <Label Text="{translator:Translate PegCadClienteChkFatAntecipado}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal" Spacing="4">
                             <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
                                 Source="{Binding BindingContext.Cliente.CompraPrecoLiquido, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="Preço Liquido" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                            <Label Text="{translator:Translate PegCadClienteChkPrecoLiquido}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal" Spacing="4">
                             <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
                                 Source="{Binding BindingContext.Cliente.IndAtivo, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="Ativo" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                            <Label Text="{translator:Translate SelecaoClienteStatusAtivo}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal" Spacing="4">
                             <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
                                 Source="{Binding BindingContext.Cliente.PermiteDigitacao, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="Permite Digitação" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                            <Label Text="{translator:Translate PegCadClienteChkPermiteDigitacao}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal" Spacing="4">
                             <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
                                 Source="{Binding BindingContext.Cliente.PermiteAjustePreco, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="Permite Ajuste Preço" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                            <Label Text="{translator:Translate PegCadClienteChkPermiteAjustePreco}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal" Spacing="4">
                             <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
                                 Source="{Binding BindingContext.Cliente.CreditoLiberado, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="Credito Liberado" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
+                            <Label Text="{translator:Translate PegCadClienteChkCreditoLiberado}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
                         </StackLayout>
 
                     </StackLayout>
@@ -741,15 +742,15 @@
                                                 TintColor="#555"
                                                 OnSegmentSelected="SegmentedControl_OnSegmentSelectedContato">
                         <controls:SegmentedControl.Children>
-                            <controls:SegmentedControlOption Text="Contatos" />
-                            <controls:SegmentedControlOption Text="Contatos Grupo" />
-                            <controls:SegmentedControlOption Text="Referências" />
+                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegContatos}" />
+                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegContatosGrupo}" />
+                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegReferencias}" />
                         </controls:SegmentedControl.Children>
                     </controls:SegmentedControl>
 
                     <flex:FlexButton x:Name="ButtonNovoContatoReferencia"
                         Grid.Row="0" Grid.Column="1"
-                        Text="NOVO CONTATO"
+                        Text="{translator:Translate PegCadClienteBtnNovoContato}"
                         ClickedCommand="{Binding BindingContext.NovoContatoCommand, Source={x:Reference this}}"
                         Style="{StaticResource flexButtonFiltros}"
                         />
@@ -771,12 +772,12 @@
                         <ColumnDefinition Width="1.1*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Text="Nome" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="1" Text="E-mail" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="2" Text="Telefone" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="3" Text="Cargo" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="4" Text="Data Nasc." FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="5" Text="Status" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="0" Text="{translator:Translate PegCadClienteHeaderNome}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="1" Text="{translator:Translate CatalogoImpressaoEmail}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="2" Text="{translator:Translate PegCadClienteHeaderTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="3" Text="{translator:Translate PegCadClienteHeaderCargo}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="4" Text="{translator:Translate PegCadClienteHeaderDataNasc}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="5" Text="{translator:Translate SelecaoClienteHeaderStatus}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
                 </Grid>
 
                 <!-- Cabeçalho de colunas: Referências -->
@@ -791,9 +792,9 @@
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1.5*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Text="Referência" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="1" Text="Contato" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="2" Text="Telefone" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="0" Text="{translator:Translate PegCadClienteHeaderReferencia}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="1" Text="{translator:Translate PegCadClienteHeaderContato}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
+                    <Label Grid.Column="2" Text="{translator:Translate PegCadClienteHeaderTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
                 </Grid>
 
                 <!-- Lista: Contatos -->

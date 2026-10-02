@@ -218,7 +218,7 @@ namespace Pegada.Core.ViewModels
         {
             if (Cliente == null || Cliente.CodPessoaCliente == null)
             {
-                await UserDialogs.Instance.AlertAsync("Selecione o cliente primeiro.", AppName, "OK");
+                await UserDialogs.Instance.AlertAsync(new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteMsgSelecioneClientePrimeiro"), AppName, "OK");
                 return;
             }
 
@@ -254,13 +254,13 @@ namespace Pegada.Core.ViewModels
             {
                 if (Cliente == null || Cliente.CodPessoaCliente == null)
                 {
-                    await UserDialogs.Instance.AlertAsync("Selecione o cliente primeiro.", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteMsgSelecioneClientePrimeiro"), AppName, "OK");
                     return;
                 }
 
                 if (Cliente.CodSituacaoCliente != "50")
                 {
-                    await UserDialogs.Instance.AlertAsync("Edição de cliente ainda não está disponivel.", AppName, "OK");
+                    await UserDialogs.Instance.AlertAsync(new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteMsgEdicaoIndisponivel"), AppName, "OK");
                     return;
                 }
 
@@ -276,7 +276,7 @@ namespace Pegada.Core.ViewModels
         {
             try
             {
-                var confirm = await UserDialogs.Instance.ConfirmAsync($"Esta ação irá transmitir todos os cadastros de clientes novos, deseja prosseguir?", "Transmitir", "Sim", "Não");
+                var confirm = await UserDialogs.Instance.ConfirmAsync(new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteMsgConfirmTransmitir"), new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteBtnConfirmTransmitirTitulo"), new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteBtnSim"), new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteBtnNao"));
                 if (!confirm)
                 {
                     return;
@@ -305,11 +305,11 @@ namespace Pegada.Core.ViewModels
                     }
                     UserDialogs.Instance.HideLoading();
 
-                    string msg = "Cadastros enviados com sucesso!";
+                    string msg = new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteMsgCadastrosEnviados");
                     await UserDialogs.Instance.AlertAsync(msg, AppName);
                 }
                 else {
-                    string msg = "Nenhum cadastro encontrado para transmissão.";
+                    string msg = new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteMsgNenhumCadastro");
                     await UserDialogs.Instance.AlertAsync(msg, AppName);
                 }
             }

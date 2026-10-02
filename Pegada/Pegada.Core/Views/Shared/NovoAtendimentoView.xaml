@@ -3,6 +3,7 @@
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              xmlns:custom="clr-namespace:MobiliVendas.Core.CustomView.Controls;assembly=MobiliVendas.Core"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
              x:Class="Pegada.Core.Views.Shared.NovoAtendimentoView"
              x:Name="this">
 
@@ -111,6 +112,59 @@
                 </ViewCell>
             </DataTemplate>
 
+            <!-- Célula de GrupoCliente de -tableView:cellForRowAtIndexPath: (EdicaoAtendimentoViewController, PegadaIOS):
+                 "Descrição - Código - N cliente(s) - N bloqueado(s)" em vermelho quando há bloqueados, código à
+                 direita e checkbox só no modo "Atualizar Cadastro"; sem botão de info. -->
+            <DataTemplate x:Key="GrupoAtendimentoCheckTemplate">
+                <ViewCell>
+                    <StackLayout Spacing="0">
+                        <Grid Margin="1"
+                              HeightRequest="49">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="120" />
+                            </Grid.ColumnDefinitions>
+
+                            <ffimageloading:CachedImage Grid.Column="0"
+                                                         BackgroundColor="Transparent"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         HeightRequest="26"
+                                                         Aspect="AspectFit"
+                                                         IsVisible="{Binding BindingContext.ModoAtualizacaoCadastro, Source={x:Reference this}}"
+                                                         Source="{Binding UiChecked, Converter={StaticResource BoleanoParaImagem}}">
+                                <ffimageloading:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.MarcarGrupoCommand, Source={x:Reference this}}" CommandParameter="{Binding .}"/>
+                                </ffimageloading:CachedImage.GestureRecognizers>
+                            </ffimageloading:CachedImage>
+
+                            <Label Grid.Column="1"
+                                   VerticalOptions="Center"
+                                   LineBreakMode="TailTruncation"
+                                   FontFamily="{StaticResource RobotoNormalFont}"
+                                   Text="{Binding TituloGrupo}"
+                                   TextColor="{Binding PossuiBloqueados, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Red,Black'}"
+                                   FontSize="14"/>
+
+                            <Label Grid.Column="2"
+                                   VerticalOptions="Center"
+                                   LineBreakMode="NoWrap"
+                                   FontFamily="{StaticResource RobotoNormalFont}"
+                                   Text="{Binding CodGrupoCliente}"
+                                   TextColor="{Binding PossuiBloqueados, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Red,Black'}"
+                                   FontSize="14"
+                                   HorizontalTextAlignment="End"
+                                   HorizontalOptions="Fill"/>
+                        </Grid>
+
+                        <BoxView HeightRequest="0.5"
+                                 HorizontalOptions="FillAndExpand"
+                                 Color="Black"/>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -146,24 +200,24 @@
 
                     <Button 
                             FontFamily="{StaticResource RobotoNormalFont}" 
-                            Text="Cancelar" 
-                            BackgroundColor="Transparent" 
-                            TextColor="{StaticResource corButtonBackPopover}" 
-                            HorizontalOptions="Start" 
+                            Text="{translator:Translate CarrinhoBtnCancelar}"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource corButtonBackPopover}"
+                            HorizontalOptions="Start"
                             Command="{Binding BindingContext.CancelarAtendimentoCommand, Source={x:Reference this}}"/>
 
                     <Label Grid.Column="1"
                            Margin="0,10,0,0"
-                           Text="Edição de Atendimento"
+                           Text="{translator:Translate EdicaoAtendimentoTitulo}"
                            HorizontalOptions="Center"
                            FontAttributes="Bold"/>
 
                     <Button Grid.Column="2" 
                             FontFamily="{StaticResource RobotoNormalFont}" 
-                            Text="Salvar" 
+                            Text="{translator:Translate GlobalBtnSalvar}"
                             BackgroundColor="Transparent"
-                            TextColor="{StaticResource corButtonBackPopover}" 
-                            HorizontalOptions="End" 
+                            TextColor="{StaticResource corButtonBackPopover}"
+                            HorizontalOptions="End"
                             Command="{Binding BindingContext.SalvarAtendimentoCommand, Source={x:Reference this}}"/>
                 </Grid>
 
@@ -181,7 +235,7 @@
 
                   <custom:BotaoComVisualDropView
                       Grid.Row="0"
-                            Label="Preposto"
+                            Label="{translator:Translate EdicaoAtendimentoLblPreposto}"
                             WidthRequest="500"
                             HeightRequest="60"
                             HorizontalOptions="Center"
@@ -197,6 +251,8 @@
                            HorizontalOptions="Center"
                            WidthRequest="300">
 
+                        <!-- clienteGrupoSegmentedControl (EdicaoAtendimentoViewController, PegadaIOS): o segmento
+                             selecionado fica em branco/negrito; tocar no outro troca a lista entre clientes e grupos. -->
                         <Grid ColumnSpacing="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -209,24 +265,66 @@
                                    Padding="5"
                                    HasShadow="False"
                                    BackgroundColor="White">
-                                <Label Text="Cliente"
+                                <Frame.Triggers>
+                                    <DataTrigger TargetType="Frame" Binding="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}}" Value="True">
+                                        <Setter Property="BackgroundColor" Value="Transparent"/>
+                                    </DataTrigger>
+                                </Frame.Triggers>
+                                <Label Text="{translator:Translate EdicaoAtendimentoLblCliente}"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
-                                       FontAttributes="Bold"/>
+                                       FontAttributes="Bold"
+                                       TextColor="Black">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}}" Value="True">
+                                            <Setter Property="FontAttributes" Value="None"/>
+                                            <Setter Property="TextColor" Value="Gray"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.SelecionarTipoAtendimentoCommand, Source={x:Reference this}}" CommandParameter="1"/>
+                                </Frame.GestureRecognizers>
                             </Frame>
 
                             <!-- GRUPO -->
-                            <Label Grid.Column="1"
-                                   Text="Grupo"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   TextColor="Gray"/>
+                            <Frame Grid.Column="1"
+                                   CornerRadius="8"
+                                   Padding="5"
+                                   HasShadow="False"
+                                   BackgroundColor="Transparent">
+                                <Frame.Triggers>
+                                    <DataTrigger TargetType="Frame" Binding="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}}" Value="True">
+                                        <Setter Property="BackgroundColor" Value="White"/>
+                                    </DataTrigger>
+                                </Frame.Triggers>
+                                <Label Text="{translator:Translate SelecaoClienteHeaderGrupo}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       TextColor="Gray">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}}" Value="True">
+                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                            <Setter Property="TextColor" Value="Black"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.SelecionarTipoAtendimentoCommand, Source={x:Reference this}}" CommandParameter="2"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
                         </Grid>
 
                     </Frame>
 
-                    <!-- FILTROS -->
-                    <Grid Grid.Row="2" ColumnSpacing="5">
+                    <!-- FILTROS (só para a lista de clientes: os grupos do iOS não usam esses filtros) -->
+                    <Grid Grid.Row="2" ColumnSpacing="5"
+                          IsEnabled="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}, Converter={StaticResource InverterValoresParaBoleano}}">
+                        <Grid.Triggers>
+                            <DataTrigger TargetType="Grid" Binding="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}}" Value="True">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </DataTrigger>
+                        </Grid.Triggers>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -247,7 +345,7 @@
 
                              <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
 
-                                <Label Text="UF"
+                                <Label Text="{translator:Translate SelecaoClienteHeaderUF}"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
                                        FontSize="13"/>
@@ -275,7 +373,7 @@
 
                              <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
 
-                                <Label Text="Cidade"
+                                <Label Text="{translator:Translate SelecaoClienteHeaderCidade}"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
                                        FontSize="13"/>
@@ -303,7 +401,7 @@
 
                              <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
 
-                                <Label Text="Situação"
+                                <Label Text="{translator:Translate CarrinhoHeaderSituacao}"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
                                        FontSize="13"/>
@@ -331,7 +429,7 @@
 
                              <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
 
-                                <Label Text="Classe de Risco"
+                                <Label Text="{translator:Translate SelecaoClienteHeaderClasseRisco}"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
                                        FontSize="13"/>
@@ -359,7 +457,7 @@
 
                              <StackLayout Spacing="2" Orientation="Vertical" VerticalOptions="CenterAndExpand">
 
-                                <Label Text="Status"
+                                <Label Text="{translator:Translate SelecaoClienteHeaderStatus}"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
                                        FontSize="13"/>
@@ -398,7 +496,7 @@
                                BorderColor="#DCDCDC"
                                BackgroundColor="#F7F7F7">
 
-                        <Entry Placeholder="Razão social, nome fantasia ou CNPJ"
+                        <Entry Placeholder="{Binding BindingContext.PlaceholderPesquisa, Source={x:Reference this}}"
                                x:Name="SearchBarCliente"
                                Text="{Binding BindingContext.FiltroPesquisa, Source={x:Reference this}}"
                                BackgroundColor="Transparent"/>
@@ -413,10 +511,24 @@
                             ItemSpacing="1"
                             SelectionBackgroundColor="LightGray"
                             TapCommand="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"  
+                            IsVisible="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}, Converter={StaticResource InverterValoresParaBoleano}}"
                             >
                     </syncfusion:SfListView>
 
-                    <custom:BotaoComVisualDropView Label="Tabela de Preço" Grid.Row="5"
+                    <!-- Lista de grupos (segmento "Grupo"): mesma posição da lista de clientes. -->
+                    <syncfusion:SfListView Grid.Row="4"
+                            VerticalOptions="FillAndExpand"
+                            BackgroundColor="White"
+                            ItemsSource="{Binding BindingContext.Grupos, Source={x:Reference this}}"
+                            ItemTemplate="{StaticResource GrupoAtendimentoCheckTemplate}"
+                            ItemSize="50"
+                            ItemSpacing="1"
+                            SelectionBackgroundColor="LightGray"
+                            TapCommand="{Binding BindingContext.SelecionarGrupoCommand, Source={x:Reference this}}"
+                            IsVisible="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}}">
+                    </syncfusion:SfListView>
+
+                    <custom:BotaoComVisualDropView Label="{translator:Translate CatalogoTabelaPreco}" Grid.Row="5"
                                                    WidthRequest="500"
                                                    HeightRequest="50"
                                                    HorizontalOptions="Center"
@@ -456,7 +568,7 @@
                     </Label>
 
                     <Label Grid.Column="2"
-                           Text="Novo Cliente"
+                           Text="{translator:Translate SelecaoClienteBtnNovoCliente}"
                            TextColor="#007AFF"
                            HorizontalOptions="Center"
                            VerticalOptions="Center">

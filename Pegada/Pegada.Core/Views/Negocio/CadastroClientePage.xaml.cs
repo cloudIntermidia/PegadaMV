@@ -40,7 +40,9 @@ namespace Pegada.Core.Views.Negocio
             ListViewContatosGrupo.IsVisible = e.NewValue == 1;
             ListViewReferencias.IsVisible = e.NewValue == 2;
 
-            ButtonNovoContatoReferencia.Text = e.NewValue == 2 ? "NOVA REFERÊNCIA" : "NOVO CONTATO";
+            ButtonNovoContatoReferencia.Text = e.NewValue == 2
+                ? new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteBtnNovaReferencia")
+                : new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteBtnNovoContato");
         }
     }
 }

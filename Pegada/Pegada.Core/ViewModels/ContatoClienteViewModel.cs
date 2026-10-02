@@ -77,13 +77,13 @@ namespace Pegada.Core.ViewModels
 
                 if (contatos.Count == 0)
                 {
-                    await UserDialogs.Instance.AlertAsync($"Cadastre um contato para o cliente {_razaoSocial}.", "Atenção", "OK");
+                    await UserDialogs.Instance.AlertAsync(string.Format(T("ContatoClienteMsgCadastreContato"), _razaoSocial), T("GlobalTituloAtencao"), "OK");
                 }
                 else if (contatos.TrueForAll(c => c.TelefonePendente))
                 {
                     // O iOS tem este aviso, mas ele nunca dispara lá (a query troca telefone vazio por "Pendente", que conta como
                     // preenchido). Aqui vale a intenção: nenhum contato com telefone.
-                    await UserDialogs.Instance.AlertAsync("Cadastre o telefone para um contato.", "Atenção", "OK");
+                    await UserDialogs.Instance.AlertAsync(T("ContatoClienteMsgCadastreTelefone"), T("GlobalTituloAtencao"), "OK");
                 }
             }
             catch (Exception ex)
@@ -107,18 +107,18 @@ namespace Pegada.Core.ViewModels
             {
                 if (string.IsNullOrEmpty(EmailCliente))
                 {
-                    await UserDialogs.Instance.AlertAsync("Digite um e-mail.", "Atenção", "OK");
+                    await UserDialogs.Instance.AlertAsync(T("ContatoClienteMsgDigiteEmail"), T("GlobalTituloAtencao"), "OK");
                     return;
                 }
 
                 if (await _contatoRepository.AtualizarEmailCliente(_codPessoaCliente, EmailCliente))
                 {
                     await CarregarTela();
-                    await UserDialogs.Instance.AlertAsync("E-mail salvo com sucesso!", "Sucesso", "OK");
+                    await UserDialogs.Instance.AlertAsync(T("ContatoClienteMsgEmailSalvo"), T("ContatoClienteTituloSucesso"), "OK");
                 }
                 else
                 {
-                    await UserDialogs.Instance.AlertAsync("ocorreu um erro ao salvar e-mail.", "Atenção", "OK");
+                    await UserDialogs.Instance.AlertAsync(T("ContatoClienteMsgErroSalvarEmail"), T("GlobalTituloAtencao"), "OK");
                 }
             }
             catch (Exception ex)
@@ -137,7 +137,7 @@ namespace Pegada.Core.ViewModels
         {
             if (ContatoSelecionado == null)
             {
-                await UserDialogs.Instance.AlertAsync("Selecione um contato", "Atenção", "OK");
+                await UserDialogs.Instance.AlertAsync(T("ContatoClienteMsgSelecioneContato"), T("GlobalTituloAtencao"), "OK");
                 return;
             }
 
@@ -170,5 +170,7 @@ namespace Pegada.Core.ViewModels
             };
             await PopupNavigation.Instance.PushAsync(popup);
         }
+    
+        private static string T(string chave) => new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage(chave);
     }
 }

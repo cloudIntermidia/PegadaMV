@@ -133,13 +133,44 @@ namespace Pegada.Core.ViewModels
 
                 // Equivalente ao -updateClientesWithSearch: (EdicaoAtendimentoViewController, PegadaIOS):
                 // filtro em memória sobre a lista já carregada, aplicado a cada tecla digitada.
-                FiltrarClientes();
+                if (IsModoGrupo)
+                    FiltrarGrupos();
+                else
+                    FiltrarClientes();
             }
         }
 
         public ObservableCollection<ClienteCommandResult> Clientes { get; set; }
 
         private List<ClienteCommandResult> ListaClientesOriginal;
+
+        // Atendimento por grupo (rede) de clientes ← segmento "Grupo" do EdicaoAtendimentoViewController (PegadaIOS):
+        // _tipoAtendimento == 2 lista os grupos (GrupoCliente gruposForUsuario) no lugar dos clientes.
+        public bool IsModoGrupo => TipoAtendimento?.Codigo == "2";
+
+        public string PlaceholderPesquisa => IsModoGrupo
+            ? new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("EdicaoAtendimentoPlaceholderGrupo")
+            : new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("SelecaoClientePlaceholderPesquisa");
+
+        private ObservableCollection<GrupoClienteCommandResult> _grupos = new ObservableCollection<GrupoClienteCommandResult>();
+        public ObservableCollection<GrupoClienteCommandResult> Grupos
+        {
+            get { return _grupos; }
+            set { SetProperty(ref _grupos, value); }
+        }
+
+        // Equivalente a "self.allClientes" quando o segmento é "Grupo": base do filtro de pesquisa em memória.
+        private List<GrupoClienteCommandResult> ListaGruposOriginal;
+
+        // Equivalentes a "grupoClienteSelecionado" e "clientesSelecionados" (EdicaoAtendimentoViewController, PegadaIOS).
+        private GrupoClienteCommandResult _grupoSelecionado;
+        public GrupoClienteCommandResult GrupoSelecionado
+        {
+            get { return _grupoSelecionado; }
+            set { SetProperty(ref _grupoSelecionado, value); }
+        }
+
+        private List<ClienteCommandResult> ClientesGrupoSelecionado;
 
         // Equivalente a "_atualizaClienteCheked" (EdicaoAtendimentoViewController, PegadaIOS): liga/desliga
         // o modo de seleção com checkbox para atualização de situação comercial.
@@ -150,8 +181,12 @@ namespace Pegada.Core.ViewModels
             set { SetProperty(ref _modoAtualizacaoCadastro, value); }
         }
 
-        public string TextoBotaoAtualizarCadastro => ModoAtualizacaoCadastro ? "Cancelar" : "Atualizar Cadastro";
-        public string TextoBotaoTransmitir => ModoAtualizacaoCadastro ? "Atualizar Selecionados" : "Transmitir Cliente";
+        public string TextoBotaoAtualizarCadastro => ModoAtualizacaoCadastro
+            ? new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoBtnCancelar")
+            : new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("EdicaoAtendimentoBtnAtualizarCadastro");
+        public string TextoBotaoTransmitir => ModoAtualizacaoCadastro
+            ? new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("EdicaoAtendimentoBtnAtualizarSelecionados")
+            : new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("EdicaoAtendimentoBtnTransmitirCliente");
 
         #endregion
 
@@ -196,6 +231,10 @@ namespace Pegada.Core.ViewModels
         // (EdicaoAtendimentoViewController / EdicaoAtendimentoTableViewCell, PegadaIOS).
         public ICommand AtualizarCadastroCommand { get; set; }
         public ICommand MarcarClienteCommand { get; set; }
+
+        // Equivalentes a "tableView:didSelectRowAtIndexPath:" e "cell:didCheckEdicaoAtendimento:" para as linhas de grupo.
+        public DelegateCommand<object> SelecionarGrupoCommand { get; set; }
+        public ICommand MarcarGrupoCommand { get; set; }
 
         private readonly ICoeficienteRepository _coeficienteRepository;
         private readonly ICondicaoPagamentoRepository _condicaoPagamentoRepository;
@@ -246,7 +285,9 @@ namespace Pegada.Core.ViewModels
 
             PesquisarClienteCommand = new DelegateCommand(PesquisarCliente);
 
-            SelecionarTipoAtendimentoCommand = new Command(SelecionarTipoAtendimento);
+            SelecionarTipoAtendimentoCommand = new Command<string>(SelecionarTipoAtendimento);
+            SelecionarGrupoCommand = new DelegateCommand<object>(async (obj) => await GrupoTapped(obj));
+            MarcarGrupoCommand = new Command<object>(MarcarGrupo);
 
             NovoClienteCommand = new Command(async () => await NovoCliente());
             TransmitirClienteCommand = new Command(async () => await TransmitirClientes());
@@ -270,7 +311,7 @@ namespace Pegada.Core.ViewModels
 
                 TipoAtendimento = new GenericComboResult();
                 TipoAtendimento.Codigo = "1";
-                TipoAtendimento.Descricao = "Cliente";
+                TipoAtendimento.Descricao = new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("EdicaoAtendimentoLblCliente");
                 RaisePropertyChanged("TipoAtendimento");
 
                 LiberaClienteNovo = await _parametroRepository.BuscarValorParametro(ParametrosSistema.BLOQCLIENOVO);
@@ -285,6 +326,12 @@ namespace Pegada.Core.ViewModels
 
         public void PesquisarCliente()
         {
+            // No segmento "Grupo" a lista é de grupos, que não usam os filtros de cliente (gruposForUsuario no iOS).
+            if (IsModoGrupo)
+            {
+                _ = CarregarGrupos();
+                return;
+            }
 
             var command = new BuscarClienteCommand(
                                                     Session.USUARIO_LOGADO.CodPessoa,
@@ -339,6 +386,89 @@ namespace Pegada.Core.ViewModels
 
             foreach (var item in filtrados)
                 Clientes.Add(item);
+        }
+
+        // Equivalente ao ramo GrupoCliente de -updateClientesWithSearch: (EdicaoAtendimentoViewController, PegadaIOS):
+        // "descricao CONTAINS[cd] texto OR code BEGINSWITH[cd] texto". A coleção é trocada inteira (uma notificação
+        // só para a lista) em vez de Clear/Add item a item.
+        private void FiltrarGrupos()
+        {
+            if (ListaGruposOriginal == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(FiltroPesquisa))
+            {
+                Grupos = new ObservableCollection<GrupoClienteCommandResult>(ListaGruposOriginal);
+                return;
+            }
+
+            var compare = System.Globalization.CultureInfo.InvariantCulture.CompareInfo;
+            var opcoes = System.Globalization.CompareOptions.IgnoreCase | System.Globalization.CompareOptions.IgnoreNonSpace;
+            string texto = FiltroPesquisa.Trim();
+
+            Grupos = new ObservableCollection<GrupoClienteCommandResult>(ListaGruposOriginal.Where(x =>
+                   (!string.IsNullOrEmpty(x.Descricao) && compare.IndexOf(x.Descricao, texto, opcoes) >= 0)
+                || (!string.IsNullOrEmpty(x.CodGrupoCliente) && compare.IsPrefix(x.CodGrupoCliente, texto, opcoes))));
+        }
+
+        // Equivalente a "self.allClientes = [GrupoCliente gruposForUsuario:usuario somenteDesbloqueados:NO]"
+        // (-clienteGrupoSegmentedControl:, EdicaoAtendimentoViewController, PegadaIOS).
+        private async Task CarregarGrupos()
+        {
+            try
+            {
+                UserDialogs.Instance.ShowLoading("Carregando grupos de clientes");
+
+                var lista = await _clienteRepository.BuscarGruposClienteAtendimento(Session.USUARIO_LOGADO, false).ConfigureAwait(false)
+                            ?? new List<GrupoClienteCommandResult>();
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    ListaGruposOriginal = lista;
+                    FiltrarGrupos();
+                    UserDialogs.Instance.HideLoading();
+                });
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        // Equivalente ao ramo GrupoCliente de -selectClient: (EdicaoAtendimentoViewController, PegadaIOS): os clientes
+        // do grupo passam a ser os selecionados e o primeiro deles sugere a tabela de preço.
+        private async Task GrupoTapped(object item)
+        {
+            try
+            {
+                if (!(item is ItemTappedEventArgs eventArgs) || !(eventArgs.ItemData is GrupoClienteCommandResult grupo))
+                    return;
+
+                GrupoSelecionado = grupo;
+                ClientesGrupoSelecionado = await _clienteRepository.BuscarClientesGrupo(grupo.CodGrupoCliente, Session.USUARIO_LOGADO);
+
+                if (ClientesGrupoSelecionado?.Count > 0)
+                {
+                    ClienteSelecionado = ClientesGrupoSelecionado[0];
+                    await SelecaoTabelaPrecoFromInit();
+                }
+                else
+                {
+                    ClienteSelecionado = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        // Equivalente a "cell:didCheckEdicaoAtendimento:" para GrupoCliente (EdicaoAtendimentoViewController, PegadaIOS).
+        private void MarcarGrupo(object obj)
+        {
+            if (obj is GrupoClienteCommandResult grupo)
+                grupo.UiChecked = !grupo.UiChecked;
         }
 
 
@@ -584,10 +714,33 @@ namespace Pegada.Core.ViewModels
         }
         //####################################################
 
-        private async void SelecionarTipoAtendimento(object obj)
+        // Equivalente a -clienteGrupoSegmentedControl: (EdicaoAtendimentoViewController, PegadaIOS): troca a lista entre
+        // clientes (1) e grupos de clientes (2). Como -setAllClientes:, limpa a pesquisa e a seleção anterior.
+        private void SelecionarTipoAtendimento(string codigo)
         {
-            var genricCombo = new List<GenericComboResult> { new GenericComboResult { Codigo = "1", Descricao = "Cliente" }, new GenericComboResult { Codigo = "2", Descricao = "Grupo" } };
-            await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupGenerico(new ObservableCollection<GenericComboResult>(genricCombo), SetUFSelecionado, new Rectangle(0.5, 0.5, 0.25, 0.25), false, false, false));
+            if (string.IsNullOrEmpty(codigo) || TipoAtendimento?.Codigo == codigo)
+                return;
+
+            TipoAtendimento = new GenericComboResult
+            {
+                Codigo = codigo,
+                Descricao = new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage(codigo == "2" ? "SelecaoClienteHeaderGrupo" : "EdicaoAtendimentoLblCliente")
+            };
+            RaisePropertyChanged(nameof(IsModoGrupo));
+            RaisePropertyChanged(nameof(PlaceholderPesquisa));
+
+            LimparSelecaoClientes();
+            ClienteSelecionado = null;
+            GrupoSelecionado = null;
+            ClientesGrupoSelecionado = null;
+            CarrinhoFechamento.CodTabelaPreco = null;
+            CarrinhoFechamento.TabelaPreco = "Tabela de Preço";
+
+            // Atribui direto no campo para não disparar o filtro em memória sobre a lista antiga.
+            filtroPesquisa = null;
+            RaisePropertyChanged(nameof(FiltroPesquisa));
+
+            PesquisarCliente();
         }
 
 
@@ -744,6 +897,10 @@ namespace Pegada.Core.ViewModels
             if (ListaClientesOriginal != null)
                 foreach (var cliente in ListaClientesOriginal)
                     cliente.UiChecked = false;
+
+            if (ListaGruposOriginal != null)
+                foreach (var grupo in ListaGruposOriginal)
+                    grupo.UiChecked = false;
         }
 
         // Equivalente a "cell:didCheckEdicaoAtendimento:" (EdicaoAtendimentoTableViewCell, PegadaIOS).
@@ -760,16 +917,39 @@ namespace Pegada.Core.ViewModels
         {
             try
             {
-                var selecionados = Clientes.Where(c => c.UiChecked).ToList();
-                if (selecionados.Count == 0)
+                List<string> codigosClientes;
+                if (IsModoGrupo)
                 {
-                    await UserDialogs.Instance.AlertAsync("Selecione pelo menos um cliente para atualizar a situação comercial.", "Atualização de situação comercial");
-                    return;
+                    // Ramo "_tipoAtendimento == 2" de touchTransmitirClientes (PegadaIOS): atualiza todos os clientes
+                    // dos grupos marcados.
+                    var gruposMarcados = (ListaGruposOriginal ?? new List<GrupoClienteCommandResult>()).Where(g => g.UiChecked).ToList();
+                    codigosClientes = new List<string>();
+                    foreach (var grupo in gruposMarcados)
+                    {
+                        var clientesGrupo = await _clienteRepository.BuscarClientesGrupo(grupo.CodGrupoCliente, Session.USUARIO_LOGADO);
+                        codigosClientes.AddRange(clientesGrupo.Select(c => c.CodPessoaCliente));
+                    }
+
+                    if (codigosClientes.Count == 0)
+                    {
+                        await UserDialogs.Instance.AlertAsync("Selecione pelo menos um grupo para atualizar a situação comercial.", "Atualização de situação comercial");
+                        return;
+                    }
+                }
+                else
+                {
+                    var selecionados = Clientes.Where(c => c.UiChecked).ToList();
+                    if (selecionados.Count == 0)
+                    {
+                        await UserDialogs.Instance.AlertAsync("Selecione pelo menos um cliente para atualizar a situação comercial.", "Atualização de situação comercial");
+                        return;
+                    }
+                    codigosClientes = selecionados.Select(c => c.CodPessoaCliente).ToList();
                 }
 
                 UserDialogs.Instance.ShowLoading("Atualizando situação comercial...");
 
-                var resultado = await ServiceUtility.AtualizarSituacaoComercialClientes(_parametroSincronizacaRepository, selecionados.Select(c => c.CodPessoaCliente).ToList());
+                var resultado = await ServiceUtility.AtualizarSituacaoComercialClientes(_parametroSincronizacaRepository, codigosClientes);
 
                 bool sucesso = resultado != null && resultado.Any(item =>
                     item.TryGetValue("SUCCESS", out var valor) && string.Equals(valor?.ToString(), "TRUE", StringComparison.OrdinalIgnoreCase));
@@ -799,7 +979,11 @@ namespace Pegada.Core.ViewModels
                     RaisePropertyChanged(nameof(TextoBotaoTransmitir));
                     LimparSelecaoClientes();
 
-                    PesquisarCliente();
+                    // "limpaSelecao" do iOS volta o segmento para "Cliente" depois de atualizar grupos.
+                    if (IsModoGrupo)
+                        SelecionarTipoAtendimento("1");
+                    else
+                        PesquisarCliente();
                 }
                 else
                 {
@@ -817,6 +1001,11 @@ namespace Pegada.Core.ViewModels
         {
             try
             {
+                if (IsModoGrupo)
+                {
+                    await SalvarAtendimentoGrupo();
+                    return;
+                }
 
                 if (ClienteSelecionado == null || ClienteSelecionado.CodPessoaCliente == null)
                 {
@@ -883,6 +1072,70 @@ namespace Pegada.Core.ViewModels
             }
         }
 
+        // Equivalente a -touchSaveBtn: com _tipoAtendimento == 2 (validateInputs + save, EdicaoAtendimentoViewController /
+        // Atendimento, PegadaIOS): só os clientes do grupo liberados para pedido entram no atendimento; descrição é a do
+        // grupo e markup/ajuste de preço vêm do primeiro cliente.
+        private async Task SalvarAtendimentoGrupo()
+        {
+            if (CarrinhoFechamento.CodTabelaPreco == null)
+            {
+                await UserDialogs.Instance.AlertAsync("Selecione uma Tabela de Preço para abrir o atendimento.");
+                return;
+            }
+
+            if (GrupoSelecionado == null || ClientesGrupoSelecionado == null || ClientesGrupoSelecionado.Count == 0)
+            {
+                await UserDialogs.Instance.AlertAsync(new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("EdicaoAtendimentoMsgSelecioneCliente"));
+                return;
+            }
+
+            var clientesLiberados = ClientesGrupoSelecionado.Where(c => c.ClienteLiberadoParaVenda).ToList();
+            if (clientesLiberados.Count == 0)
+            {
+                await UserDialogs.Instance.AlertAsync("O Cliente selecionado está bloqueado para digitar pedido!");
+                return;
+            }
+
+            var primeiroCliente = clientesLiberados[0];
+            decimal markupCliente = primeiroCliente.Markup;
+            if (primeiroCliente.PermiteAjustePreco == 1 && primeiroCliente.Markup == 0)
+                markupCliente = 1;
+
+            UserDialogs.Instance.ShowLoading();
+            try
+            {
+                CriarAtendimentoCommand command = new CriarAtendimentoCommand()
+                {
+                    CodPessoaCliente = primeiroCliente.CodPessoaCliente,
+                    CodUsuario = Session.USUARIO_LOGADO.CodUsuario,
+                    CodMarca = Session.USUARIO_LOGADO.CodMarca,
+                    CodInstalacao = Session.USUARIO_LOGADO.CodInstalacao,
+                    Descricao = GrupoSelecionado.Descricao,
+                    IndAberto = 1,
+                    CodTabelaPreco = CarrinhoFechamento.CodTabelaPreco,
+                    PrazoMedio = CarrinhoFechamento.PrazoMedio,
+                    CodCondicaoPagamento = CarrinhoFechamento.CodCondicaoPagamento,
+                    PercentualDesconto1 = CarrinhoFechamento.PercentualDesconto,
+                    Controle = CarrinhoFechamento.Controle,
+                    TipoPedido = CarrinhoFechamento.CodTipoPedido,
+                    Markup = markupCliente,
+                    IndAplicaMarkup = primeiroCliente.PermiteAjustePreco == 1 ? 1 : 0
+                };
+
+                Session.ATENDIMENTO_ATUAL = await _atendimentoRepository.AbrirAtendimentoGrupo(command, GrupoSelecionado.CodGrupoCliente, clientesLiberados);
+                Session.ATENDIMENTO_ATUAL.Markup = Session.MarkupPadrao;
+
+                await _atendimentoRepository.InativarAtendimentoAberto(Session.ATENDIMENTO_ATUAL.CodAtendimento);
+            }
+            finally
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+
+            MessagingCenter.Send<object>(this, "AtendimentoFoiAlterado");
+            await PopupNavigation.Instance.PopAllAsync();
+        }
+
         private async void FecharPopupAtendimento(object obj)
         {
             await PopupNavigation.Instance.PopAllAsync();
@@ -898,7 +1151,7 @@ namespace Pegada.Core.ViewModels
         {
             return new List<GenericComboResult>
             {
-                new GenericComboResult { Codigo = "-1", Descricao = "Todos" },
+                new GenericComboResult { Codigo = "-1", Descricao = new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PedidoTela_Global_Todos") },
                 new GenericComboResult { Codigo = "AC", Descricao = "AC" },
                 new GenericComboResult { Codigo = "AL", Descricao = "AL" },
                 new GenericComboResult { Codigo = "AM", Descricao = "AM" },
@@ -933,9 +1186,9 @@ namespace Pegada.Core.ViewModels
         {
             return new List<GenericComboResult>
             {
-                new GenericComboResult { Codigo = "-1", Descricao = "Todos" },
-                new GenericComboResult { Codigo = "Ativo", Descricao = "Ativo" },
-                new GenericComboResult { Codigo = "Inativo", Descricao = "Inativo" }
+                new GenericComboResult { Codigo = "-1", Descricao = new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PedidoTela_Global_Todos") },
+                new GenericComboResult { Codigo = "Ativo", Descricao = new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("SelecaoClienteStatusAtivo") },
+                new GenericComboResult { Codigo = "Inativo", Descricao = new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("SelecaoClienteStatusInativo") }
             };
         }
     }

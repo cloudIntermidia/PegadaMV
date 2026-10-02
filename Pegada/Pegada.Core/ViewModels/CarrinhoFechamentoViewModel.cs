@@ -714,7 +714,7 @@ namespace Pegada.Core.ViewModels
             // touchDiaFaturamento (iOS): fora de pronta entrega o dia de faturamento depende da semana escolhida.
             if (SemanaSelecionada == null && PedidoSelecionado.TipoPedidoValida != "PE")
             {
-                await UserDialogs.Instance.AlertAsync("É necessário que seja selecionado antes a opção de semana!", "Atenção");
+                await UserDialogs.Instance.AlertAsync(T("FechamentoMsgSelecioneSemanaAntes"), T("GlobalTituloAtencao"));
                 return;
             }
 
@@ -859,7 +859,7 @@ namespace Pegada.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await UserDialogs.Instance.AlertAsync(ex.Message, "Atenção");
+                await UserDialogs.Instance.AlertAsync(ex.Message, T("GlobalTituloAtencao"));
             }
         }
 
@@ -869,7 +869,7 @@ namespace Pegada.Core.ViewModels
             {
                 if (ContatoPendente)
                 {
-                    await UserDialogs.Instance.AlertAsync("Não foi possível salvar o carrinho, existe pendências com o cliente. Verifique no campo abaixo em Atualizar Contatos.", "Atenção");
+                    await UserDialogs.Instance.AlertAsync(T("FechamentoMsgContatoPendente"), T("GlobalTituloAtencao"));
                     return;
                 }
 
@@ -878,13 +878,13 @@ namespace Pegada.Core.ViewModels
                 var itensSemGrade = await _dataBaseRepository.GetString("TBT_ITEM_CARRINHO", "COUNT(*)", $"CodCarrinho = '{PedidoSelecionado.CodCarrinho}' AND ItemSemGrade = 1");
                 if (int.TryParse(itensSemGrade, out int qtdSemGrade) && qtdSemGrade > 0)
                 {
-                    await UserDialogs.Instance.AlertAsync("Há itens nesse carrinho que não possuem grade. É preciso que seja preenchida a grade para o fechamento.", "Atenção");
+                    await UserDialogs.Instance.AlertAsync($"{T("FechamentoMsgItensSemGrade")} {T("FechamentoMsgPreenchaGrade")}", T("GlobalTituloAtencao"));
                     return;
                 }
 
                 if (CondicaoPagamento == null)
                 {
-                    await UserDialogs.Instance.AlertAsync("Favor selecionar uma condição de pagamento!", "Atenção");
+                    await UserDialogs.Instance.AlertAsync(T("FechamentoMsgSelecioneCondPgto"), T("GlobalTituloAtencao"));
                     return;
                 }
 
@@ -892,21 +892,21 @@ namespace Pegada.Core.ViewModels
                 {
                     if (SemanaSelecionada == null)
                     {
-                        await UserDialogs.Instance.AlertAsync("Favor selecionar uma semana!", "Atenção");
+                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgSelecioneSemana"), T("GlobalTituloAtencao"));
                         return;
                     }
                 }
 
                 if (!DataEntrega.HasValue)
                 {
-                    await UserDialogs.Instance.AlertAsync("Favor selecionar o dia de faturamento!", "Atenção");
+                    await UserDialogs.Instance.AlertAsync(T("FechamentoMsgSelecioneDiaFaturamento"), T("GlobalTituloAtencao"));
                     return;
                 }
 
                 // iOS compara com hoje à meia-noite: faturar hoje é permitido.
                 if (DataEntrega.Value.Date < DateTime.Today)
                 {
-                    await UserDialogs.Instance.AlertAsync("Data de faturamento inválida!", "Atenção");
+                    await UserDialogs.Instance.AlertAsync(T("FechamentoMsgDataFaturamentoInvalida"), T("GlobalTituloAtencao"));
                     return;
                 }
 
@@ -925,7 +925,7 @@ namespace Pegada.Core.ViewModels
 
                     if (valorDuplicata < valorMinimoParcela)
                     {
-                        await UserDialogs.Instance.AlertAsync($"O pedido não alcançou o valor mínimo por duplicata de R${valorMinimoParcela:0.00}!", "Atenção");
+                        await UserDialogs.Instance.AlertAsync($"{T("FechamentoMsgMinimoDuplicata")}{valorMinimoParcela:0.00}!", T("GlobalTituloAtencao"));
                         return;
                     }
                 }
@@ -941,7 +941,7 @@ namespace Pegada.Core.ViewModels
                     var prazoAdicional = await _prazoAdicionalRepository.BuscaPrazoAdicional(new BuscarPrazoAdicionalCommand(PedidoSelecionado.CodTipoPedido, diasBonificacao));
                     if (prazoAdicional == null)
                     {
-                        await UserDialogs.Instance.AlertAsync("Prazo extra não permitido!", "Atenção");
+                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgPrazoExtraNaoPermitido"), T("GlobalTituloAtencao"));
                         return;
                     }
 
@@ -959,7 +959,7 @@ namespace Pegada.Core.ViewModels
                 {
                     if (string.IsNullOrWhiteSpace(DiasFatAntecipadoTexto))
                     {
-                        await UserDialogs.Instance.AlertAsync("O campo Dia(s) de Faturamento Antecipado deve ser preenchido!", "Atenção");
+                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgDiasFatAntecipadoPreencher"), T("GlobalTituloAtencao"));
                         return;
                     }
 
@@ -968,14 +968,14 @@ namespace Pegada.Core.ViewModels
                     // O prazo informado não pode passar do permitido no cadastro do cliente.
                     if (PedidoSelecionado.DiasFatAntecipadoCliente < diasFatAntecipado)
                     {
-                        await UserDialogs.Instance.AlertAsync("O prazo de dias de faturamento é inválido, o prazo informado é maior do que o permitido para o cliente!", "Atenção");
+                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgPrazoDiasFatMaiorPermitido"), T("GlobalTituloAtencao"));
                         return;
                     }
 
                     // Dia de faturamento menos os dias antecipados precisa ser posterior a hoje.
                     if (DataEntrega.Value.Date.AddDays(-diasFatAntecipado) <= DateTime.Today)
                     {
-                        await UserDialogs.Instance.AlertAsync("O prazo de dias de faturamento é inválido!", "Atenção");
+                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgPrazoDiasFatInvalido"), T("GlobalTituloAtencao"));
                         return;
                     }
                 }
@@ -983,13 +983,13 @@ namespace Pegada.Core.ViewModels
                 var quantidadeMinima = await _parametroRepository.BuscarParametroPorTipoPedido(PedidoSelecionado.CodTipoPedido, "4");
                 if (PedidoSelecionado.QtdTotal < quantidadeMinima)
                 {
-                    await UserDialogs.Instance.AlertAsync($"O pedido não alcançou a quantidade mínima de {quantidadeMinima:0.##}. ", "Atenção");
+                    await UserDialogs.Instance.AlertAsync($"{T("FechamentoMsgQtdMinima")} {quantidadeMinima:0.##}. ", T("GlobalTituloAtencao"));
                     return;
                 }
 
                 if (CondicaoPagamento.Codigo != PedidoSelecionado.CodCondicaoPagamento && PedidoSelecionado.IndPrecoLiquido == 1) {
 
-                    var confirm = await UserDialogs.Instance.ConfirmAsync($"Há pedidos com preço líquido editado. Todos valores digitados serão perdidos. Deseja prosseguir?", "Atenção", "Sim", "Não");
+                    var confirm = await UserDialogs.Instance.ConfirmAsync(T("FechamentoMsgPrecosEditados"), T("GlobalTituloAtencao"), T("PegCadClienteBtnSim"), T("PegCadClienteBtnNao"));
                     if (!confirm)
                     {
                         return;
@@ -1001,7 +1001,7 @@ namespace Pegada.Core.ViewModels
             }
             catch (Exception ex)
             {
-                await UserDialogs.Instance.AlertAsync($"Não foi possível salvar o carrinho.\n{ex.Message}", "Atenção");
+                await UserDialogs.Instance.AlertAsync($"{T("FechamentoMsgErroSalvar")}\n{ex.Message}", T("GlobalTituloAtencao"));
             }
         }
 
@@ -1032,10 +1032,10 @@ namespace Pegada.Core.ViewModels
 
 
             if (rows > 0 && atualizouCarrinho)
-                await UserDialogs.Instance.AlertAsync("Carrinho salvo", AppName);
+                await UserDialogs.Instance.AlertAsync(T("FechamentoMsgSalvoSucesso"), T("GlobalTituloAtencao"));
             else
             {
-                await UserDialogs.Instance.AlertAsync("Ocorreu um erro ao tentar persistir as informações", AppName);
+                await UserDialogs.Instance.AlertAsync(T("FechamentoMsgErroPersistir"), AppName);
                 return;
             }
 
@@ -1118,8 +1118,9 @@ namespace Pegada.Core.ViewModels
    
         public async void SelecionarTipoFrete()
         {
-            var result = await UserDialogs.Instance.ActionSheetAsync("Selecione o tipo de frete", "Cancelar", null, null, "CIF", "FOB");
-            if (result != "Cancelar")
+            var cancelar = T("CarrinhoBtnCancelar");
+            var result = await UserDialogs.Instance.ActionSheetAsync(T("FechamentoMsgSelecioneTipoFrete"), cancelar, null, null, "CIF", "FOB");
+            if (result != cancelar)
             {
                 CifFob = result;
                 TransportadoraEstaVisivel = this.CifFob == "FOB";
@@ -1139,7 +1140,7 @@ namespace Pegada.Core.ViewModels
         {
             try
             {
-                UserDialogs.Instance.ShowLoading("Carregando dados");
+                UserDialogs.Instance.ShowLoading(T("PedidoPageVMMessgeCarregandoDados"));
                 var command = new BuscarCDProdutoCommand() { CodProduto = null, CodPessoa = Session.USUARIO_LOGADO.CodPessoa };
                 var dados = await _produtoRepository.BuscarCDProduto(command);
                 UserDialogs.Instance.HideLoading();
@@ -1198,5 +1199,7 @@ namespace Pegada.Core.ViewModels
 
         #endregion
 
+    
+        private static string T(string chave) => new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage(chave);
     }
 }

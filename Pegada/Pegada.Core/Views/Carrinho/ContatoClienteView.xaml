@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
              x:Class="Pegada.Core.Views.Carrinho.ContatoClienteView"
              x:Name="this">
 
@@ -44,13 +45,13 @@
 
                     <!-- Barra do título -->
                     <BoxView AbsoluteLayout.LayoutBounds="0,0,900,50" BackgroundColor="#E1E3E6" />
-                    <Label AbsoluteLayout.LayoutBounds="10,10,156,30" Text="Voltar" FontSize="17" TextColor="#007AFF"
+                    <Label AbsoluteLayout.LayoutBounds="10,10,156,30" Text="{translator:Translate PedidoTela_Global_Voltar}" FontSize="17" TextColor="#007AFF"
                            VerticalTextAlignment="Center">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.VoltarCommand, Source={x:Reference this}}" />
                         </Label.GestureRecognizers>
                     </Label>
-                    <Label AbsoluteLayout.LayoutBounds="200,10,500,30" Text="Contatos" FontSize="17" TextColor="Black"
+                    <Label AbsoluteLayout.LayoutBounds="200,10,500,30" Text="{translator:Translate PegCadClienteSegContatos}" FontSize="17" TextColor="Black"
                            FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
 
                     <!-- Cabeçalho da lista -->
@@ -63,12 +64,12 @@
                             <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="Nome" Style="{StaticResource contatoCabecalho}" />
-                        <Label Grid.Column="1" Text="E-mail" Style="{StaticResource contatoCabecalho}" />
-                        <Label Grid.Column="2" Text="Telefone" Style="{StaticResource contatoCabecalho}" />
-                        <Label Grid.Column="3" Text="Cargo" Style="{StaticResource contatoCabecalho}" />
-                        <Label Grid.Column="4" Text="Data Nasc." FontSize="13" Style="{StaticResource contatoCabecalho}" />
-                        <Label Grid.Column="5" Text="Recebe cópia" FontSize="13" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="0" Text="{translator:Translate PegCadClienteHeaderNome}" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="1" Text="{translator:Translate CatalogoImpressaoEmail}" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="2" Text="{translator:Translate PegCadClienteHeaderTelefone}" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="3" Text="{translator:Translate PegCadClienteHeaderCargo}" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="4" Text="{translator:Translate PegCadClienteHeaderDataNasc}" FontSize="13" Style="{StaticResource contatoCabecalho}" />
+                        <Label Grid.Column="5" Text="{translator:Translate ContatoClienteHeaderRecebeCopia}" FontSize="13" Style="{StaticResource contatoCabecalho}" />
                     </Grid>
 
                     <!-- Lista -->
@@ -91,19 +92,21 @@
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Column="0" Text="{Binding Nome}" Style="{StaticResource contatoCelula}" />
                                         <Label Grid.Column="1" Text="{Binding Email}" Style="{StaticResource contatoCelula}" />
-                                        <Label Grid.Column="2" Text="{Binding TelefoneUI}" Style="{StaticResource contatoCelula}">
+                                        <Label Grid.Column="2" Text="{Binding Telefone}" Style="{StaticResource contatoCelula}">
                                             <Label.Triggers>
                                                 <DataTrigger TargetType="Label" Binding="{Binding TelefonePendente}" Value="True">
                                                     <Setter Property="TextColor" Value="Red" />
+                                                    <Setter Property="Text" Value="{translator:Translate ContatoClienteLblPendente}" />
                                                 </DataTrigger>
                                             </Label.Triggers>
                                         </Label>
                                         <Label Grid.Column="3" Text="{Binding Cargo}" Style="{StaticResource contatoCelula}" />
                                         <Label Grid.Column="4" Text="{Binding DataNascimento, StringFormat='{0:dd/MM/yyyy}'}" Style="{StaticResource contatoCelula}" />
-                                        <Label Grid.Column="5" Text="{Binding RecebeCopiaUI}" Style="{StaticResource contatoCelula}">
+                                        <Label Grid.Column="5" Text="{translator:Translate PegCadClienteBtnSim}" Style="{StaticResource contatoCelula}">
                                             <Label.Triggers>
                                                 <DataTrigger TargetType="Label" Binding="{Binding RecebeCopiaPendente}" Value="True">
                                                     <Setter Property="TextColor" Value="Red" />
+                                                    <Setter Property="Text" Value="{translator:Translate ContatoClienteLblPendente}" />
                                                 </DataTrigger>
                                             </Label.Triggers>
                                         </Label>
@@ -114,21 +117,21 @@
                     </ListView>
 
                     <!-- E-mail do cliente -->
-                    <Label AbsoluteLayout.LayoutBounds="10,295,323,25" Text="E-mail Cliente" FontSize="17" TextColor="Black" />
+                    <Label AbsoluteLayout.LayoutBounds="10,295,323,25" Text="{translator:Translate ContatoClienteLblEmailCliente}" FontSize="17" TextColor="Black" />
                     <Entry AbsoluteLayout.LayoutBounds="10,320,443,30" FontSize="14" BackgroundColor="White" Keyboard="Email"
                            Text="{Binding BindingContext.EmailCliente, Source={x:Reference this}}" />
-                    <Button AbsoluteLayout.LayoutBounds="461,320,103,30" Text="Salvar E-mail" FontSize="13"
+                    <Button AbsoluteLayout.LayoutBounds="461,320,103,30" Text="{translator:Translate ContatoClienteBtnSalvarEmail}" FontSize="13"
                             BackgroundColor="#F0F0F5" TextColor="#007AFF" Padding="0"
                             Command="{Binding BindingContext.SalvarEmailCommand, Source={x:Reference this}}" />
-                    <Label AbsoluteLayout.LayoutBounds="10,347,323,19" Text="*Preencha o campo E-mail." FontSize="13"
+                    <Label AbsoluteLayout.LayoutBounds="10,347,323,19" Text="{translator:Translate ContatoClienteLblPreenchaEmail}" FontSize="13"
                            TextColor="#FF2600"
                            IsVisible="{Binding BindingContext.EmailPendente, Source={x:Reference this}}" />
 
                     <!-- Ações -->
-                    <Button AbsoluteLayout.LayoutBounds="547,379,150,30" Text="Editar Contato"
+                    <Button AbsoluteLayout.LayoutBounds="547,379,150,30" Text="{translator:Translate ContatoClienteBtnEditarContato}"
                             BackgroundColor="#F0F0F5" TextColor="#007AFF" Padding="0"
                             Command="{Binding BindingContext.EditarContatoCommand, Source={x:Reference this}}" />
-                    <Button AbsoluteLayout.LayoutBounds="713,379,150,30" Text="Adicionar Contato"
+                    <Button AbsoluteLayout.LayoutBounds="713,379,150,30" Text="{translator:Translate ContatoClienteBtnAdicionarContato}"
                             BackgroundColor="#F0F0F5" TextColor="#007AFF" Padding="0"
                             Command="{Binding BindingContext.AdicionarContatoCommand, Source={x:Reference this}}" />
 
