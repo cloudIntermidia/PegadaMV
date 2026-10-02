@@ -677,7 +677,8 @@
                                  <ffimageloading:CachedImage DownsampleToViewSize="False" Source="{Binding ExibeCaixaAzul, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',caixa_azul.jpeg'}" 
                                 LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="40" WidthRequest="40" Margin="10,0">
                                     <ffimageloading:CachedImage.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding DirecionarB2bCommand}"
+                                        <!-- touchEstoqueFuturo (ItemCatalogoCollectionViewController, PegadaIOS) -->
+                                        <TapGestureRecognizer Command="{Binding DirecionarEstoqueFuturoCommand}"
                                                           CommandParameter="{Binding .}"/>
                                     </ffimageloading:CachedImage.GestureRecognizers>
                                 </ffimageloading:CachedImage>

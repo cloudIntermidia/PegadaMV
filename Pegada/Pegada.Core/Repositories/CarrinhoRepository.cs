@@ -119,6 +119,21 @@ namespace Pegada.Core.Repositories
             return rowsAffected > 0;
         }
 
+        /// <summary>
+        /// Item de Estoque Futuro envia a data de disponibilidade em CUSTOM3 (dd/MM/yyyy), igual ao
+        /// jsonDataForCarrinho do WebservicePedidoHelper (PegadaIOS). Item 'DISPONIVEL' não envia.
+        /// </summary>
+        private static string DataDisponibilidadeTransmissao(string dataDisponibilidade)
+        {
+            if (string.IsNullOrEmpty(dataDisponibilidade) || dataDisponibilidade == "DISPONIVEL")
+                return null;
+
+            if (DateTime.TryParse(dataDisponibilidade, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime data))
+                return data.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+            return null;
+        }
+
         public override async Task<WcfPedidoModelInput> BuscarCarrinhoParaTransmissao(string codCarrinho)
         {
             var camposCarrinho = (await _sqlAsyncConnection.QueryAsync<SqliteTableInfoCommandResult>(
@@ -243,6 +258,7 @@ namespace Pegada.Core.Repositories
 
                     CUSTOM1 = x.QtdTotal?.ToString(),
                     CUSTOM2 = x.NomeLoja,
+                    CUSTOM3 = DataDisponibilidadeTransmissao(x.DataDisponibilidade),
                     CUSTOM4 = x.Estabelecimento,
                     CUSTOM5 = x.Localizacao,
                     MARKUP = x.Markup,

@@ -718,7 +718,8 @@ namespace Pegada.Core.ViewModels
                 return;
             }
 
-            await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupCalendario(SelecionarDataEvent, PedidoSelecionado.TipoPedidoValida == "PE" ? DateTime.Now.AddDays(1) : SemanaSelecionada?.DataInicial, SemanaSelecionada?.DataFinal));
+            var dataMinima = PedidoSelecionado.TipoPedidoValida == "PE" ? await DataMinimaEntregaProntaEntrega() : SemanaSelecionada?.DataInicial;
+            await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupCalendario(SelecionarDataEvent, dataMinima, SemanaSelecionada?.DataFinal));
             //var data = await UserDialogs.Instance.DatePromptAsync(new DatePromptConfig() { MinimumDate = PedidoSelecionado.TipoPedidoValida == "PE" ? DateTime.Now.AddDays(1) : SemanaSelecionada?.DataInicial, MaximumDate = SemanaSelecionada?.DataFinal });
             //if (data.Ok)
             //{
@@ -735,6 +736,18 @@ namespace Pegada.Core.ViewModels
             //    }
             //}
 
+        }
+
+        /// <summary>
+        /// _dataMinimaVF (EdicaoCarrinhoViewController, PegadaIOS): na Pronta Entrega a entrega mínima é amanhã, ou a
+        /// maior data de disponibilidade dos itens de Estoque Futuro do carrinho, se for posterior.
+        /// </summary>
+        private async Task<DateTime> DataMinimaEntregaProntaEntrega()
+        {
+            var amanha = DateTime.Today.AddDays(1);
+            var dataEstoqueFuturo = await _carrinhoRepository.BuscarDataMinimaEstoqueFuturo(PedidoSelecionado.CodCarrinho);
+
+            return dataEstoqueFuturo.HasValue && dataEstoqueFuturo.Value > amanha ? dataEstoqueFuturo.Value : amanha;
         }
 
         private async void SelecionarDataEvent(object obj)

@@ -56,7 +56,9 @@
     I.NomeLoja,
     I.Estabelecimento,
     I.Localizacao,
-    I.Markup
+    I.Markup,
+    -- dataDisponivelLabel (ItemCarrinhoTableViewController, PegadaIOS): 'DISPONIVEL' ou a data do Estoque Futuro em dd/MM/yyyy.
+    CASE WHEN I.DataDisponibilidade IS NULL OR I.DataDisponibilidade = 'DISPONIVEL' THEN I.DataDisponibilidade ELSE strftime('%d/%m/%Y', I.DataDisponibilidade) END AS DataDisponivel
 FROM TBT_ITEM_CARRINHO I
 LEFT JOIN TBT_CARRINHO C ON C.CodCarrinho = I.CodCarrinho
 LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodTabelaPreco = I.CodTabelaPreco AND I.CodProduto = ITP.CodProduto

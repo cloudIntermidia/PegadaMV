@@ -1026,6 +1026,16 @@ namespace Pegada.Core.ViewModels
 
 
 
+                    // transmitirCarrinhosChecados (CarrinhoViewController, PegadaIOS): carrinho com item de Estoque Futuro
+                    // não pode ter entrega antes da maior data de disponibilidade dos itens.
+                    var dataMinimaEstoqueFuturo = await _carrinhoRepository.BuscarDataMinimaEstoqueFuturo(pedido.CodCarrinho);
+                    if (dataMinimaEstoqueFuturo.HasValue && (pedido.DataEntrega == null || dataMinimaEstoqueFuturo.Value > pedido.DataEntrega.Value.Date))
+                    {
+                        TransmissaoLogger.Log($"Transmitir: pedido {pedido.CodCarrinho} com entrega antes da data mínima do Estoque Futuro {dataMinimaEstoqueFuturo.Value:dd/MM/yyyy}.");
+                        lstPedidosComErros.Add($"Data de entrega {pedido.DataEntrega?.ToString("dd/MM/yyyy")} do carrinho {pedido.CodCarrinho}, é menor que a data mínima {dataMinimaEstoqueFuturo.Value:dd/MM/yyyy} disponivel para o carrinho!");
+                        continue;
+                    }
+
                     TransmissaoLogger.Log($"Transmitir: iniciando transmissão do pedido {pedido.CodCarrinho}.");
                     UserDialogs.Instance.ShowLoading($"{T("CarrinhoPageVMMessageTransmitindoPedido")} {pedido.CodCarrinho}");
                     var resultTransmissao = await ServiceUtility.TransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
