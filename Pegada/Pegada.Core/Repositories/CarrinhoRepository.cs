@@ -469,6 +469,8 @@ namespace Pegada.Core.Repositories
             return lstErros;
         }
 
+        // Atenção: "virtual" (não override) — esconde o da base. Quem chama via ICarrinhoRepository cai no
+        // PRO_ITEM_CARRINHO_GET do MobiliVendas.Core (sem PVL). Ver PedidoRepository.GetItensPedidos do Pegada.
         public virtual async Task<ObservableCollection<ItemCommandResult>> BuscarItensCarrinho(BuscarItensCarrinhoCommand command)
         {
             string sql = ManagerQuery.MakeSql("PRO_ITEM_CARRINHO_GET", "Query", command);

@@ -44,6 +44,45 @@ namespace Pegada.Core.Repositories
             var result = await _sqlAsyncConnection.QueryAsync<InformacoesPedidoResult>(sql);
             return result.Count > 0 ? result[0] : null;
         }
+        // Itens completos do pedido (usado pela impressão da PedidoPage). Carrinho: usa o PRO_ITEM_CARRINHO_GET do Pegada
+        // (PVL = PrecoPVL), o mesmo da impressão pela tela Carrinho. O BuscarItensCarrinho do CarrinhoRepository do Pegada
+        // é "virtual" (esconde, não sobrescreve), então pela interface ICarrinhoRepository cairia na query do MobiliVendas.Core.
+        public override async Task<ObservableCollection<ItemCommandResult>> GetItensPedidos(CarrinhoCommandResult ped)
+        {
+            if (ped.Origem != "C" || !(_carrinhoRepository is CarrinhoRepository carrinhoRepositoryPegada))
+            {
+                // Pedido integrado: o PRO_ITEM_PEDIDO_GET do MobiliVendas.Core não traz PVL. PegadaIOS (ItemPedido.m):
+                // ITEM_TABELA_PRECO.PrecoPVL da tabela de preço do pedido.
+                var itensPedido = await base.GetItensPedidos(ped);
+                if (!string.IsNullOrEmpty(ped.CodTabelaPreco) && itensPedido.Count > 0)
+                {
+                    var pvls = await _sqlAsyncConnection.QueryAsync<PvlRow>(
+                        $"SELECT CodProduto, PrecoPVL FROM TBT_ITEM_TABELA_PRECO WHERE CodTabelaPreco = '{ped.CodTabelaPreco}' " +
+                        $"AND CodProduto IN ({string.Join(",", itensPedido.Select(i => $"'{i.CodProduto}'").Distinct())})");
+                    var pvlPorProduto = pvls.GroupBy(p => p.CodProduto).ToDictionary(g => g.Key, g => g.First().PrecoPVL ?? 0);
+                    foreach (var item in itensPedido)
+                        if (item.CodProduto != null && pvlPorProduto.TryGetValue(item.CodProduto, out var pvl))
+                            item.PrecoSugestao = pvl;
+                }
+                return itensPedido;
+            }
+
+            var itens = await carrinhoRepositoryPegada.BuscarItensCarrinho(new BuscarItensCarrinhoCommand(ped.CodCarrinho, ped.CodTabelaPreco, ped.CodigoSegmento));
+            foreach (var item in itens)
+            {
+                var grades = await _carrinhoRepository.BuscarGradesDoItem(new BuscarGradesItemCommand(ped.CodCarrinho, item.CodItemCarrinho));
+                foreach (var grade in grades)
+                    item.Grades.Add(grade);
+            }
+            return itens;
+        }
+
+        private class PvlRow
+        {
+            public string CodProduto { get; set; }
+            public decimal? PrecoPVL { get; set; }
+        }
+
         // Linhas das consultas de itens/grade da tela de pedidos (colunas extras usadas só aqui).
         private class ItemTelaRow : ItemCommandResult
         {

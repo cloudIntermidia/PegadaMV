@@ -37,6 +37,12 @@
            CLI.NomeFantasia AS ClienteNome,  
            CLI.CNPJ AS CNPJ,  
            REP.Nome AS RepresentanteNome,
+           -- Cabeçalho da impressão (mesmas regras do PRO_CARRINHO_GET usado pela tela Carrinho)
+           REP.Nome AS Representante,
+           PRE.Custom2 AS TelefoneRep,
+           CLI.Email AS Email,
+           P.DiasBonificacao AS DiasBonificacao,
+           strftime('%d/%m/%Y', FS.DataInicial) || ' a ' || strftime('%d/%m/%Y', FS.DataFinal) AS SemanaFaturamento,
            null AS NotaFiscal,
     	   TPR.CodTabelaPreco as CodTabelaPreco,
     	   TPR.Descricao AS TabelaPreco,
@@ -91,6 +97,8 @@
            LEFT JOIN TBT_GRUPO_CLIENTE G ON G.CodGrupoCliente = CLI.CodGrupoCliente
            LEFT JOIN TBT_ENDERECO_CLIENTE E ON CLI.CodPessoaCliente = E.CodPessoaCliente AND E.IndPrincipal = 1
            LEFT JOIN TBT_PESSOA REP ON P.CodPessoaRepresentante = REP.CodPessoa 
+           LEFT JOIN TBT_PESSOA PRE ON PRE.CodPessoa = P.CodPessoaPreposto
+           LEFT JOIN TBT_FABRICA_SEMANAS FS ON FS.CodFabrica = P.CodFabrica AND FS.CodSemana = P.CodSemana
            LEFT JOIN TBT_TABELA_PRECO TPR ON TPR.CodTabelaPreco = P.CodTabelaPreco
 		   LEFT JOIN (
                SELECT IC2.CodCarrinho, SUM(IFNULL(IC2.QtdDistribuida, 0)) AS QtdDistribuido, SUM(IC2.ValorUnitarioLiquido * IFNULL(IC2.QtdDistribuida, 0)) AS ValorDistribuido    
@@ -220,6 +228,11 @@
            CLI.NomeFantasia AS ClienteNome,  
            CLI.CNPJ AS ClienteCnpj,  
            REP.Nome AS RepresentanteNome,
+           REP.Nome AS Representante,
+           PRE.Custom2 AS TelefoneRep,
+           IFNULL(NULLIF(P.Email, ''), CLI.Email) AS Email,
+           P.DiasBonificacao AS DiasBonificacao,
+           strftime('%d/%m/%Y', FS.DataInicial) || ' a ' || strftime('%d/%m/%Y', FS.DataFinal) AS SemanaFaturamento,
            IP.NumeroNf AS NotaFiscal,
     	   TPR.CodTabelaPreco as CodTabelaPreco,
     	   TPR.Descricao AS TabelaPreco,
@@ -270,6 +283,9 @@
            LEFT JOIN TBT_PESSOA REP ON P.CodPessoaRepresentante = REP.CodPessoa 
     	   LEFT JOIN TBT_TABELA_PRECO TPR ON TPR.CodTabelaPreco = P.CodTabelaPreco
 		   LEFT JOIN TBT_CARRINHO C ON C.CodPedido = RTRIM(P.CodPedido) AND C.CodPedido != '' AND C.CodPedido IS NOT NULL
+           LEFT JOIN TBT_PESSOA PRE ON PRE.CodPessoa = P.CodPessoaPreposto
+           -- TBT_PEDIDO não tem CodFabrica: usa a do carrinho de origem
+           LEFT JOIN TBT_FABRICA_SEMANAS FS ON FS.CodFabrica = C.CodFabrica AND FS.CodSemana = P.CodSemana
 --		   LEFT JOIN (
 --               SELECT IC2.CodCarrinho, MAX(CodCarrinhoOriginal) AS CodPedidoOrigem
 --               FROM TBT_ITEM_CARRINHO IC2

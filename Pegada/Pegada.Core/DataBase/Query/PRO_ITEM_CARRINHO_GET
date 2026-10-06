@@ -15,7 +15,9 @@
      I.QtdTotal AS QtdTotal,
 	 I.QtdDisponivel AS QtdDisponivel,
 	 I.CodGrade AS CodGrade,
-	 ITP.PrecoSugestao As PrecoSugestao,
+	 -- PVL da impressão (GerarPdf/ItemPedido.m do PegadaIOS: ITEM_TABELA_PRECO.PrecoPVL). A coluna PrecoSugestao
+	 -- não vem preenchida na carga do Pegada; o PVL sincroniza em PrecoPVL.
+	 ITP.PrecoPVL As PrecoSugestao,
 	 I.ValorUnitario AS PrecoCusto,
 	 ROUND(I.ValorUnitarioLiquido, 2) AS PrecoCustoComDesconto,
      I.ValorUnitario AS ValorUnitario,
