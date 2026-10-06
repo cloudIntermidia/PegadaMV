@@ -383,35 +383,54 @@
 
 
                 <!-- ================= BOTÕES ================= -->
-                <Grid Grid.Column="0"
+                <StackLayout Grid.Column="0"
                       VerticalOptions="End"
+                      Spacing="10"
                       Margin="0,0,20,0">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="150" />
-                    </Grid.ColumnDefinitions>
+                    <!-- Menu do item do PegadaIOS (longPressItemCarrinho / didSelectItemCarrinhoMenuOption).
+                         Linha de cima: opções de um item, só depois de tocar/marcar um item que as libere
+                         ("Editar preço líquido" ainda depende do cliente com PermiteAjustePreco). -->
+                    <StackLayout Orientation="Horizontal" Spacing="6">
+                        <controls:FlexButton
+                            Text="{translator:Translate CarrinhoBtnEditarPrecoLiq}"
+                            ClickedCommand="{Binding EditarPrecoItemCommand}"
+                            Style="{StaticResource flexButtonAction}"
+                            IsVisible="{Binding MostraEditarPrecoItem}" />
 
-                    <controls:FlexButton
-                        Grid.Column="0"
-                        Text="{translator:Translate CarrinhoBtnExcluir}"
-                        ClickedCommand="{Binding ExcluirItemCommand}"
-                        Style="{StaticResource flexButtonAction}" />
+                        <controls:FlexButton
+                            Text="{translator:Translate CarrinhoBtnVisualizarDesconto}"
+                            ClickedCommand="{Binding VisualizarDescontoItemCommand}"
+                            Style="{StaticResource flexButtonAction}"
+                            IsVisible="{Binding MostraAcoesItemUnico}" />
 
-                    <controls:FlexButton
-                        Grid.Column="1"
-                        Text="{translator:Translate CarrinhoBtnEditar}"
-                        ClickedCommand="{Binding EditarItemCommand}"
-                        Style="{StaticResource flexButtonAction}" />
+                        <controls:FlexButton
+                            Text="{translator:Translate CarrinhoBtnEditarLoja}"
+                            ClickedCommand="{Binding EditarLojaItemCommand}"
+                            Style="{StaticResource flexButtonAction}"
+                            IsVisible="{Binding MostraAcoesItemUnico}" />
+                    </StackLayout>
 
-                    <controls:FlexButton
-                        Grid.Column="2"
-                        Text="{translator:Translate GlobalBtnDesmembrar}"
-                        ClickedCommand="{Binding DesmembrarItemCommand}"
-                        Style="{StaticResource flexButtonAction}"
-                        IsVisible="{Binding BindingContext.OcultaBtnDesmembramento, Source={x:Reference this}}" />
-                </Grid>
+                    <!-- Linha de baixo: Excluir em qualquer item; Editar/Desmembrar fora da Pronta Entrega. -->
+                    <StackLayout Orientation="Horizontal" Spacing="6">
+                        <controls:FlexButton
+                            Text="{translator:Translate CarrinhoBtnExcluir}"
+                            ClickedCommand="{Binding ExcluirItemCommand}"
+                            Style="{StaticResource flexButtonAction}" />
+
+                        <controls:FlexButton
+                            Text="{translator:Translate CarrinhoBtnEditar}"
+                            ClickedCommand="{Binding EditarItemCommand}"
+                            Style="{StaticResource flexButtonAction}"
+                            IsVisible="{Binding PedidoSelecionado.NaoEProntaEntrega}" />
+
+                        <controls:FlexButton
+                            Text="{translator:Translate GlobalBtnDesmembrar}"
+                            ClickedCommand="{Binding DesmembrarItemCommand}"
+                            Style="{StaticResource flexButtonAction}"
+                            IsVisible="{Binding PedidoSelecionado.NaoEProntaEntrega}" />
+                    </StackLayout>
+                </StackLayout>
 
 
                 <!-- ================= GRADE ESTILO TABELA ================= -->

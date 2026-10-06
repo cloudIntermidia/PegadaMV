@@ -35,6 +35,8 @@
 	 P.Custom2 As CodCor,
 	 P.DescricaoMaterial,
 	 P.DescricaoCor,
+	 P.DescricaoCompleta AS DescricaoCompleta,
+	 TP.Moeda AS Moeda,
      I.PercDesc as PercDesc,
 	 I.PercDesc1 as PercDesc1,
 	 I.PercDesc2 as PercDesc2,
@@ -57,12 +59,16 @@
     I.Estabelecimento,
     I.Localizacao,
     I.Markup,
+    IFNULL(I.IndPrecoEditado, 0) AS IndPrecoEditado,
+    I.ValorUnitarioLiquidoOriginal,
+    I.ValorUnitarioLiquidoDif,
     -- dataDisponivelLabel (ItemCarrinhoTableViewController, PegadaIOS): 'DISPONIVEL' ou a data do Estoque Futuro em dd/MM/yyyy.
     CASE WHEN I.DataDisponibilidade IS NULL OR I.DataDisponibilidade = 'DISPONIVEL' THEN I.DataDisponibilidade ELSE strftime('%d/%m/%Y', I.DataDisponibilidade) END AS DataDisponivel
 FROM TBT_ITEM_CARRINHO I
 LEFT JOIN TBT_CARRINHO C ON C.CodCarrinho = I.CodCarrinho
 LEFT JOIN TBT_ITEM_TABELA_PRECO ITP ON ITP.CodTabelaPreco = I.CodTabelaPreco AND I.CodProduto = ITP.CodProduto
 LEFT JOIN TBT_PRODUTO P ON P.CodProduto = I.CodProduto 
+LEFT JOIN TBT_TABELA_PRECO TP ON TP.CodTabelaPreco = I.CodTabelaPreco
 LEFT JOIN TBT_MODELO M ON M.CodModelo = P.CodModelo AND M.CodMarca = P.CodMarca
 LEFT JOIN TBT_NIVEL_PRODUTO NP ON NP.CodProduto = I.CodProduto AND NP.CodNivel = '3'
 LEFT JOIN TBT_NIVEL_ATRIBUTO NA ON NA.CodNivel = NP.CodNivel AND NA.CodAtributo = NP.CodAtributo

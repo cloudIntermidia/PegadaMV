@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
+             x:Class="Pegada.Core.Views.Carrinho.DescontoItemView"
+             x:Name="this">
+
+    <!-- Espelha a cena VisualizaDescontoICViewController do PegadaIOS (700x140): título "Descontos", faixa de percentuais e "Voltar". -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="descRotulo" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="descValor" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <AbsoluteLayout>
+
+            <!-- FUNDO ESCURO -->
+            <AbsoluteLayout BackgroundColor="#000" Opacity="0.3"
+                            AbsoluteLayout.LayoutBounds="0,0,1,1"
+                            AbsoluteLayout.LayoutFlags="All" />
+
+            <Frame AbsoluteLayout.LayoutBounds="0.5,0.5,700,150"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   Padding="0" HasShadow="True" CornerRadius="10" IsClippedToBounds="True"
+                   BackgroundColor="White">
+
+                <AbsoluteLayout>
+                    <Label AbsoluteLayout.LayoutBounds="0,10,700,31" Text="{translator:Translate DescontoItemTitulo}" FontSize="18" TextColor="Black"
+                           FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+
+                    <BoxView AbsoluteLayout.LayoutBounds="5,52,690,48" BackgroundColor="#EDEDED" CornerRadius="3" />
+                    <Grid AbsoluteLayout.LayoutBounds="10,52,680,48" ColumnSpacing="2"
+                          BindingContext="{Binding BindingContext.Descontos, Source={x:Reference this}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="54" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblFinanceiro}" />
+                        <Label Grid.Column="1" Style="{StaticResource descValor}" Text="{Binding Financeiro}" />
+                        <Label Grid.Column="2" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblNivel2}" />
+                        <Label Grid.Column="3" Style="{StaticResource descValor}" Text="{Binding Nivel2}" />
+                        <Label Grid.Column="4" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblNivel3}" />
+                        <Label Grid.Column="5" Style="{StaticResource descValor}" Text="{Binding Nivel3}" />
+                        <Label Grid.Column="6" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblNivel4}" />
+                        <Label Grid.Column="7" Style="{StaticResource descValor}" Text="{Binding Nivel4}" />
+                        <Label Grid.Column="8" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblNivel5}" />
+                        <Label Grid.Column="9" Style="{StaticResource descValor}" Text="{Binding Nivel5}" />
+                        <Label Grid.Column="10" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblTotal}" />
+                        <Label Grid.Column="11" Style="{StaticResource descValor}" Text="{Binding Total}" />
+                    </Grid>
+
+                    <Label AbsoluteLayout.LayoutBounds="600,110,90,34" Text="{translator:Translate PedidoTela_Global_Voltar}" FontSize="17" TextColor="#007AFF"
+                           HorizontalTextAlignment="End" VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.VoltarCommand, Source={x:Reference this}}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </AbsoluteLayout>
+            </Frame>
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

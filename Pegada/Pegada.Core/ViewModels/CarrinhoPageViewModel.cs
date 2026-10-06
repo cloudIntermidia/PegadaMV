@@ -47,7 +47,37 @@ namespace Pegada.Core.ViewModels
         public CarrinhoCommandResult PedidoSelecionado
         {
             get { return _pedidoSelecionado; }
-            set { SetProperty(ref _pedidoSelecionado, value); }
+            set { SetProperty(ref _pedidoSelecionado, value); _itemTocado = false; AtualizarAcoesItem(); }
+        }
+
+        // longPressItemCarrinho (ItemCarrinhoTableViewController, PegadaIOS): o menu só abre sobre um item e as opções
+        // "Editar preço líquido", "Visualizar Desconto" e "Editar Loja" saem quando há mais de 1 item marcado
+        // (exceto na Pronta Entrega). Aqui elas só aparecem depois de tocar/marcar um item que as libere.
+        private bool _itemTocado;
+
+        private bool _mostraAcoesItemUnico;
+        public bool MostraAcoesItemUnico
+        {
+            get { return _mostraAcoesItemUnico; }
+            set { SetProperty(ref _mostraAcoesItemUnico, value); }
+        }
+
+        private bool _mostraEditarPrecoItem;
+        public bool MostraEditarPrecoItem
+        {
+            get { return _mostraEditarPrecoItem; }
+            set { SetProperty(ref _mostraEditarPrecoItem, value); }
+        }
+
+        private void AtualizarAcoesItem()
+        {
+            var itens = PedidoSelecionado?.Itens;
+            int qtdMarcados = itens?.Count(x => x.ItemChecado) ?? 0;
+            bool temItem = qtdMarcados > 0 || (_itemTocado && !string.IsNullOrEmpty(ItemSelecionado?.CodProduto));
+            bool prontaEntrega = PedidoSelecionado != null && !PedidoSelecionado.NaoEProntaEntrega;
+
+            MostraAcoesItemUnico = temItem && (prontaEntrega || qtdMarcados <= 1);
+            MostraEditarPrecoItem = MostraAcoesItemUnico && PedidoSelecionado.PermiteEditarPrecoItem;
         }
 
         private ItemCommandResult _itemSelecionado;
@@ -88,6 +118,10 @@ namespace Pegada.Core.ViewModels
         public ICommand EditarItemCommand { get; set; }
         public ICommand DesmembrarItemCommand { get; set; }
         public ICommand MarcarItemCommand { get; set; }
+        // Demais opções do menu do item (didSelectItemCarrinhoMenuOption, ItemCarrinhoTableViewController do PegadaIOS).
+        public ICommand EditarPrecoItemCommand { get; set; }
+        public ICommand VisualizarDescontoItemCommand { get; set; }
+        public ICommand EditarLojaItemCommand { get; set; }
 
         public ICommand CopiarCommand { get; set; }
         public ICommand BloquearCommand { get; set; }
@@ -167,6 +201,9 @@ namespace Pegada.Core.ViewModels
             EditarItemCommand = new Command<ItemCommandResult>(EditarItem);
             DesmembrarItemCommand = new Command<ItemCommandResult>(DesmembrarItem);
             MarcarItemCommand = new Command<ItemCommandResult>(MarcarItem);
+            EditarPrecoItemCommand = new Command(async () => await EditarPrecoItem());
+            VisualizarDescontoItemCommand = new Command(async () => await VisualizarDescontoItem());
+            EditarLojaItemCommand = new Command(async () => await EditarLojaItem());
 
             MarcarCarrinhosCommand = new Command(MarcarCarrinhos);
             MarcarItensCommand = new Command(MarcarItens);
@@ -229,6 +266,7 @@ namespace Pegada.Core.ViewModels
                 foreach (var item in PedidoSelecionado.Itens)
                     item.ItemChecado = TodosItensChecados;
             }
+            AtualizarAcoesItem();
         }
 
         private void MarcarCarrinho(CarrinhoCommandResult obj)
@@ -637,6 +675,107 @@ namespace Pegada.Core.ViewModels
             }
         }
 
+        // No iOS essas opções só aparecem no menu de um único item (o pressionado). Aqui vale o item marcado
+        // ou, sem marcação, a linha selecionada.
+        private async Task<ItemCommandResult> ItemUnicoParaAcao()
+        {
+            if (PedidoSelecionado?.Itens == null)
+                return null;
+
+            var marcados = PedidoSelecionado.Itens.Where(x => x.ItemChecado).ToList();
+            ItemCommandResult item;
+            if (marcados.Count > 1)
+            {
+                // Pronta Entrega mantém as opções com vários marcados e age sobre o item pressionado (aqui, o tocado).
+                if (PedidoSelecionado.NaoEProntaEntrega || !_itemTocado)
+                {
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgMarqueSomenteUmItemEdicao"), AppName);
+                    return null;
+                }
+                item = ItemSelecionado;
+            }
+            else
+            {
+                item = marcados.FirstOrDefault() ?? (_itemTocado ? ItemSelecionado : null);
+            }
+            if (item == null || string.IsNullOrEmpty(item.CodProduto))
+            {
+                await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgMarqueItemEdicao"), AppName);
+                return null;
+            }
+            return item;
+        }
+
+        // ItemCarrinhoMenuOptionEditarPreco: tela "Edição de Preço do Item" (EdicaoItemCarrinhoViewController).
+        private async Task EditarPrecoItem()
+        {
+            try
+            {
+                if (PedidoSelecionado == null || !PedidoSelecionado.PermiteEditarPrecoItem)
+                    return;
+
+                var item = await ItemUnicoParaAcao();
+                if (item == null)
+                    return;
+
+                var edicaoPreco = ServiceLocator.Current.GetInstance<EdicaoPrecoItemViewModel>();
+                if (await edicaoPreco.Init(PedidoSelecionado, item))
+                    await PopupNavigation.Instance.PushAsync(new PopupPage { Content = new EdicaoPrecoItemView { BindingContext = edicaoPreco } });
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        // ItemCarrinhoMenuOptionDesconto: tela "Descontos" (VisualizaDescontoICViewController).
+        private async Task VisualizarDescontoItem()
+        {
+            try
+            {
+                var item = await ItemUnicoParaAcao();
+                if (item == null)
+                    return;
+
+                var desconto = ServiceLocator.Current.GetInstance<DescontoItemViewModel>();
+                await desconto.Init(PedidoSelecionado, item);
+                await PopupNavigation.Instance.PushAsync(new PopupPage { Content = new DescontoItemView { BindingContext = desconto } });
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        // ItemCarrinhoMenuOptionEditarLoja: editaLoja (alerta com campo de texto e o nome atual como placeholder).
+        private async Task EditarLojaItem()
+        {
+            try
+            {
+                var item = await ItemUnicoParaAcao();
+                if (item == null)
+                    return;
+
+                var resposta = await UserDialogs.Instance.PromptAsync(new PromptConfig
+                {
+                    Title = T("CarrinhoBtnEditarLoja"),
+                    Placeholder = item.NomeLoja,
+                    OkText = "Ok",
+                    CancelText = T("CarrinhoBtnCancelar")
+                });
+                if (!resposta.Ok)
+                    return;
+
+                var repositorio = ServiceLocator.Current.GetInstance<Pegada.Core.Repositories.ItemCarrinhoAcoesRepository>();
+                await repositorio.AtualizarNomeLoja(PedidoSelecionado.CodCarrinho, item.CodItemCarrinho, resposta.Text);
+                item.NomeLoja = resposta.Text;
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
         private void MarcarItem(ItemCommandResult obj)
         {
             if (obj.CodKit != null)
@@ -648,6 +787,7 @@ namespace Pegada.Core.ViewModels
             {
                 obj.ItemChecado = !obj.ItemChecado;
             }
+            AtualizarAcoesItem();
         }
 
         public async Task Load()
@@ -713,6 +853,8 @@ namespace Pegada.Core.ViewModels
             if (Item == null) return;
 
             ItemSelecionado = Item as ItemCommandResult;
+            _itemTocado = true;
+            AtualizarAcoesItem();
         }
 
         private async void CopiarCarrinho(object obj)

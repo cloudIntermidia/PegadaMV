@@ -28,10 +28,11 @@
 
             <!-- Cores da aplicação -->
             <!--INICIO CORES FILTRO NIVEIS-->
-            <Color x:Key="BackColor">#000000</Color>
-            <Color x:Key="OptionColor">#835324</Color> <!--COR HOVEREFFECT-->
-            <Color x:Key="ItemColor">#352C2D</Color>
-            <Color x:Key="FontItemColor">#FFFFFF</Color>
+            <!-- Estilo claro, igual ao popup +Filtros (fundo cinza corDestaque, itens brancos, texto escuro) -->
+            <Color x:Key="BackColor">#D5D7DE</Color>
+            <Color x:Key="OptionColor">#E8E9ED</Color> <!--COR HOVEREFFECT-->
+            <Color x:Key="ItemColor">#FFFFFF</Color>
+            <Color x:Key="FontItemColor">#333333</Color>
             <!--FIM CORES FILTRO NIVEIS-->
             
             
@@ -579,13 +580,15 @@
 
                         </Grid>
 
+                        <!-- Linhas proporcionais: com a linha de 18 do "SOMENTE ESTOQUE" a área ficou ~106 de altura e 4x30 empurrava
+                             o coração (favorito) pra fora do grid - no iOS o toque fora dos limites do pai não chega no ícone. -->
                         <Grid Grid.Row="1" Grid.Column="0" BackgroundColor="White" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
                             <!--<Grid.ColumnDefinitions>
@@ -609,8 +612,8 @@
                                                 LoadingPlaceholder="NaoDisp.png"
                                                 Aspect="AspectFit" 
                                                 HorizontalOptions="End"
-                                                HeightRequest="35"
-                                                WidthRequest="35"
+                                                HeightRequest="28"
+                                                WidthRequest="28"
                                                 Margin="10,0"
                                                 >
                                 <ffimageloading:CachedImage.GestureRecognizers>

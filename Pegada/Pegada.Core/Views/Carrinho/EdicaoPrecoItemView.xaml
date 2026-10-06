@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
+             x:Class="Pegada.Core.Views.Carrinho.EdicaoPrecoItemView"
+             x:Name="this">
+
+    <!--
+        Espelha a cena EdicaoItemCarrinhoViewController do PegadaIOS (700x380): barra "Cancelar / Edição de Preço do Item / Salvar",
+        descrição, campo Preço + Aplicar, quadro de preços à direita e a faixa de descontos embaixo.
+    -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="precoRotulo" TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="precoValor" TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="descRotulo" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="descValor" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <AbsoluteLayout>
+
+            <!-- FUNDO ESCURO -->
+            <AbsoluteLayout BackgroundColor="#000" Opacity="0.3"
+                            AbsoluteLayout.LayoutBounds="0,0,1,1"
+                            AbsoluteLayout.LayoutFlags="All" />
+
+            <Frame AbsoluteLayout.LayoutBounds="0.5,0.5,700,380"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   Padding="0" HasShadow="True" CornerRadius="10" IsClippedToBounds="True"
+                   BackgroundColor="White">
+
+                <AbsoluteLayout>
+
+                    <!-- Barra de navegação -->
+                    <BoxView AbsoluteLayout.LayoutBounds="0,0,700,44" BackgroundColor="#E1E3E6" />
+                    <Label AbsoluteLayout.LayoutBounds="10,7,150,30" Text="{translator:Translate CarrinhoBtnCancelar}" FontSize="17" TextColor="#007AFF"
+                           VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.CancelarCommand, Source={x:Reference this}}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label AbsoluteLayout.LayoutBounds="160,7,380,30" Text="{translator:Translate EdicaoPrecoItemTitulo}" FontSize="17" TextColor="Black"
+                           FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    <Label AbsoluteLayout.LayoutBounds="540,7,150,30" Text="{translator:Translate GlobalBtnSalvar}" FontSize="17" TextColor="#007AFF"
+                           HorizontalTextAlignment="End" VerticalTextAlignment="Center" FontAttributes="Bold">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.SalvarCommand, Source={x:Reference this}}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!-- Produto e preço digitado -->
+                    <Label AbsoluteLayout.LayoutBounds="20,58,300,63" FontSize="15" TextColor="Black" MaxLines="3" LineBreakMode="TailTruncation"
+                           Text="{Binding BindingContext.Descricao, Source={x:Reference this}}" />
+                    <Label AbsoluteLayout.LayoutBounds="20,134,60,21" FontSize="17" TextColor="Black"
+                           Text="{translator:Translate EdicaoPrecoItemLblPreco}" />
+                    <Entry AbsoluteLayout.LayoutBounds="86,128,143,34" FontSize="14" Keyboard="Numeric"
+                           Text="{Binding BindingContext.Preco, Source={x:Reference this}}" />
+                    <Button AbsoluteLayout.LayoutBounds="139,168,90,34" Text="{translator:Translate EdicaoPrecoItemBtnAplicar}"
+                            FontSize="15" TextColor="#007AFF" BackgroundColor="Transparent"
+                            Command="{Binding BindingContext.AplicarCommand, Source={x:Reference this}}" />
+
+                    <!-- Quadro de preços -->
+                    <Label AbsoluteLayout.LayoutBounds="348,58,220,32" Style="{StaticResource precoRotulo}" Text="{translator:Translate EdicaoPrecoItemLblMarkup}" />
+                    <Label AbsoluteLayout.LayoutBounds="560,58,120,32" Style="{StaticResource precoValor}" Text="{Binding BindingContext.Markup, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="348,94,220,32" Style="{StaticResource precoRotulo}" Text="{translator:Translate EdicaoPrecoItemLblPrecoBruto}" />
+                    <Label AbsoluteLayout.LayoutBounds="560,94,120,32" Style="{StaticResource precoValor}" Text="{Binding BindingContext.PrecoBruto, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="348,132,220,32" Style="{StaticResource precoRotulo}" Text="{translator:Translate EdicaoPrecoItemLblPrecoLiqAntes}" />
+                    <Label AbsoluteLayout.LayoutBounds="560,132,120,32" Style="{StaticResource precoValor}" Text="{Binding BindingContext.PrecoLiquidoAntesAjuste, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="348,170,220,32" Style="{StaticResource precoRotulo}" Text="{translator:Translate EdicaoPrecoItemLblAjuste}" />
+                    <Label AbsoluteLayout.LayoutBounds="560,170,120,32" Style="{StaticResource precoValor}" Text="{Binding BindingContext.AjustePreco, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="348,207,220,32" Style="{StaticResource precoRotulo}" Text="{translator:Translate EdicaoPrecoItemLblPrecoLiqApos}" />
+                    <Label AbsoluteLayout.LayoutBounds="560,207,120,32" Style="{StaticResource precoValor}" Text="{Binding BindingContext.PrecoLiquidoAposAjuste, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="348,245,220,32" Style="{StaticResource precoRotulo}" Text="{translator:Translate EdicaoPrecoItemLblPrecoPVL}" />
+                    <Label AbsoluteLayout.LayoutBounds="560,245,120,32" Style="{StaticResource precoValor}" Text="{Binding BindingContext.PrecoPVL, Source={x:Reference this}}" />
+
+                    <!-- Descontos -->
+                    <BoxView AbsoluteLayout.LayoutBounds="5,290,690,48" BackgroundColor="#EDEDED" CornerRadius="3" />
+                    <Grid AbsoluteLayout.LayoutBounds="10,290,680,48" ColumnSpacing="2"
+                          BindingContext="{Binding BindingContext.Descontos, Source={x:Reference this}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="54" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblFinanceiro}" />
+                        <Label Grid.Column="1" Style="{StaticResource descValor}" Text="{Binding Financeiro}" />
+                        <Label Grid.Column="2" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblNivel2}" />
+                        <Label Grid.Column="3" Style="{StaticResource descValor}" Text="{Binding Nivel2}" />
+                        <Label Grid.Column="4" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblNivel3}" />
+                        <Label Grid.Column="5" Style="{StaticResource descValor}" Text="{Binding Nivel3}" />
+                        <Label Grid.Column="6" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblNivel4}" />
+                        <Label Grid.Column="7" Style="{StaticResource descValor}" Text="{Binding Nivel4}" />
+                        <Label Grid.Column="8" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblNivel5}" />
+                        <Label Grid.Column="9" Style="{StaticResource descValor}" Text="{Binding Nivel5}" />
+                        <Label Grid.Column="10" Style="{StaticResource descRotulo}" Text="{translator:Translate DescontoItemLblTotal}" />
+                        <Label Grid.Column="11" Style="{StaticResource descValor}" Text="{Binding Total}" />
+                    </Grid>
+
+                </AbsoluteLayout>
+            </Frame>
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

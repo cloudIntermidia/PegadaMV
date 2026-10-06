@@ -74,7 +74,9 @@ SET Markup = CASE WHEN IsAplicaMarkup = 1 THEN
                WHEN CodAtributo = IDCategoria THEN 5 
                ELSE 6 END)
                ELSE 0 END
-WHERE CodCarrinho = '@CodCarrinho';
+WHERE CodCarrinho = '@CodCarrinho'
+-- Item com preço líquido editado (EdicaoItemCarrinhoViewController, PegadaIOS) mantém o markup ajustado.
+AND IFNULL(IndPrecoEditado, 0) = 0;
 
 UPDATE TBT_ITEM_CARRINHO
 SET ValorUnitarioLiquido = ValorUnitario
@@ -144,23 +146,23 @@ END
 
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquidoOriginal = ValorUnitario - (ValorUnitario * (CAST(PercDesc1 as float)  / 100))
+SET ValorUnitarioLiquidoOriginal = Round(ValorUnitario - (ValorUnitario * (CAST(PercDesc1 as float)  / 100)), 2)
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquidoOriginal = ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc2 as float)  / 100))
+SET ValorUnitarioLiquidoOriginal = Round(ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc2 as float)  / 100)), 2)
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquidoOriginal = ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc3 as float)  / 100))
+SET ValorUnitarioLiquidoOriginal = Round(ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc3 as float)  / 100)), 2)
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquidoOriginal = ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc4 as float)  / 100))
+SET ValorUnitarioLiquidoOriginal = Round(ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc4 as float)  / 100)), 2)
 WHERE CodCarrinho = '@CodCarrinho';
 
 UPDATE TBT_ITEM_CARRINHO
-SET ValorUnitarioLiquidoOriginal = ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc5 as float)  / 100))
+SET ValorUnitarioLiquidoOriginal = Round(ValorUnitarioLiquidoOriginal - (ValorUnitarioLiquidoOriginal * (CAST(PercDesc5 as float)  / 100)), 2)
 WHERE CodCarrinho = '@CodCarrinho';
 
 

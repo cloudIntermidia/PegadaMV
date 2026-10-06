@@ -262,6 +262,8 @@ namespace Pegada.Core.Repositories
                     CUSTOM4 = x.Estabelecimento,
                     CUSTOM5 = x.Localizacao,
                     MARKUP = x.Markup,
+                    VALORUNITARIOLIQUIDODIF = x.ValorUnitarioLiquidoDif,
+                    VALORUNITARIOLIQUIDOORIGINAL = x.ValorUnitarioLiquidoOriginal,
                     CODITEMPRONTAENTREGA = x.CodItemProntaEntrega,
                     CODINSTALACAO = carrinho.CodInstalacao,
 

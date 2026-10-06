@@ -66,6 +66,7 @@
     CON.QtdParcela,
     T.TipoPedido as TipoPedidoValida,
     CLI.CompraPrecoLiquido,
+    CLI.PermiteAjustePreco,
     C.IndPrecoLiquido,
     PRE.Custom2 as TelefoneRep,
 	strftime('%d/%m/%Y', FS.DataInicial) ||
