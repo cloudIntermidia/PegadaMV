@@ -588,7 +588,7 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
                             <!--<Grid.ColumnDefinitions>
@@ -605,6 +605,8 @@
                             <ffimageloading:CachedImage Grid.Row="2" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeNew, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',new.png'}" 
                                 LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
 
+                            <!-- Coluna 0 da célula tem 40: com Margin="10,0" sobravam só 20 pro ícone (o tamanho pedido era ignorado).
+                                 Margem 3+2 deixa o ícone caber inteiro. -->
                             <ffimageloading:CachedImage 
                                                 Grid.Row="3" Grid.Column="0"
                                                 DownsampleToViewSize="False" 
@@ -614,7 +616,7 @@
                                                 HorizontalOptions="End"
                                                 HeightRequest="28"
                                                 WidthRequest="28"
-                                                Margin="10,0"
+                                                Margin="3,0,2,0"
                                                 >
                                 <ffimageloading:CachedImage.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" 
@@ -693,7 +695,9 @@
                                 LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="35" WidthRequest="35" Margin="10,0" />
                         </Grid>
 
-                        <ffimageloading:CachedImage Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" DownsampleToViewSize="False" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}" 
+                        <!-- Foto aberta já reduzida (~130pt de altura, em pixels de tela): no tamanho original (até 1500x1500)
+                             cada célula ocupava de 2 a 9 MB e a navegação entre modelos estourava a memória. -->
+                        <ffimageloading:CachedImage Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" DownsampleHeight="130" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
                             LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
 
 

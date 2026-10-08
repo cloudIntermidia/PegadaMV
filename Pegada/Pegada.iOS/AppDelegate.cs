@@ -50,6 +50,13 @@ namespace Pegada.iOS
             KeyboardOverlapRenderer.Init();
             CarouselViewRenderer.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
+            // Sem limite o cache de imagens decodificadas crescia a cada modelo navegado no catálogo/combinações
+            // (fotos vêm de stream, sem reaproveitamento) até o iOS matar o app por falta de memória.
+            FFImageLoading.ImageService.Instance.Initialize(new FFImageLoading.Config.Configuration
+            {
+                MaxMemoryCacheSize = 64 * 1024 * 1024,
+                ClearMemoryCacheOnOutOfMemory = true
+            });
             Rg.Plugins.Popup.Popup.Init();
             Flex.FlexButton.Init();
             SfListViewRenderer.Init();            
