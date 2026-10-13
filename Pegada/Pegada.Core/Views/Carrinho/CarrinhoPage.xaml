@@ -148,8 +148,8 @@
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}" Grid.Row="0" Grid.Column="6" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="7" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="8" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="9" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}" Grid.Row="0" Grid.Column="10" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}" Grid.Row="0" Grid.Column="9" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}" Grid.Row="0" Grid.Column="10" />
 
                                 </Grid>
                             </ViewCell>
@@ -180,15 +180,22 @@
                 </Grid.ColumnDefinitions>
 
                 <controls:FlexButton
-                            Grid.Row="0" Grid.Column="2"
+                            Grid.Row="0" Grid.Column="1"
                             Text="{translator:Translate CarrinhoBtnCancelar}"
                             ClickedCommand="{Binding CancelarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
-                            Grid.Row="0" Grid.Column="3"
+                            Grid.Row="0" Grid.Column="2"
                             Text="{translator:Translate CarrinhoBtnImprimir}"
                             ClickedCommand="{Binding ImprimirCommand}"
+                            Style="{StaticResource flexButtonAction}"/>
+
+                <!-- Enviar por E-mail (CarrinhoMenuOptionEnviarEmail do PegadaIOS): compositor de e-mail com o PDF anexo -->
+                <controls:FlexButton
+                            Grid.Row="0" Grid.Column="3"
+                            Text="{translator:Translate PedidoTela_Global_EnviarPEmail}"
+                            ClickedCommand="{Binding EnviarEmailCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
@@ -211,7 +218,7 @@
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="5"
-                            Text="{translator:Translate CarrinhoBtnFinalizar}"
+                            Text="{translator:Translate CarrinhoBtnFechamento}"
                             ClickedCommand="{Binding EditarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
@@ -356,11 +363,11 @@
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotalNaCaixa}"                                                          Grid.Row="0" Grid.Column="7" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupCliente}"                                                          Grid.Row="0" Grid.Column="8" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupAplicado}"                                                          Grid.Row="0" Grid.Column="9" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCusto,  Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="10" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCusto,  Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="10" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding DescontoUI}"                                                          Grid.Row="0" Grid.Column="11" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCustoComDesconto, Converter={StaticResource ValorParaMoeda}}"  Grid.Row="0" Grid.Column="12" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="13" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}}"             Grid.Row="0" Grid.Column="14" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCustoComDesconto, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"  Grid.Row="0" Grid.Column="12" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="13" />
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="14" />
 
                                 </Grid>
                             </ViewCell>

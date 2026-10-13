@@ -90,7 +90,7 @@ namespace Pegada.Core.Repositories
             public string DescPerc { get; set; }
         }
 
-        private class GradeTelaRow : DerivacaoGradeResult
+        public class GradeTelaRow : DerivacaoGradeResult
         {
             public string ItemChave { get; set; }
             public string CodGradeItem { get; set; }
@@ -129,6 +129,21 @@ namespace Pegada.Core.Repositories
             }
 
             return new ObservableCollection<ItemCommandResult>(itens);
+        }
+
+        // PegadaIOS (GradeItemPedido gradesForItemPedidoProducao:andClientePais:): grade de todos os itens do pedido/carrinho
+        // no país do cliente, indexada pelo item (CodItemPedido/CodItemCarrinho). Usada no Excel do pedido.
+        public async Task<ILookup<string, GradeTelaRow>> BuscarGradesPorPaisCliente(CarrinhoCommandResult pedido)
+        {
+            bool carrinho = pedido.Origem == "C";
+            string codPais = await BuscarCodPaisGrade(pedido.CodPessoaCliente);
+            string sql = ManagerQuery.MakeSql("PRO_GRADE_ITEM_PEDIDO_TELA", "Query", new
+            {
+                Origem = carrinho ? "C" : "P",
+                Codigo = carrinho ? pedido.CodCarrinho : pedido.CodPedido,
+                CodPais = codPais
+            });
+            return (await _sqlAsyncConnection.QueryAsync<GradeTelaRow>(sql)).ToLookup(g => g.ItemChave);
         }
 
         // PegadaIOS: país do cliente (sem país = BR "1"); país sem nenhuma derivação cadastrada usa a grade BR (Defeito #21271).

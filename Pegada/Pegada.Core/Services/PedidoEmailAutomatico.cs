@@ -17,7 +17,8 @@ namespace Pegada.Core.Services
     // E-mail automático do pedido transmitido, como no CarrinhoViewController do PegadaIOS
     // (enviaPedidosPorEmail -> enviaEmailPedidoAutomatico -> montaPedidoEmail): junta os e-mails dos contatos com
     // "cópia do pedido", pergunta se envia e abre o compositor de e-mail com o PDF dos pedidos em anexo.
-    public class PedidoEmailAutomatico
+    // Também atende o "Enviar por E-mail" manual do Carrinho e do Pedido (openMailFormWithPedido), via IEnvioPdfPedidoEmail.
+    public class PedidoEmailAutomatico : IEnvioPdfPedidoEmail
     {
         private const string Sistema = "Pegada";
 
@@ -26,10 +27,13 @@ namespace Pegada.Core.Services
         private readonly IClienteRepository _clienteRepository;
         private readonly IFotoRepository _fotoRepository;
         private readonly IParametroSincronizacaoRepository _parametroSincronizacaoRepository;
+        private readonly IPedidoRepository _pedidoRepository;
 
         public PedidoEmailAutomatico(EmailPedidoRepository emailRepository, IPrintService printService, IClienteRepository clienteRepository,
-                                     IFotoRepository fotoRepository, IParametroSincronizacaoRepository parametroSincronizacaoRepository)
+                                     IFotoRepository fotoRepository, IParametroSincronizacaoRepository parametroSincronizacaoRepository,
+                                     IPedidoRepository pedidoRepository)
         {
+            _pedidoRepository = pedidoRepository;
             _emailRepository = emailRepository;
             _printService = printService;
             _clienteRepository = clienteRepository;
@@ -66,11 +70,60 @@ namespace Pegada.Core.Services
             if (!enviar)
                 return;
 
-            await MontarEmailAsync(pedidos, emails, textos);
+            await MontarEmailAsync(pedidos, emails, textos, textos.TituloTransmissao, textos.MontarCorpo);
+        }
+
+        // openMailFormWithPedido (CarrinhoViewController/PedidoViewController): sem pergunta, abre direto o compositor
+        // com o e-mail do pedido + contatos com cópia do pedido (abre mesmo sem destinatário, como no iOS) e o PDF anexo.
+        // Os pedidos chegam validados (marcados e do mesmo cliente/grupo); destinatários são os do 1º, igual ao iOS.
+        public async Task AbrirEmailAsync(List<CarrinhoCommandResult> pedidos, OrigemEnvioPdfEmail origem)
+        {
+            if (pedidos == null || pedidos.Count == 0)
+                return;
+
+            var textos = Textos.Do(Session.Idioma);
+            var paraPdf = pedidos;
+            var emails = new List<string>();
+            try
+            {
+                UserDialogs.Instance.ShowLoading(textos.GerandoPdf);
+
+                // Carrinho: itens completos (com PVL) pela regra do PedidoRepository do Pegada para origem "C",
+                // em cópias, sem mexer nos carrinhos da tela.
+                if (origem == OrigemEnvioPdfEmail.Carrinho)
+                {
+                    paraPdf = new List<CarrinhoCommandResult>();
+                    foreach (var pedido in pedidos)
+                    {
+                        var copia = pedido.CopiaRasa(null);
+                        copia.Origem = "C";
+                        paraPdf.Add(copia.CopiaRasa(await _pedidoRepository.GetItensPedidos(copia)));
+                    }
+                }
+
+                var primeiro = pedidos[0];
+                var candidatos = (primeiro.Email ?? string.Empty).Split(';')
+                    .Concat(await _emailRepository.BuscarEmailsCopiaPedido(primeiro.CodPessoaCliente));
+                foreach (var email in candidatos.Select(e => e?.Trim()).Where(e => !string.IsNullOrEmpty(e)))
+                {
+                    if (!emails.Any(e => string.Equals(e, email, StringComparison.OrdinalIgnoreCase)))
+                        emails.Add(email);
+                }
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                await UserDialogs.Instance.AlertAsync(ex.Message, textos.Atencao, "OK");
+                return;
+            }
+
+            Func<string, string> corpo = origem == OrigemEnvioPdfEmail.Pedido ? (Func<string, string>)textos.MontarCorpoPedido : textos.MontarCorpo;
+            await MontarEmailAsync(paraPdf, emails, textos, textos.Atencao, corpo);
         }
 
         // montaPedidoEmail:
-        private async Task MontarEmailAsync(List<CarrinhoCommandResult> pedidos, List<string> emails, Textos textos)
+        private async Task MontarEmailAsync(List<CarrinhoCommandResult> pedidos, List<string> emails, Textos textos,
+                                            string tituloAlerta, Func<string, string> montarCorpo)
         {
             try
             {
@@ -83,7 +136,7 @@ namespace Pegada.Core.Services
                 var mensagem = new EmailMessage
                 {
                     Subject = $"{Sistema} - {textos.RecebemosSeuPedido} {codigos}",
-                    Body = textos.MontarCorpo(codigos),
+                    Body = montarCorpo(codigos),
                     BodyFormat = EmailBodyFormat.PlainText,
                     To = emails
                 };
@@ -94,12 +147,12 @@ namespace Pegada.Core.Services
             catch (FeatureNotSupportedException)
             {
                 UserDialogs.Instance.HideLoading();
-                await UserDialogs.Instance.AlertAsync(textos.EmailNaoConfigurado, textos.TituloTransmissao, "OK");
+                await UserDialogs.Instance.AlertAsync(textos.EmailNaoConfigurado, tituloAlerta, "OK");
             }
             catch (Exception ex)
             {
                 UserDialogs.Instance.HideLoading();
-                await UserDialogs.Instance.AlertAsync(ex.Message, textos.TituloTransmissao, "OK");
+                await UserDialogs.Instance.AlertAsync(ex.Message, tituloAlerta, "OK");
             }
         }
 
@@ -136,6 +189,7 @@ namespace Pegada.Core.Services
             public string ConformeAnexo;
             public string EmailNaoConfigurado;
             public string GerandoPdf;
+            public string Atencao;
             public bool Portugues;
 
             public static Textos Do(string idioma)
@@ -157,7 +211,8 @@ namespace Pegada.Core.Services
                             RecebemosPedido = " we have received your order number, following order attached",
                             ConformeAnexo = "see attached",
                             EmailNaoConfigurado = "Could not send the e-mail. Check the e-mail configuration of your iPad!",
-                            GerandoPdf = "Generating PDF"
+                            GerandoPdf = "Generating PDF",
+                            Atencao = "Attention"
                         };
                     case "es":
                         return new Textos
@@ -172,7 +227,8 @@ namespace Pegada.Core.Services
                             RecebemosPedido = "Recibimos su pedido de número",
                             ConformeAnexo = "conforme anexo",
                             EmailNaoConfigurado = "No se pudo enviar el correo. ¡Verifique la configuración de correo de su iPad!",
-                            GerandoPdf = "Generando PDF"
+                            GerandoPdf = "Generando PDF",
+                            Atencao = "Atención"
                         };
                     default:
                         return new Textos
@@ -188,7 +244,8 @@ namespace Pegada.Core.Services
                             RecebemosPedido = "ATENÇÃO-Para evitar qualquer tipo de problema na entrega, favor revisar em sua cópia de pedido as seguintes informações: Endereço da loja, Preços, Prazo, Modelos e Quantidades. Caso note alguma divergência informe o seu representante comercial.",
                             ConformeAnexo = "\n\nObrigado. Calçados Pegada Nordeste LTDA",
                             EmailNaoConfigurado = "Não foi possível enviar o e-mail. Verifique a configuração de e-mail do seu iPad!",
-                            GerandoPdf = "Gerando PDF"
+                            GerandoPdf = "Gerando PDF",
+                            Atencao = "Atenção"
                         };
                 }
             }
@@ -200,6 +257,16 @@ namespace Pegada.Core.Services
                     return $"{Prezado}\n\n    {RecebemosPedido} {ConformeAnexo}.\n\n{Sistema}";
 
                 return $"{Prezado},\n\n    {codigos} {RecebemosPedido}, {ConformeAnexo}.\n\n{Sistema}";
+            }
+
+            // Corpo do "Enviar por E-mail" do PedidoViewController (PegadaIOS): sem a assinatura "Pegada" e, fora do
+            // português, com os números depois do "recebemos seu pedido".
+            public string MontarCorpoPedido(string codigos)
+            {
+                if (Portugues)
+                    return $"{Prezado}\n\n    {RecebemosPedido} {ConformeAnexo}.\n";
+
+                return $"{Prezado},\n\n  {RecebemosPedido} {codigos}, {ConformeAnexo}.\n";
             }
         }
     }

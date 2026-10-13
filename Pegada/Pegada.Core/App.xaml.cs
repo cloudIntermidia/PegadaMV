@@ -66,8 +66,16 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.NavegacaoBottomIconeComTexto = true;
             MobiliVendas.Core.Session.PedidoUsaRegrasIOS = true;
             MobiliVendas.Core.Session.NotasUsaRegrasIOS = true;
+            // Aba Títulos com o layout do TituloViewController do PegadaIOS.
+            MobiliVendas.Core.Session.CriarTitulosPage = () => new Pegada.Core.Views.Negocio.TitulosPage();
+            // Aba Notas com o layout do NotaFiscalViewController do PegadaIOS.
+            MobiliVendas.Core.Session.CriarNotasPage = () => new Pegada.Core.Views.Negocio.NotasPage();
+            MobiliVendas.Core.Session.NegociosConteudoAteNavegacao = true;
+            MobiliVendas.Core.Session.PopupSelecaoUsaCoresDoApp = true;
             MobiliVendas.Core.Session.SincronizacaoUsaMenuIOS = true;
             MobiliVendas.Core.Session.CatalogoFiltrosUsaLayoutIOS = true;
+            // Mesmo azul do fundo do FundoCatalogo2.png (RGB 22,65,148): sem sobra branca em volta da imagem.
+            MobiliVendas.Core.Session.CorFundoCatalogo = "#164194";
             MobiliVendas.Core.ConfiguracaoVisual.IsCaixaUnica = true;
             MobiliVendas.Core.Session.DATATEMPLATES_CONFIG = new List<MobiliVendas.Core.Models.DataTemplateConfiguracao>()
             {
@@ -101,6 +109,8 @@ namespace Pegada.Core
             containerRegistry.RegisterForNavigation<Pegada.Core.Views.Negocio.PedidoPage, PedidoPageViewModel>();
             containerRegistry.RegisterForNavigation<AlocacaoProdutoPage, AlocacaoProdutoPageViewModel>();
             containerRegistry.RegisterForNavigation<TitulosPage, TitulosPageViewModel>();
+            Prism.Mvvm.ViewModelLocationProvider.Register<Pegada.Core.Views.Negocio.TitulosPage, TitulosPageViewModel>();
+            Prism.Mvvm.ViewModelLocationProvider.Register<Pegada.Core.Views.Negocio.NotasPage, NotasPageViewModel>();
             containerRegistry.RegisterForNavigation<NotasPage, NotasPageViewModel>();
             containerRegistry.RegisterForNavigation<PreVenda, PreVendaViewModel>();
             containerRegistry.RegisterForNavigation<ConsultaEstoquePage, ConsultaEstoqueViewModel>();
@@ -108,6 +118,10 @@ namespace Pegada.Core
             containerRegistry.RegisterForNavigation<SincronizacaoPage, SincronizacaoPageViewModel>();
             containerRegistry.RegisterForNavigation<GerenciamentoMapPage, GerenciamentoMapPageViewModel>();
             containerRegistry.Register<AtendimentoUtility>();
+            // "Enviar por E-mail" do Carrinho/Pedido com o compositor de e-mail e o PDF anexo (openMailFormWithPedido do PegadaIOS).
+            containerRegistry.Register<MobiliVendas.Core.Services.Contracts.IEnvioPdfPedidoEmail, Pegada.Core.Services.PedidoEmailAutomatico>();
+            // "Enviar como Excel por E-mail" do Pedido com a tela "Envio de Pedido" (EnvioPedidoExcelViewController do PegadaIOS).
+            containerRegistry.Register<MobiliVendas.Core.Services.Contracts.IEnvioPedidoExcel, Pegada.Core.Services.EnvioPedidoExcelService>();
             containerRegistry.RegisterForNavigation<MaisFiltroPopupView>();
             containerRegistry.RegisterForNavigation<MaisFiltroPEPopupView>();
             containerRegistry.RegisterForNavigation<PedidoFacilPage>();

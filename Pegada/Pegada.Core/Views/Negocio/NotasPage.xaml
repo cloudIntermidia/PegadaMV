@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
+             xmlns:conv="clr-namespace:Pegada.Core.Converters"
+             xmlns:shared="clr-namespace:Pegada.Core.Views.Shared"
+             xmlns:ext="clr-namespace:MobiliVendas.Core.CustomView;assembly=MobiliVendas.Core"
+             x:Class="Pegada.Core.Views.Negocio.NotasPage">
+
+    <!--
+        Layout espelhado da cena NotaFiscalViewController do PegadaIOS (MainStoryboard, 1024x610):
+          - filtros (60, #D0D0D0)   : Vendedor | Grupo | Cliente | Período de Emissão (Início à Fim) | Situação | Pedido | Número | Consultar
+          - cabeçalho (30) + lista (linhas de 36, system 14)
+          - totais (67, #7F7F7F)    : Ver Títulos | Imprimir | Quantidade Total | Valor Total | n nota(s) encontrada(s)
+        Larguras proporcionais às posições (x, largura) do storyboard; alturas e posições verticais iguais.
+        Totais encostados no fim da tela (a lista vai até eles), como na aba Títulos.
+    -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:ValorPtBrConverter x:Key="ValorPtBr" />
+
+            <Style x:Key="notRotuloFiltro" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HeightRequest" Value="21" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="NoWrap" />
+            </Style>
+
+            <Style x:Key="notCombo" TargetType="shared:BotaoComboIOS">
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HeightRequest" Value="31" />
+            </Style>
+
+            <Style x:Key="notCampo" TargetType="Entry">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="HeightRequest" Value="31" />
+            </Style>
+
+            <!-- IMButton: fundo branco arredondado, negrito 15 cinza escuro -->
+            <Style x:Key="notBotao" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="#C7C7C7" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="TextColor" Value="#555555" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalOptions" Value="Start" />
+            </Style>
+
+            <Style x:Key="notCabecalho" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#808080" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="Margin" Value="0,0,1,0" />
+            </Style>
+
+            <Style x:Key="notCelula" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="Margin" Value="0,0,1,1" />
+            </Style>
+
+            <Style x:Key="notTotal" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- AbsoluteLayout + FillAndExpand: na aba da NegociosPage (StackLayout) a lista ocupa o resto da altura -->
+    <AbsoluteLayout VerticalOptions="FillAndExpand">
+    <Grid AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" BackgroundColor="White" RowSpacing="0" ColumnSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="67" />
+        </Grid.RowDefinitions>
+
+        <!-- ============ FILTROS (BWs-SX-1GK) ============
+             Colunas pelas bordas x do storyboard: 0 3 107 108 209 215 339 342 424 426 433 515 519 635 638 741 747 855 863 1019 1025;
+             cada controle no topo da linha com Margin = y do storyboard (a faixa começa em y = -1). -->
+        <Grid Grid.Row="0" BackgroundColor="#D0D0D0" RowSpacing="0" ColumnSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="104*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="101*" />
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="124*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="82*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="82*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="116*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="103*" />
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="108*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="156*" />
+                <ColumnDefinition Width="6*" />
+            </Grid.ColumnDefinitions>
+
+            <shared:BotaoComboIOS Grid.Column="1" Style="{StaticResource notCombo}" Margin="0,24,0,0"
+                                  Titulo="{translator:Translate PedidoTela_PedidoVC_Vendedor}"
+                                  Valor="{Binding VendedorSelecionado.Descricao}"
+                                  Command="{Binding SelecionarVendedorTituloCommand}" />
+            <shared:BotaoComboIOS Grid.Column="3" Style="{StaticResource notCombo}" Margin="0,24,0,0"
+                                  Titulo="{translator:Translate PedidoTela_PedidoVC_Grupo}"
+                                  Valor="{Binding GrupoSelecionado.Descricao}"
+                                  Command="{Binding SelecionarGrupoTituloCommand}" />
+            <shared:BotaoComboIOS Grid.Column="5" Style="{StaticResource notCombo}" Margin="0,24,0,0"
+                                  Titulo="{translator:Translate PedidoTela_PedidoVC_Cliente}"
+                                  Valor="{Binding ClienteSelecionado.Descricao}"
+                                  Command="{Binding SelecionarClienteTituloCommand}" />
+
+            <!-- Período de Emissão: Início à Fim -->
+            <Label Grid.Column="7" Grid.ColumnSpan="4" Style="{StaticResource notRotuloFiltro}" Margin="0,5,0,0"
+                   HorizontalTextAlignment="Center" Text="{translator:Translate PedidoTela_NotaFiscalTVC_PeriodoEmissao}" />
+            <shared:BotaoComboIOS Grid.Column="7" Style="{StaticResource notCombo}" Margin="0,26,0,0"
+                                  Titulo="{translator:Translate PedidoTela_TituloVC_BtnInicio}"
+                                  Valor="{Binding Filtro.DataEmissaoInicial, StringFormat='{0:dd/MM/yyyy}'}"
+                                  Command="{Binding SelecionarDataEmissaoCommand}" CommandParameter="INICIO" />
+            <Label Grid.Column="8" Grid.ColumnSpan="2" Style="{StaticResource notRotuloFiltro}" Margin="0,35,0,0" HeightRequest="20"
+                   HorizontalTextAlignment="Center" Text="{translator:Translate PedidoTela_TituloVC_lblA}" />
+            <shared:BotaoComboIOS Grid.Column="10" Style="{StaticResource notCombo}" Margin="0,24,0,0"
+                                  Titulo="{translator:Translate PedidoTela_TituloVC_BtnFim}"
+                                  Valor="{Binding Filtro.DataEmissaoFinal, StringFormat='{0:dd/MM/yyyy}'}"
+                                  Command="{Binding SelecionarDataEmissaoCommand}" CommandParameter="FIM" />
+
+            <shared:BotaoComboIOS Grid.Column="12" Style="{StaticResource notCombo}" Margin="0,24,0,0"
+                                  Titulo="{translator:Translate PedidoTela_PedidoVC_Situacao}"
+                                  Valor="{Binding SituacaoSelecionado.Descricao}"
+                                  Command="{Binding SelecionarSituacaoTituloCommand}" />
+
+            <!-- Pedido / Número (rótulo negrito 13 em cima, campo roundedRect system 14 embaixo) -->
+            <Label Grid.Column="14" Style="{StaticResource notRotuloFiltro}" Margin="0,5,0,0" Text="{translator:Translate NegocioPedidoEntryPedido}" />
+            <Entry Grid.Column="14" Style="{StaticResource notCampo}" Margin="0,24,0,0" Text="{Binding Filtro.NumeroPedido}" />
+            <Label Grid.Column="16" Style="{StaticResource notRotuloFiltro}" Margin="0,5,0,0" Text="{translator:Translate PedidoTela_PDFNotaFiscalVC_Numero}" />
+            <Entry Grid.Column="16" Style="{StaticResource notCampo}" Margin="0,24,0,0" Text="{Binding Filtro.NotaFiscal}" />
+
+            <Button Grid.Column="18" Style="{StaticResource notBotao}" Margin="0,24,0,0" HeightRequest="28"
+                    Text="{translator:Translate PedidoTela_PEVC_Consultar}"
+                    Command="{Binding ConsultarCommand}" />
+        </Grid>
+
+        <!-- ============ CABEÇALHO (gVz-xw-3bb): fundo #CCCCCC aparece nos vãos de 1 entre as colunas ============ -->
+        <Grid Grid.Row="1" BackgroundColor="#CCCCCC" RowSpacing="0" ColumnSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="104*" />
+                <ColumnDefinition Width="73*" />
+                <ColumnDefinition Width="90*" />
+                <ColumnDefinition Width="67*" />
+                <ColumnDefinition Width="46*" />
+                <ColumnDefinition Width="378*" />
+                <ColumnDefinition Width="126*" />
+                <ColumnDefinition Width="83*" />
+                <ColumnDefinition Width="58*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Style="{StaticResource notCabecalho}" Text="{translator:Translate NotasHeaderDataEmissao}" />
+            <Label Grid.Column="1" Style="{StaticResource notCabecalho}" Text="{translator:Translate NotasHeaderEmpresa}" />
+            <Label Grid.Column="2" Style="{StaticResource notCabecalho}" Text="{translator:Translate PedidoTela_PDFNotaFiscalVC_Numero}" />
+            <Label Grid.Column="3" Style="{StaticResource notCabecalho}" Text="{translator:Translate NotasHeaderSerie}" />
+            <Label Grid.Column="4" Style="{StaticResource notCabecalho}" Text="{translator:Translate NotasHeaderFilial}" />
+            <Label Grid.Column="5" Style="{StaticResource notCabecalho}" Text="{translator:Translate PedidoTela_PedidoVC_Cliente}" />
+            <Label Grid.Column="6" Style="{StaticResource notCabecalho}" Text="{translator:Translate NegocioTitulosBtnSituacao}" />
+            <Label Grid.Column="7" Style="{StaticResource notCabecalho}" Text="{translator:Translate NotasHeaderValor}" />
+            <Label Grid.Column="8" Style="{StaticResource notCabecalho}" Margin="0,0,2,0" Text="{translator:Translate NotasHeaderQtd}" />
+        </Grid>
+
+        <!-- ============ LISTA (Gno-2Z-hQc / NotaFiscalTableViewCell, linhas de 36) ============ -->
+        <ListView Grid.Row="2"
+                  RowHeight="36"
+                  SeparatorVisibility="Default"
+                  ItemsSource="{Binding ListaRegistro}"
+                  SelectedItem="{Binding NotaSelecionada, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <!-- Nota selecionada em cinza (seleção padrão da UITableView no iOS; a 1ª já vem selecionada) -->
+                    <ext:ExtendedViewCell SelectedBackgroundColor="#D9D9D9">
+                        <Grid RowSpacing="0" ColumnSpacing="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="104*" />
+                                <ColumnDefinition Width="73*" />
+                                <ColumnDefinition Width="90*" />
+                                <ColumnDefinition Width="67*" />
+                                <ColumnDefinition Width="46*" />
+                                <ColumnDefinition Width="378*" />
+                                <ColumnDefinition Width="126*" />
+                                <ColumnDefinition Width="83*" />
+                                <ColumnDefinition Width="58*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Style="{StaticResource notCelula}" Text="{Binding DataEmissao, StringFormat='{0:dd/MM/yyyy}'}" />
+                            <Label Grid.Column="1" Style="{StaticResource notCelula}" Text="{Binding CodEmpresa}" />
+                            <Label Grid.Column="2" Style="{StaticResource notCelula}" Text="{Binding NumeroNF}" />
+                            <Label Grid.Column="3" Style="{StaticResource notCelula}" Text="{Binding SerieNF}" />
+                            <Label Grid.Column="4" Style="{StaticResource notCelula}" Text="{Binding CodFilial}" />
+                            <Label Grid.Column="5" Style="{StaticResource notCelula}" Text="{Binding Cliente}" />
+                            <Label Grid.Column="6" Style="{StaticResource notCelula}" Text="{Binding Situacao}" />
+                            <!-- Valor alinhado à direita (textAlignment right no storyboard) -->
+                            <Label Grid.Column="7" Style="{StaticResource notCelula}" HorizontalTextAlignment="End"
+                                   Text="{Binding ValorTotal, Converter={StaticResource ValorPtBr}}" />
+                            <Label Grid.Column="8" Style="{StaticResource notCelula}" Text="{Binding QtdTotal}" />
+                        </Grid>
+                    </ext:ExtendedViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- ============ TOTAIS (5em-Lt-hdx): fundo #7F7F7F, negrito 14 branco ============
+             Colunas pelas bordas x: 0 55 156 164 265 483 607 610 713 730 775 835 839 855 858 992 1013 1025. -->
+        <Grid Grid.Row="3" BackgroundColor="#7F7F7F" RowSpacing="0" ColumnSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10" />
+                <RowDefinition Height="21" />
+                <RowDefinition Height="7" />
+                <RowDefinition Height="21" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="55*" />
+                <ColumnDefinition Width="101*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="101*" />
+                <ColumnDefinition Width="218*" />
+                <ColumnDefinition Width="124*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="103*" />
+                <ColumnDefinition Width="17*" />
+                <ColumnDefinition Width="45*" />
+                <ColumnDefinition Width="60*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="16*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="134*" />
+                <ColumnDefinition Width="21*" />
+                <ColumnDefinition Width="12*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Ver Títulos / Imprimir (IMButton 101x30 em y 19) -->
+            <Button Grid.Row="0" Grid.RowSpan="5" Grid.Column="1" Style="{StaticResource notBotao}" Margin="0,19,0,0" HeightRequest="30"
+                    Text="{translator:Translate NotasBtnVerTitulos}"
+                    Command="{Binding VerTitulosCommand}" />
+            <Button Grid.Row="0" Grid.RowSpan="5" Grid.Column="3" Style="{StaticResource notBotao}" Margin="0,19,0,0" HeightRequest="30"
+                    Text="{translator:Translate PedidoTela_Global_Imprimir}"
+                    Command="{Binding ImprimirCommand}" />
+
+            <Label Grid.Row="1" Grid.Column="5" Style="{StaticResource notTotal}" HorizontalTextAlignment="End"
+                   Text="{translator:Translate NotasFooterQtdTotal}" />
+            <Label Grid.Row="1" Grid.Column="7" Style="{StaticResource notTotal}"
+                   Text="{Binding Total.QtdTotal, TargetNullValue='0', FallbackValue='0'}" />
+            <Label Grid.Row="1" Grid.Column="9" Grid.ColumnSpan="4" Style="{StaticResource notTotal}" HorizontalTextAlignment="End"
+                   Text="{translator:Translate TitulosFooterValorTotal}" />
+            <Label Grid.Row="1" Grid.Column="14" Grid.ColumnSpan="2" Style="{StaticResource notTotal}"
+                   Text="{Binding Total.ValorTotal, Converter={StaticResource ValorPtBr}, TargetNullValue='0,00', FallbackValue='0,00'}" />
+
+            <!-- "0  nota(s) encontrada(s)": quantidade alinhada à direita + texto fixo do storyboard (sem tradução no iOS) -->
+            <Label Grid.Row="3" Grid.Column="10" Style="{StaticResource notTotal}" HorizontalTextAlignment="End"
+                   Text="{Binding ListaRegistro.Count}" />
+            <Label Grid.Row="3" Grid.Column="12" Grid.ColumnSpan="3" Style="{StaticResource notTotal}"
+                   Text="nota(s) encontrada(s)" />
+        </Grid>
+    </Grid>
+    </AbsoluteLayout>
+</ContentPage>

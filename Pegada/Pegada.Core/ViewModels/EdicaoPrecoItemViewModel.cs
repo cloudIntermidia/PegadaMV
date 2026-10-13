@@ -54,6 +54,21 @@ namespace Pegada.Core.ViewModels
             return resultado;
         }
 
+        // Item de pedido (TBT_ITEM_PEDIDO): PerDs1 = financeiro, PerDs2..4 = níveis 2..4 (o MV não tem PerDs5).
+        // Total = soma simples, igual à coluna "Desconto" da tela de pedidos (carregaDescontoItemPedido do PegadaIOS).
+        public static async Task<DescontosItemCarrinho> CarregarPedido(ItemCarrinhoAcoesRepository repositorio, string codPedido, string codItemPedido)
+        {
+            var d = await repositorio.BuscarDescontosItemPedido(codPedido, codItemPedido);
+            return new DescontosItemCarrinho
+            {
+                Financeiro = Formatar(d.PerDs1 ?? 0),
+                Nivel2 = Formatar(d.PerDs2 ?? 0),
+                Nivel3 = Formatar(d.PerDs3 ?? 0),
+                Nivel4 = Formatar(d.PerDs4 ?? 0),
+                Total = Formatar((d.PerDs1 ?? 0) + (d.PerDs2 ?? 0) + (d.PerDs3 ?? 0) + (d.PerDs4 ?? 0))
+            };
+        }
+
         private static string Formatar(decimal valor) => valor.ToString("0.##", PtBr);
     }
 
@@ -239,6 +254,15 @@ namespace Pegada.Core.ViewModels
         public async Task Init(CarrinhoCommandResult carrinho, ItemCommandResult item)
         {
             Descontos = await DescontosItemCarrinho.Carregar(_repositorio, carrinho.CodCarrinho, item.CodItemCarrinho);
+        }
+
+        // Tela de pedidos: lista pedidos (TBT_ITEM_PEDIDO) e carrinhos (Origem "C", TBT_ITEM_CARRINHO_DESC).
+        public async Task InitPedido(CarrinhoCommandResult pedido, ItemCommandResult item)
+        {
+            if (pedido.Origem == "C")
+                Descontos = await DescontosItemCarrinho.Carregar(_repositorio, pedido.CodCarrinho, item.CodItemCarrinho);
+            else
+                Descontos = await DescontosItemCarrinho.CarregarPedido(_repositorio, pedido.CodPedido, item.CodItemPedido);
         }
     }
 }

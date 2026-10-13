@@ -27,6 +27,15 @@ namespace Pegada.Core.Repositories
         public decimal? PercentualDesconto { get; set; }
     }
 
+    // Percentuais de desconto do item de pedido já transmitido (TBT_ITEM_PEDIDO).
+    public class DescontoItemPedidoResult
+    {
+        public decimal? PerDs1 { get; set; }
+        public decimal? PerDs2 { get; set; }
+        public decimal? PerDs3 { get; set; }
+        public decimal? PerDs4 { get; set; }
+    }
+
     // Acesso a dados das ações do menu do item do carrinho (didSelectItemCarrinhoMenuOption, ItemCarrinhoTableViewController do PegadaIOS).
     public class ItemCarrinhoAcoesRepository
     {
@@ -80,6 +89,15 @@ namespace Pegada.Core.Repositories
                 "AND SeqItemPedido = ?";
 
             return await _sqlAsyncConnection.QueryAsync<DescontoItemCarrinhoResult>(sql, codCarrinho, ((int)codItemCarrinho).ToString());
+        }
+
+        // "Visualizar Desconto" na tela de pedidos: percentuais gravados no item do pedido.
+        public async Task<DescontoItemPedidoResult> BuscarDescontosItemPedido(string codPedido, string codItemPedido)
+        {
+            var result = await _sqlAsyncConnection.QueryAsync<DescontoItemPedidoResult>(
+                "SELECT PerDs1, PerDs2, PerDs3, PerDs4 FROM TBT_ITEM_PEDIDO WHERE CodPedido = ? AND CodItemPedido = ?",
+                codPedido, codItemPedido);
+            return result.FirstOrDefault() ?? new DescontoItemPedidoResult();
         }
 
         // touchSalvar (EdicaoItemCarrinhoViewController): updateMarkup (quando há PVL) + updateValorItemCarrinho.

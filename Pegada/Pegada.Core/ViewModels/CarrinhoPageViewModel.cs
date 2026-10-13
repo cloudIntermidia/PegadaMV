@@ -130,6 +130,7 @@ namespace Pegada.Core.ViewModels
         public ICommand TransmitirCommand { get; set; }
         public ICommand CancelarCommand { get; set; }
         public ICommand ImprimirCommand { get; set; }
+        public ICommand EnviarEmailCommand { get; set; }
         public ICommand MarcarCarrinhoCommand { get; set; }
         public ICommand TrocarClienteCommand { get; set; }
         public ICommand AgruparCommand { get; set; }
@@ -191,6 +192,7 @@ namespace Pegada.Core.ViewModels
             );
             CancelarCommand = new Command(Cancelar);
             ImprimirCommand = new Command<CarrinhoCommandResult>(Imprimir);
+            EnviarEmailCommand = new Command(EnviarEmail);
             MarcarCarrinhoCommand = new Command<CarrinhoCommandResult>(MarcarCarrinho);
             TrocarClienteCommand = new Command(TrocarClienteDoCarrinho);
             BloquearCommand = new Command(Bloquear);
@@ -893,6 +895,34 @@ namespace Pegada.Core.ViewModels
             }
         }
 
+        // CarrinhoMenuOptionEnviarEmail -> openMailFormWithPedido (CarrinhoViewController, PegadaIOS): carrinhos marcados
+        // do mesmo cliente, compositor de e-mail com o PDF em anexo.
+        private async void EnviarEmail()
+        {
+            try
+            {
+                var marcados = Pedidos.Where(x => x.CarrinhoChecado).ToList();
+                if (marcados.Count == 0)
+                {
+                    await UserDialogs.Instance.AlertAsync(T("PedidoTela_CarrinhoTBCell_carrinho_ParaEnvio"), T("GlobalTituloAtencao"), "OK");
+                    return;
+                }
+
+                if (marcados.Any(x => x.CodPessoaCliente != marcados[0].CodPessoaCliente))
+                {
+                    await UserDialogs.Instance.AlertAsync(T("PedidoTela_CarrinhoTB_envioEmailMulti"), T("GlobalTituloAtencao"), "OK");
+                    return;
+                }
+
+                await ServiceLocator.Current.GetInstance<IEnvioPdfPedidoEmail>().AbrirEmailAsync(marcados, OrigemEnvioPdfEmail.Carrinho);
+            }
+            catch (Exception ex)
+            {
+                UserDialogs.Instance.HideLoading();
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
         private async void Imprimir(CarrinhoCommandResult obj)
         {
             try
@@ -958,13 +988,20 @@ namespace Pegada.Core.ViewModels
                     }
                 }
 
-                //if (!Pedidos.Any(x => !x.CarrinhoChecado)
-                //    && !results.Any(x => !x.Sucesso)
-                //    )
-                //{
-                //    MessagingCenter.Send<object>(this, "AtendimentoFoiAlterado");
-                //    Session.ATENDIMENTO_ATUAL = null;
-                //}
+                // -cancelaCarrinho (CarrinhoViewController, PegadaIOS): sem carrinho em digitação o atendimento
+                // é encerrado. Mesmo tratamento do Transmitir: fecha, limpa a sessão e atualiza o badge do Carrinho.
+                if (Session.ATENDIMENTO_ATUAL != null)
+                {
+                    var carrinhosAbertos = await _atendimentoRepository.BuscarCarrinhosAbertos(Session.ATENDIMENTO_ATUAL.CodAtendimento);
+                    Session.QtdCar = carrinhosAbertos?.Count ?? 0;
+
+                    if (Session.QtdCar == 0)
+                    {
+                        await _atendimentoRepository.FecharAtendimento(Session.ATENDIMENTO_ATUAL.CodAtendimento);
+                        Session.ATENDIMENTO_ATUAL = null;
+                        MessagingCenter.Send<object>(this, "AtendimentoFoiAlterado");
+                    }
+                }
 
                 if (results.Any(x => !x.Sucesso))
                 {

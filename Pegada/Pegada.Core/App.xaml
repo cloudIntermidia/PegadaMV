@@ -482,6 +482,14 @@
                             <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
 
+                        <!-- Foto do modelo ocupa as linhas 0-2 e as 3 colunas, declarada primeiro pra ficar POR BAIXO de preços/ícones/sigla
+                             (que não mudam de lugar) - antes ficava presa na coluna do meio. As grades laterais de ícones não têm fundo
+                             próprio pra não cobrir a foto.
+                             Foto aberta já reduzida (em pixels de tela): no tamanho original (até 1500x1500)
+                             cada célula ocupava de 2 a 9 MB e a navegação entre modelos estourava a memória. -->
+                        <ffimageloading:CachedImage Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="10,0" InputTransparent="True" HorizontalOptions="Center" VerticalOptions="Center" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
+                            LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
+
                         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0,0,3,0">
 
                             <Grid.ColumnDefinitions>
@@ -506,9 +514,7 @@
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        IsVisible="{Binding IndPromocional}"
-                                       Text="{Binding PrecoDe,
-                                                      Converter={StaticResource ValorParaMoeda},
-                                                      StringFormat='De: {0}'}"
+                                       Text="{Binding PrecoDeUI, StringFormat='De: {0}'}"
                                        FontSize="10"
                                        FontFamily="{StaticResource RobotoBoldFont}"
                                        TextColor="LightGray"
@@ -519,7 +525,7 @@
                                 <!-- PREÇO POR / PREÇO NORMAL -->
                                <Label Grid.Row="0"
                                        Grid.Column="3"
-                                       Text="{Binding PrecoPor, Converter={StaticResource ValorParaMoeda}}"
+                                       Text="{Binding PrecoPorUI}"
                                        FontSize="11"
                                        HorizontalOptions="EndAndExpand"
                                        VerticalOptions="Center">
@@ -532,9 +538,7 @@
                                                      Value="1">
 
                                             <Setter Property="Text"
-                                                    Value="{Binding PrecoPor,
-                                                                    Converter={StaticResource ValorParaMoeda},
-                                                                    StringFormat='Por: {0}'}"/>
+                                                    Value="{Binding PrecoPorUI, StringFormat='Por: {0}'}"/>
 
                                             <Setter Property="TextColor"
                                                     Value="#006633"/>
@@ -582,7 +586,7 @@
 
                         <!-- Linhas proporcionais: com a linha de 18 do "SOMENTE ESTOQUE" a área ficou ~106 de altura e 4x30 empurrava
                              o coração (favorito) pra fora do grid - no iOS o toque fora dos limites do pai não chega no ícone. -->
-                        <Grid Grid.Row="1" Grid.Column="0" BackgroundColor="White" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Grid Grid.Row="1" Grid.Column="0" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -606,17 +610,17 @@
                                 LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
 
                             <!-- Coluna 0 da célula tem 40: com Margin="10,0" sobravam só 20 pro ícone (o tamanho pedido era ignorado).
-                                 Margem 3+2 deixa o ícone caber inteiro. -->
+                                 Margem 3+2 deixa o ícone caber inteiro. Encostado à esquerda (Start + 2) pra ficar longe da foto. -->
                             <ffimageloading:CachedImage 
                                                 Grid.Row="3" Grid.Column="0"
                                                 DownsampleToViewSize="False" 
                                                 Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='wish_unchecked.png,wish_checked.png'}" 
                                                 LoadingPlaceholder="NaoDisp.png"
                                                 Aspect="AspectFit" 
-                                                HorizontalOptions="End"
+                                                HorizontalOptions="Start"
                                                 HeightRequest="28"
                                                 WidthRequest="28"
-                                                Margin="3,0,2,0"
+                                                Margin="2,0,0,0"
                                                 >
                                 <ffimageloading:CachedImage.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" 
@@ -629,7 +633,7 @@
 
                         </Grid>
 
-                        <Grid Grid.Row="1" Grid.Column="2" BackgroundColor="White" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Grid Grid.Row="1" Grid.Column="2" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -694,11 +698,6 @@
                             <ffimageloading:CachedImage Grid.Row="3" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeForaLinha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',fora_linha.png'}" 
                                 LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="35" WidthRequest="35" Margin="10,0" />
                         </Grid>
-
-                        <!-- Foto aberta já reduzida (~130pt de altura, em pixels de tela): no tamanho original (até 1500x1500)
-                             cada célula ocupava de 2 a 9 MB e a navegação entre modelos estourava a memória. -->
-                        <ffimageloading:CachedImage Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" DownsampleHeight="130" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
-                            LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
 
 
                         <Label Grid.Row="2"

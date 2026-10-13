@@ -8,6 +8,7 @@
              xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              xmlns:conv="clr-namespace:Pegada.Core.Converters"
+             xmlns:beh="clr-namespace:Pegada.Core.Behaviors"
              x:Name="this"
              x:Class="Pegada.Core.Views.Negocio.PedidoPage">
 
@@ -17,7 +18,7 @@
           - lista de pedidos (234)        : cabeçalho (30) + linhas (50)
           - barra de totais (35)          : Qtd Pedidos | Qtd Total Itens | Valor Total
           - itens do pedido (restante)    : cabeçalho + linhas (30) + grade (esquerda) + foto (direita)
-          - painel "+ Filtros" (320 de largura, à direita, sobre a tela)
+          - painel "+ Filtros" (380 de largura, à direita, sobre a tela)
         As larguras das colunas são proporcionais às posições (x, largura) do storyboard.
     -->
     <ContentPage.Resources>
@@ -79,6 +80,8 @@
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
                 <Setter Property="MaxLines" Value="2" />
                 <Setter Property="Margin" Value="0,0,1,0" />
+                <!-- Diminui a fonte até o título caber na coluna em até 2 linhas (FontSize do Label = máxima) -->
+                <Setter Property="beh:AjusteFonte.Ativo" Value="True" />
             </Style>
 
             <!-- Células das listas -->
@@ -88,6 +91,8 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <!-- Diminui a fonte até o valor caber na coluna em MaxLines linhas (sem MaxLines = 1) -->
+                <Setter Property="beh:AjusteFonte.Ativo" Value="True" />
             </Style>
 
             <!-- Textos da barra de totais -->
@@ -333,7 +338,7 @@
                                            MaxLines="3" Text="{Binding ClienteUI}" />
 
                                     <Label Grid.Column="6" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding CondicaoPagamento}" />
-                                    <Label Grid.Column="7" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding TipoPedido}" />
+                                    <Label Grid.Column="7" Style="{StaticResource pedCelula}" Margin="0,4,0,9" MaxLines="2" Text="{Binding TipoPedido}" />
                                     <Label Grid.Column="8" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding Situacao}" />
                                     <Label Grid.Column="9" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding DataEmissao, StringFormat='{0:dd/MM/yyyy}'}" />
                                     <Label Grid.Column="10" Style="{StaticResource pedCelula}" Margin="0,4,0,9" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" />
@@ -451,7 +456,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="109" />
+                    <!-- Grade + foto no fim da tela: altura do conteúdo, a lista de itens fica com o resto -->
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!-- Cabeçalho -->
@@ -553,20 +559,27 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                <!-- Grade do item (esquerda, 623 de largura) e foto do produto (direita, 361 de largura) -->
+                <!-- Botão "Visualizar Desconto" (esquerda, embaixo, como nos itens do Carrinho), grade do item logo depois do botão e foto do produto (direita, 361 de largura) -->
                 <Grid Grid.Row="2" ColumnSpacing="0" RowSpacing="0">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="623*" />
                         <ColumnDefinition Width="40*" />
                         <ColumnDefinition Width="361*" />
                     </Grid.ColumnDefinitions>
 
+                    <flex:FlexButton x:Name="BtnVisualizarDesconto" Grid.Column="0"
+                                     Style="{StaticResource flexButtonAction}" WidthRequest="150" HeightRequest="38" FontSize="11"
+                                     VerticalOptions="End" Margin="10,0,10,6"
+                                     Text="{translator:Translate CarrinhoBtnVisualizarDesconto}"
+                                     IsVisible="{Binding BindingContext.GradeVisivel, Source={x:Reference this}}" />
+
                     <!-- Grade: 1ª coluna com o país ("BR"; cliente estrangeiro: "BR" e "EX"), depois uma coluna por tamanho:
                          [tamanho BR original] / tamanho do país / quantidade (linhas de 21) -->
-                    <ScrollView Grid.Column="0" Orientation="Horizontal" VerticalOptions="Start" Margin="0,20,0,0"
+                    <ScrollView Grid.Column="1" Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="End" Margin="30,4,0,6"
                                 HorizontalScrollBarVisibility="Never"
                                 IsVisible="{Binding BindingContext.GradeVisivel, Source={x:Reference this}}">
-                        <StackLayout Orientation="Horizontal" Spacing="1" HeightRequest="65">
+                        <StackLayout Orientation="Horizontal" Spacing="1">
                             <StackLayout Spacing="1" WidthRequest="31.5">
                                 <Label Style="{StaticResource pedGradeCabecalho}" FontAttributes="None" Text="BR" />
                                 <Label Style="{StaticResource pedGradeCabecalho}" FontAttributes="None" Text="EX"
@@ -593,17 +606,17 @@
                     </ScrollView>
 
                     <!-- Foto do produto do item selecionado (produto/modelo; sem foto: "NaoDisp") -->
-                    <Image Grid.Column="2" Aspect="AspectFit" VerticalOptions="Start" HeightRequest="89"
+                    <Image Grid.Column="3" Aspect="AspectFit" VerticalOptions="End" HeightRequest="72" Margin="0,4,0,4"
                            Source="{Binding BindingContext.ItemSelecionado.Imagem, Source={x:Reference this}, Converter={StaticResource Base64ParaImagem}}" />
-                    <Image Grid.Column="2" Aspect="AspectFit" VerticalOptions="Start" HeightRequest="89" Source="NaoDisp.png"
+                    <Image Grid.Column="3" Aspect="AspectFit" VerticalOptions="End" HeightRequest="72" Margin="0,4,0,4" Source="NaoDisp.png"
                            IsVisible="{Binding BindingContext.FotoIndisponivel, Source={x:Reference this}}" />
                 </Grid>
             </Grid>
         </Grid>
 
-        <!-- ============ PAINEL "+ FILTROS" (FiltroPedidoViewController, 320 de largura) ============ -->
+        <!-- ============ PAINEL "+ FILTROS" (FiltroPedidoViewController, 380 de largura; 320 no iOS) ============ -->
         <Grid x:Name="PainelFiltros"
-              AbsoluteLayout.LayoutBounds="1,0,320,1"
+              AbsoluteLayout.LayoutBounds="1,0,380,1"
               AbsoluteLayout.LayoutFlags="XProportional,HeightProportional"
               BackgroundColor="#D3D3D3"
               IsClippedToBounds="True"
@@ -620,27 +633,29 @@
             </Frame>
 
             <ScrollView>
-                <AbsoluteLayout WidthRequest="320" HeightRequest="601">
+                <AbsoluteLayout WidthRequest="380" HeightRequest="601">
 
-                    <Label AbsoluteLayout.LayoutBounds="0,11,320,24"
+                    <Label AbsoluteLayout.LayoutBounds="0,11,380,24"
                            Text="{translator:Translate PedidoTela_PEVC_FiltrosTitle}"
                            FontSize="17" FontAttributes="Bold" TextColor="Black"
                            HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
 
+                    <!-- Painel com 380 (o FiltroPedidoViewController do PegadaIOS tem 320): datas com 116 e fonte 12 pra "dd/MM/yyyy"
+                         caber sem truncar; combos, campos e botões esticados até 347. -->
                     <!-- PedidoTela_PedidoVC_Emissao -->
                     <Label AbsoluteLayout.LayoutBounds="33,32,64,28" Style="{StaticResource pedFiltroRotulo}"
                            HorizontalTextAlignment="Start"
                            Text="{translator:Translate PedidoTela_PedidoVC_Emissao}" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="99,32,82,28" Style="{StaticResource pedBotao}"
-                                     WidthRequest="82" HeightRequest="28"
+                    <flex:FlexButton x:Name="BtnDataEmissaoInicio" AbsoluteLayout.LayoutBounds="99,32,116,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="116" HeightRequest="28" FontSize="12"
                                      Text="{Binding BindingContext.Filtro.DataEmissaoInicial, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnInicio}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarDataEmissaoCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="INICIO" />
-                    <Label AbsoluteLayout.LayoutBounds="181,32,26,28" Style="{StaticResource pedFiltroRotulo}"
+                    <Label AbsoluteLayout.LayoutBounds="215,32,16,28" Style="{StaticResource pedFiltroRotulo}"
                            HorizontalTextAlignment="Center"
                            Text="{translator:Translate PedidoTela_TituloVC_lblA}" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="207,32,80,28" Style="{StaticResource pedBotao}"
-                                     WidthRequest="80" HeightRequest="28"
+                    <flex:FlexButton x:Name="BtnDataEmissaoFim" AbsoluteLayout.LayoutBounds="231,32,116,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="116" HeightRequest="28" FontSize="12"
                                      Text="{Binding BindingContext.Filtro.DataEmissaoFinal, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnFim}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarDataEmissaoCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="FIM" />
@@ -649,16 +664,16 @@
                     <Label AbsoluteLayout.LayoutBounds="33,64,64,28" Style="{StaticResource pedFiltroRotulo}"
                            HorizontalTextAlignment="Start"
                            Text="{translator:Translate PedidoTela_PedidoVC_Entrega}" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="99,64,82,28" Style="{StaticResource pedBotao}"
-                                     WidthRequest="82" HeightRequest="28"
+                    <flex:FlexButton x:Name="BtnDataEntregaInicio" AbsoluteLayout.LayoutBounds="99,64,116,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="116" HeightRequest="28" FontSize="12"
                                      Text="{Binding BindingContext.Filtro.DataEntregaInicial, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnInicio}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarDataEntregaCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="INICIO" />
-                    <Label AbsoluteLayout.LayoutBounds="181,64,26,28" Style="{StaticResource pedFiltroRotulo}"
+                    <Label AbsoluteLayout.LayoutBounds="215,64,16,28" Style="{StaticResource pedFiltroRotulo}"
                            HorizontalTextAlignment="Center"
                            Text="{translator:Translate PedidoTela_TituloVC_lblA}" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="207,64,80,28" Style="{StaticResource pedBotao}"
-                                     WidthRequest="80" HeightRequest="28"
+                    <flex:FlexButton x:Name="BtnDataEntregaFim" AbsoluteLayout.LayoutBounds="231,64,116,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="116" HeightRequest="28" FontSize="12"
                                      Text="{Binding BindingContext.Filtro.DataEntregaFinal, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnFim}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarDataEntregaCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="FIM" />
@@ -667,130 +682,131 @@
                     <Label AbsoluteLayout.LayoutBounds="33,96,64,28" Style="{StaticResource pedFiltroRotulo}"
                            HorizontalTextAlignment="Start"
                            Text="{translator:Translate PedidoTela_FiltroPedido_cadastro}" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="99,96,82,28" Style="{StaticResource pedBotao}"
-                                     WidthRequest="82" HeightRequest="28"
+                    <flex:FlexButton x:Name="BtnDataCadastroInicio" AbsoluteLayout.LayoutBounds="99,96,116,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="116" HeightRequest="28" FontSize="12"
                                      Text="{Binding BindingContext.Filtro.DataCadastroInicial, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnInicio}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarDataCadastroCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="INICIO" />
-                    <Label AbsoluteLayout.LayoutBounds="181,96,26,28" Style="{StaticResource pedFiltroRotulo}"
+                    <Label AbsoluteLayout.LayoutBounds="215,96,16,28" Style="{StaticResource pedFiltroRotulo}"
                            HorizontalTextAlignment="Center"
                            Text="{translator:Translate PedidoTela_TituloVC_lblA}" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="207,96,80,28" Style="{StaticResource pedBotao}"
-                                     WidthRequest="80" HeightRequest="28"
+                    <flex:FlexButton x:Name="BtnDataCadastroFim" AbsoluteLayout.LayoutBounds="231,96,116,28" Style="{StaticResource pedBotao}"
+                                     WidthRequest="116" HeightRequest="28" FontSize="12"
                                      Text="{Binding BindingContext.Filtro.DataCadastroFinal, Source={x:Reference this}, Converter={StaticResource DataOuTexto}, ConverterParameter={translator:Translate PedidoTela_TituloVC_BtnFim}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarDataCadastroCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="FIM" />
 
                     <!-- Combos com botão de limpar: Situação, Tipo, Grupo Segmento, Segmento, Gênero, Público, Linha -->
-                    <BoxView AbsoluteLayout.LayoutBounds="33,129,254,35" Color="#EFEFF4" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,129,214,35" Style="{StaticResource pedBotao}"
-                                     WidthRequest="214" HeightRequest="35" CornerRadius="0" MaxLines="2" FontSize="12"
+                    <BoxView AbsoluteLayout.LayoutBounds="33,129,314,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,129,274,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="274" HeightRequest="35" CornerRadius="0" MaxLines="2" FontSize="12"
                                      Text="{Binding BindingContext.TituloSituacao, Source={x:Reference this}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarSituacaoCommand, Source={x:Reference this}}" />
-                    <Image AbsoluteLayout.LayoutBounds="254,133,27,27" Source="deleteFilter.png">
+                    <Image AbsoluteLayout.LayoutBounds="314,133,27,27" Source="deleteFilter.png">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.LimparSituacaoCommand, Source={x:Reference this}}" />
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <BoxView AbsoluteLayout.LayoutBounds="33,172,254,35" Color="#E6E6E6" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,172,214,35" Style="{StaticResource pedBotao}"
-                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                    <BoxView AbsoluteLayout.LayoutBounds="33,172,314,35" Color="#E6E6E6" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,172,274,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="274" HeightRequest="35" CornerRadius="0"
                                      MaxLines="2" FontSize="12"
                                      Text="{Binding BindingContext.TituloTipo, Source={x:Reference this}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarTipoCommand, Source={x:Reference this}}" />
-                    <Image AbsoluteLayout.LayoutBounds="254,176,27,27" Source="deleteFilter.png">
+                    <Image AbsoluteLayout.LayoutBounds="314,176,27,27" Source="deleteFilter.png">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.LimparTipoCommand, Source={x:Reference this}}" />
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <BoxView AbsoluteLayout.LayoutBounds="33,215,254,35" Color="#EFEFF4" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,215,214,35" Style="{StaticResource pedBotao}"
-                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                    <BoxView AbsoluteLayout.LayoutBounds="33,215,314,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,215,274,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="274" HeightRequest="35" CornerRadius="0"
                                      MaxLines="2" FontSize="12"
                                      Text="{Binding BindingContext.TituloGrupoSegmento, Source={x:Reference this}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="3" />
-                    <Image AbsoluteLayout.LayoutBounds="254,219,27,27" Source="deleteFilter.png">
+                    <Image AbsoluteLayout.LayoutBounds="314,219,27,27" Source="deleteFilter.png">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="3" />
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <BoxView AbsoluteLayout.LayoutBounds="33,259,254,35" Color="#EFEFF4" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,259,214,35" Style="{StaticResource pedBotao}"
-                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                    <BoxView AbsoluteLayout.LayoutBounds="33,259,314,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,259,274,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="274" HeightRequest="35" CornerRadius="0"
                                      MaxLines="2" FontSize="12"
                                      Text="{Binding BindingContext.TituloSegmento, Source={x:Reference this}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="4" />
-                    <Image AbsoluteLayout.LayoutBounds="254,263,27,27" Source="deleteFilter.png">
+                    <Image AbsoluteLayout.LayoutBounds="314,263,27,27" Source="deleteFilter.png">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="4" />
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <BoxView AbsoluteLayout.LayoutBounds="33,302,254,35" Color="#EFEFF4" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,302,214,35" Style="{StaticResource pedBotao}"
-                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                    <BoxView AbsoluteLayout.LayoutBounds="33,302,314,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,302,274,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="274" HeightRequest="35" CornerRadius="0"
                                      MaxLines="2" FontSize="12"
                                      Text="{Binding BindingContext.TituloGenero, Source={x:Reference this}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="1" />
-                    <Image AbsoluteLayout.LayoutBounds="254,306,27,27" Source="deleteFilter.png">
+                    <Image AbsoluteLayout.LayoutBounds="314,306,27,27" Source="deleteFilter.png">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="1" />
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <BoxView AbsoluteLayout.LayoutBounds="33,345,254,35" Color="#EFEFF4" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,345,214,35" Style="{StaticResource pedBotao}"
-                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                    <BoxView AbsoluteLayout.LayoutBounds="33,345,314,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,345,274,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="274" HeightRequest="35" CornerRadius="0"
                                      MaxLines="2" FontSize="12"
                                      Text="{Binding BindingContext.TituloPublico, Source={x:Reference this}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="2" />
-                    <Image AbsoluteLayout.LayoutBounds="254,349,27,27" Source="deleteFilter.png">
+                    <Image AbsoluteLayout.LayoutBounds="314,349,27,27" Source="deleteFilter.png">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="2" />
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <BoxView AbsoluteLayout.LayoutBounds="33,388,254,35" Color="#EFEFF4" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,388,214,35" Style="{StaticResource pedBotao}"
-                                     WidthRequest="214" HeightRequest="35" CornerRadius="0"
+                    <BoxView AbsoluteLayout.LayoutBounds="33,388,314,35" Color="#EFEFF4" />
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="33,388,274,35" Style="{StaticResource pedBotao}"
+                                     WidthRequest="274" HeightRequest="35" CornerRadius="0"
                                      MaxLines="2" FontSize="12"
                                      Text="{Binding BindingContext.TituloLinha, Source={x:Reference this}}"
                                      ClickedCommand="{Binding BindingContext.SelecionarNivelCommand, Source={x:Reference this}}"
                                      ClickedCommandParameter="6" />
-                    <Image AbsoluteLayout.LayoutBounds="254,392,27,27" Source="deleteFilter.png">
+                    <Image AbsoluteLayout.LayoutBounds="314,392,27,27" Source="deleteFilter.png">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.LimparNivelCommand, Source={x:Reference this}}" CommandParameter="6" />
                         </Image.GestureRecognizers>
                     </Image>
 
                     <!-- Campos de texto -->
-                    <Entry AbsoluteLayout.LayoutBounds="33,432,254,30" FontSize="14" BackgroundColor="White"
+                    <Entry AbsoluteLayout.LayoutBounds="33,432,314,30" FontSize="14" BackgroundColor="White"
                            Placeholder="{translator:Translate PedidoTela_FiltroPedido_ordemCompra}"
                            Text="{Binding BindingContext.Filtro.OrdemCompra, Source={x:Reference this}}" />
-                    <Entry AbsoluteLayout.LayoutBounds="33,465,254,30" FontSize="14" BackgroundColor="White"
+                    <Entry AbsoluteLayout.LayoutBounds="33,465,314,30" FontSize="14" BackgroundColor="White"
                            Placeholder="{translator:Translate PedidoTela_TituloVC_notaFiscal}"
                            Text="{Binding BindingContext.Filtro.NotaFiscal, Source={x:Reference this}}" />
-                    <Entry AbsoluteLayout.LayoutBounds="33,498,254,30" FontSize="14" BackgroundColor="White"
+                    <Entry AbsoluteLayout.LayoutBounds="33,498,314,30" FontSize="14" BackgroundColor="White"
                            Placeholder="{translator:Translate PedidoTela_PDFNotaFiscalVC_Numero}"
                            Text="{Binding BindingContext.Filtro.CodCarrinho, Source={x:Reference this}}" />
-                    <Entry AbsoluteLayout.LayoutBounds="33,532,254,30" FontSize="14" BackgroundColor="White"
+                    <Entry AbsoluteLayout.LayoutBounds="33,532,314,30" FontSize="14" BackgroundColor="White"
                            Placeholder="{translator:Translate PedidoTela_CadasClientes_Referencias}"
                            Text="{Binding BindingContext.Filtro.Referencia, Source={x:Reference this}}" />
 
                     <!-- Consultar / Limpar -->
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="34,565,123,30" Style="{StaticResource pedBotao}"
-                                     WidthRequest="123" HeightRequest="30"
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="34,565,153,30" Style="{StaticResource pedBotao}"
+                                     WidthRequest="153" HeightRequest="30"
                                      Text="{translator:Translate PedidoTela_PEVC_Consultar}"
+                                     Clicked="OnConsultarFiltrosClicked"
                                      ClickedCommand="{Binding BindingContext.ConsultarCommand, Source={x:Reference this}}" />
-                    <flex:FlexButton AbsoluteLayout.LayoutBounds="165,565,123,30" Style="{StaticResource pedBotao}"
-                                     WidthRequest="123" HeightRequest="30"
+                    <flex:FlexButton AbsoluteLayout.LayoutBounds="195,565,153,30" Style="{StaticResource pedBotao}"
+                                     WidthRequest="153" HeightRequest="30"
                                      Text="{translator:Translate PedidoTela_Global_Limpar}"
                                      ClickedCommand="{Binding BindingContext.LimparFiltrosCommand, Source={x:Reference this}}" />
                 </AbsoluteLayout>

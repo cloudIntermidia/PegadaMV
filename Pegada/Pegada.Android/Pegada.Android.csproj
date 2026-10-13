@@ -480,6 +480,7 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\BluePin.png" />
+    <AndroidResource Include="Resources\drawable\sem_grade.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\btn_bg_off.png" />
