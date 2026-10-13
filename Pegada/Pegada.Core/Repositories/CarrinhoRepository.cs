@@ -475,7 +475,42 @@ namespace Pegada.Core.Repositories
         {
             string sql = ManagerQuery.MakeSql("PRO_ITEM_CARRINHO_GET", "Query", command);
             var itens = await _sqlAsyncConnection.QueryAsync<ItemCommandResult>(sql);
+            foreach (var item in itens)
+                PreencherMarkupsTela(item);
             return new ObservableCollection<ItemCommandResult>(itens);
+        }
+
+        // Colunas Markup Cliente / Markup Aplicado (ItemCarrinhoTableViewController cellForRow, PegadaIOS): só aparecem
+        // quando o markup do item é maior que 1; Cliente = markup do carrinho, Aplicado = markup do item (toUIString).
+        private static void PreencherMarkupsTela(ItemCommandResult item)
+        {
+            if (item.Markup > 1)
+            {
+                decimal? markupCarrinho = decimal.TryParse(item.MarkupCliente, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal valor) ? valor : (decimal?)null;
+                item.MarkupCliente = markupCarrinho.HasValue ? FormatarMarkupTela(markupCarrinho.Value) : string.Empty;
+                item.MarkupAplicado = FormatarMarkupTela(item.Markup);
+            }
+            else
+            {
+                item.MarkupCliente = string.Empty;
+                item.MarkupAplicado = string.Empty;
+            }
+        }
+
+        // NSNumberFormatterDecimalStyle do toUIString: separador de milhar e até 3 casas decimais.
+        private static string FormatarMarkupTela(decimal valor)
+        {
+            return valor.ToString("#,##0.###", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"));
+        }
+
+        // Quebra de carrinho (Carrinho.m quebraForCarrinho, PegadaIOS): mesma regra da base, mas com a query do Pegada,
+        // que não exige item sem DataDisponibilidade. A base nunca achava o carrinho já aberto para item de Pronta Entrega
+        // ('DISPONIVEL'/data do Estoque Futuro) e cada caixa incluída abria um carrinho novo.
+        public override async Task<string> QuebrarPedido(QuebrarPedidoCommand command)
+        {
+            string sql = ManagerQuery.MakeSql("PRO_CARRINHO_QUEBRA", "Query", command);
+            var carrinhos = await _sqlAsyncConnection.QueryAsync<TBT_CARRINHO>(sql);
+            return carrinhos.Select(c => c.CodCarrinho).FirstOrDefault(c => !string.IsNullOrEmpty(c));
         }
 
         public virtual async Task<string> BuscarDepositoCarrinho(string codCarrinho)

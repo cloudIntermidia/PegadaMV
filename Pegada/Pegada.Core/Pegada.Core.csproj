@@ -42,6 +42,7 @@
     <None Remove="DataBase\Query\PRO_GRADE_ITEM_CARRINHO_GET" />
     <None Remove="DataBase\Query\PRO_GRADE_ITEM_PEDIDO_GET" />
     <None Remove="DataBase\Query\PRO_ITEM_CARRINHO_GET" />
+    <None Remove="DataBase\Query\PRO_MODELO_PE_GET" />
     <None Remove="DataBase\Query\PRO_ITEM_INTEGRACAO_GET" />
     <None Remove="DataBase\Query\PRO_METODO_PAGAMENTO_GET" />
     <None Remove="DataBase\Query\PRO_MODELO_MESMA_LINHA_GET" />
@@ -89,6 +90,7 @@
     <EmbeddedResource Include="DataBase\Query\PRO_COMISSAO_ITEM_TABELA_PRECO_GET" />
     <EmbeddedResource Include="DataBase\Query\PRO_GRADE_ITEM_CARRINHO_GET" />
     <EmbeddedResource Include="DataBase\Query\PRO_ITEM_CARRINHO_GET" />
+    <EmbeddedResource Include="DataBase\Query\PRO_MODELO_PE_GET" />
     <EmbeddedResource Include="DataBase\Query\PRO_MODELO_MESMA_LINHA_GET" />
     <EmbeddedResource Include="DataBase\Query\PRO_OPERACAO_FISCAL_GET" />
     <EmbeddedResource Include="DataBase\Query\PRO_METODO_PAGAMENTO_GET" />

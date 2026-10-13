@@ -359,6 +359,7 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\seta_baixo_vermelha.png" />
+    <BundleResource Include="Resources\icon_desc.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\trofeu.png" />

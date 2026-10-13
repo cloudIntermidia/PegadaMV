@@ -1065,6 +1065,12 @@
     <AndroidResource Include="Resources\drawable\seta_baixo_vermelha.png">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\drawable\icon_desc.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\e_a.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\trofeu.png">

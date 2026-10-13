@@ -61,6 +61,9 @@
     I.Estabelecimento,
     I.Localizacao,
     I.Markup,
+    -- Markup Cliente (ItemCarrinhoTableViewController, PegadaIOS: carrinho.markup); formatado no CarrinhoRepository.
+    -- iOS: carrinho.markup = cliente.markup (nulo vira 0) só quando o carrinho aplica markup.
+    CASE WHEN C.IsAplicaMarkup = 1 THEN CAST(IFNULL(C.Markup, 0) AS TEXT) END AS MarkupCliente,
     IFNULL(I.IndPrecoEditado, 0) AS IndPrecoEditado,
     I.ValorUnitarioLiquidoOriginal,
     I.ValorUnitarioLiquidoDif,

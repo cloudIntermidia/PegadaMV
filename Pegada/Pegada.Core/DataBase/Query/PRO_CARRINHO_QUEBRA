@@ -1,11 +1,24 @@
-﻿SELECT C.CodCarrinho FROM TBT_CARRINHO C
-INNER JOIN TBT_ITEM_CARRINHO IC ON IC.CodCarrinho = C.CodCarrinho
-WHERE C.CodSituacaoPedido = '1'
-AND C.CodAtendimento = '@CodAtendimento'
-AND C.CodPessoaCliente = '@CodPessoaCliente'
-AND C.CodPessoaRepresentante = '@CodPessoaRepresentante'
-AND C.CodMarca = '@CodMarca'
-AND C.CodTipoPedido = '@CodTipoPedido'
-AND C.CodDeposito = '@CodDeposito'
-AND C.IndBloqueado = 0
-AND C.PedidoMae ISNULL;
+﻿-- Quebra de carrinho do Pegada = PRO_CARRINHO_QUEBRA do MobiliVendas.Core.DataBase, exceto a regra de disponibilidade.
+SELECT C.CodCarrinho
+  FROM TBT_CARRINHO C
+JOIN TBT_ITEM_CARRINHO IC ON IC.CodCarrinho = C.CodCarrinho
+ WHERE C.CodSituacaoPedido IN ('1', '99') 
+ AND NOT EXISTS (
+               SELECT *
+                 FROM TBT_PEDIDO PED
+                WHERE PED.CodPedido = C.CodCarrinho 
+                AND C.CodSituacaoPedido = '99'
+           )
+AND ('-1' = '@CodSemana' OR C.CodSemana = '@CodSemana' )
+AND C.CodTabelaPreco = '@CodTabelaPreco' 
+AND ('-1' = '@CodAgrupamentoLinha' OR CodAgrupamentoLinha = '@CodAgrupamentoLinha' )
+AND ('-1' = '@CodFabrica' OR C.CodFabrica = '@CodFabrica'  )
+AND C.CodTipoPedido = '@CodTipoPedido' 
+AND C.CodPessoaCliente = '@CodPessoaCliente' 
+AND C.CodpessoaRepresentante = '@CodPessoaRepresentante' 
+AND C.CodPessoaPreposto = '@CodPessoaPreposto' 
+--AND C.CodUsuario = '@CodUsuario' 
+AND C.CodMarca = '1' 
+-- Carrinho.m quebraForCarrinho (PegadaIOS): a condição de disponibilidade é sempre verdadeira, então item de
+-- Pronta Entrega ('DISPONIVEL' ou data do Estoque Futuro) entra no carrinho já aberto em vez de abrir outro.
+AND (IFNULL(IC.DataDisponibilidade, 'NULL') = 'NULL' OR (IC.DataDisponibilidade IS NOT NULL AND IC.DataDisponibilidade <> 'NULL'));

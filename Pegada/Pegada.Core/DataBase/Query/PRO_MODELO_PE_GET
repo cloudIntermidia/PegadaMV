@@ -1,0 +1,169 @@
+-- Lista da Pronta Entrega do Pegada, espelhando ItemProntaEntrega.m setFiltersPE:(NSDictionary *) (PegadaIOS).
+-- Diferenças em relação ao PRO_MODELO_PE_GET compartilhado (que continua valendo para os outros apps):
+--  * preço não é obrigatório: com atendimento o PRECO é só LEFT JOIN na tabela do atendimento (sem PESSOA_TABELA_PRECO);
+--    sem atendimento é a tabela do representante e o HabilitaVendaPE só é exigido para quem tem FazPedidoIpad = 1;
+--  * não exige P.IndProntaEntrega = 1 (o VIEW_ESTOQUE_PRODUTO do iOS deixa isso comentado - D#19402);
+--  * CD (F) é a TBT_FABRICA do estoque (VEP.CodFabrica), não a fábrica da linha;
+--  * segmento/linha/modelo são LEFT JOIN, como NIVEL4/LINHA no iOS.
+SELECT
+  N4.Descricao AS Segmento,
+  F.Descricao AS DescricaoFabrica,
+  L.Descricao AS Linha,
+  P.CodModelo,
+  CASE WHEN '@PeTemAtendimento' = '1'
+       THEN CASE WHEN IFNULL(PRECO.IndPromocional, 0) > 0 THEN 1 ELSE 0 END
+       ELSE CASE WHEN Promo.Preco > 0 THEN 1 ELSE 0 END
+  END AS ItemEPromocao,
+  CASE WHEN P.IndNovidade > 0 THEN 1 ELSE 0 END AS IndNovidade,
+  CASE WHEN P.IndMidia > 0 THEN 1 ELSE 0 END AS IndMidia,
+  P.CodProduto,
+  P.DescricaoCompleta,
+  CASE
+      WHEN IFNULL(VEP.IndEstoqueAvulso, 0) > 0 THEN 'AVULSO'
+      WHEN (VEP.DataDisponibilidade IS NULL) THEN 'DISPONIVEL'
+      ELSE strftime('%d/%m/%Y', VEP.DataDisponibilidade)
+  END AS DataDisponibilidade,
+  SUM(VEP.Quantidade) AS Pares,
+  VEP.CodFabrica,
+  P.CodProdutoFoto,
+  M.CodLinha,
+  PRECO.Preco AS PrecoVenda,
+  MAX(VEP.IndEstoqueAvulso) AS ExibeEstoqueAvulso,
+  CASE WHEN '@PeTemAtendimento' = '1'
+       THEN CASE WHEN PRECO.PrecoOriginal > 0 THEN PRECO.PrecoOriginal ELSE 0 END
+       ELSE CASE WHEN Promo.PrecoOriginal > 0 THEN Promo.PrecoOriginal ELSE 0 END
+  END AS PrecoOriginal,
+  PRECO.Moeda AS Moeda,
+  PRECO.PrecoPVL AS PrecoPVL,
+  PRECO.CodTabelaPreco AS CodTabelaPreco,
+  VEP.IndEstoqueFuturo,
+  CASE WHEN PRECO.Desconto IS NOT NULL THEN PRECO.Desconto ELSE 0 END AS DescontoUI,
+  CASE WHEN Promo.Preco > 0 THEN 1 ELSE 0 END AS ExibeEtiquetaPromocao,
+  CASE WHEN PRECO.Desconto IS NOT NULL THEN PRECO.Desconto ELSE 0 END AS Desconto,
+  CASE WHEN IFNULL(PRECO.Desconto, 0) > 0 THEN 1 ELSE 0 END AS ExibeSetaBaixoVermelha,
+  P.IndNovidade AS ExibeNew,
+  P.IndCampeaoVenda AS ExibeTrofeu,
+  P.IndMidia AS ExibeTV,
+  P.VendaBloqueada AS ExibeForaLinha,
+  CASE WHEN FL.Sigla IS NULL THEN '' ELSE FL.Sigla END AS Sigla,
+  VEPFU.IndEstoqueFuturo AS ExibeCaixaAzul,
+  CASE WHEN MAX(IA.CodProduto) IS NOT NULL THEN 1 ELSE 0 END AS ItemChecadoInt,
+  P.IDProduto,
+  P.IDModelo,
+  P.IDLinha,
+  P.IDSubCategoria,
+  P.IDCategoria
+FROM TBT_PRODUTO P
+INNER JOIN
+(
+    -- VIEW_ESTOQUE_PRODUTO (IMDBConfigUtils.m) + PESSOA_CD: um registro por lote (produto, CD, data, futuro, avulso);
+    -- caixa já em carrinho ativo (1/99) não conta (Defeito #20735).
+    SELECT IPE.CodProduto,
+           SUM(IPE.Quantidade) AS Quantidade,
+           IPE.CodFabrica,
+           IPE.DataDisponibilidade,
+           IFNULL(IPE.IndEstoqueFuturo, 0) AS IndEstoqueFuturo,
+           IFNULL(IPE.IndEstoqueAvulso, 0) AS IndEstoqueAvulso,
+           CASE WHEN IFNULL(IPE.IndEstoqueFuturo, 0) = 0 AND IFNULL(IPE.IndEstoqueAvulso, 0) = 0 THEN 1 ELSE 0 END AS IndEstoqueDisponivel
+      FROM TBT_ITEM_PRONTA_ENTREGA IPE
+      JOIN TBT_PESSOA_CD PCD ON PCD.CodFabrica = IPE.CodFabrica
+       AND PCD.CodPessoa = '@PePessoaCD'
+     WHERE NOT EXISTS (
+            SELECT 1
+              FROM TBT_CARRINHO C
+             INNER JOIN TBT_ITEM_CARRINHO IC ON C.CodCarrinho = IC.CodCarrinho
+               AND IPE.CodItemProntaEntrega = IC.CodItemProntaEntrega
+               AND C.CodSituacaoPedido IN ('1', '99')
+     )
+     GROUP BY IPE.CodProduto,
+              IPE.CodFabrica,
+              IPE.DataDisponibilidade,
+              IFNULL(IPE.IndEstoqueFuturo, 0),
+              IFNULL(IPE.IndEstoqueAvulso, 0)
+) AS VEP ON VEP.CodProduto = P.CodProduto
+LEFT JOIN TBT_MODELO M ON M.CodModelo = P.CodModelo
+LEFT JOIN TBT_LINHA L ON L.CodLinha = M.CodLinha
+LEFT JOIN TBT_FABRICA FL ON FL.CodFabrica = L.CodFabrica
+LEFT JOIN TBT_FABRICA F ON F.CodFabrica = VEP.CodFabrica
+LEFT JOIN TBT_NIVEL_PRODUTO NP ON NP.CodProduto = P.CodProduto AND NP.CodNivel = '4'
+LEFT JOIN TBT_NIVEL_ATRIBUTO N4 ON N4.CodNivel = NP.CodNivel AND N4.CodAtributo = NP.CodAtributo
+LEFT JOIN
+(
+    SELECT ITP.Preco,
+           TP.CodTabelaPreco,
+           ITP.CodProduto,
+           TP.Moeda,
+           ITP.PrecoPVL,
+           ITP.PrecoOriginal,
+           ITP.IndPromocional,
+           ITP.Desconto
+      FROM TBT_ITEM_TABELA_PRECO ITP
+     INNER JOIN TBT_TABELA_PRECO TP ON TP.CodTabelaPreco = ITP.CodTabelaPreco
+     WHERE TP.IndAtivo = 1
+       AND TP.InicioVigencia <= DATE('NOW')
+       AND TP.FinalVigencia >= DATE('NOW')
+       AND (
+             ('@PeTemAtendimento' = '1' AND TP.CodTabelaPreco = '@PeTabelaPreco')
+          OR ('@PeTemAtendimento' <> '1' AND EXISTS (
+                  SELECT 1 FROM TBT_PESSOA_TABELA_PRECO PTP
+                   WHERE PTP.CodTabelaPreco = TP.CodTabelaPreco
+                     AND PTP.CodPessoa = '@PeRepresentante'))
+       )
+     GROUP BY ITP.CodProduto
+) AS PRECO ON PRECO.CodProduto = P.CodProduto
+LEFT JOIN
+(
+    SELECT CodProduto,
+           MAX(Preco) AS Preco,
+           PrecoOriginal
+      FROM TBT_TABELA_PRECO T
+     INNER JOIN TBT_ITEM_TABELA_PRECO ITP ON T.CodTabelaPreco = ITP.CodTabelaPreco
+       AND ITP.IndPromocional = 1
+     INNER JOIN TBT_PESSOA_TABELA_PRECO PTP ON T.CodTabelaPreco = PTP.CodTabelaPreco
+       AND PTP.CodPessoa = '@PeRepresentante'
+     WHERE T.InicioVigencia <= DATE('NOW')
+       AND T.FinalVigencia >= DATE('NOW')
+     GROUP BY CodProduto
+) Promo ON P.CodProduto = Promo.CodProduto
+LEFT JOIN
+(
+    SELECT P.CodProduto,
+           MAX(IPE.IndEstoqueFuturo) AS IndEstoqueFuturo
+      FROM TBT_ITEM_PRONTA_ENTREGA IPE
+      JOIN TBT_PRODUTO P ON P.CodProduto = IPE.CodProduto AND P.IndProntaEntrega = 1
+      JOIN TBT_PESSOA_CD PCD ON PCD.CodFabrica = IPE.CodFabrica AND PCD.CodPessoa = '@PePessoaCD'
+     WHERE IPE.DataDisponibilidade IS NOT NULL
+     GROUP BY P.CodModelo
+    HAVING SUM(IPE.Quantidade) > 0
+) AS VEPFU ON VEPFU.CodProduto = P.CodProduto
+LEFT JOIN TBT_ITEM_ATENDIMENTO IA ON IA.CodAtendimento = '@PeAtendimento' AND IA.CodProduto = P.CodProduto
+WHERE 1 = 1
+-- tarefa 32858: sem atendimento, só quem faz pedido no iPad precisa de HabilitaVendaPE na tabela
+AND (
+      '@PeTemAtendimento' = '1'
+   OR IFNULL((SELECT MAX(U.FazPedidoIpad) FROM TBT_USUARIO U WHERE U.CodPessoa = '@PeUsuario'), 0) <> 1
+   OR EXISTS (
+          SELECT 1 FROM TBT_ITEM_TABELA_PRECO ITP
+           WHERE ITP.CodProduto = VEP.CodProduto
+             AND ITP.CodTabelaPreco = PRECO.CodTabelaPreco
+             AND ITP.HabilitaVendaPE = '1')
+)
+AND (
+      '@PePesquisa' = '-1'
+   OR P.DescricaoCompleta LIKE '%@PePesquisa%'
+   OR P.CodModelo LIKE '%@PePesquisa%'
+)
+@PeWhere 
+GROUP BY N4.Descricao,
+         F.Descricao,
+         F.CodFabrica,
+         L.Descricao,
+         P.CodModelo,
+         P.IndProntaEntrega,
+         P.IndNovidade,
+         P.IndMidia,
+         P.CodProduto,
+         P.DescricaoCompleta,
+         CASE WHEN (VEP.DataDisponibilidade IS NULL) THEN 'DISPONIVEL' ELSE strftime('%d/%m/%Y', VEP.DataDisponibilidade) END,
+         VEP.IndEstoqueAvulso
+ORDER BY L.Descricao;
