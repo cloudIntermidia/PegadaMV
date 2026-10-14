@@ -68,6 +68,7 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.NotasUsaRegrasIOS = true;
             // Aba Títulos com o layout do TituloViewController do PegadaIOS.
             MobiliVendas.Core.Session.CriarTitulosPage = () => new Pegada.Core.Views.Negocio.TitulosPage();
+            MobiliVendas.Core.Session.NegocioUsaSelecaoClienteCompleta = true;
             // Aba Notas com o layout do NotaFiscalViewController do PegadaIOS.
             MobiliVendas.Core.Session.CriarNotasPage = () => new Pegada.Core.Views.Negocio.NotasPage();
             MobiliVendas.Core.Session.NegociosConteudoAteNavegacao = true;

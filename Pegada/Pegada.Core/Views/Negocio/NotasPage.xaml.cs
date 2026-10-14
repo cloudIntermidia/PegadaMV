@@ -1,3 +1,4 @@
+using MobiliVendas.Core.Services.Contracts;
 using MobiliVendas.Core.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -20,6 +21,12 @@ namespace Pegada.Core.Views.Negocio
             viewModel.FiltrarDataEmissao = true;
             viewModel.Filtro.DataEmissaoInicial = null;
             viewModel.Filtro.DataEmissaoFinal = null;
+
+
+            // Datas: o parâmetro leva o próprio botão, pro calendário abrir em popover ancorado nele (como no filtro
+            // do Pedido / IMDatePickerViewController do PegadaIOS) em vez do DatePromptAsync de tela cheia.
+            BtnDataEmissaoInicio.CommandParameter = new SelecaoDataParametro("INICIO", BtnDataEmissaoInicio);
+            BtnDataEmissaoFim.CommandParameter = new SelecaoDataParametro("FIM", BtnDataEmissaoFim);
 
             Content.BindingContext = viewModel;
         }

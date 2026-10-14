@@ -140,13 +140,13 @@
             <!-- Período de Emissão: Início à Fim -->
             <Label Grid.Column="7" Grid.ColumnSpan="4" Style="{StaticResource notRotuloFiltro}" Margin="0,5,0,0"
                    HorizontalTextAlignment="Center" Text="{translator:Translate PedidoTela_NotaFiscalTVC_PeriodoEmissao}" />
-            <shared:BotaoComboIOS Grid.Column="7" Style="{StaticResource notCombo}" Margin="0,26,0,0"
+            <shared:BotaoComboIOS x:Name="BtnDataEmissaoInicio" Grid.Column="7" Style="{StaticResource notCombo}" Margin="0,26,0,0"
                                   Titulo="{translator:Translate PedidoTela_TituloVC_BtnInicio}"
                                   Valor="{Binding Filtro.DataEmissaoInicial, StringFormat='{0:dd/MM/yyyy}'}"
                                   Command="{Binding SelecionarDataEmissaoCommand}" CommandParameter="INICIO" />
             <Label Grid.Column="8" Grid.ColumnSpan="2" Style="{StaticResource notRotuloFiltro}" Margin="0,35,0,0" HeightRequest="20"
                    HorizontalTextAlignment="Center" Text="{translator:Translate PedidoTela_TituloVC_lblA}" />
-            <shared:BotaoComboIOS Grid.Column="10" Style="{StaticResource notCombo}" Margin="0,24,0,0"
+            <shared:BotaoComboIOS x:Name="BtnDataEmissaoFim" Grid.Column="10" Style="{StaticResource notCombo}" Margin="0,24,0,0"
                                   Titulo="{translator:Translate PedidoTela_TituloVC_BtnFim}"
                                   Valor="{Binding Filtro.DataEmissaoFinal, StringFormat='{0:dd/MM/yyyy}'}"
                                   Command="{Binding SelecionarDataEmissaoCommand}" CommandParameter="FIM" />
