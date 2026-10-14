@@ -114,7 +114,8 @@ namespace Pegada.Core.Repositories
                 PeRepresentante = representante,
                 PeUsuario = usuario?.CodPessoa,
                 PePesquisa = string.IsNullOrWhiteSpace(command.FiltroPesquisa) ? null : command.FiltroPesquisa.Replace("'", "''"),
-                PeWhere = where
+                PeWhere = where,
+                PeOrdem = string.IsNullOrEmpty(command.OrdenacaoPE) ? "L.Descricao" : command.OrdenacaoPE
             });
             var result = await _sqlAsyncConnection.QueryAsync<ModeloCommandResult>(sql);
             return result;

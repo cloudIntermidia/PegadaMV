@@ -212,6 +212,8 @@
     <Content Include="map.png" />
     <EmbeddedResource Include="NaoDispE.png" />
     <Content Include="NaoDisp.png" />
+    <Content Include="icon_up.png" />
+    <Content Include="icon_down.png" />
     <Content Include="nav_carrinho_branco.png" />
     <Content Include="nav_carrinho_destaque.png" />
     <Content Include="nav_catalogo_branco.png" />

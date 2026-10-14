@@ -360,6 +360,8 @@
   <ItemGroup>
     <BundleResource Include="Resources\seta_baixo_vermelha.png" />
     <BundleResource Include="Resources\icon_desc.png" />
+    <BundleResource Include="Resources\icon_up.png" />
+    <BundleResource Include="Resources\icon_down.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\trofeu.png" />

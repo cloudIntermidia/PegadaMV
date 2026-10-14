@@ -166,4 +166,5 @@ GROUP BY N4.Descricao,
          P.DescricaoCompleta,
          CASE WHEN (VEP.DataDisponibilidade IS NULL) THEN 'DISPONIVEL' ELSE strftime('%d/%m/%Y', VEP.DataDisponibilidade) END,
          VEP.IndEstoqueAvulso
-ORDER BY L.Descricao;
+-- Ordenação pelos títulos Produto/Pares (upDownProdutoAction/upDownParesAction do PegadaIOS); padrão L.Descricao.
+ORDER BY @PeOrdem ;
