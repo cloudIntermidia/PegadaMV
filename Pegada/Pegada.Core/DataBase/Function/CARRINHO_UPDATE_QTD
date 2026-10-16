@@ -25,10 +25,12 @@ WHERE CodCarrinho = '@CodCarrinho'
 AND CodCondicaoPagamento IS NULL;
 
 
+-- % financeiro da condição de pagamento. Custom1 vem como texto com vírgula ("1,5"): sem normalizar, o SQLite
+-- lê só a parte inteira nas contas abaixo (aplicava 1% em vez de 1,5%). O PegadaIOS grava o percentual já numérico.
 UPDATE TBT_ITEM_CARRINHO
 SET PercDesc1 = IFNULL((
 SELECT 
- Custom1 
+ CAST(REPLACE(TRIM(Custom1), ',', '.') AS REAL)
  FROM TBT_TABELA_PRECO_COND_PGTO PGTO
  INNER JOIN TBT_CARRINHO C ON C.CodTabelaPreco = PGTO.CodTabelaPreco AND C.CodCondicaoPagamento = PGTO.CodCondicaoPagamento
  WHERE C.CodCarrinho = '@CodCarrinho'

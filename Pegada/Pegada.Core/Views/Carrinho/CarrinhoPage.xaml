@@ -415,7 +415,7 @@
                             Text="{translator:Translate CarrinhoBtnEditarLoja}"
                             ClickedCommand="{Binding EditarLojaItemCommand}"
                             Style="{StaticResource flexButtonAction}"
-                            IsVisible="{Binding MostraAcoesItemUnico}" />
+                            IsVisible="{Binding MostraEditarLoja}" />
                     </StackLayout>
 
                     <!-- Linha de baixo: Excluir em qualquer item; Editar/Desmembrar fora da Pronta Entrega. -->
@@ -441,17 +441,66 @@
 
 
                 <!-- ================= GRADE ESTILO TABELA ================= -->
+               <!-- Cliente de outro país (loadGradeForItem, ItemCarrinhoTableViewController do PegadaIOS): 1ª coluna com "BR"/"EX",
+                    linha BR com o tamanho original em cima e linha EX com o tamanho do país. Cliente BR: grade como antes. -->
                <Grid Grid.Column="1"
                       HorizontalOptions="End"
-                      VerticalOptions="End">
+                      VerticalOptions="End"
+                      RowSpacing="0"
+                      ColumnSpacing="0">
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- LINHA SUPERIOR (TAMANHOS) -->
-                    <StackLayout Grid.Row="0"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- COLUNA DO PAÍS (só cliente estrangeiro) -->
+                    <Grid Grid.Row="0" Grid.Column="0" WidthRequest="50" HeightRequest="30" BackgroundColor="#8E8E8E"
+                          IsVisible="{Binding GradeEstrangeira}">
+                        <Label Text="BR" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="0" WidthRequest="50" HeightRequest="30" BackgroundColor="#8E8E8E"
+                          IsVisible="{Binding GradeEstrangeira}">
+                        <Label Text="EX" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White"/>
+                    </Grid>
+                    <BoxView Grid.Row="2" Grid.Column="0" WidthRequest="50" HeightRequest="30" Color="Transparent"
+                             IsVisible="{Binding GradeEstrangeira}"/>
+
+                    <!-- LINHA BR (TAMANHO ORIGINAL, só cliente estrangeiro) -->
+                    <StackLayout Grid.Row="0" Grid.Column="1"
+                                 Orientation="Horizontal"
+                                 HorizontalOptions="End"
+                                 Spacing="0"
+                                 IsVisible="{Binding GradeEstrangeira}"
+                                 BindableLayout.ItemsSource="{Binding ItemSelecionado.Grades}">
+
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid WidthRequest="50"
+                                      HeightRequest="30"
+                                      BackgroundColor="#8E8E8E">
+
+                                    <BoxView BackgroundColor="White"
+                                             WidthRequest="1"
+                                             HorizontalOptions="Start"/>
+
+                                    <Label Text="{Binding DescricaoOriginal}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           TextColor="White"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+
+                    <!-- LINHA DOS TAMANHOS (cliente estrangeiro: tamanho do país) -->
+                    <StackLayout Grid.Row="1" Grid.Column="1"
                                  Orientation="Horizontal"
                                  HorizontalOptions="End"
                                  Spacing="0"
@@ -471,7 +520,16 @@
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"
                                            FontAttributes="Bold"
-                                           TextColor="White"/>
+                                           TextColor="White">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label"
+                                                         Binding="{Binding BindingContext.GradeEstrangeira, Source={x:Reference this}}"
+                                                         Value="True">
+                                                <Setter Property="Text" Value="{Binding Descricao}"/>
+                                                <Setter Property="FontAttributes" Value="None"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
                                 </Grid>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
@@ -479,7 +537,7 @@
 
 
                     <!-- LINHA INFERIOR (QUANTIDADES) -->
-                    <StackLayout Grid.Row="1"
+                    <StackLayout Grid.Row="2" Grid.Column="1"
                                  Orientation="Horizontal"
                                  HorizontalOptions="End"
                                  Spacing="0"

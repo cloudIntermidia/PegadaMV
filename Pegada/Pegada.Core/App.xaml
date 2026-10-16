@@ -117,7 +117,7 @@
             <Style x:Key="labelGridItem" TargetType="Label">
                 <Setter Property="TextColor" Value="Black"/>
                 <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
-                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="FontSize" Value="11"/>
                 <Setter Property="BackgroundColor" Value="{StaticResource corItemGrid}"/>
                 <Setter Property="HorizontalTextAlignment" Value="Center"/>
                 <Setter Property="VerticalTextAlignment" Value="Center"/>
@@ -486,8 +486,9 @@
                              (que não mudam de lugar) - antes ficava presa na coluna do meio. As grades laterais de ícones não têm fundo
                              próprio pra não cobrir a foto.
                              Foto aberta já reduzida (em pixels de tela): no tamanho original (até 1500x1500)
-                             cada célula ocupava de 2 a 9 MB e a navegação entre modelos estourava a memória. -->
-                        <ffimageloading:CachedImage Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="10,0" InputTransparent="True" HorizontalOptions="Center" VerticalOptions="Center" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
+                             cada célula ocupava de 2 a 9 MB e a navegação entre modelos estourava a memória.
+                             Margem lateral 32 pra foto não encostar na estrela (esquerda) nem no ícone PE (direita). -->
+                        <ffimageloading:CachedImage Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="32,6" InputTransparent="True" HorizontalOptions="Center" VerticalOptions="Center" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
                             LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
 
                         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0,0,3,0">
@@ -520,11 +521,19 @@
                                        TextColor="LightGray"
                                        TextDecorations="Strikethrough"
                                        HorizontalOptions="End"
-                                       VerticalOptions="Center"/>
+                                       VerticalOptions="Center">
+                                    <!-- Botão de preço (cifrão) desligado esconde o "De" mesmo em promoção -->
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsMostraPreco}" Value="False">
+                                            <Setter Property="IsVisible" Value="False"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
 
                                 <!-- PREÇO POR / PREÇO NORMAL -->
                                <Label Grid.Row="0"
                                        Grid.Column="3"
+                                       IsVisible="{Binding IsMostraPreco}"
                                        Text="{Binding PrecoPorUI}"
                                        FontSize="11"
                                        HorizontalOptions="EndAndExpand"

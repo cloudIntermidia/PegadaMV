@@ -272,7 +272,7 @@ namespace Pegada.Core.ViewModels
             InfoCommand = new Command(VisualizarInfoCliente);
             SelecionarCondicaoPagamentoCommand = new Command(async () => await _atendimentoUtility.SelecionarCondicaoPagamento());
             //SelecionarTabelaPrecoCommand = new Command(async () => await _atendimentoUtility.SelecionarTabelaPreco(true));
-            SelecionarTabelaPrecoCommand = new Command(async () => await _atendimentoUtility.SelecionarTabelaPrecoCliente(ClienteSelecionado?.CodPessoaCliente));
+            SelecionarTabelaPrecoCommand = new Command(async () => await _atendimentoUtility.SelecionarTabelaPrecoCliente(ClienteSelecionado?.CodPessoaCliente, true));
             SelecionarTipoPedidoCommand = new Command(async () => await _atendimentoUtility.SelecionarTipoPedido());
             SelecionarClienteCommand = new DelegateCommand<object>(async (obj) => await ClienteTapped(obj));
             SelecionarPrepostoCommand = new Command(SelecionarPreposto);

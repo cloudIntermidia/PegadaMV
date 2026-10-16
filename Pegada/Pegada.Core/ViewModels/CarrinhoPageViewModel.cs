@@ -69,6 +69,14 @@ namespace Pegada.Core.ViewModels
             set { SetProperty(ref _mostraEditarPrecoItem, value); }
         }
 
+        // Editar Loja vale para todos os itens marcados, então fica visível com qualquer quantidade marcada.
+        private bool _mostraEditarLoja;
+        public bool MostraEditarLoja
+        {
+            get { return _mostraEditarLoja; }
+            set { SetProperty(ref _mostraEditarLoja, value); }
+        }
+
         private void AtualizarAcoesItem()
         {
             var itens = PedidoSelecionado?.Itens;
@@ -78,14 +86,22 @@ namespace Pegada.Core.ViewModels
 
             MostraAcoesItemUnico = temItem && (prontaEntrega || qtdMarcados <= 1);
             MostraEditarPrecoItem = MostraAcoesItemUnico && PedidoSelecionado.PermiteEditarPrecoItem;
+            MostraEditarLoja = temItem;
         }
 
         private ItemCommandResult _itemSelecionado;
         public ItemCommandResult ItemSelecionado
         {
             get { return _itemSelecionado; }
-            set { SetProperty(ref _itemSelecionado, value); }
+            set
+            {
+                SetProperty(ref _itemSelecionado, value);
+                RaisePropertyChanged(nameof(GradeEstrangeira));
+            }
         }
+
+        // Cliente de outro país: grade com a linha BR (original) em cima da linha EX, como no PegadaIOS.
+        public bool GradeEstrangeira => ItemSelecionado?.Grades?.Any(g => !string.IsNullOrEmpty(g.DescricaoOriginal)) == true;
 
         private bool _todosItensChecados;
         public bool TodosItensChecados
@@ -750,18 +766,30 @@ namespace Pegada.Core.ViewModels
         }
 
         // ItemCarrinhoMenuOptionEditarLoja: editaLoja (alerta com campo de texto e o nome atual como placeholder).
+        // Diferente do iOS (só o item pressionado), grava a loja em todos os itens marcados; sem marcação, no item tocado.
         private async Task EditarLojaItem()
         {
             try
             {
-                var item = await ItemUnicoParaAcao();
-                if (item == null)
+                if (PedidoSelecionado?.Itens == null)
                     return;
+
+                var itens = PedidoSelecionado.Itens.Where(x => x.ItemChecado).ToList();
+                if (itens.Count == 0 && _itemTocado && !string.IsNullOrEmpty(ItemSelecionado?.CodProduto))
+                    itens.Add(ItemSelecionado);
+                if (itens.Count == 0)
+                {
+                    await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgMarqueItemEdicao"), AppName);
+                    return;
+                }
+
+                // Placeholder com o nome atual só quando todos os itens têm a mesma loja
+                var lojas = itens.Select(x => x.NomeLoja ?? string.Empty).Distinct().ToList();
 
                 var resposta = await UserDialogs.Instance.PromptAsync(new PromptConfig
                 {
                     Title = T("CarrinhoBtnEditarLoja"),
-                    Placeholder = item.NomeLoja,
+                    Placeholder = lojas.Count == 1 ? lojas[0] : string.Empty,
                     OkText = "Ok",
                     CancelText = T("CarrinhoBtnCancelar")
                 });
@@ -769,8 +797,11 @@ namespace Pegada.Core.ViewModels
                     return;
 
                 var repositorio = ServiceLocator.Current.GetInstance<Pegada.Core.Repositories.ItemCarrinhoAcoesRepository>();
-                await repositorio.AtualizarNomeLoja(PedidoSelecionado.CodCarrinho, item.CodItemCarrinho, resposta.Text);
-                item.NomeLoja = resposta.Text;
+                foreach (var item in itens)
+                {
+                    await repositorio.AtualizarNomeLoja(PedidoSelecionado.CodCarrinho, item.CodItemCarrinho, resposta.Text);
+                    item.NomeLoja = resposta.Text;
+                }
             }
             catch (Exception ex)
             {

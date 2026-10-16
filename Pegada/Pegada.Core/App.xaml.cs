@@ -66,6 +66,10 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.NavegacaoBottomIconeComTexto = true;
             MobiliVendas.Core.Session.PedidoUsaRegrasIOS = true;
             MobiliVendas.Core.Session.NotasUsaRegrasIOS = true;
+            // Senha do login sem diferenciar maiúsculas/minúsculas, como no PegadaIOS.
+            MobiliVendas.Core.Session.SenhaLoginIgnoraMaiusculas = true;
+            // Tipo Pedido do detalhe do produto com as regras do ProdutoDetalheAtendimentoViewController do PegadaIOS.
+            MobiliVendas.Core.Session.DetalheTipoPedidoUsaRegrasIOS = true;
             // Aba Títulos com o layout do TituloViewController do PegadaIOS.
             MobiliVendas.Core.Session.CriarTitulosPage = () => new Pegada.Core.Views.Negocio.TitulosPage();
             MobiliVendas.Core.Session.NegocioUsaSelecaoClienteCompleta = true;
@@ -73,6 +77,7 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.CriarNotasPage = () => new Pegada.Core.Views.Negocio.NotasPage();
             MobiliVendas.Core.Session.NegociosConteudoAteNavegacao = true;
             MobiliVendas.Core.Session.PopupSelecaoUsaCoresDoApp = true;
+            MobiliVendas.Core.Session.FavoritoModeloMarcaTodasCores = true;
             MobiliVendas.Core.Session.SincronizacaoUsaMenuIOS = true;
             MobiliVendas.Core.Session.CatalogoFiltrosUsaLayoutIOS = true;
             // Mesmo azul do fundo do FundoCatalogo2.png (RGB 22,65,148): sem sobra branca em volta da imagem.

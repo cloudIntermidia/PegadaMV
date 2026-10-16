@@ -45,13 +45,19 @@ namespace Pegada.Core.ViewModels
                 }
             }
 
-            // Desconto total em cascata: 1 - (1 - D1) * (1 - Dn)...
-            decimal multiplicador = 1 - percFinanceiro / 100;
-            foreach (var desc in descontos.Where(d => d.PercentualDesconto.HasValue))
-                multiplicador *= 1 - desc.PercentualDesconto.Value / 100;
-
-            resultado.Total = ((1 - multiplicador) * 100).ToString("N2", PtBr);
+            resultado.Total = CalcularTotal(percFinanceiro, descontos.Select(d => d.PercentualDesconto)).ToString("N2", PtBr);
             return resultado;
+        }
+
+        // Desconto total em cascata: 1 - (1 - D1) * (1 - Dn)... (carregaDescontoItemCarrinho, ItemCarrinho.m do PegadaIOS).
+        // Mesma conta da coluna "Desc. Total" do carrinho, pra tela de edição e lista mostrarem o mesmo valor.
+        public static decimal CalcularTotal(decimal percFinanceiro, IEnumerable<decimal?> percentuais)
+        {
+            decimal multiplicador = 1 - percFinanceiro / 100;
+            foreach (var perc in percentuais.Where(p => p.HasValue))
+                multiplicador *= 1 - perc.Value / 100;
+
+            return Math.Round((1 - multiplicador) * 100, 2);
         }
 
         // Item de pedido (TBT_ITEM_PEDIDO): PerDs1 = financeiro, PerDs2..4 = níveis 2..4 (o MV não tem PerDs5).

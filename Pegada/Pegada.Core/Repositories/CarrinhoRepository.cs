@@ -48,6 +48,7 @@ namespace Pegada.Core.Repositories
                 foreach (var car in carrinhosAtualizado)
                 {
                     car.Itens = await BuscarItensCarrinho(new BuscarItensCarrinhoCommand(car.CodCarrinho, car.CodTabelaPreco));
+                    var tamanhosPais = await BuscarTamanhosPaisCliente(car.CodCarrinho, car.CodPessoaCliente);
 
                     foreach (var item in car.Itens)
                     {
@@ -67,11 +68,61 @@ namespace Pegada.Core.Repositories
                                 item.Grades.Add(grade);
                             }
                         }
+
+                        // Cliente estrangeiro: tamanho do país em Descricao e o BR em DescricaoOriginal (grade BR/EX da tela)
+                        if (tamanhosPais != null)
+                        {
+                            foreach (var grade in item.Grades)
+                            {
+                                if (tamanhosPais.TryGetValue($"{(int)grade.CodItemCarrinho}|{(int)grade.CodGradeItemCarrinho}", out var tamanho))
+                                {
+                                    grade.Descricao = tamanho.Descricao;
+                                    grade.DescricaoOriginal = tamanho.DescricaoOriginal;
+                                }
+                            }
+                        }
                     }
                 }
             }
 
             return carrinhosAtualizado;
+        }
+
+        private class TamanhoPaisGrade
+        {
+            public string Chave { get; set; }
+            public string Descricao { get; set; }
+            public string DescricaoOriginal { get; set; }
+        }
+
+        // loadGradeForItem / gradesForItemCarrinho:andClientePais: (ItemCarrinhoTableViewController e GradeItemCarrinho.m,
+        // PegadaIOS): cliente de outro país vê o tamanho do país (DERIVACAO_PAIS, ou o BR se não houver) e o BR original.
+        // País sem nenhuma derivação cadastrada usa a grade BR (Defeito #21271). Cliente BR: null (grade como antes).
+        private async Task<Dictionary<string, TamanhoPaisGrade>> BuscarTamanhosPaisCliente(string codCarrinho, string codPessoaCliente)
+        {
+            string codPais = await _sqlAsyncConnection.ExecuteScalarAsync<string>(
+                "SELECT CodPais FROM TBT_CLIENTE WHERE CodPessoaCliente = ?", codPessoaCliente);
+            if (string.IsNullOrEmpty(codPais) || codPais == "1")
+                return null;
+
+            int derivacoes = await _sqlAsyncConnection.ExecuteScalarAsync<int>(
+                "SELECT COUNT(*) FROM TBT_DERIVACAO_PAIS WHERE CodPais = ?", codPais);
+            if (derivacoes == 0)
+                return null;
+
+            var tamanhos = await _sqlAsyncConnection.QueryAsync<TamanhoPaisGrade>(
+                "SELECT CAST(CAST(G.CodItemCarrinho AS INTEGER) AS TEXT) || '|' || CAST(CAST(G.CodGradeItemCarrinho AS INTEGER) AS TEXT) AS Chave, " +
+                "       CASE WHEN DP.DescricaoDerivacao IS NULL THEN D.Descricao ELSE DP.DescricaoDerivacao END AS Descricao, " +
+                "       D.Descricao AS DescricaoOriginal " +
+                "  FROM TBT_GRADE_ITEM_CARRINHO G " +
+                "  LEFT JOIN TBT_DERIVACAO D ON D.CodDerivacao = G.CodDerivacao " +
+                "  LEFT JOIN TBT_DERIVACAO_PAIS DP ON DP.CodDerivacao = D.CodDerivacao AND DP.CodPais = ? " +
+                " WHERE G.CodCarrinho = ? ", codPais, codCarrinho);
+
+            var mapa = new Dictionary<string, TamanhoPaisGrade>();
+            foreach (var t in tamanhos)
+                mapa[t.Chave] = t;
+            return mapa;
         }
 
         public virtual async Task<List<CarrinhoPreVenda>> GetCarrinhosPreVenda(BuscarCarrinhoCommand command)
@@ -477,7 +528,39 @@ namespace Pegada.Core.Repositories
             var itens = await _sqlAsyncConnection.QueryAsync<ItemCommandResult>(sql);
             foreach (var item in itens)
                 PreencherMarkupsTela(item);
+            await PreencherDescontoTotal(itens);
             return new ObservableCollection<ItemCommandResult>(itens);
+        }
+
+        private class PercentualDescontoItem
+        {
+            public string CodItem { get; set; }
+            public decimal? Percentual { get; set; }
+        }
+
+        // Coluna "Desc. Total" (descontoTotalUI = carregaDescontoItemCarrinho, ItemCarrinho.m do PegadaIOS): cascata do
+        // % financeiro (PercDesc1) com os descontos do ITEM_CARRINHO_DESC — a mesma conta do % Total da Edição de Preço.
+        // Antes vinha do PRO_ITEM_CARRINHO_GET derivado de ValorUnitarioLiquido/ValorUnitario, que muda com o preço editado.
+        private async Task PreencherDescontoTotal(List<ItemCommandResult> itens)
+        {
+            foreach (var codCarrinho in itens.Select(x => x.CodCarrinho).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToList())
+            {
+                // PercDesc1 vem da condição de pagamento e pode estar gravado com vírgula ("1,5").
+                var financeiros = await _sqlAsyncConnection.QueryAsync<PercentualDescontoItem>(
+                    "SELECT CAST(CAST(CodItemCarrinho AS INTEGER) AS TEXT) AS CodItem, CAST(REPLACE(IFNULL(PercDesc1, 0), ',', '.') AS REAL) AS Percentual " +
+                    "FROM TBT_ITEM_CARRINHO WHERE CodCarrinho = ?", codCarrinho);
+                var descontos = await _sqlAsyncConnection.QueryAsync<PercentualDescontoItem>(
+                    "SELECT SeqItemPedido AS CodItem, PercentualDesconto AS Percentual " +
+                    "FROM TBT_ITEM_CARRINHO_DESC WHERE CodCarrinho = ? AND SeqItemPedido NOT LIKE '%.%'", codCarrinho);
+
+                foreach (var item in itens.Where(x => x.CodCarrinho == codCarrinho))
+                {
+                    string codItem = ((int)item.CodItemCarrinho).ToString();
+                    decimal financeiro = financeiros.FirstOrDefault(x => x.CodItem == codItem)?.Percentual ?? 0;
+                    item.DescontoUI = Pegada.Core.ViewModels.DescontosItemCarrinho.CalcularTotal(
+                        financeiro, descontos.Where(x => x.CodItem == codItem).Select(x => x.Percentual));
+                }
+            }
         }
 
         // Colunas Markup Cliente / Markup Aplicado (ItemCarrinhoTableViewController cellForRow, PegadaIOS): só aparecem

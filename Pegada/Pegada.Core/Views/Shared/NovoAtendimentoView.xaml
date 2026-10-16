@@ -528,13 +528,13 @@
                             IsVisible="{Binding BindingContext.IsModoGrupo, Source={x:Reference this}}">
                     </syncfusion:SfListView>
 
-                    <custom:BotaoComVisualDropView Label="{translator:Translate CatalogoTabelaPreco}" Grid.Row="5"
-                                                   WidthRequest="500"
-                                                   HeightRequest="50"
-                                                   HorizontalOptions="Center"
-                                                   Command="{Binding BindingContext.SelecionarTabelaPrecoCommand, Source={x:Reference this}}"
-                                                   Descricao="{Binding BindingContext.CarrinhoFechamento.TabelaPreco, Source={x:Reference this}}"
-                                                       />
+                    <!-- Mesmo botão/dropdown da Tabela de Preço do Catálogo e da Pronta Entrega -->
+                    <custom:BotaoTabelaPrecoView Label="{translator:Translate CatalogoTabelaPreco}" Grid.Row="5"
+                                                 WidthRequest="500"
+                                                 HeightRequest="50"
+                                                 HorizontalOptions="Center"
+                                                 Command="{Binding BindingContext.SelecionarTabelaPrecoCommand, Source={x:Reference this}}"
+                                                 Descricao="{Binding BindingContext.CarrinhoFechamento.TabelaPreco, Source={x:Reference this}}" />
 
                 </Grid>
 
