@@ -174,8 +174,8 @@
                 <ColumnDefinition Width="73*" />
                 <ColumnDefinition Width="90*" />
                 <ColumnDefinition Width="67*" />
-                <ColumnDefinition Width="46*" />
-                <ColumnDefinition Width="378*" />
+                <ColumnDefinition Width="90*" />
+                <ColumnDefinition Width="334*" />
                 <ColumnDefinition Width="126*" />
                 <ColumnDefinition Width="83*" />
                 <ColumnDefinition Width="58*" />
@@ -208,8 +208,8 @@
                                 <ColumnDefinition Width="73*" />
                                 <ColumnDefinition Width="90*" />
                                 <ColumnDefinition Width="67*" />
-                                <ColumnDefinition Width="46*" />
-                                <ColumnDefinition Width="378*" />
+                                <ColumnDefinition Width="90*" />
+                                <ColumnDefinition Width="334*" />
                                 <ColumnDefinition Width="126*" />
                                 <ColumnDefinition Width="83*" />
                                 <ColumnDefinition Width="58*" />

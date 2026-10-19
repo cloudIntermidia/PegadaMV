@@ -80,6 +80,7 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.FavoritoModeloMarcaTodasCores = true;
             MobiliVendas.Core.Session.SincronizacaoUsaMenuIOS = true;
             MobiliVendas.Core.Session.CatalogoFiltrosUsaLayoutIOS = true;
+            MobiliVendas.Core.Session.CatalogoRolagemAlinhadaLinha = true;
             // Mesmo azul do fundo do FundoCatalogo2.png (RGB 22,65,148): sem sobra branca em volta da imagem.
             MobiliVendas.Core.Session.CorFundoCatalogo = "#164194";
             MobiliVendas.Core.ConfiguracaoVisual.IsCaixaUnica = true;
