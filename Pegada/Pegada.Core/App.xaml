@@ -117,7 +117,7 @@
             <Style x:Key="labelGridItem" TargetType="Label">
                 <Setter Property="TextColor" Value="Black"/>
                 <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
-                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="FontSize" Value="13"/>
                 <Setter Property="BackgroundColor" Value="{StaticResource corItemGrid}"/>
                 <Setter Property="HorizontalTextAlignment" Value="Center"/>
                 <Setter Property="VerticalTextAlignment" Value="Center"/>
@@ -489,7 +489,14 @@
                              cada célula ocupava de 2 a 9 MB e a navegação entre modelos estourava a memória.
                              Margem lateral 32 pra foto não encostar na estrela (esquerda) nem no ícone PE (direita). -->
                         <ffimageloading:CachedImage Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="32,6" InputTransparent="True" HorizontalOptions="Center" VerticalOptions="Center" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
-                            LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
+                            LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit">
+                            <!-- Com "SOMENTE ESTOQUE" (linha 2) a foto fica só nas linhas 0-1 pra não cobrir o texto. -->
+                            <ffimageloading:CachedImage.Triggers>
+                                <DataTrigger TargetType="ffimageloading:CachedImage" Binding="{Binding IsSoPE}" Value="True">
+                                    <Setter Property="Grid.RowSpan" Value="2"/>
+                                </DataTrigger>
+                            </ffimageloading:CachedImage.Triggers>
+                        </ffimageloading:CachedImage>
 
                         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0,0,3,0">
 

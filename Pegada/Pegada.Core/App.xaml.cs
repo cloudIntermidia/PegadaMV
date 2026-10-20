@@ -81,6 +81,9 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.SincronizacaoUsaMenuIOS = true;
             MobiliVendas.Core.Session.CatalogoFiltrosUsaLayoutIOS = true;
             MobiliVendas.Core.Session.CatalogoRolagemAlinhadaLinha = true;
+            // Combinações em 3 colunas x 3 linhas visíveis (o catálogo de modelos continua com 4 colunas).
+            MobiliVendas.Core.Session.CatalogoCombinacoesColunas = 3;
+            MobiliVendas.Core.Session.CatalogoCombinacoesLinhas = 3;
             // Mesmo azul do fundo do FundoCatalogo2.png (RGB 22,65,148): sem sobra branca em volta da imagem.
             MobiliVendas.Core.Session.CorFundoCatalogo = "#164194";
             MobiliVendas.Core.ConfiguracaoVisual.IsCaixaUnica = true;
@@ -193,7 +196,7 @@ namespace Pegada.Core
             containerRegistry.Register(typeof(ICarrinhoRepository), typeof(Pegada.Core.Repositories.CarrinhoRepository));
             containerRegistry.Register(typeof(IFotoRepository), typeof(FotoRepository));
             containerRegistry.Register(typeof(IPedidoRepository), typeof(Pegada.Core.Repositories.PedidoRepository));
-            containerRegistry.Register(typeof(ITituloRepository), typeof(TituloRepository));
+            containerRegistry.Register(typeof(ITituloRepository), typeof(Pegada.Core.Repositories.TituloRepository));
             containerRegistry.Register(typeof(INotaFiscalRepository), typeof(NotaFiscalRepository));
             containerRegistry.Register(typeof(ICondicaoPagamentoRepository), typeof(CondicaoPagamentoRepository));
             containerRegistry.Register(typeof(IItemAtendimentoRepository), typeof(ItemAtendimentoRepository));

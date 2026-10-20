@@ -553,7 +553,13 @@ namespace Pegada.Core.ViewModels
             }
 
             foreach (var item in itensFull) {
-                var grades = await _carrinhoRepository.BuscarGradesDoItem(new BuscarGradesItemCommand(PedidoSelecionado.CodCarrinho, item.CodItemCarrinho));
+                //Item vindo do TBT_ITEM_PEDIDO (PRO_ITEM_PEDIDO_COPIA_GET devolve CodCarrinho = CodPedido): regra do
+                //Objective-C (itensForPedido), grade pela DistribuicaoGrade do item, senão pela GRADE_ITEM_PEDIDO.
+                List<DerivacaoGradeResult> grades = null;
+                if (item.CodCarrinho != PedidoSelecionado.CodCarrinho && _pedidoRepository is Pegada.Core.Repositories.PedidoRepository pedidoRepositoryPegada)
+                    grades = await pedidoRepositoryPegada.BuscarGradesItemPedidoCopia(item.CodCarrinho, item.CodItemPedido);
+                if (grades == null || grades.Count == 0)
+                    grades = await _carrinhoRepository.BuscarGradesDoItem(new BuscarGradesItemCommand(PedidoSelecionado.CodCarrinho, item.CodItemCarrinho));
                 foreach (var grade in grades)
                 {
                     //Regra do Objective-C (CopiaCarrinhoViewController): ao copiar, a grade do item copiado

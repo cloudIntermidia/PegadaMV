@@ -53,6 +53,8 @@
     <None Remove="DataBase\Query\PRO_GRADE_ITEM_PEDIDO_TELA" />
     <None Remove="DataBase\Query\PRO_ITEM_PEDIDO_TELA" />
     <None Remove="DataBase\Query\Filtros\COMBO_TIPO_PEDIDO" />
+    <None Remove="DataBase\Query\Filtros\COMBO_SITUACAO_TITULO" />
+    <None Remove="DataBase\Query\Filtros\COMBO_SITUACAO_PEDIDO" />
     <None Remove="DataBase\Query\Filtros\COMBO_GRUPO_CLIENTES_PEDIDO" />
     <None Remove="DataBase\Query\Filtros\COMBO_VENDEDORES_PEDIDO" />
     <None Remove="DataBase\Query\PRO_POLITICA_COMERCIAL_GET" />
@@ -100,6 +102,8 @@
     <EmbeddedResource Include="DataBase\Query\PRO_GRADE_ITEM_PEDIDO_TELA" />
     <EmbeddedResource Include="DataBase\Query\PRO_ITEM_PEDIDO_TELA" />
     <EmbeddedResource Include="DataBase\Query\Filtros\COMBO_TIPO_PEDIDO" />
+    <EmbeddedResource Include="DataBase\Query\Filtros\COMBO_SITUACAO_TITULO" />
+    <EmbeddedResource Include="DataBase\Query\Filtros\COMBO_SITUACAO_PEDIDO" />
     <EmbeddedResource Include="DataBase\Query\Filtros\COMBO_GRUPO_CLIENTES_PEDIDO" />
     <EmbeddedResource Include="DataBase\Query\Filtros\COMBO_VENDEDORES_PEDIDO" />
     <EmbeddedResource Include="DataBase\Query\PRO_GRADE_ITEM_PEDIDO_GET" />

@@ -197,3 +197,14 @@ SET
 WHERE CodCarrinho = '@CodCarrinho';
 
 
+-- Fábrica do item: ITEM_PRONTA_ENTREGA.CodFabrica (item de PE) ou LINHA.CodFabrica do produto.
+-- Fica aqui porque toda gravação de item do carrinho (criar, atualizar, copiar, desmembrar) passa por esta function.
+UPDATE TBT_ITEM_CARRINHO
+   SET CodFabrica = COALESCE(
+       (SELECT IPE.CodFabrica FROM TBT_ITEM_PRONTA_ENTREGA IPE WHERE IPE.CodItemProntaEntrega = TBT_ITEM_CARRINHO.CodItemProntaEntrega),
+       (SELECT L.CodFabrica FROM TBT_PRODUTO P
+          JOIN TBT_MODELO M ON M.CodModelo = P.CodModelo AND M.CodMarca = P.CodMarca
+          JOIN TBT_LINHA L ON L.CodLinha = M.CodLinha
+         WHERE P.CodProduto = TBT_ITEM_CARRINHO.CodProduto LIMIT 1))
+ WHERE CodCarrinho = '@CodCarrinho'
+   AND CodFabrica IS NULL;

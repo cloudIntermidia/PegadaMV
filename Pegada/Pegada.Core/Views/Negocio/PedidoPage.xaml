@@ -539,7 +539,7 @@
                                     <Label Grid.Column="0" Style="{StaticResource pedCelula}" Text="{Binding CodItemPedido}" />
                                     <Label Grid.Column="1" Style="{StaticResource pedCelula}" Text="{Binding CodModelo}" />
                                     <Label Grid.Column="2" Style="{StaticResource pedCelula}" MaxLines="3" Text="{Binding Descricao}" />
-                                    <Label Grid.Column="3" Style="{StaticResource pedCelula}" Text="{Binding Fabrica}" />
+                                    <Label Grid.Column="3" Style="{StaticResource pedCelula}" MaxLines="2" Text="{Binding Fabrica}" />
                                     <Label Grid.Column="4" Style="{StaticResource pedCelula}" Text="{Binding SituacaoItem}" />
                                     <Label Grid.Column="5" Style="{StaticResource pedCelula}" Text="{Binding NotaFiscal}" />
                                     <Label Grid.Column="6" Style="{StaticResource pedCelula}" Text="{Binding DataEmissaoNF, StringFormat='{0:dd/MM/yyyy}'}" />

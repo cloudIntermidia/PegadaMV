@@ -1,0 +1,60 @@
+-- Pegada: igual à compartilhada, mas a descrição sai sem o código na frente ("Aberto" em vez de "(1) Aberto").
+SELECT '-1' AS Codigo,
+       '(TODOS)' AS Descricao
+UNION
+SELECT  
+		P.CodSituacaoTitulo AS Codigo,
+		P.SituacaoTitulo AS Descricao
+FROM 
+(
+	SELECT  
+		T.NumeroTitulo as NotaFiscal,
+	    T.CodPessoaRepresentante,
+		T.CodPessoaCliente,
+		C.RazaoSocial,
+		T.DataEmissao,
+		T.DataVencimento,
+		GC.CodGrupoCliente,
+		GC.Descricao AS GrupoCliente,
+		T.CodSituacaoTitulo,
+		S.Descricao AS SituacaoTitulo,
+		REP.Nome AS Representante 
+	FROM TBT_TITULO T
+	LEFT JOIN TBT_PESSOA REP ON REP.CodPessoa = T.CodPessoaRepresentante
+	LEFT JOIN TBT_SITUACAO_TITULO S ON T.CodSituacaoTitulo = S.CodSituacaoTitulo
+	LEFT JOIN TBT_CLIENTE C ON T.CodPessoaCliente = C.CodPessoaCliente
+	LEFT JOIN TBT_GRUPO_CLIENTE GC ON GC.CodGrupoCliente = C.CodGrupoCliente
+) P
+WHERE (
+			('@CodTipoPessoa' <> '1' 
+				AND EXISTS (
+					   SELECT *
+						 FROM TBT_MARCA_CLIENTE MC
+						WHERE MC.CodPessoaCliente = P.CodPessoaCliente AND 
+							  (MC.CodPessoaRepresentante = '@CodPessoa' OR 
+							   MC.CodPessoaVendedor = '@CodPessoa'
+					)
+				) 
+			   OR
+			   ('@CodTipoPessoa' = '1' AND 
+				   EXISTS(
+						SELECT * FROM TBT_GERENTE_VENDEDOR GV
+						INNER JOIN TBT_MARCA_CLIENTE MC ON GV.CodPessoaRepresentante = MC.CodPessoaRepresentante
+						WHERE MC.CodPessoaCliente = P.CodPessoaCliente 
+						AND GV.CodPessoaGerente = '@CodPessoa'
+				   )
+			   )
+			)
+       )
+AND ('@CodPessoaCliente' = '-1' 
+	 OR (P.CodPessoaCliente = '@CodPessoaCliente')
+) 
+AND ('@CodGrupoCliente' = '-1' 
+	 OR (P.CodGrupoCliente = '@CodGrupoCliente')
+) 
+AND ('@NotaFiscal' = '-1' 
+	 OR (P.NotaFiscal = '@NotaFiscal')
+) 
+AND ('@CodSituacao' = '-1' 
+	 OR (P.CodSituacaoTitulo = '@CodSituacao')
+);

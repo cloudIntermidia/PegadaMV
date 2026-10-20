@@ -1,0 +1,125 @@
+-- Pegada: igual à compartilhada, mas a descrição sai sem o código na frente ("Aberto" em vez de "(1) Aberto").
+SELECT '-1' AS Codigo,
+       '(TODOS)' AS Descricao
+UNION
+SELECT  
+		P.CodSituacaoPedido AS Codigo,
+		P.SituacaoPedido AS Descricao
+FROM 
+(
+	SELECT 
+		P.CodPedido as NumeroPedido,
+		P.CodPessoaRepresentante as CodPessoaVendedor,
+		P.CodMarca, 
+		P.CodPessoaCliente,
+		C.RazaoSocial,
+		P.CodTipoPedido,
+		P.DataEmissao,
+		P.DataEntrega,
+		P.OrdemCompra,
+		P.Observacoes,
+		GC.CodGrupoCliente,
+		GC.Descricao AS GrupoCliente,
+		P.CodSituacaoPedido,
+		S.Descricao AS SituacaoPedido,
+		REP.Nome AS Representante
+	FROM TBT_PEDIDO P
+	LEFT JOIN TBT_PESSOA REP ON REP.CodPessoa = P.CodPessoaRepresentante
+	LEFT JOIN TBT_SITUACAO_PEDIDO S ON P.CodSituacaoPedido = S.CodSituacaoPedido
+	LEFT JOIN TBT_CLIENTE C ON P.CodPessoaCliente = C.CodPessoaCliente
+	LEFT JOIN TBT_GRUPO_CLIENTE GC ON GC.CodGrupoCliente = C.CodGrupoCliente
+	WHERE  (
+		'@NotaFiscal' = '-1' 
+		OR EXISTS (	    
+			SELECT * FROM TBT_ITEM_PEDIDO IP
+			WHERE P.CodPedido = IP.CodPedido
+			AND NumeroNF = '@NotaFiscal'
+			)
+		) 
+		AND ('@Referencia' = '-1' 
+			OR EXISTS (	    
+				SELECT * FROM TBT_ITEM_PEDIDO IP
+				WHERE P.CodPedido = IP.CodPedido
+				AND CodProduto = '@Referencia'
+			)
+	) 
+	AND ('@NumeroPedido' = '-1' 
+		OR (P.CodCarrinho = '@NumeroPedido' OR P.CodPedido = '@NumeroPedido')
+	) 
+	AND ('@CodPessoaVendedor' = '-1' 
+		OR (P.CodPessoaRepresentante = '@CodPessoaVendedor' OR P.CodPessoaPreposto = '@CodPessoaVendedor')
+	) 
+
+	UNION
+	SELECT 
+		P.CodCarrinho as NumeroPedido,
+		P.CodPessoaRepresentante as CodPessoaVendedor,
+		P.CodMarca, 
+		P.CodPessoaCliente,
+		C.RazaoSocial,
+		P.CodTipoPedido,
+		P.DataEmissao,
+		P.DataEntrega,
+		P.OrdemCompra,
+		P.Observacoes,
+		GC.CodGrupoCliente,
+		GC.Descricao AS GrupoCliente,
+		P.CodSituacaoPedido,
+		S.Descricao AS SituacaoPedido,
+		REP.Nome AS Representante
+	FROM TBT_CARRINHO P
+	LEFT JOIN TBT_PESSOA REP ON REP.CodPessoa = P.CodPessoaRepresentante
+	LEFT JOIN TBT_SITUACAO_PEDIDO S ON P.CodSituacaoPedido = S.CodSituacaoPedido
+	LEFT JOIN TBT_CLIENTE C ON P.CodPessoaCliente = C.CodPessoaCliente
+	LEFT JOIN TBT_GRUPO_CLIENTE GC ON GC.CodGrupoCliente = C.CodGrupoCliente
+	WHERE  (
+			'@Referencia' = '-1' 
+			OR EXISTS (	    
+				SELECT * FROM TBT_ITEM_CARRINHO IP
+				WHERE P.CodCarrinho = IP.CodCarrinho
+				AND IP.CodProduto = '@Referencia'
+			)
+		) 
+		AND ('@NumeroPedido' = '-1' 
+			OR (P.CodCarrinho = '@NumeroPedido' OR P.CodPedido = '@NumeroPedido')
+		) 
+		AND ('@CodPessoaVendedor' = '-1' 
+			OR (P.CodPessoaRepresentante = '@CodPessoaVendedor' OR P.CodPessoaPreposto = '@CodPessoaVendedor')
+		) 
+		AND NOT EXISTS (
+                SELECT *
+                    FROM TBT_PEDIDO PED
+                WHERE PED.CodCarrinho = P.CodCarrinho
+                OR  PED.CodPedido = P.CodPedido
+        )
+) P
+WHERE (
+			('@CodTipoPessoa' <> '1' 
+				AND EXISTS (
+					   SELECT *
+						 FROM TBT_MARCA_CLIENTE MC
+						WHERE MC.CodPessoaCliente = P.CodPessoaCliente AND 
+							  (MC.CodPessoaRepresentante = '@CodPessoa' OR 
+							   MC.CodPessoaVendedor = '@CodPessoa'
+					)
+				) 
+			   OR
+			   ('@CodTipoPessoa' = '1' AND 
+				   EXISTS(
+						SELECT * FROM TBT_GERENTE_VENDEDOR GV
+						INNER JOIN TBT_MARCA_CLIENTE MC ON GV.CodPessoaRepresentante = MC.CodPessoaRepresentante
+						WHERE MC.CodPessoaCliente = P.CodPessoaCliente 
+						AND GV.CodPessoaGerente = '@CodPessoa'
+				   )
+			   )
+			)
+       )
+AND  ('@CodPessoaCliente' = '-1' 
+	 OR (P.CodPessoaCliente IN (FUNCTION_SPLIT('@CodPessoaCliente')) )
+) 
+AND ('@CodGrupoCliente' = '-1' 
+	 OR (P.CodGrupoCliente  IN (FUNCTION_SPLIT('@CodGrupoCliente')) )
+) 
+AND ('@CodSituacao' = '-1' 
+	 OR (P.CodSituacaoPedido IN (FUNCTION_SPLIT('@CodSituacao')) )
+);

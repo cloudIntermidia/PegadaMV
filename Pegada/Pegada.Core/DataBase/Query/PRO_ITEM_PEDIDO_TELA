@@ -30,13 +30,17 @@ SELECT B.*
            IP.NumeroNF AS NotaFiscal,
            (SELECT NF.DataEmissao FROM TBT_NOTA_FISCAL NF
              WHERE NF.CodEmpresa = IP.CodEmpresa AND NF.NumeroNF = IP.NumeroNF AND NF.SerieNF = IP.SerieNF LIMIT 1) AS DataEmissaoNF,
-           (SELECT SP.Descricao FROM TBT_PEDIDO PE
-              JOIN TBT_SITUACAO_PEDIDO SP ON SP.CodSituacaoPedido = PE.CodSituacaoPedido
-             WHERE PE.CodPedido = IP.CodPedido) AS SituacaoItem,
-           NULL AS Fabrica,
-           NULL AS PercComissaoItem,
-           NULL AS MarkupCliente,
-           NULL AS MarkupAplicado,
+           -- PegadaIOS (ItemPedido itensForPedido): situação do próprio item (IP.CodSituacaoPedido); sem ela no item, cai na do pedido
+           (SELECT SP.Descricao FROM TBT_SITUACAO_PEDIDO SP
+             WHERE SP.CodSituacaoPedido = IFNULL(IP.CodSituacaoPedido, (SELECT PE.CodSituacaoPedido FROM TBT_PEDIDO PE WHERE PE.CodPedido = IP.CodPedido))) AS SituacaoItem,
+           -- PegadaIOS: LEFT JOIN FABRICA F ON F.CodFabrica = IP.CodFabrica (fábrica do item, não do produto)
+           (SELECT F.Descricao FROM TBT_FABRICA F WHERE F.CodFabrica = IP.CodFabrica) AS Fabrica,
+           IP.PercComissaoItem AS PercComissaoItem,
+           -- PegadaIOS (ItemPedido itensForPedido): grade do item vem da DistribuicaoGrade ("CodDerivacao:Qtd|..."); GRADE_ITEM_PEDIDO não tem carga
+           IP.DistribuicaoGrade AS DistribuicaoGrade,
+           -- PegadaIOS: IP.Markup (cliente) e IP.MarkupAplicado
+           CASE WHEN IP.Markup IS NULL OR IP.Markup = '' THEN NULL ELSE REPLACE(printf('%.2f', IP.Markup), '.', ',') END AS MarkupCliente,
+           CASE WHEN IP.MarkupAplicado IS NULL OR IP.MarkupAplicado = '' THEN NULL ELSE REPLACE(printf('%.2f', IP.MarkupAplicado), '.', ',') END AS MarkupAplicado,
            'P' AS DescTipo,
            IFNULL(IP.PerDs1, 0) || ';' || IFNULL(IP.PerDs2, 0) || ';' || IFNULL(IP.PerDs3, 0) || ';' || IFNULL(IP.PerDs4, 0) AS DescPerc
       FROM TBT_ITEM_PEDIDO IP
@@ -44,6 +48,9 @@ SELECT B.*
            LEFT JOIN TBT_MODELO MOD ON MOD.CodModelo = P.CodModelo AND MOD.CodMarca = P.CodMarca
      WHERE '@Origem' <> 'C'
        AND IP.CodPedido = '@Codigo'
+       -- PegadaIOS: AND IP.CodSituacaoPedido = pedido.codSituacaoPedido (item sem situação não é descartado)
+       AND (IP.CodSituacaoPedido IS NULL
+            OR IP.CodSituacaoPedido = (SELECT PE.CodSituacaoPedido FROM TBT_PEDIDO PE WHERE PE.CodPedido = IP.CodPedido))
        AND (IP.Excluido IS NULL OR IP.Excluido = 0)
     AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento'))))
     AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento'))))
@@ -84,8 +91,9 @@ SELECT B.*
            (SELECT SP.Descricao FROM TBT_CARRINHO C0
               JOIN TBT_SITUACAO_PEDIDO SP ON SP.CodSituacaoPedido = C0.CodSituacaoPedido
              WHERE C0.CodCarrinho = IP.CodCarrinho) AS SituacaoItem,
-           NULL AS Fabrica,
+           (SELECT F.Descricao FROM TBT_FABRICA F WHERE F.CodFabrica = IP.CodFabrica) AS Fabrica,
            NULL AS PercComissaoItem,
+           NULL AS DistribuicaoGrade,
            (SELECT CASE WHEN C1.Markup IS NULL OR C1.Markup = '' THEN NULL ELSE REPLACE(printf('%.2f', C1.Markup), '.', ',') END
               FROM TBT_CARRINHO C1 WHERE C1.CodCarrinho = IP.CodCarrinho) AS MarkupCliente,
            CASE WHEN IP.Markup IS NULL OR IP.Markup = '' THEN NULL ELSE REPLACE(printf('%.2f', IP.Markup), '.', ',') END AS MarkupAplicado,

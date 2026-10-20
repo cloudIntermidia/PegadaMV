@@ -58,6 +58,7 @@
 	CASE WHEN C.IndPedidoMae = 1 THEN 'S' ELSE 'N' END AS IndPedidoMaeUI,
     T.IndValidaPrazo,
     C.CodSemana,
+    C.CodFabrica,
     CLI.PermiteAlterarCondicao AS ClientePermiteAlterarCondi,
 	C.OrdemCompra,
 	C.DiasBonificacao,

@@ -650,6 +650,11 @@ namespace Pegada.Core.ViewModels
                 semanaFabricas.Add(sf);
             }
 
+            // PegadaIOS (EdicaoCarrinhoViewController carregaTela, Tarefa 23176): pedido de Pronta Entrega usa só a
+            // fábrica gravada no carrinho (TBT_CARRINHO.CodFabrica), não as fábricas das linhas dos produtos.
+            if (PedidoSelecionado.TipoPedidoValida == "PE" && !string.IsNullOrEmpty(PedidoSelecionado.CodFabrica))
+                semanaFabricas = new List<SemanaResult> { new SemanaResult { CodFabrica = PedidoSelecionado.CodFabrica } };
+
             var commandFabrica = new FabricaCommand(semanaFabricas, dataMinima, DateTime.Now, PedidoSelecionado.IndValidaPrazo, null, TabelaPrecoCarrinho, PedidoSelecionado.CodCarrinho);
             this.Semanas = await _semanaRepository.BuscarSemanasPorFabrica(commandFabrica);
 
