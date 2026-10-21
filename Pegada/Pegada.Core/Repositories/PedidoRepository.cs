@@ -95,6 +95,19 @@ namespace Pegada.Core.Repositories
                     }
                 }
 
+                // PegadaIOS (ItemPedido itensForPedido / itensForToImpressao): ValorTotal = ValorUnitario * (QtdTotal * QtdCaixa) e
+                // ValorTotalLiquido = ValorUnitarioLiquido * (QtdTotal * QtdCaixa). O PRO_ITEM_PEDIDO_GET compartilhado traz o
+                // líquido * QtdTotal (sem as caixas) e não traz o total líquido: coluna Valor Total e rodapé do PDF ficavam errados.
+                if (ped.Origem != "C")
+                {
+                    foreach (var item in itensPedido)
+                    {
+                        decimal qt = item.QtdTotal * item.QtdCaixa;
+                        item.ValorTotal = item.ValorUnitario * qt;
+                        item.ValorTotalLiquido = item.PrecoCustoComDesconto * qt;
+                    }
+                }
+
                 // PegadaIOS (GerarPdf geraPdfWithPedidoChecked / WebservicePedidoHelper): grade do item vem da DistribuicaoGrade;
                 // só sem distribuição fica a da GRADE_ITEM_PEDIDO (já carregada pelo base).
                 if (ped.Origem != "C" && itensPedido.Count > 0)
