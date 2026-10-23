@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Renderers\KeyboardOverlapRenderer.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -238,9 +239,6 @@
       <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="Prism.Unity.Forms" Version="7.0.0.362" />
-    <PackageReference Include="Xam.Plugins.Forms.KeyboardOverlap">
-      <Version>1.0.0.4</Version>
-    </PackageReference>
     <PackageReference Include="Xamarin.Forms.CarouselView">
       <Version>2.3.0-pre2</Version>
     </PackageReference>

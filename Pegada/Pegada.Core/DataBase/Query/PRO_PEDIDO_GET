@@ -284,8 +284,8 @@
     	   LEFT JOIN TBT_TABELA_PRECO TPR ON TPR.CodTabelaPreco = P.CodTabelaPreco
 		   LEFT JOIN TBT_CARRINHO C ON C.CodPedido = RTRIM(P.CodPedido) AND C.CodPedido != '' AND C.CodPedido IS NOT NULL
            LEFT JOIN TBT_PESSOA PRE ON PRE.CodPessoa = P.CodPessoaPreposto
-           -- TBT_PEDIDO não tem CodFabrica: usa a do carrinho de origem
-           LEFT JOIN TBT_FABRICA_SEMANAS FS ON FS.CodFabrica = C.CodFabrica AND FS.CodSemana = P.CodSemana
+           -- Fábrica do próprio pedido (PEDIDO.CodFabrica, Semanas getSemanaForCode:andFabrica: do PegadaIOS); sem ela, a do carrinho de origem
+           LEFT JOIN TBT_FABRICA_SEMANAS FS ON FS.CodFabrica = COALESCE(NULLIF(P.CodFabrica, ''), C.CodFabrica) AND FS.CodSemana = P.CodSemana
 --		   LEFT JOIN (
 --               SELECT IC2.CodCarrinho, MAX(CodCarrinhoOriginal) AS CodPedidoOrigem
 --               FROM TBT_ITEM_CARRINHO IC2

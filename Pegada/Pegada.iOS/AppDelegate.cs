@@ -3,7 +3,6 @@ using UIKit;
 using Prism;
 using Prism.Ioc;
 using MobiliVendas.Core.Lib.IOS;
-using KeyboardOverlap.Forms.Plugin.iOSUnified;
 using CarouselView.FormsPlugin.iOS;
 using MobiliVendas.Core.Lib.IOS.Sqlite;
 using MobiliVendas.Core.Lib.IOS.Services;
@@ -47,7 +46,6 @@ namespace Pegada.iOS
         public void InitPlugins(){
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             global::Xamarin.FormsMaps.Init();
-            KeyboardOverlapRenderer.Init();
             CarouselViewRenderer.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             // Sem limite o cache de imagens decodificadas crescia a cada modelo navegado no catálogo/combinações

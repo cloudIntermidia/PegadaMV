@@ -148,7 +148,12 @@ namespace Pegada.Core.Repositories
                 var statements = sql.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var statement in statements)
                 {
-                    rowsAffected = await _sqlAsyncConnection.ExecuteAsync(statement);
+                    if (string.IsNullOrWhiteSpace(statement))
+                        continue;
+
+                    // Soma de todos os comandos: o último (CodFabrica IS NULL) costuma não alterar nada quando os
+                    // itens já têm fábrica, e olhar só ele fazia o Salvar do fechamento acusar erro ao persistir.
+                    rowsAffected += await _sqlAsyncConnection.ExecuteAsync(statement);
                 }
             }
             catch (SQLiteException sqliteException)

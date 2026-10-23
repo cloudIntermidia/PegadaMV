@@ -460,277 +460,147 @@
             </DataTemplate>-->
 
 
+            <!-- Célula do catálogo = célula ItemCatalogoCell (255x184) do ItemCatalogoCollectionViewController do PegadaIOS:
+                 cada elemento no frame do storyboard, os da esquerda presos à esquerda (Margin = x,y) e os da direita presos
+                 à direita (Margin direita = 255 - x - largura), pra não derivarem quando a célula é mais larga que 255.
+                 Foto aberta já reduzida (em pixels de tela): no tamanho original (até 1500x1500) cada célula ocupava de 2 a 9 MB
+                 e a navegação entre modelos estourava a memória. -->
             <DataTemplate x:Key="CatalogoTemplate">
                 <StackLayout HeightRequest="190"
                              BackgroundColor="Silver">
                     <Grid BackgroundColor="White"
-                          RowSpacing="3"
                           Margin="1"
                           HorizontalOptions="FillAndExpand"
-                          VerticalOptions="FillAndExpand"
-                      >
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="18"/>
-                            <RowDefinition Height="25"/>
-                        </Grid.RowDefinitions>
+                          VerticalOptions="FillAndExpand">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="40"/>
-                        </Grid.ColumnDefinitions>
+                        <!-- imageView (28,23,188,121) - declarada primeiro pra ficar por baixo dos ícones -->
+                        <ffimageloading:CachedImage Margin="28,23,39,40" InputTransparent="True" HorizontalOptions="Fill" VerticalOptions="Fill" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
+                            LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
 
-                        <!-- Foto do modelo ocupa as linhas 0-2 e as 3 colunas, declarada primeiro pra ficar POR BAIXO de preços/ícones/sigla
-                             (que não mudam de lugar) - antes ficava presa na coluna do meio. As grades laterais de ícones não têm fundo
-                             próprio pra não cobrir a foto.
-                             Foto aberta já reduzida (em pixels de tela): no tamanho original (até 1500x1500)
-                             cada célula ocupava de 2 a 9 MB e a navegação entre modelos estourava a memória.
-                             Margem lateral 32 pra foto não encostar na estrela (esquerda) nem no ícone PE (direita). -->
-                        <ffimageloading:CachedImage Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="32,6" InputTransparent="True" HorizontalOptions="Center" VerticalOptions="Center" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
-                            LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit">
-                            <!-- Com "SOMENTE ESTOQUE" (linha 2) a foto fica só nas linhas 0-1 pra não cobrir o texto. -->
-                            <ffimageloading:CachedImage.Triggers>
-                                <DataTrigger TargetType="ffimageloading:CachedImage" Binding="{Binding IsSoPE}" Value="True">
-                                    <Setter Property="Grid.RowSpan" Value="2"/>
-                                </DataTrigger>
-                            </ffimageloading:CachedImage.Triggers>
+                        <!-- iconPromo (8,2,26,26) -->
+                        <ffimageloading:CachedImage Margin="8,2,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="26" HeightRequest="26" DownsampleToViewSize="False" Aspect="AspectFit"
+                            Source="{Binding ExibeEtiquetaPromocao, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',etiqueta_promocao.png'}" />
+
+                        <!-- iconDesconto (45,0,33,30) -->
+                        <ffimageloading:CachedImage Margin="45,0,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="33" HeightRequest="30" DownsampleToViewSize="False" Aspect="AspectFit"
+                            Source="{Binding ExibeSetaBaixoVermelha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',seta_baixo_vermelha.png'}" />
+
+                        <!-- carrinhoIcon (93,0,24,24) -->
+                        <Image Margin="93,0,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="24" HeightRequest="24" Aspect="AspectFit" Source="carrinho.png"
+                               IsVisible="{Binding ExibeCarrinho, Converter={StaticResource IntToBoolConverter}}" />
+
+                        <!-- iconCampeaoVenda (8,30,26,26) -->
+                        <ffimageloading:CachedImage Margin="8,30,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="26" HeightRequest="26" DownsampleToViewSize="False" Aspect="AspectFit"
+                            Source="{Binding ExibeTrofeu, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',trofeu.png'}" />
+
+                        <!-- iconMid (13,65,16,16) -->
+                        <ffimageloading:CachedImage Margin="13,65,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="16" HeightRequest="16" DownsampleToViewSize="False" Aspect="AspectFit"
+                            Source="{Binding ExibeTV, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',tv.png'}" />
+
+                        <!-- iconNov (8,83,24,24) -->
+                        <ffimageloading:CachedImage Margin="8,83,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="24" HeightRequest="24" DownsampleToViewSize="False" Aspect="AspectFit"
+                            Source="{Binding ExibeNew, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',new.png'}" />
+
+                        <!-- btnFavorito (8,120,25,25) -->
+                        <ffimageloading:CachedImage Margin="8,120,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="25" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
+                            Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='wish_unchecked.png,wish_checked.png'}">
+                            <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" CommandParameter="{Binding .}"/>
+                            </ffimageloading:CachedImage.GestureRecognizers>
                         </ffimageloading:CachedImage>
 
-                        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0,0,3,0">
+                        <!-- siglaLbl (4,148,40,17) -->
+                        <Label IsVisible="{Binding MostraSigla}" Margin="4,148,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="40" HeightRequest="17" Text="{Binding Sigla}" FontSize="12" FontFamily="{StaticResource RobotoNormalFont}" />
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                        <!-- precoDe (80,6,76,16) - botão de preço (cifrão) desligado esconde o "De" mesmo em promoção -->
+                        <Label Margin="0,6,99,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center"
+                               IsVisible="{Binding IndPromocional}" Text="{Binding PrecoDeUI, StringFormat='De: {0}'}"
+                               FontSize="10" FontFamily="{StaticResource RobotoBoldFont}" TextColor="LightGray" TextDecorations="Strikethrough">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsMostraPreco}" Value="False">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
 
-                            <Grid.RowDefinitions>
-                               <RowDefinition Height="*"/>
-                               <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                        <!-- priceLabel (164,0,80,16) - preço Por (promocional) ou preço normal -->
+                        <Label Margin="0,0,11,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center" HorizontalTextAlignment="End"
+                               IsVisible="{Binding IsMostraPreco}" Text="{Binding PrecoPorUI}" FontSize="11">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IndPromocional}" Value="1">
+                                    <Setter Property="Text" Value="{Binding PrecoPorUI, StringFormat='Por: {0}'}"/>
+                                    <Setter Property="TextColor" Value="#006633"/>
+                                    <Setter Property="FontFamily" Value="{StaticResource RobotoBoldFont}"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding IndPromocional}" Value="0">
+                                    <Setter Property="TextColor" Value="Black"/>
+                                    <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
 
-                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" DownsampleToViewSize="False" Source="{Binding ExibeEtiquetaPromocao, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',etiqueta_promocao.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
+                        <!-- precoPVL (164,12,80,16) -->
+                        <Label Margin="0,12,11,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center" HorizontalTextAlignment="End"
+                               IsVisible="{Binding IsMostraPreco}" Text="{Binding PrecoPVL, Converter={StaticResource ValorPVLParaMoeda}}"
+                               FontSize="11" FontFamily="{StaticResource RobotoNormalFont}" />
 
-                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" DownsampleToViewSize="False" Source="{Binding ExibeSetaBaixoVermelha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',seta_baixo_vermelha.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="15" WidthRequest="15" Margin="10,0" />
+                        <!-- iconEstoqueAvulso (190,33,25,25) -->
+                        <ffimageloading:CachedImage Margin="0,33,40,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="25" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
+                            Source="{Binding ExibeEstoqueAvulso, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',e_a.png'}">
+                            <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DirecionarB2bCommand}" CommandParameter="{Binding .}"/>
+                            </ffimageloading:CachedImage.GestureRecognizers>
+                        </ffimageloading:CachedImage>
 
-                            <!-- PREÇO DE -->
-                                <Label Grid.Row="0"
-                                       Grid.Column="2"
-                                       IsVisible="{Binding IndPromocional}"
-                                       Text="{Binding PrecoDeUI, StringFormat='De: {0}'}"
-                                       FontSize="10"
-                                       FontFamily="{StaticResource RobotoBoldFont}"
-                                       TextColor="LightGray"
-                                       TextDecorations="Strikethrough"
-                                       HorizontalOptions="End"
-                                       VerticalOptions="Center">
-                                    <!-- Botão de preço (cifrão) desligado esconde o "De" mesmo em promoção -->
-                                    <Label.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsMostraPreco}" Value="False">
-                                            <Setter Property="IsVisible" Value="False"/>
-                                        </DataTrigger>
-                                    </Label.Triggers>
-                                </Label>
+                        <!-- btnPE (220,33,32,32) + estoqueLbl (215,56,35,19) -->
+                        <ffimageloading:CachedImage Margin="0,33,3,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="32" HeightRequest="32" DownsampleToViewSize="False" Aspect="AspectFit"
+                            IsVisible="{Binding ExibeProntaEntrega, Converter={StaticResource IntToBoolConverter}}"
+                            Source="{Binding ExibeProntaEntrega, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',pronta_entrega.png'}">
+                            <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DirecionarProntaEntregaCommand}" CommandParameter="{Binding .}"/>
+                            </ffimageloading:CachedImage.GestureRecognizers>
+                        </ffimageloading:CachedImage>
+                        <ContentView Margin="0,56,5,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="35" HeightRequest="19" InputTransparent="True"
+                                     IsVisible="{Binding ExibeProntaEntrega, Converter={StaticResource IntToBoolConverter}}">
+                            <Label IsVisible="{Binding MostraQtdEstoque}" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Text="{Binding Estoque}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
+                        </ContentView>
 
-                                <!-- PREÇO POR / PREÇO NORMAL -->
-                               <Label Grid.Row="0"
-                                       Grid.Column="3"
-                                       IsVisible="{Binding IsMostraPreco}"
-                                       Text="{Binding PrecoPorUI}"
-                                       FontSize="11"
-                                       HorizontalOptions="EndAndExpand"
-                                       VerticalOptions="Center">
+                        <!-- btnSoPe (mesmo frame do btnPE) + quantidade no lugar do estoqueLbl -->
+                        <ffimageloading:CachedImage Margin="0,33,3,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="32" HeightRequest="32" DownsampleToViewSize="False" Aspect="AspectFit"
+                            IsVisible="{Binding IsSoPE}"
+                            Source="{Binding IsSoPE, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',SoPE.png'}">
+                            <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DirecionarProntaEntregaCommand}" CommandParameter="{Binding .}"/>
+                            </ffimageloading:CachedImage.GestureRecognizers>
+                        </ffimageloading:CachedImage>
+                        <ContentView Margin="0,56,5,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="35" HeightRequest="19" InputTransparent="True"
+                                     IsVisible="{Binding IsSoPE}">
+                            <Label IsVisible="{Binding MostraQtdEstoque}" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Text="{Binding EstoqueFuturo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
+                        </ContentView>
 
-                                    <Label.Triggers>
+                        <!-- iconEstoqueFuturo (225,78,25,25) + estoqueFutLbl (215,104,35,19) - touchEstoqueFuturo do PegadaIOS -->
+                        <ffimageloading:CachedImage Margin="0,78,5,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="25" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
+                            IsVisible="{Binding ExibeCaixaAzul, Converter={StaticResource IntToBoolConverter}}"
+                            Source="{Binding ExibeCaixaAzul, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',caixa_azul.jpeg'}">
+                            <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DirecionarEstoqueFuturoCommand}" CommandParameter="{Binding .}"/>
+                            </ffimageloading:CachedImage.GestureRecognizers>
+                        </ffimageloading:CachedImage>
+                        <Label Margin="0,104,5,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="35" HeightRequest="19" HorizontalTextAlignment="End" VerticalTextAlignment="Center"
+                               IsVisible="{Binding ExibeCaixaAzul, Converter={StaticResource IntToBoolConverter}}"
+                               Text="{Binding EstoqueFuturo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
 
-                                        <!-- PROMOCIONAL -->
-                                        <DataTrigger TargetType="Label"
-                                                     Binding="{Binding IndPromocional}"
-                                                     Value="1">
+                        <!-- iconInativo (219,136,35,25) = fora de linha -->
+                        <ffimageloading:CachedImage Margin="0,136,1,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="35" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
+                            Source="{Binding ExibeForaLinha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',fora_linha.png'}" />
 
-                                            <Setter Property="Text"
-                                                    Value="{Binding PrecoPorUI, StringFormat='Por: {0}'}"/>
+                        <!-- "SOMENTE ESTOQUE" (só MV): logo abaixo da foto, acima da descrição -->
+                        <Label Margin="0,146,0,0" HorizontalOptions="Center" VerticalOptions="Start" Text="SOMENTE ESTOQUE" IsVisible="{Binding IsSoPE}"
+                               TextColor="Black" FontSize="12" FontFamily="{StaticResource RobotoBoldFont}" />
 
-                                            <Setter Property="TextColor"
-                                                    Value="#006633"/>
-
-                                            <Setter Property="FontFamily"
-                                                    Value="{StaticResource RobotoBoldFont}"/>
-
-                                        </DataTrigger>
-
-                                        <!-- NORMAL -->
-                                        <DataTrigger TargetType="Label"
-                                                     Binding="{Binding IndPromocional}"
-                                                     Value="0">
-
-                                            <Setter Property="TextColor"
-                                                    Value="Black"/>
-
-                                            <Setter Property="FontFamily"
-                                                    Value="{StaticResource RobotoNormalFont}"/>
-
-                                        </DataTrigger>
-
-                                    </Label.Triggers>
-
-                                </Label>
-
-                            <!-- PREÇO PVL -->
-                                <Label Grid.Row="1"
-                                       Grid.Column="3"
-                                       IsVisible="{Binding IsMostraPreco}"
-                                       Text="{Binding PrecoPVL, Converter={StaticResource ValorPVLParaMoeda}}"
-                                       FontSize="11"
-                                       FontFamily="{StaticResource RobotoNormalFont}"
-                                       HorizontalOptions="EndAndExpand"/>
-
-                            <!--PRECO DE-->
-                            <!--<Label IsVisible="{Binding IsMostraPreco}" Grid.Row="0" Grid.Column="2" HorizontalTextAlignment="Center" Text="{Binding PrecoOriginal, Converter={StaticResource ValorParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" HorizontalOptions="End"/>-->
-                            <!--PRECO POR ou preço normal-->
-                            <!--<Label IsVisible="{Binding IsMostraPreco}" Grid.Row="0" Grid.Column="3" HorizontalTextAlignment="Center" Text="{Binding PrecoVenda, Converter={StaticResource ValorParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" HorizontalOptions="EndAndExpand"/>-->
-                            <!--PRECO PVL-->
-                            <!--<Label IsVisible="{Binding IsMostraPreco}" Grid.Row="1" Grid.Column="3" HorizontalTextAlignment="Center" Text="{Binding PrecoPVL, Converter={StaticResource ValorPVLParaMoeda}}" FontSize="13" FontFamily="{StaticResource RobotoNormalFont}" HorizontalOptions="EndAndExpand"/>-->
-
-
-                        </Grid>
-
-                        <!-- Linhas proporcionais: com a linha de 18 do "SOMENTE ESTOQUE" a área ficou ~106 de altura e 4x30 empurrava
-                             o coração (favorito) pra fora do grid - no iOS o toque fora dos limites do pai não chega no ícone. -->
-                        <Grid Grid.Row="1" Grid.Column="0" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="40"/>
-                            </Grid.RowDefinitions>
-
-                            <!--<Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="25"/>
-                            </Grid.ColumnDefinitions>-->
-
-
-                            <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeTrofeu, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',trofeu.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
-
-                            <ffimageloading:CachedImage Grid.Row="1" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeTV, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',tv.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
-
-                            <ffimageloading:CachedImage Grid.Row="2" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeNew, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',new.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />
-
-                            <!-- Coluna 0 da célula tem 40: com Margin="10,0" sobravam só 20 pro ícone (o tamanho pedido era ignorado).
-                                 Margem 3+2 deixa o ícone caber inteiro. Encostado à esquerda (Start + 2) pra ficar longe da foto. -->
-                            <ffimageloading:CachedImage 
-                                                Grid.Row="3" Grid.Column="0"
-                                                DownsampleToViewSize="False" 
-                                                Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='wish_unchecked.png,wish_checked.png'}" 
-                                                LoadingPlaceholder="NaoDisp.png"
-                                                Aspect="AspectFit" 
-                                                HorizontalOptions="Start"
-                                                HeightRequest="28"
-                                                WidthRequest="28"
-                                                Margin="2,0,0,0"
-                                                >
-                                <ffimageloading:CachedImage.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" 
-                                                  CommandParameter="{Binding .}"/>
-                                </ffimageloading:CachedImage.GestureRecognizers>
-                            </ffimageloading:CachedImage>
-
-                            <!--<ffimageloading:CachedImage Grid.Row="3" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeEstrela, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',estrela_inativa.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="25" WidthRequest="25" Margin="10,0" />-->
-
-                        </Grid>
-
-                        <Grid Grid.Row="1" Grid.Column="2" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="35"/>
-                            </Grid.RowDefinitions>
-
-                            <!--<Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="25"/>
-                            </Grid.ColumnDefinitions>-->
-
-                             <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeEstoqueAvulso, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',e_a.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="40" WidthRequest="40" Margin="5,0">
-                                    <ffimageloading:CachedImage.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding DirecionarB2bCommand}"
-                                                          CommandParameter="{Binding .}"/>
-                                    </ffimageloading:CachedImage.GestureRecognizers>
-                                </ffimageloading:CachedImage>
-
-                            <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Vertical" Spacing="0" IsVisible="{Binding ExibeProntaEntrega}">
-
-                                <ffimageloading:CachedImage DownsampleToViewSize="False" Source="{Binding ExibeProntaEntrega, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',pronta_entrega.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="40" WidthRequest="40" Margin="5,0">
-                                    <ffimageloading:CachedImage.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding DirecionarProntaEntregaCommand}"
-                                                          CommandParameter="{Binding .}"/>
-                                    </ffimageloading:CachedImage.GestureRecognizers>
-                                </ffimageloading:CachedImage>
-
-                                <Label IsVisible="{Binding MostraQtdEstoque}" Margin="0,-10,0,0" HorizontalTextAlignment="Center" Text="{Binding Estoque}" FontSize="8" FontFamily="{StaticResource RobotoNormalFont}" HeightRequest="12"/>
-                            </StackLayout>
-
-                               <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Vertical" Spacing="0" IsVisible="{Binding IsSoPE}">
-
-                                <ffimageloading:CachedImage DownsampleToViewSize="False" Source="{Binding IsSoPE, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',SoPE.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="45" WidthRequest="45" Margin="5,0">
-                                    <ffimageloading:CachedImage.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding DirecionarProntaEntregaCommand}"
-                                                          CommandParameter="{Binding .}"/>
-                                    </ffimageloading:CachedImage.GestureRecognizers>
-                                </ffimageloading:CachedImage>
-
-                                <Label IsVisible="{Binding MostraQtdEstoque}" Margin="0,-10,0,0" HorizontalTextAlignment="Center" Text="{Binding EstoqueFuturo}" FontSize="8" FontFamily="{StaticResource RobotoNormalFont}" HeightRequest="12"/>
-                            </StackLayout>
-                            
-
-                             <StackLayout Grid.Row="2" Grid.Column="0" Orientation="Vertical" Spacing="0" IsVisible="{Binding ExibeCaixaAzul}">
-
-                                 <ffimageloading:CachedImage DownsampleToViewSize="False" Source="{Binding ExibeCaixaAzul, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',caixa_azul.jpeg'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="40" WidthRequest="40" Margin="10,0">
-                                    <ffimageloading:CachedImage.GestureRecognizers>
-                                        <!-- touchEstoqueFuturo (ItemCatalogoCollectionViewController, PegadaIOS) -->
-                                        <TapGestureRecognizer Command="{Binding DirecionarEstoqueFuturoCommand}"
-                                                          CommandParameter="{Binding .}"/>
-                                    </ffimageloading:CachedImage.GestureRecognizers>
-                                </ffimageloading:CachedImage>
-
-                                <Label Margin="0,-4,0,0" HorizontalTextAlignment="Center" Text="{Binding EstoqueFuturo}" FontSize="8" FontFamily="{StaticResource RobotoNormalFont}" HeightRequest="12"/>
-                            </StackLayout>
-
-                            <ffimageloading:CachedImage Grid.Row="3" Grid.Column="0" DownsampleToViewSize="False" Source="{Binding ExibeForaLinha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',fora_linha.png'}" 
-                                LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" HorizontalOptions="End" HeightRequest="35" WidthRequest="35" Margin="10,0" />
-                        </Grid>
-
-
-                        <Label Grid.Row="2"
-                               Grid.Column="1"
-                               Text="SOMENTE ESTOQUE"
-                               IsVisible="{Binding IsSoPE}"
-                               HorizontalTextAlignment="Center"
-                               TextColor="Black"
-                               FontSize="12"
-                               HorizontalOptions="Center"
-                               VerticalOptions="End"
-                               FontFamily="{StaticResource RobotoBoldFont}" />
-
-                        <Label IsVisible="{Binding MostraSigla}" Grid.Row="2" Grid.Column="0" Margin="3,5,3,0" HorizontalTextAlignment="Center" Text="{Binding Sigla}" FontSize="10" FontFamily="{StaticResource RobotoNormalFont}" />
-                        <Label Grid.Row="3" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding Descricao}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
-
-                        <!--<Label Grid.Row="3" Grid.Column="1" Margin="3,0,3,0" HorizontalTextAlignment="Center" Text="{Binding DescricaoProdutoModelo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />-->
+                        <!-- descLabelCompl (16,164,236,20) -->
+                        <Label Margin="16,0,3,0" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                               Text="{Binding Descricao}" FontSize="12" TextColor="#555555" FontFamily="{StaticResource RobotoNormalFont}" />
 
                     </Grid>
                 </StackLayout>

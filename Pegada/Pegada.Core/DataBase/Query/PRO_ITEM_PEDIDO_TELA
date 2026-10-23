@@ -49,8 +49,8 @@ SELECT B.*
      WHERE '@Origem' <> 'C'
        AND IP.CodPedido = '@Codigo'
        -- PegadaIOS: AND IP.CodSituacaoPedido = pedido.codSituacaoPedido (item sem situação não é descartado)
-       AND (IP.CodSituacaoPedido IS NULL
-            OR IP.CodSituacaoPedido = (SELECT PE.CodSituacaoPedido FROM TBT_PEDIDO PE WHERE PE.CodPedido = IP.CodPedido))
+ --      AND (IP.CodSituacaoPedido IS NULL
+ --           OR IP.CodSituacaoPedido = (SELECT PE.CodSituacaoPedido FROM TBT_PEDIDO PE WHERE PE.CodPedido = IP.CodPedido))
        AND (IP.Excluido IS NULL OR IP.Excluido = 0)
     AND ('-1' = '@FiltroGrupoSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '3' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroGrupoSegmento'))))
     AND ('-1' = '@FiltroSegmento' OR EXISTS (SELECT 1 FROM TBT_NIVEL_PRODUTO NP WHERE NP.CodProduto = IP.CodProduto AND NP.CodNivel = '4' AND NP.CodAtributo IN (FUNCTION_SPLIT('@FiltroSegmento'))))

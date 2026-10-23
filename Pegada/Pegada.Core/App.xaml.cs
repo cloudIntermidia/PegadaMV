@@ -81,6 +81,7 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.SincronizacaoUsaMenuIOS = true;
             MobiliVendas.Core.Session.CatalogoFiltrosUsaLayoutIOS = true;
             MobiliVendas.Core.Session.CatalogoRolagemAlinhadaLinha = true;
+            MobiliVendas.Core.Session.CatalogoZoomDetalheEmbutido = true;
             // Combinações em 3 colunas x 3 linhas visíveis (o catálogo de modelos continua com 4 colunas).
             MobiliVendas.Core.Session.CatalogoCombinacoesColunas = 3;
             MobiliVendas.Core.Session.CatalogoCombinacoesLinhas = 3;
