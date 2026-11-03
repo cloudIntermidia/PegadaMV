@@ -38,6 +38,42 @@ namespace Pegada.Core.Repositories
             return await _sqlAsyncConnection.QueryAsync<DerivacaoGradeResult>(sql, codCarrinho, (int)codItemCarrinho, codGrade);
         }
 
+        private class TamanhoPais
+        {
+            public string CodDerivacao { get; set; }
+            public string Descricao { get; set; }
+        }
+
+        // Mesma regra da grade BR/EX do carrinho (CarrinhoRepository.BuscarTamanhosPaisCliente / loadGradeForItem do PegadaIOS):
+        // cliente de outro país vê o tamanho do país (DERIVACAO_PAIS, ou o BR se não houver); país sem nenhuma derivação
+        // cadastrada usa a grade BR. Cliente BR: null.
+        public async Task<Dictionary<string, string>> BuscarTamanhosPais(string codPessoaCliente, IEnumerable<string> codDerivacoes)
+        {
+            string codPais = await _sqlAsyncConnection.ExecuteScalarAsync<string>(
+                "SELECT CodPais FROM TBT_CLIENTE WHERE CodPessoaCliente = ?", codPessoaCliente);
+            if (string.IsNullOrEmpty(codPais) || codPais == "1")
+                return null;
+
+            int derivacoes = await _sqlAsyncConnection.ExecuteScalarAsync<int>(
+                "SELECT COUNT(*) FROM TBT_DERIVACAO_PAIS WHERE CodPais = ?", codPais);
+            if (derivacoes == 0)
+                return null;
+
+            var codigos = codDerivacoes.Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
+            if (codigos.Count == 0)
+                return null;
+
+            var tamanhos = await _sqlAsyncConnection.QueryAsync<TamanhoPais>(
+                "SELECT D.CodDerivacao AS CodDerivacao, " +
+                "       CASE WHEN DP.DescricaoDerivacao IS NULL THEN D.Descricao ELSE DP.DescricaoDerivacao END AS Descricao " +
+                "  FROM TBT_DERIVACAO D " +
+                "  LEFT JOIN TBT_DERIVACAO_PAIS DP ON DP.CodDerivacao = D.CodDerivacao AND DP.CodPais = ? " +
+                " WHERE D.CodDerivacao IN (" + string.Join(",", codigos.Select(_ => "?")) + ")",
+                new object[] { codPais }.Concat(codigos).ToArray());
+
+            return tamanhos.GroupBy(t => t.CodDerivacao).ToDictionary(g => g.Key, g => g.First().Descricao);
+        }
+
         // ProdutoAtendimento tamanhoForModelo: (iOS) — tamanhos de corrugado do modelo, ex.: "6|9|10|12|15".
         public async Task<string> BuscarTamanhosPossiveis(string codProduto)
         {

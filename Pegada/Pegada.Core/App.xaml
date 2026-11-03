@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
              xmlns:converters="clr-namespace:MobiliVendas.Core.Utils.Converters;assembly=MobiliVendas.Core"
+             xmlns:utils="clr-namespace:MobiliVendas.Core.Utils;assembly=MobiliVendas.Core"
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
              xmlns:dataTemplate="clr-namespace:MobiliVendas.Core.Utils.DataTemplates;assembly=MobiliVendas.Core"
+             xmlns:behaviors="clr-namespace:Pegada.Core.Behaviors"
              x:Class="Pegada.Core.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -76,6 +78,8 @@
             <converters:ValorParaMoeda x:Key="ValorParaMoeda"/>
             <converters:ValorPVLParaMoeda x:Key="ValorPVLParaMoeda"/>
             <converters:Base64ParaImagem x:Key="Base64ParaImagem"/>
+            <!-- Foto da célula do catálogo lida sob demanda, com chave de cache por foto (MobiliVendas.Core.Utils.FotoCatalogo) -->
+            <utils:FotoCatalogoCacheKeyFactory x:Key="FotoCatalogoCacheKey"/>
             <converters:ByteArrayParaImagem x:Key="ByteArrayParaImagem"/>
             <converters:ColecaoNaoTemDados x:Key="ColecaoNaoTemDados"/>
             <converters:ColecaoTemDados x:Key="ColecaoTemDados"/>
@@ -468,14 +472,17 @@
             <DataTemplate x:Key="CatalogoTemplate">
                 <StackLayout HeightRequest="190"
                              BackgroundColor="Silver">
+                    <!-- iPad maior que o de 9,7": ícones e posições crescem na proporção da célula (nunca menores que os frames abaixo) -->
                     <Grid BackgroundColor="White"
                           Margin="1"
                           HorizontalOptions="FillAndExpand"
-                          VerticalOptions="FillAndExpand">
+                          VerticalOptions="FillAndExpand"
+                          behaviors:EscalaCelula.LarguraBase="255"
+                          behaviors:EscalaCelula.AlturaBase="184">
 
                         <!-- imageView (28,23,188,121) - declarada primeiro pra ficar por baixo dos ícones -->
-                        <ffimageloading:CachedImage Margin="28,23,39,40" InputTransparent="True" HorizontalOptions="Fill" VerticalOptions="Fill" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding Imagem, Converter={StaticResource Base64ParaImagem}}"
-                            LoadingPlaceholder="NaoDisp.png" Aspect="AspectFit" />
+                        <ffimageloading:CachedImage Margin="28,23,39,40" behaviors:EscalaCelula.Modo="MantemBaixo" InputTransparent="True" HorizontalOptions="Fill" VerticalOptions="Fill" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding ImagemStream}"
+                            CacheKeyFactory="{StaticResource FotoCatalogoCacheKey}" LoadingPlaceholder="NaoDisp.png" ErrorPlaceholder="NaoDisp.png" Aspect="AspectFit" />
 
                         <!-- iconPromo (8,2,26,26) -->
                         <ffimageloading:CachedImage Margin="8,2,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="26" HeightRequest="26" DownsampleToViewSize="False" Aspect="AspectFit"
@@ -594,13 +601,30 @@
                         <ffimageloading:CachedImage Margin="0,136,1,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="35" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
                             Source="{Binding ExibeForaLinha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',fora_linha.png'}" />
 
-                        <!-- "SOMENTE ESTOQUE" (só MV): logo abaixo da foto, acima da descrição -->
-                        <Label Margin="0,146,0,0" HorizontalOptions="Center" VerticalOptions="Start" Text="SOMENTE ESTOQUE" IsVisible="{Binding IsSoPE}"
-                               TextColor="Black" FontSize="12" FontFamily="{StaticResource RobotoBoldFont}" />
+                        <!-- "SOMENTE ESTOQUE" = descLabel (16,148,236,20) do PegadaIOS: entre a foto e a descLabelCompl, presa ao rodapé.
+                             Só na grade de Modelos (_isModelo no iOS); nas Combinações o iOS não mostra. -->
+                        <Label Margin="16,0,3,20" behaviors:EscalaCelula.Modo="Nenhum" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                               Text="SOMENTE ESTOQUE" IsVisible="{Binding IsSoPE}"
+                               TextColor="Black" FontSize="12" FontFamily="{StaticResource RobotoBoldFont}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsCelulaCombinacao}" Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
 
                         <!-- descLabelCompl (16,164,236,20) -->
-                        <Label Margin="16,0,3,0" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                        <Label Margin="16,0,3,0" behaviors:EscalaCelula.Modo="Nenhum" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                               IsVisible="{Binding IsCelulaCombinacao, Converter={StaticResource InverterValoresParaBoleano}}"
                                Text="{Binding Descricao}" FontSize="12" TextColor="#555555" FontFamily="{StaticResource RobotoNormalFont}" />
+
+                        <!-- Combinações: descLabel (9,172,237,31) do ItemCatalogoCollectionViewController do PegadaIOS = descricaoCor do
+                             produto, negrito 12, preto, até 2 linhas. Aqui a DescricaoCor do TBT_PRODUTO vem vazia e o mesmo texto
+                             ("131221-01 ANILINA PINHAO 24L N:37 A 44") está na DescricaoCompleta. Negrito com a fonte do sistema
+                             (o iOS não tem Roboto-Bold no bundle). -->
+                        <Label Margin="9,0,8,0" behaviors:EscalaCelula.Modo="Nenhum" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="31" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                               IsVisible="{Binding IsCelulaCombinacao}" MaxLines="2" LineBreakMode="WordWrap"
+                               Text="{Binding DescricaoCompleta}" FontSize="12" FontAttributes="Bold" TextColor="Black" />
 
                     </Grid>
                 </StackLayout>

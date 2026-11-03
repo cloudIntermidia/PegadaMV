@@ -43,6 +43,15 @@ namespace Pegada.iOS
             return base.FinishedLaunching(app, options);
         }
 
+        // Aviso de pouca memória do iOS: solta as fotos decodificadas e devolve o heap gerenciado antes que a
+        // próxima alocação grande (consulta do catálogo/filtros) falhe com OutOfMemoryException ou o iOS mate o app.
+        // Sem base: método opcional do UIApplicationDelegate (o base lança exceção no Xamarin.iOS).
+        public override void ReceiveMemoryWarning(UIApplication application)
+        {
+            FFImageLoading.ImageService.Instance.InvalidateMemoryCache();
+            System.GC.Collect();
+        }
+
         public void InitPlugins(){
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             global::Xamarin.FormsMaps.Init();

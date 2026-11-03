@@ -52,6 +52,26 @@ namespace Pegada.Core.ViewModels
             set { SetProperty(ref _categoriaCliente, value); }
         }
 
+        // Campos de -atualizaTela (CadastroViewController, PegadaIOS) formatados só para a tela: Cliente.EnderecoPrincipal.CEP
+        // e Cliente.Agencia/Conta seguem sem formatação porque o formulário de edição salva esses valores.
+        private string _paisDescricao;
+        public string PaisDescricao { get => _paisDescricao; set => SetProperty(ref _paisDescricao, value); }
+
+        private string _cepUI;
+        public string CepUI { get => _cepUI; set => SetProperty(ref _cepUI, value); }
+
+        private string _telefoneUI;
+        public string TelefoneUI { get => _telefoneUI; set => SetProperty(ref _telefoneUI, value); }
+
+        private string _agenciaUI;
+        public string AgenciaUI { get => _agenciaUI; set => SetProperty(ref _agenciaUI, value); }
+
+        private string _contaUI;
+        public string ContaUI { get => _contaUI; set => SetProperty(ref _contaUI, value); }
+
+        private EnderecoCommandResult _enderecoEntrega;
+        public EnderecoCommandResult EnderecoEntrega { get => _enderecoEntrega; set => SetProperty(ref _enderecoEntrega, value); }
+
         #endregion
 
         #region "Commands"
@@ -60,7 +80,6 @@ namespace Pegada.Core.ViewModels
         public ICommand EditarClienteCommand { get; set; }
         public ICommand TransmitirClienteCommand { get; set; }
         public ICommand NovoContatoCommand { get; set; }
-        public ICommand EditarContatoCommand { get; set; }
 
         #endregion
 
@@ -95,9 +114,9 @@ namespace Pegada.Core.ViewModels
             EditarClienteCommand = new DelegateCommand(EditarCliente);
             TransmitirClienteCommand = new DelegateCommand(TransmitirClientes);
             NovoContatoCommand = new Command(NovoContato);
-            EditarContatoCommand = new Command<object>(EditarContato);
 
-            MessagingCenter.Subscribe<object>(this, "ContatoSalvo", async (sender) => await CarregarContatos());
+            // -modalDismissed: (CadastroViewController, PegadaIOS): salvar contato põe o cliente em situação 50, então recarrega a tela toda.
+            MessagingCenter.Subscribe<object>(this, "ContatoSalvo", async (sender) => await RecarregarClienteEditado());
 
             // Equivalente ao delegate "atualizaCliente:" do CadastroViewController (PegadaIOS): sem
             // isso, campos derivados de JOIN (Condição de Pagamento, Classe de Risco etc.) continuavam
@@ -145,27 +164,67 @@ namespace Pegada.Core.ViewModels
             var categoria = condicoes.Where(x => x.Codigo == Cliente.CodCategoriaCliente).FirstOrDefault();
             if (categoria != null)
                 CategoriaCliente = categoria.Descricao;
-            var cnpj = Cliente.CNPJ.Replace(".", "").Replace("/", "").Replace("-", "");
-            Cliente.CNPJ = StringHelper.FormatCNPJ(cnpj);
+            // PegadaIOS (-atualizaTela): cliente sem CNPJ ou CEP aparece com o campo em branco, sem erro.
+            if (!string.IsNullOrEmpty(Cliente.CNPJ))
+            {
+                var cnpj = Cliente.CNPJ.Replace(".", "").Replace("/", "").Replace("-", "");
+                Cliente.CNPJ = StringHelper.FormatCNPJ(cnpj);
+            }
             Cliente.EnderecoPrincipal = await _clienteRepository.BuscarEnderecoPrincipal(Cliente.CodPessoaCliente);
             Cliente.EnderecoCobranca = await _clienteRepository.BuscarEnderecoCobranca(Cliente.CodPessoaCliente);
 
             // Equivalente a "mc.nomeRepresentante" em -atualizaTela (CadastroViewController, PegadaIOS).
             Cliente.Representante = await _clienteRepository.BuscarRepresentantePorCliente(Cliente);
 
-            if (Cliente.EnderecoPrincipal != null)
+            CepUI = FormatarCepUI(Cliente.EnderecoPrincipal?.CEP);
+
+            if (!string.IsNullOrEmpty(Cliente.EnderecoPrincipal?.CEP))
             {
                 var cep = Cliente.EnderecoPrincipal.CEP.Replace("-", "");
                 Cliente.EnderecoPrincipal.CEP = StringHelper.FormatCEP(cep);
             }
 
-            if (Cliente.EnderecoCobranca != null)
+            if (!string.IsNullOrEmpty(Cliente.EnderecoCobranca?.CEP))
             {
                 var cep = Cliente.EnderecoCobranca.CEP.Replace("-", "");
                 Cliente.EnderecoCobranca.CEP = StringHelper.FormatCEP(cep);
             }
 
+            // PegadaIOS: "ee" é o endereço principal do cliente de entrega (c.codClienteEntrega).
+            EnderecoEntrega = string.IsNullOrEmpty(Cliente.CodClienteEntrega)
+                ? null
+                : await _clienteRepository.BuscarEnderecoPrincipal(Cliente.CodClienteEntrega);
+
+            PaisDescricao = string.IsNullOrEmpty(Cliente.CodPais) ? null : await _clienteRepository.BuscarDescricaoPais(Cliente.CodPais);
+
+            // PegadaIOS: "_pFone = c.telefone" (Telefone1). O Pegada_download ainda não envia esse campo; enquanto isso
+            // mostra o telefone do endereço principal para não deixar em branco.
+            TelefoneUI = !string.IsNullOrWhiteSpace(Cliente.Telefone1) ? Cliente.Telefone1 : Cliente.EnderecoPrincipal?.Telefone;
+
+            AgenciaUI = JuntarComDigito(Cliente.Agencia, Cliente.DigitoAgencia);
+            ContaUI = JuntarComDigito(Cliente.Conta, Cliente.DigitoConta);
+
             await CarregarContatos();
+        }
+
+        // Regra do CEP de -atualizaTela (CadastroViewController, PegadaIOS, Defeito #19015).
+        private static string FormatarCepUI(string cep)
+        {
+            var digitos = new string((cep ?? string.Empty).Where(char.IsDigit).ToArray());
+
+            if (digitos.Length > 7)
+                return $"{digitos.Substring(0, 2)}.{digitos.Substring(2, 3)}-{digitos.Substring(5, 3)}";
+
+            if (digitos.Length == 7)
+                return $"0{digitos.Substring(0, 1)}.{digitos.Substring(1, 3)}-{digitos.Substring(4, 3)}";
+
+            return string.Empty;
+        }
+
+        // PegadaIOS: "%@ - %@" (agência/conta - dígito), sem o "(null)" que o iOS mostra quando falta o dígito.
+        private static string JuntarComDigito(string valor, string digito)
+        {
+            return string.Join(" - ", new[] { valor, digito }.Where(x => !string.IsNullOrWhiteSpace(x)));
         }
 
         // Equivalente ao delegate "atualizaCliente:" do CadastroViewController (PegadaIOS): busca o
@@ -207,7 +266,7 @@ namespace Pegada.Core.ViewModels
             // else{ contatosWithCodPessoaCliente: }" de -atualizaTela (CadastroViewController, PegadaIOS):
             // sem grupo, "Contatos Grupo" mostra os mesmos contatos do próprio cliente.
             var contatosGrupo = !string.IsNullOrEmpty(Cliente.CodGrupoCliente)
-                ? await _contatoRepository.BuscarContatosGrupo(Cliente.CodGrupoCliente)
+                ? await _contatoRepository.BuscarContatosGrupoCadastro(Cliente.CodGrupoCliente)
                 : contatos;
 
             foreach (var contato in contatosGrupo)
@@ -222,20 +281,40 @@ namespace Pegada.Core.ViewModels
                 return;
             }
 
-            var page = new FormCadastroContatoView();
-            page.SetContexto(Cliente.CodPessoaCliente);
-            await Application.Current.MainPage.Navigation.PushModalAsync(page);
+            // PegadaIOS: CadastroContatoViewController em formSheet (popup), não em tela cheia.
+            await Views.Negocio.CadastroContatoPopupView.AbrirAsync(Cliente.CodPessoaCliente);
         }
 
-        private async void EditarContato(object obj)
+        // Opção "Editar" do toque longo na lista de contatos (-longPress:, CadastroViewController, PegadaIOS). Na aba Contatos
+        // Grupo o contato pode ser de outro cliente da rede, então vale o cliente do próprio contato.
+        public async void EditarContato(ContatoCommandResult contato)
         {
-            var contato = (obj as Syncfusion.ListView.XForms.ItemTappedEventArgs)?.ItemData as ContatoCommandResult;
-            if (contato == null)
-                return;
+            try
+            {
+                await Views.Negocio.CadastroContatoPopupView.AbrirAsync(contato.CodPessoaCliente, contato);
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
 
-            var page = new FormCadastroContatoView();
-            page.SetContexto(Cliente.CodPessoaCliente, contato);
-            await Application.Current.MainPage.Navigation.PushModalAsync(page);
+        // Opção "Inativar" do mesmo menu (ContatoMenuOptionExcluir no PegadaIOS).
+        public async void InativarContato(ContatoCommandResult contato)
+        {
+            try
+            {
+                var t = new MobiliVendas.Core.Helpers.TranslateExtension();
+                if (!await UserDialogs.Instance.ConfirmAsync(t.GetMessage("PegCadClienteMsgInativarContato"), t.GetMessage("GlobalTituloAtencao"), t.GetMessage("PegCadClienteBtnSim"), t.GetMessage("PegCadClienteBtnNao")))
+                    return;
+
+                await _contatoRepository.InativarContato(contato);
+                await RecarregarClienteEditado();
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
         }
         private async void Init()
         {
@@ -258,13 +337,16 @@ namespace Pegada.Core.ViewModels
                     return;
                 }
 
-                if (Cliente.CodSituacaoCliente != "50")
-                {
-                    await UserDialogs.Instance.AlertAsync(new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("PegCadClienteMsgEdicaoIndisponivel"), AppName, "OK");
+                // -touchEditaClienteBtn: e -prepareForSegue: (CadastroViewController, PegadaIOS): abre para qualquer cliente selecionado,
+                // com uma cópia nova do banco; assim Cancelar não muda o que está na tela.
+                var clienteEdicao = await _clienteRepository.BuscarCliente(new BuscarClienteCommand(Session.USUARIO_LOGADO.CodPessoa, Session.USUARIO_LOGADO.CodMarca, Cliente.CodPessoaCliente, Session.USUARIO_LOGADO.CodTipoPessoa));
+                if (clienteEdicao == null)
                     return;
-                }
 
-                await RgPopupUtility.AbrirEdicaoCliente(Cliente);
+                clienteEdicao.EnderecoPrincipal = await _clienteRepository.BuscarEnderecoPrincipal(clienteEdicao.CodPessoaCliente);
+                clienteEdicao.EnderecoCobranca = await _clienteRepository.BuscarEnderecoCobranca(clienteEdicao.CodPessoaCliente);
+
+                await RgPopupUtility.AbrirEdicaoCliente(clienteEdicao);
             }
             catch (Exception ex)
             {
@@ -290,16 +372,14 @@ namespace Pegada.Core.ViewModels
                     UserDialogs.Instance.ShowLoading($"Transmitindo o cadastros...");
                     foreach (var cliente in listClientes)
                     {
-                        if (cliente.CodPessoaCliente.Contains("."))
+                        // -transmiteCadastros (PegadaIOS): todo cliente em situação 50 é transmitido, inclusive cliente do ERP editado.
+                        var clienteERP = cliente.CodPessoaCliente.Contains(".") ? await _clienteRepository.BuscarClienteIntegrado(cliente.CNPJ) : null;
+                        if (clienteERP == null)
                         {
-                            var clienteERP = await _clienteRepository.BuscarClienteIntegrado(cliente.CNPJ);
-                            if (clienteERP == null)
+                            var resultTransmissaoCliente = await ServiceUtility.TransmitirCliente(_clienteRepository, _parametroSincronizacaRepository, cliente.CodPessoaCliente);
+                            if (resultTransmissaoCliente.SUCCESS.ToString().ToUpper() == "TRUE")
                             {
-                                var resultTransmissaoCliente = await ServiceUtility.TransmitirCliente(_clienteRepository, _parametroSincronizacaRepository, cliente.CodPessoaCliente);
-                                if (resultTransmissaoCliente.SUCCESS.ToString().ToUpper() == "TRUE")
-                                {
-                                    await _clienteRepository.AtualizarClienteIntegrado(cliente.CodPessoaCliente, resultTransmissaoCliente.CODIGO.ToString());
-                                }
+                                await _clienteRepository.AtualizarClienteIntegrado(cliente.CodPessoaCliente, resultTransmissaoCliente.CODIGO.ToString());
                             }
                         }
                     }

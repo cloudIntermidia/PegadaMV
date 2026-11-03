@@ -85,7 +85,16 @@ LEFT JOIN TBT_MODELO M ON M.CodModelo = P.CodModelo
 LEFT JOIN TBT_LINHA L ON L.CodLinha = M.CodLinha
 LEFT JOIN TBT_FABRICA FL ON FL.CodFabrica = L.CodFabrica
 LEFT JOIN TBT_FABRICA F ON F.CodFabrica = VEP.CodFabrica
+-- Segmento: no iOS é a coluna PRODUTO.CodNivel4 (um só por produto). Aqui, quando o produto troca de segmento no servidor,
+-- a sincronização insere a linha nova sem apagar a antiga (PK inclui CodAtributo) e o produto saía duplicado na lista/total.
+-- Fica só a linha mais recente (CtrlDataOperacao).
 LEFT JOIN TBT_NIVEL_PRODUTO NP ON NP.CodProduto = P.CodProduto AND NP.CodNivel = '4'
+      AND NP.CodAtributo = (SELECT NPX.CodAtributo
+                              FROM TBT_NIVEL_PRODUTO NPX
+                             WHERE NPX.CodProduto = P.CodProduto
+                               AND NPX.CodNivel = '4'
+                             ORDER BY NPX.CtrlDataOperacao DESC
+                             LIMIT 1)
 LEFT JOIN TBT_NIVEL_ATRIBUTO N4 ON N4.CodNivel = NP.CodNivel AND N4.CodAtributo = NP.CodAtributo
 LEFT JOIN
 (

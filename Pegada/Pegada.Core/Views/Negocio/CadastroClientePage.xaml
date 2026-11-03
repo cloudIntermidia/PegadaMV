@@ -8,892 +8,469 @@
              xmlns:flex="clr-namespace:Flex.Controls;assembly=Flex"
              xmlns:controls="clr-namespace:MobiliVendas.Core.CustomView.Controls.SegmentedControl;assembly=MobiliVendas.Core"
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
              mc:Ignorable="d"
              x:Class="Pegada.Core.Views.Negocio.CadastroClientePage"
              x:Name="this">
+
+    <!--
+        Espelha a cena CadastroViewController do PegadaIOS (MainStoryboard "sXk-wb-SCd", 1024x610, fundo #D0D0D0).
+        Todas as posições são os frames (x,y,largura,altura) do storyboard:
+          - topo                 : Cliente (47,3,472,30) | Editar Cadastro (541,3,163,30) | Transmitir Cadastros (730,3,163,30)
+          - quadro do cliente    : (35,36,950,399), borda branca de 5 e cantos de 8
+              Dados do Cliente / endereços em abas (moldura cinza clara) / Outros / indicadores
+          - contatos             : (35,443,950,...) abas Contatos Cliente | Contatos Grupo | Referências + Novo contato,
+                                   cabeçalho cinza 50% e linhas de 20 com fonte 12
+        Rótulos em negrito 14 alinhados à direita e valores com a fonte padrão do UILabel (17), como no iOS.
+    -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <!-- IMComboButton / IMButton brancos do PegadaIOS (whiteButton), fonte padrão do UIButton (system 15) -->
+            <Style x:Key="cadBotao" TargetType="flex:FlexButton">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="None" />
+                <Setter Property="ForegroundColor" Value="#555555" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="BorderColor" Value="White" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="HighlightForegroundColor" Value="#555555" />
+                <Setter Property="HighlightBackgroundColor" Value="#E5E5E5" />
+                <Setter Property="HighlightBorderColor" Value="#E5E5E5" />
+                <Setter Property="MaxLines" Value="1" />
+            </Style>
+
+            <!-- "Dados do Cliente:" / "Outros:" -->
+            <Style x:Key="cadTitulo" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#555555" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Rótulos: boldSystem 14, preto, alinhados à direita -->
+            <Style x:Key="cadRotulo" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="HorizontalTextAlignment" Value="End" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+            <Style x:Key="cadRotuloEsq" TargetType="Label" BasedOn="{StaticResource cadRotulo}">
+                <Setter Property="HorizontalTextAlignment" Value="Start" />
+            </Style>
+
+            <!-- Valores: fonte padrão do UILabel (system 17), preto -->
+            <Style x:Key="cadValor" TargetType="Label">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <!-- Cabeçalho da lista de contatos: fundo #7F7F7F, branco, boldSystem 14 -->
+            <Style x:Key="cadCabecalho" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#7F7F7F" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <!-- Células da lista de contatos (ContRefTableViewCell): system 12, preto -->
+            <Style x:Key="cadCelula" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+            <Style x:Key="cadCelulaCentro" TargetType="Label" BasedOn="{StaticResource cadCelula}">
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Indicadores (g_check_off / g_check_on 17x17) -->
+            <Style x:Key="cadCheck" TargetType="Image">
+                <Setter Property="Aspect" Value="AspectFit" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
-        <AbsoluteLayout VerticalOptions="FillAndExpand"
-                    HorizontalOptions="FillAndExpand">
-
-            <StackLayout AbsoluteLayout.LayoutFlags="All"
-                  AbsoluteLayout.LayoutBounds="0,0,1,0.92"
-                  BackgroundColor="#DCDCDC"
-                  VerticalOptions="FillAndExpand"
-                  Spacing="0">
-
-
-                <Grid Padding="20,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                    </Grid.RowDefinitions>
-
-                    <flex:FlexButton
-                        Grid.Row="0" Grid.Column="0"
-                        WidthRequest="350"
-                        HorizontalOptions="Start"
-                        Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}, Converter={x:StaticResource TextSubText}, ConverterParameter={translator:Translate PegCadClienteBtnSelecionarCliente}}"
-                        ClickedCommand="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}"
-                        Style="{StaticResource flexButtonFiltros}"
-                        />
-
-                    <StackLayout Grid.Row="0" Grid.Column="1"
-                             Orientation="Horizontal"
-                             HorizontalOptions="End"
-                             IsVisible="{Binding BindingContext.MantemCadastro, Source={x:Reference this}}">
-
-                        <flex:FlexButton IsVisible="True"
-                            Text="{translator:Translate PegCadClienteBtnEditarCadastro}"
-                            HorizontalOptions="End"
-                            ClickedCommand="{Binding BindingContext.EditarClienteCommand, Source={x:Reference this}}"
-                            Style="{StaticResource flexButtonFiltros}"
-                            />
-
-                        <flex:FlexButton
-                        Text="{translator:Translate EdicaoAtendimentoBtnTransmitirCliente}"
-                        HorizontalOptions="End"
-                        ClickedCommand="{Binding BindingContext.TransmitirClienteCommand, Source={x:Reference this}}"
-                        Style="{StaticResource flexButtonFiltros}"
-                        />
-
-                        <flex:FlexButton IsVisible="True"
-                            Text="{translator:Translate SelecaoClienteBtnNovoCliente}"
-                            HorizontalOptions="End"
-                            ClickedCommand="{Binding BindingContext.CadastrarClienteNovoCommand, Source={x:Reference this}}"
-                            Style="{StaticResource flexButtonFiltros}"
-                         />
-                    </StackLayout>
-
-                </Grid>
-
-                <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                <StackLayout Spacing="0">
-
-                <!-- ===================== CARD PRINCIPAL (Dados do Cliente + Endereço + Outros) ===================== -->
-                <Grid BackgroundColor="White"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="20,15"
-                      RowSpacing="4"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="24"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- Dados do Cliente: -->
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Text="{translator:Translate PegCadClienteLblDadosCliente}"
-                           FontFamily="{StaticResource RobotoBoldFont}"
-                           FontAttributes="Bold"
-                           TextColor="Gray"
-                           FontSize="16"
-                           />
-
-                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblRazaoSocial}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblNomeFantasia}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.NomeFantasia, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCNPJ}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.CNPJ, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblIE}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.InscricaoEstadual, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblEmailNFE}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EmailNFE, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="4" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblRepresentante}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.Representante, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="5" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblHomePage}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.Homepage, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="5" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblSuframa}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.Suframa, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="5" Grid.Column="2" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblValidadeSuframa}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.DataValidadeSuframa, Source={x:Reference this}, StringFormat='{0:dd/MM/yyyy}'}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="6" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblRede}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.RedeCliente, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                </Grid>
-
-                <!-- ===================== ABAS DE ENDEREÇO ===================== -->
-                <Grid BackgroundColor="White" HorizontalOptions="FillAndExpand" Padding="0,6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                    </Grid.RowDefinitions>
-
-                    <controls:SegmentedControl x:Name="SegmentedEndereco"
-                                               SelectedTextColor="Black"
-                                                Grid.Row="0"
-                                                Grid.Column="0"
-                                                TintColor="#555"
-                                                OnSegmentSelected="SegmentedControl_OnSegmentSelectedEndereco">
-                        <controls:SegmentedControl.Children>
-                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoPrincipal}" />
-                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoCobranca}" />
-                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoEntrega}" />
-                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegDadosBancarios}" />
-                        </controls:SegmentedControl.Children>
-                    </controls:SegmentedControl>
-
-                </Grid>
-
-                <!-- Endereço Principal -->
-                <Grid x:Name="GridEnderecoPrincipal"
-                      IsVisible="True"
-                      BackgroundColor="White"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="20,4,20,10"
-                      RowSpacing="4"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblRuaAv}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.EnderecoUI, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblComplemento}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Complemento, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCidade}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Cidade, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblPais}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblUF}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.UF, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Telefone, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblBairro}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Bairro, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCEP}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.CEP, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblFax}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Fax, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                </Grid>
-
-                <!-- Endereço de Cobrança -->
-                <Grid x:Name="GridEnderecoCobranca"
-                      IsVisible="False"
-                      BackgroundColor="White"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="20,4,20,10"
-                      RowSpacing="4"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblRuaAv}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.EnderecoUI, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblComplemento}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Complemento, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCidade}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Cidade, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblPais}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblUF}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.UF, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Telefone, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblBairro}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.Bairro, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCEP}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.EnderecoCobranca.CEP, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                </Grid>
-
-                <!-- Endereço de Entrega -->
-                <Grid x:Name="GridEnderecoEntrega"
-                      IsVisible="False"
-                      BackgroundColor="White"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="20,4,20,10"
-                      RowSpacing="4"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblRuaAv}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblComplemento}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCidade}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblPais}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: sem campo correspondente em ClienteCommandResult ainda -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="2" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblUF}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblBairro}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="2" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCEP}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <!-- TODO: Cliente.EnderecoEntrega ainda não existe no model -->
-                                <Span Text="" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                </Grid>
-
-                <!-- Dados Bancários -->
-                <Grid x:Name="GridDadosBancarios"
-                      IsVisible="False"
-                      BackgroundColor="White"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="20,4,20,10"
-                      RowSpacing="4"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCodBancario}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.Banco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="0" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblNomeBanco}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.NomeBanco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblAgencia}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.Agencia, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblContaCorrente}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.Conta, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblNomeTitular}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.NomeTitularConta, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblTipoChavePix}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.TipoChavePix, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="3" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblChavePix}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.ChavePix, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                </Grid>
-
-                <BoxView HeightRequest="1" Color="#DDDDDD" BackgroundColor="White" Margin="20,0"/>
-
-                <!-- ===================== OUTROS ===================== -->
-                <Grid BackgroundColor="White"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="20,10"
-                      RowSpacing="6"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.4*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="22"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="26"/>
-                        <RowDefinition Height="34"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Text="{translator:Translate PegCadClienteLblOutros}"
-                           FontFamily="{StaticResource RobotoBoldFont}"
-                           FontAttributes="Bold"
-                           TextColor="Gray"
-                           FontSize="16"
-                           />
-
-                    <Label Grid.Row="1" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblCondPagamentos}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.CondicaoPagamentoDescricao, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="1" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblSitComercial}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.CodSituacaoCliente, Source={x:Reference this}, Converter={StaticResource SituacaoClienteParaTextoConverter}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="2" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblLimiteCredGrupoPed}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.LimiteCreditoGrupo, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblLimiteCredGrupoFat}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.LimiteFaturamento, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="3" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblLimiteCredClientePed}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.LimiteCredito, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <Label Grid.Row="3" Grid.Column="1" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblLimiteCredClienteFat}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.LimiteTotal, Source={x:Reference this}, Converter={x:StaticResource ValorParaMoeda}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label Grid.Row="4" Grid.Column="0" LineBreakMode="TailTruncation">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{translator:Translate PegCadClienteLblClasseRisco}" FontFamily="{StaticResource RobotoBoldFont}" FontSize="Micro" FontAttributes="Bold" TextColor="Black"/>
-                                <Span Text="{Binding BindingContext.Cliente.DescricaoClasseRisco, Source={x:Reference this}}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <!-- Linha de indicadores (checkboxes) -->
-                    <StackLayout Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                                 Orientation="Horizontal"
-                                 Spacing="18"
-                                 VerticalOptions="Center">
-
-                        <StackLayout Orientation="Horizontal" Spacing="4">
-                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
-                                Source="{Binding BindingContext.Cliente.IndFatParcial, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="{translator:Translate PegCadClienteChkFatParcial}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
-                        </StackLayout>
-
-                        <StackLayout Orientation="Horizontal" Spacing="4">
-                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
-                                Source="{Binding BindingContext.Cliente.IndFatAntecipado, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="{translator:Translate PegCadClienteChkFatAntecipado}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
-                        </StackLayout>
-
-                        <StackLayout Orientation="Horizontal" Spacing="4">
-                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
-                                Source="{Binding BindingContext.Cliente.CompraPrecoLiquido, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="{translator:Translate PegCadClienteChkPrecoLiquido}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
-                        </StackLayout>
-
-                        <StackLayout Orientation="Horizontal" Spacing="4">
-                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
-                                Source="{Binding BindingContext.Cliente.IndAtivo, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="{translator:Translate SelecaoClienteStatusAtivo}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
-                        </StackLayout>
-
-                        <StackLayout Orientation="Horizontal" Spacing="4">
-                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
-                                Source="{Binding BindingContext.Cliente.PermiteDigitacao, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="{translator:Translate PegCadClienteChkPermiteDigitacao}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
-                        </StackLayout>
-
-                        <StackLayout Orientation="Horizontal" Spacing="4">
-                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
-                                Source="{Binding BindingContext.Cliente.PermiteAjustePreco, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="{translator:Translate PegCadClienteChkPermiteAjustePreco}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
-                        </StackLayout>
-
-                        <StackLayout Orientation="Horizontal" Spacing="4">
-                            <ffimageloading:CachedImage Aspect="AspectFit" HeightRequest="16" WidthRequest="16"
-                                Source="{Binding BindingContext.Cliente.CreditoLiberado, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='square_uncheck.png,square_check.png'}" />
-                            <Label Text="{translator:Translate PegCadClienteChkCreditoLiberado}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="Black" VerticalTextAlignment="Center"/>
-                        </StackLayout>
-
-                    </StackLayout>
-
-                </Grid>
-
-                <!-- ===================== CONTATOS / CONTATOS GRUPO / REFERÊNCIAS ===================== -->
-                <Grid BackgroundColor="White"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="0,10,0,0"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                    </Grid.RowDefinitions>
-
-                    <controls:SegmentedControl x:Name="SegmentedContato"
-                                               SelectedTextColor="Black"
-                                                Grid.Row="0"
-                                                Grid.Column="0"
-                                                TintColor="#555"
-                                                OnSegmentSelected="SegmentedControl_OnSegmentSelectedContato">
-                        <controls:SegmentedControl.Children>
-                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegContatos}" />
-                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegContatosGrupo}" />
-                            <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegReferencias}" />
-                        </controls:SegmentedControl.Children>
-                    </controls:SegmentedControl>
-
-                    <flex:FlexButton x:Name="ButtonNovoContatoReferencia"
-                        Grid.Row="0" Grid.Column="1"
-                        Text="{translator:Translate PegCadClienteBtnNovoContato}"
-                        ClickedCommand="{Binding BindingContext.NovoContatoCommand, Source={x:Reference this}}"
-                        Style="{StaticResource flexButtonFiltros}"
-                        />
-
-                </Grid>
-
-                <!-- Cabeçalho de colunas: Nome | E-mail | Telefone | Cargo | Data Nasc. | Status -->
-                <Grid x:Name="GridHeaderContato"
-                      IsVisible="True"
-                      BackgroundColor="#808080"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="10,6"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.6*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1.3*"/>
-                        <ColumnDefinition Width="1.3*"/>
-                        <ColumnDefinition Width="1.1*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Text="{translator:Translate PegCadClienteHeaderNome}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="1" Text="{translator:Translate CatalogoImpressaoEmail}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="2" Text="{translator:Translate PegCadClienteHeaderTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="3" Text="{translator:Translate PegCadClienteHeaderCargo}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="4" Text="{translator:Translate PegCadClienteHeaderDataNasc}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="5" Text="{translator:Translate SelecaoClienteHeaderStatus}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                </Grid>
-
-                <!-- Cabeçalho de colunas: Referências -->
-                <Grid x:Name="GridHeaderReferencia"
-                      IsVisible="False"
-                      BackgroundColor="#808080"
-                      HorizontalOptions="FillAndExpand"
-                      Padding="10,6"
-                      >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1.5*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Text="{translator:Translate PegCadClienteHeaderReferencia}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="1" Text="{translator:Translate PegCadClienteHeaderContato}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                    <Label Grid.Column="2" Text="{translator:Translate PegCadClienteHeaderTelefone}" FontFamily="{StaticResource RobotoBoldFont}" FontAttributes="Bold" FontSize="Micro" TextColor="White"/>
-                </Grid>
-
-                <!-- Lista: Contatos -->
+        <Grid x:Name="RaizCadastro" BackgroundColor="#D0D0D0" VerticalOptions="FillAndExpand" SizeChanged="RaizCadastro_SizeChanged">
+        <!-- Bloco de 1024 ampliado por inteiro no iPad grande, como o iOS mostra a tela (ver RaizCadastro_SizeChanged) -->
+        <Grid x:Name="BlocoCadastro"
+              WidthRequest="1024"
+              HorizontalOptions="Start"
+              VerticalOptions="Start"
+              AnchorX="0"
+              AnchorY="0"
+              RowSpacing="0"
+              ColumnSpacing="0">
+            <Grid.RowDefinitions>
+                <!-- até o início da tabela de contatos: 443 + 49 -->
+                <RowDefinition Height="492" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <AbsoluteLayout Grid.Row="0">
+
+                <!-- ===================== TOPO ===================== -->
+                <flex:FlexButton AbsoluteLayout.LayoutBounds="47,3,472,30"
+                                 Style="{StaticResource cadBotao}"
+                                 MaxLines="2"
+                                 FontSize="12"
+                                 Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}, Converter={x:StaticResource TextSubText}, ConverterParameter={translator:Translate PegCadClienteBtnSelecionarCliente}}"
+                                 ClickedCommand="{Binding BindingContext.SelecionarClienteCommand, Source={x:Reference this}}" />
+
+                <flex:FlexButton AbsoluteLayout.LayoutBounds="541,3,163,30"
+                                 Style="{StaticResource cadBotao}"
+                                 IsVisible="{Binding BindingContext.MantemCadastro, Source={x:Reference this}}"
+                                 Text="{translator:Translate PegCadClienteBtnEditarCadastro}"
+                                 ClickedCommand="{Binding BindingContext.EditarClienteCommand, Source={x:Reference this}}" />
+
+                <flex:FlexButton AbsoluteLayout.LayoutBounds="730,3,163,30"
+                                 Style="{StaticResource cadBotao}"
+                                 IsVisible="{Binding BindingContext.MantemCadastro, Source={x:Reference this}}"
+                                 Text="{translator:Translate EdicaoAtendimentoBtnTransmitirCliente}"
+                                 ClickedCommand="{Binding BindingContext.TransmitirClienteCommand, Source={x:Reference this}}" />
+
+                <!-- ===================== QUADRO DO CLIENTE (35,36,950,399) ===================== -->
+                <Frame AbsoluteLayout.LayoutBounds="35,36,950,399"
+                       Padding="0" CornerRadius="8" HasShadow="False" IsClippedToBounds="True"
+                       BackgroundColor="#D0D0D0">
+                    <AbsoluteLayout>
+
+                        <!-- Dados do Cliente -->
+                        <Label AbsoluteLayout.LayoutBounds="8,6,137,20" Style="{StaticResource cadTitulo}" Text="{translator:Translate PegCadClienteLblDadosCliente}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="3,25,130,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblRazaoSocial}" />
+                        <Label AbsoluteLayout.LayoutBounds="140,25,323,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.RazaoSocial, Source={x:Reference this}}" />
+                        <Label AbsoluteLayout.LayoutBounds="464,25,110,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblNomeFantasia}" />
+                        <Label AbsoluteLayout.LayoutBounds="575,25,334,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.NomeFantasia, Source={x:Reference this}}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="8,43,125,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblCNPJ}" />
+                        <Label AbsoluteLayout.LayoutBounds="138,43,203,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.CNPJ, Source={x:Reference this}}" />
+                        <Label AbsoluteLayout.LayoutBounds="464,44,132,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblIE}" />
+                        <Label AbsoluteLayout.LayoutBounds="597,44,190,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.InscricaoEstadual, Source={x:Reference this}}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="10,61,122,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblEmailNFE}" />
+                        <Label AbsoluteLayout.LayoutBounds="138,61,584,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.Email, Source={x:Reference this}}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="10,79,122,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblRepresentante}" />
+                        <Label AbsoluteLayout.LayoutBounds="138,79,404,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.Representante, Source={x:Reference this}}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="10,97,122,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblHomePage}" />
+                        <Label AbsoluteLayout.LayoutBounds="138,97,300,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.Homepage, Source={x:Reference this}}" />
+                        <Label AbsoluteLayout.LayoutBounds="439,97,64,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblSuframa}" />
+                        <Label AbsoluteLayout.LayoutBounds="504,97,112,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.Suframa, Source={x:Reference this}}" />
+                        <Label AbsoluteLayout.LayoutBounds="617,97,147,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblValidadeSuframa}" />
+                        <Label AbsoluteLayout.LayoutBounds="765,97,140,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.DataValidadeSuframa, Source={x:Reference this}, StringFormat='{0:dd/MM/yyyy}'}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="8,115,124,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblRede}" />
+                        <Label AbsoluteLayout.LayoutBounds="135,115,629,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.RedeCliente, Source={x:Reference this}}" />
+
+                        <!-- ============ ENDEREÇOS (-5,135,960,100): moldura cinza clara de 1 com cantos de 8 ============ -->
+                        <Frame AbsoluteLayout.LayoutBounds="-5,135,960,100"
+                               Padding="0" CornerRadius="8" HasShadow="False" IsClippedToBounds="True"
+                               BorderColor="LightGray" BackgroundColor="Transparent">
+                            <AbsoluteLayout>
+
+                                <!-- Endereço Principal (GrD-wS-cJ2) -->
+                                <AbsoluteLayout x:Name="GridEnderecoPrincipal" AbsoluteLayout.LayoutBounds="1,34,950,60" IsVisible="True">
+                                    <Label AbsoluteLayout.LayoutBounds="8,2,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblRuaAv}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,2,350,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Endereco, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="473,2,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblComplemento}" />
+                                    <Label AbsoluteLayout.LayoutBounds="576,2,370,17" Style="{StaticResource cadValor}" FontSize="12" Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Complemento, Source={x:Reference this}}" />
+
+                                    <Label AbsoluteLayout.LayoutBounds="8,20,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblCidade}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,20,403,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Cidade, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="520,20,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblPais}" />
+                                    <Label AbsoluteLayout.LayoutBounds="624,20,139,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.PaisDescricao, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="789,20,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblUF}" />
+                                    <Label AbsoluteLayout.LayoutBounds="890,20,40,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoPrincipal.UF, Source={x:Reference this}}" />
+
+                                    <Label AbsoluteLayout.LayoutBounds="8,37,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblTelefone}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,37,186,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.TelefoneUI, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="309,37,81,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblBairro}" />
+                                    <Label AbsoluteLayout.LayoutBounds="392,37,155,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoPrincipal.Bairro, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="539,38,85,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblCEP}" />
+                                    <Label AbsoluteLayout.LayoutBounds="630,38,130,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.CepUI, Source={x:Reference this}}" />
+                                </AbsoluteLayout>
+
+                                <!-- Endereço de Cobrança (iF4-7m-UFE) -->
+                                <AbsoluteLayout x:Name="GridEnderecoCobranca" AbsoluteLayout.LayoutBounds="1,34,950,60" IsVisible="False">
+                                    <Label AbsoluteLayout.LayoutBounds="8,2,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblRuaAv}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,2,403,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoCobranca.EnderecoUI, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="520,2,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblComplemento}" />
+                                    <Label AbsoluteLayout.LayoutBounds="623,2,284,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoCobranca.Complemento, Source={x:Reference this}}" />
+
+                                    <Label AbsoluteLayout.LayoutBounds="8,20,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblCidade}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,20,403,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoCobranca.Cidade, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="520,20,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblUF}" />
+                                    <Label AbsoluteLayout.LayoutBounds="621,20,25,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoCobranca.UF, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="678,20,85,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblCEP}" />
+                                    <Label AbsoluteLayout.LayoutBounds="769,20,130,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoCobranca.CEP, Source={x:Reference this}}" />
+
+                                    <Label AbsoluteLayout.LayoutBounds="8,37,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblTelefone}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,37,193,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoCobranca.Telefone, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="310,37,29,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblFax}" />
+                                    <Label AbsoluteLayout.LayoutBounds="340,37,179,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoCobranca.Fax, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="520,37,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblBairro}" />
+                                    <Label AbsoluteLayout.LayoutBounds="624,37,222,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.EnderecoCobranca.Bairro, Source={x:Reference this}}" />
+                                </AbsoluteLayout>
+
+                                <!-- Endereço de Entrega (0gB-K4-eN9) -->
+                                <AbsoluteLayout x:Name="GridEnderecoEntrega" AbsoluteLayout.LayoutBounds="1,34,950,60" IsVisible="False">
+                                    <Label AbsoluteLayout.LayoutBounds="8,2,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblRuaAv}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,2,403,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.EnderecoEntrega.Endereco, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="520,2,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblComplemento}" />
+                                    <Label AbsoluteLayout.LayoutBounds="623,2,284,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.EnderecoEntrega.Complemento, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="8,20,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblCidade}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,20,403,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.EnderecoEntrega.Cidade, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="520,20,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblUF}" />
+                                    <Label AbsoluteLayout.LayoutBounds="621,20,25,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.EnderecoEntrega.UF, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="678,20,85,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblCEP}" />
+                                    <Label AbsoluteLayout.LayoutBounds="769,20,130,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.EnderecoEntrega.CEP, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="8,37,100,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblTelefone}" />
+                                    <Label AbsoluteLayout.LayoutBounds="116,37,193,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.EnderecoEntrega.Telefone, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="310,37,29,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblFax}" />
+                                    <Label AbsoluteLayout.LayoutBounds="340,37,179,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.EnderecoEntrega.Fax, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="520,37,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblBairro}" />
+                                    <Label AbsoluteLayout.LayoutBounds="624,37,222,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.EnderecoEntrega.Bairro, Source={x:Reference this}}" />
+                                </AbsoluteLayout>
+
+                                <!-- Dados Bancários (nHa-zn-vfs) -->
+                                <AbsoluteLayout x:Name="GridDadosBancarios" AbsoluteLayout.LayoutBounds="1,34,950,60" IsVisible="False">
+                                    <Label AbsoluteLayout.LayoutBounds="2,2,119,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblCodBancario}" />
+                                    <Label AbsoluteLayout.LayoutBounds="123,2,135,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.Banco, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="265,2,102,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblNomeBanco}" />
+                                    <Label AbsoluteLayout.LayoutBounds="368,2,225,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.NomeBanco, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="599,2,112,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblTipoChavePix}" />
+                                    <Label AbsoluteLayout.LayoutBounds="714,2,228,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.TipoChavePix, Source={x:Reference this}}" />
+
+                                    <Label AbsoluteLayout.LayoutBounds="2,20,119,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblAgencia}" />
+                                    <Label AbsoluteLayout.LayoutBounds="124,20,184,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.AgenciaUI, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="314,20,119,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblContaCorrente}" />
+                                    <Label AbsoluteLayout.LayoutBounds="439,20,310,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.ContaUI, Source={x:Reference this}}" />
+
+                                    <Label AbsoluteLayout.LayoutBounds="0,40,152,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblNomeTitular}" />
+                                    <Label AbsoluteLayout.LayoutBounds="156,40,386,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.NomeTitularConta, Source={x:Reference this}}" />
+                                    <Label AbsoluteLayout.LayoutBounds="629,40,81,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblChavePix}" />
+                                    <Label AbsoluteLayout.LayoutBounds="714,40,236,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.ChavePix, Source={x:Reference this}}" />
+                                </AbsoluteLayout>
+
+                                <controls:SegmentedControl x:Name="SegmentedEndereco"
+                                                           AbsoluteLayout.LayoutBounds="7,3,873,32"
+                                                           SelectedTextColor="Black"
+                                                           TintColor="#555"
+                                                           OnSegmentSelected="SegmentedControl_OnSegmentSelectedEndereco">
+                                    <controls:SegmentedControl.Children>
+                                        <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoPrincipal}" />
+                                        <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoCobranca}" />
+                                        <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegEnderecoEntrega}" />
+                                        <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegDadosBancarios}" />
+                                    </controls:SegmentedControl.Children>
+                                </controls:SegmentedControl>
+                            </AbsoluteLayout>
+                        </Frame>
+
+                        <!-- Outros -->
+                        <Label AbsoluteLayout.LayoutBounds="8,235,84,20" Style="{StaticResource cadTitulo}" Text="{translator:Translate PegCadClienteLblOutros}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="8,254,180,17" Style="{StaticResource cadRotuloEsq}" Text="{translator:Translate PegCadClienteLblCondPagamentos}" />
+                        <Label AbsoluteLayout.LayoutBounds="189,254,274,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.CondicaoPagamentoDescricao, Source={x:Reference this}}" />
+                        <Label AbsoluteLayout.LayoutBounds="510,254,136,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblSitComercial}" />
+                        <Label AbsoluteLayout.LayoutBounds="652,254,102,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.CodSituacaoCliente, Source={x:Reference this}, Converter={StaticResource SituacaoClienteParaTextoConverter}}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="8,282,200,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblLimiteCredGrupoPed}" />
+                        <Label AbsoluteLayout.LayoutBounds="210,282,157,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.LimiteCreditoGrupo, Source={x:Reference this}, StringFormat='R${0:0},00'}" />
+                        <Label AbsoluteLayout.LayoutBounds="447,282,200,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblLimiteCredGrupoFat}" />
+                        <Label AbsoluteLayout.LayoutBounds="652,282,124,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.LimiteCredito, Source={x:Reference this}, StringFormat='R${0:0},00'}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="8,312,200,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblLimiteCredClientePed}" />
+                        <Label AbsoluteLayout.LayoutBounds="210,312,143,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.LimiteTotal, Source={x:Reference this}, StringFormat='R${0:0},00'}" />
+                        <Label AbsoluteLayout.LayoutBounds="447,312,200,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblLimiteCredClienteFat}" />
+                        <Label AbsoluteLayout.LayoutBounds="652,312,141,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.LimiteFaturamento, Source={x:Reference this}, StringFormat='R${0:0},00'}" />
+
+                        <Label AbsoluteLayout.LayoutBounds="8,340,113,17" Style="{StaticResource cadRotulo}" Text="{translator:Translate PegCadClienteLblClasseRisco}" />
+                        <Label AbsoluteLayout.LayoutBounds="122,340,809,17" Style="{StaticResource cadValor}" Text="{Binding BindingContext.Cliente.DescricaoClasseRisco, Source={x:Reference this}}" />
+
+                        <!-- Indicadores (y 372): caixa 17x17 + rótulo boldSystem 14 -->
+                        <Image AbsoluteLayout.LayoutBounds="8,372,17,17" Style="{StaticResource cadCheck}"
+                               Source="{Binding BindingContext.Cliente.IndFatParcial, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='g_check_off.png,g_check_on.png'}" />
+                        <Label AbsoluteLayout.LayoutBounds="28,372,77,17" Style="{StaticResource cadRotuloEsq}" Text="{translator:Translate PegCadClienteChkFatParcial}" />
+
+                        <Image AbsoluteLayout.LayoutBounds="126,372,17,17" Style="{StaticResource cadCheck}"
+                               Source="{Binding BindingContext.Cliente.IndFatAntecipado, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='g_check_off.png,g_check_on.png'}" />
+                        <Label AbsoluteLayout.LayoutBounds="146,372,109,17" Style="{StaticResource cadRotuloEsq}" Text="{translator:Translate PegCadClienteChkFatAntecipado}" />
+
+                        <Image AbsoluteLayout.LayoutBounds="269,372,17,17" Style="{StaticResource cadCheck}"
+                               Source="{Binding BindingContext.Cliente.CompraPrecoLiquido, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='g_check_off.png,g_check_on.png'}" />
+                        <Label AbsoluteLayout.LayoutBounds="287,372,95,17" Style="{StaticResource cadRotuloEsq}" Text="{translator:Translate PegCadClienteChkPrecoLiquido}" />
+
+                        <Image AbsoluteLayout.LayoutBounds="394,372,17,17" Style="{StaticResource cadCheck}"
+                               Source="{Binding BindingContext.Cliente.IndAtivo, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='g_check_off.png,g_check_on.png'}" />
+                        <Label AbsoluteLayout.LayoutBounds="413,372,36,17" Style="{StaticResource cadRotuloEsq}" Text="{translator:Translate SelecaoClienteStatusAtivo}" />
+
+                        <Image AbsoluteLayout.LayoutBounds="468,372,17,17" Style="{StaticResource cadCheck}"
+                               Source="{Binding BindingContext.Cliente.PermiteDigitacao, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='g_check_off.png,g_check_on.png'}" />
+                        <Label AbsoluteLayout.LayoutBounds="487,372,123,17" Style="{StaticResource cadRotuloEsq}" Text="{translator:Translate PegCadClienteChkPermiteDigitacao}" />
+
+                        <!-- PegadaIOS (CadastroViewController): o pAjustePreco nunca é preenchido, fica sempre desmarcado. -->
+                        <Image AbsoluteLayout.LayoutBounds="629,372,17,17" Style="{StaticResource cadCheck}" Source="g_check_off.png" />
+                        <Label AbsoluteLayout.LayoutBounds="648,372,145,17" Style="{StaticResource cadRotuloEsq}" Text="{translator:Translate PegCadClienteChkPermiteAjustePreco}" />
+
+                        <Image AbsoluteLayout.LayoutBounds="805,372,17,17" Style="{StaticResource cadCheck}"
+                               Source="{Binding BindingContext.Cliente.CreditoLiberado, Source={x:Reference this}, Converter={x:StaticResource BoleanoParaImagem}, ConverterParameter='g_check_off.png,g_check_on.png'}" />
+                        <Label AbsoluteLayout.LayoutBounds="824,372,116,17" Style="{StaticResource cadRotuloEsq}" Text="{translator:Translate PegCadClienteChkCreditoLiberado}" />
+
+                        <!-- Borda branca de 5 (layer.borderWidth), desenhada por cima do conteúdo como no iOS -->
+                        <BoxView AbsoluteLayout.LayoutBounds="0,0,950,5" Color="White" InputTransparent="True" />
+                        <BoxView AbsoluteLayout.LayoutBounds="0,394,950,5" Color="White" InputTransparent="True" />
+                        <BoxView AbsoluteLayout.LayoutBounds="0,0,5,399" Color="White" InputTransparent="True" />
+                        <BoxView AbsoluteLayout.LayoutBounds="945,0,5,399" Color="White" InputTransparent="True" />
+                    </AbsoluteLayout>
+                </Frame>
+
+                <!-- ===================== CONTATOS (35,443,950,...) ===================== -->
+                <!-- Cabeçalho Contatos Cliente / Contatos Grupo (y 28) -->
+                <AbsoluteLayout x:Name="GridHeaderContato" AbsoluteLayout.LayoutBounds="35,471,950,21" BackgroundColor="White" IsVisible="True">
+                    <Label AbsoluteLayout.LayoutBounds="0,1,220,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate PegCadClienteHeaderNome}" />
+                    <Label AbsoluteLayout.LayoutBounds="221,1,240,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate CatalogoImpressaoEmail}" />
+                    <Label AbsoluteLayout.LayoutBounds="462,1,99,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate PegCadClienteHeaderTelefone}" />
+                    <Label AbsoluteLayout.LayoutBounds="562,1,184,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate PegCadClienteHeaderCargo}" />
+                    <Label AbsoluteLayout.LayoutBounds="747,1,87,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate PegCadClienteHeaderDataNasc}" />
+                    <Label AbsoluteLayout.LayoutBounds="835,1,115,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate SelecaoClienteHeaderStatus}" />
+                </AbsoluteLayout>
+
+                <!-- Cabeçalho Referências (H1D-BI-26S) -->
+                <AbsoluteLayout x:Name="GridHeaderReferencia" AbsoluteLayout.LayoutBounds="35,471,950,21" BackgroundColor="White" IsVisible="False">
+                    <Label AbsoluteLayout.LayoutBounds="0,1,292,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate PegCadClienteHeaderReferencia}" />
+                    <Label AbsoluteLayout.LayoutBounds="293,1,285,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate PegCadClienteHeaderContato}" />
+                    <Label AbsoluteLayout.LayoutBounds="579,1,99,21" Style="{StaticResource cadCabecalho}" Text="{translator:Translate PegCadClienteHeaderTelefone}" />
+                </AbsoluteLayout>
+
+                <controls:SegmentedControl x:Name="SegmentedContato"
+                                           AbsoluteLayout.LayoutBounds="35,443,343,32"
+                                           SelectedTextColor="Black"
+                                           TintColor="#555"
+                                           OnSegmentSelected="SegmentedControl_OnSegmentSelectedContato">
+                    <controls:SegmentedControl.Children>
+                        <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegContatos}" />
+                        <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegContatosGrupo}" />
+                        <controls:SegmentedControlOption Text="{translator:Translate PegCadClienteSegReferencias}" />
+                    </controls:SegmentedControl.Children>
+                </controls:SegmentedControl>
+
+                <flex:FlexButton x:Name="ButtonNovoContatoReferencia"
+                                 AbsoluteLayout.LayoutBounds="823,443,163,27"
+                                 Style="{StaticResource cadBotao}"
+                                 Text="{translator:Translate PegCadClienteBtnNovoContato}"
+                                 ClickedCommand="{Binding BindingContext.NovoContatoCommand, Source={x:Reference this}}" />
+            </AbsoluteLayout>
+
+            <!-- Tabela de contatos (0,49,950,...): fundo branco, linhas de 20 -->
+            <Grid x:Name="TabelaContatos" Grid.Row="1" Margin="35,0,39,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="85">
+                <!-- Contatos Cliente -->
                 <syncfusion:SfListView x:Name="ListViewContatos"
-                      IsVisible="True"
-                      BackgroundColor="White"
-                      HeightRequest="220"
-                      Padding="10,0"
-                      ItemSize="30"
-                      ItemSpacing="2"
-                      ItemsSource="{Binding BindingContext.Contatos, Source={x:Reference this}}"
-                      TapCommand="{Binding BindingContext.EditarContatoCommand, Source={x:Reference this}}">
+                                       IsVisible="True"
+                                       BackgroundColor="White"
+                                       ItemSize="20"
+                                       ItemSpacing="0"
+                                       ItemHolding="ListViewContato_ItemHolding"
+                                       ItemsSource="{Binding BindingContext.Contatos, Source={x:Reference this}}">
                     <syncfusion:SfListView.ItemTemplate>
                         <DataTemplate>
-                            <ViewCell>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1.6*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="1.3*"/>
-                                        <ColumnDefinition Width="1.3*"/>
-                                        <ColumnDefinition Width="1.1*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Text="{Binding Nome}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="1" Text="{Binding Email}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="2" Text="{Binding Telefone}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="3" Text="{Binding Cargo}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="4" Text="{Binding DataNascimento}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="5" Text="{Binding Status}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                </Grid>
-                            </ViewCell>
+                            <AbsoluteLayout HeightRequest="20" BackgroundColor="White">
+                                <Label AbsoluteLayout.LayoutBounds="0,0,220,20" Style="{StaticResource cadCelula}" Text="{Binding Nome}" />
+                                <Label AbsoluteLayout.LayoutBounds="221,0,240,20" Style="{StaticResource cadCelula}" Text="{Binding Email}" />
+                                <Label AbsoluteLayout.LayoutBounds="462,0,98,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding TelefoneCadastroUI}" />
+                                <Label AbsoluteLayout.LayoutBounds="562,0,182,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding Cargo}" />
+                                <Label AbsoluteLayout.LayoutBounds="747,0,86,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding DataNascimento, StringFormat='{0:dd/MM/yyyy}'}" />
+                                <Label AbsoluteLayout.LayoutBounds="835,0,115,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding Status}" />
+                            </AbsoluteLayout>
                         </DataTemplate>
                     </syncfusion:SfListView.ItemTemplate>
                 </syncfusion:SfListView>
 
-                <!-- Lista: Contatos Grupo -->
+                <!-- Contatos Grupo -->
                 <syncfusion:SfListView x:Name="ListViewContatosGrupo"
-                      IsVisible="False"
-                      BackgroundColor="White"
-                      HeightRequest="220"
-                      Padding="10,0"
-                      ItemSize="30"
-                      ItemSpacing="2"
-                      ItemsSource="{Binding BindingContext.ContatosGrupo, Source={x:Reference this}}">
+                                       IsVisible="False"
+                                       BackgroundColor="White"
+                                       ItemSize="20"
+                                       ItemSpacing="0"
+                                       ItemHolding="ListViewContato_ItemHolding"
+                                       ItemsSource="{Binding BindingContext.ContatosGrupo, Source={x:Reference this}}">
                     <syncfusion:SfListView.ItemTemplate>
                         <DataTemplate>
-                            <ViewCell>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1.6*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="1.3*"/>
-                                        <ColumnDefinition Width="1.3*"/>
-                                        <ColumnDefinition Width="1.1*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Text="{Binding Nome}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="1" Text="{Binding Email}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="2" Text="{Binding Telefone}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="3" Text="{Binding Cargo}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="4" Text="{Binding DataNascimento}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="5" Text="{Binding Status}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                </Grid>
-                            </ViewCell>
+                            <AbsoluteLayout HeightRequest="20" BackgroundColor="White">
+                                <Label AbsoluteLayout.LayoutBounds="0,0,220,20" Style="{StaticResource cadCelula}" Text="{Binding Nome}" />
+                                <Label AbsoluteLayout.LayoutBounds="221,0,240,20" Style="{StaticResource cadCelula}" Text="{Binding Email}" />
+                                <Label AbsoluteLayout.LayoutBounds="462,0,98,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding TelefoneCadastroUI}" />
+                                <Label AbsoluteLayout.LayoutBounds="562,0,182,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding Cargo}" />
+                                <Label AbsoluteLayout.LayoutBounds="747,0,86,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding DataNascimento, StringFormat='{0:dd/MM/yyyy}'}" />
+                                <Label AbsoluteLayout.LayoutBounds="835,0,115,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding Status}" />
+                            </AbsoluteLayout>
                         </DataTemplate>
                     </syncfusion:SfListView.ItemTemplate>
                 </syncfusion:SfListView>
 
-                <!-- Lista: Referências -->
+                <!-- Referências. TODO: Cliente.Referencias ainda não existe no model -->
                 <syncfusion:SfListView x:Name="ListViewReferencias"
-                      IsVisible="False"
-                      BackgroundColor="White"
-                      HeightRequest="220"
-                      Padding="10,0,10,20"
-                      ItemSize="30"
-                      ItemSpacing="2">
-                    <!-- TODO: Cliente.Referencias ainda não existe no model -->
+                                       IsVisible="False"
+                                       BackgroundColor="White"
+                                       ItemSize="20"
+                                       ItemSpacing="0">
                     <syncfusion:SfListView.ItemTemplate>
                         <DataTemplate>
-                            <ViewCell>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="1.5*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Text="{Binding Nome}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="1" Text="{Binding Contato}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                    <Label Grid.Column="2" Text="{Binding Telefone}" FontFamily="{StaticResource RobotoNormalFont}" FontSize="Micro"/>
-                                </Grid>
-                            </ViewCell>
+                            <AbsoluteLayout HeightRequest="20" BackgroundColor="White">
+                                <Label AbsoluteLayout.LayoutBounds="0,0,292,20" Style="{StaticResource cadCelula}" Text="{Binding Nome}" />
+                                <Label AbsoluteLayout.LayoutBounds="293,0,285,20" Style="{StaticResource cadCelula}" Text="{Binding Contato}" />
+                                <Label AbsoluteLayout.LayoutBounds="579,0,99,20" Style="{StaticResource cadCelulaCentro}" Text="{Binding Telefone}" />
+                            </AbsoluteLayout>
                         </DataTemplate>
                     </syncfusion:SfListView.ItemTemplate>
                 </syncfusion:SfListView>
+            </Grid>
 
-                </StackLayout>
-                </ScrollView>
-            </StackLayout>
-        </AbsoluteLayout>
+            <!-- Menu do toque longo nos contatos (UIMenuController de -longPress:, PegadaIOS): balão Editar | Inativar sobre a linha -->
+            <AbsoluteLayout x:Name="MenuContato" Grid.RowSpan="2" IsVisible="False">
+                <BoxView AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" Color="#01000000">
+                    <BoxView.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="FecharMenuContato_Tapped" />
+                    </BoxView.GestureRecognizers>
+                </BoxView>
+                <BoxView x:Name="SetaMenuContato" AbsoluteLayout.LayoutBounds="0,0,14,14" Rotation="45" Color="#F7F7F7" />
+                <Frame x:Name="BalaoMenuContato" AbsoluteLayout.LayoutBounds="0,0,160,40" Padding="0" CornerRadius="12" HasShadow="False" IsClippedToBounds="True"
+                       BackgroundColor="#F7F7F7" BorderColor="#D0D0D0">
+                    <Grid ColumnSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="1" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" FontSize="15" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                               Text="{translator:Translate PedidoTela_Global_Editar}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="EditarContato_Tapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <BoxView Grid.Column="1" Color="#D0D0D0" />
+                        <Label Grid.Column="2" FontSize="15" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                               Text="{translator:Translate PegCadClienteBtnInativarContato}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="InativarContato_Tapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+                </Frame>
+            </AbsoluteLayout>
+        </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

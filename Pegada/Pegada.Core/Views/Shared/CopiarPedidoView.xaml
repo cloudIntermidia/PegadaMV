@@ -89,11 +89,12 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <SearchBar Grid.Row="0"
+                        <Entry Grid.Row="0"
                                BackgroundColor="White"
                                Text="{Binding BindingContext.FiltroPesquisaCliente, Source={x:Reference this}}"
                                Placeholder="{translator:Translate CopiaPedidoEntryRazaoNomeCNPJ}"
-                               SearchCommand="{Binding BindingContext.PesquisarClienteCommand, Source={x:Reference this}}"
+                               ReturnType="Search"
+                               ReturnCommand="{Binding BindingContext.PesquisarClienteCommand, Source={x:Reference this}}"
                                HorizontalOptions="FillAndExpand"
                                VerticalOptions="Start"/>
 

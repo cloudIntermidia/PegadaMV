@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
+             xmlns:behavior="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
+             x:Class="Pegada.Core.Views.Negocio.CadastroContatoPopupView"
+             x:Name="this">
+
+    <!--
+        Espelha a cena CadastroContatoViewController do PegadaIOS aberta em formSheet pelo "Novo contato" / toque no
+        contato do Cadastro de Clientes (600x400): barra "Voltar / Cadastro de Contato / Salvar", Nome, Data Nascimento,
+        Cargo, DDD, Telefone, E-mail e os switches em duas colunas. Mesmos dados e regras do FormCadastroContatoViewModel.
+    -->
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="contatoRotulo" TargetType="Label">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="contatoCampo" TargetType="Entry">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <AbsoluteLayout>
+
+            <!-- FUNDO ESCURO -->
+            <AbsoluteLayout BackgroundColor="#000" Opacity="0.3"
+                            AbsoluteLayout.LayoutBounds="0,0,1,1"
+                            AbsoluteLayout.LayoutFlags="All" />
+
+            <Frame AbsoluteLayout.LayoutBounds="0.5,0.5,600,400"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   Padding="0" HasShadow="True" CornerRadius="10" IsClippedToBounds="True"
+                   BackgroundColor="White">
+
+                <AbsoluteLayout>
+
+                    <!-- Barra de navegação -->
+                    <BoxView AbsoluteLayout.LayoutBounds="0,0,600,44" BackgroundColor="#F7F7F7" />
+                    <BoxView AbsoluteLayout.LayoutBounds="0,44,600,0.5" BackgroundColor="#C8C7CC" />
+                    <Label AbsoluteLayout.LayoutBounds="20,7,150,30" Text="{translator:Translate PedidoTela_Global_Voltar}"
+                           FontSize="17" TextColor="#007AFF" VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.FecharCommand, Source={x:Reference this}}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label AbsoluteLayout.LayoutBounds="150,7,300,30" Text="{Binding BindingContext.LblTitulo, Source={x:Reference this}}"
+                           FontSize="17" TextColor="Black" FontAttributes="Bold"
+                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                    <Label AbsoluteLayout.LayoutBounds="430,7,150,30" Text="{translator:Translate GlobalBtnSalvar}"
+                           FontSize="17" TextColor="#007AFF" HorizontalTextAlignment="End" VerticalTextAlignment="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.SalvarCommand, Source={x:Reference this}}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!-- Nome -->
+                    <Label AbsoluteLayout.LayoutBounds="20,61,200,21" Style="{StaticResource contatoRotulo}"
+                           Text="{translator:Translate FormCadContatoLblNome}" />
+                    <Entry AbsoluteLayout.LayoutBounds="20,90,560,30" Style="{StaticResource contatoCampo}" MaxLength="79"
+                           Text="{Binding BindingContext.Nome, Source={x:Reference this}}">
+                        <Entry.Behaviors>
+                            <behavior:StringValidatorBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+
+                    <!-- Data Nascimento / Cargo / DDD / Telefone -->
+                    <Label AbsoluteLayout.LayoutBounds="20,128,160,21" Style="{StaticResource contatoRotulo}"
+                           Text="{translator:Translate FormCadContatoLblDataNasc}" />
+                    <DatePicker AbsoluteLayout.LayoutBounds="20,157,136,30" Format="dd/MM/yyyy" FontSize="14"
+                                TextColor="Black" BackgroundColor="White"
+                                Date="{Binding BindingContext.DataNascimento, Source={x:Reference this}}" />
+
+                    <!-- IMComboButton "Cargo": título centralizado, sem borda; mostra o cargo escolhido. -->
+                    <Label AbsoluteLayout.LayoutBounds="164,156,197,30" FontSize="17" TextColor="Black"
+                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"
+                           Text="{Binding BindingContext.CargoSelecionado.Descricao, Source={x:Reference this},
+                                  FallbackValue={translator:Translate FormCadContatoLblCargo},
+                                  TargetNullValue={translator:Translate FormCadContatoLblCargo}}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding BindingContext.CargoSelecionado, Source={x:Reference this}}" Value="{x:Null}">
+                                <Setter Property="TextColor" Value="#AAAAAA" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.SelecionarCargoCommand, Source={x:Reference this}}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label AbsoluteLayout.LayoutBounds="369,128,60,21" Style="{StaticResource contatoRotulo}" Text="DDD" />
+                    <Entry AbsoluteLayout.LayoutBounds="369,157,59,30" Style="{StaticResource contatoCampo}"
+                           MaxLength="2" Keyboard="Numeric"
+                           Text="{Binding BindingContext.Ddd, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="436,128,144,21" Style="{StaticResource contatoRotulo}"
+                           Text="{translator:Translate FormCadContatoLblTelefone}" />
+                    <Entry AbsoluteLayout.LayoutBounds="436,157,144,30" Style="{StaticResource contatoCampo}"
+                           MaxLength="10" Keyboard="Numeric"
+                           Text="{Binding BindingContext.Telefone, Source={x:Reference this}}" />
+
+                    <!-- E-mail -->
+                    <Label AbsoluteLayout.LayoutBounds="20,195,200,21" Style="{StaticResource contatoRotulo}"
+                           Text="{translator:Translate FormCadContatoLblEmail}" />
+                    <Entry AbsoluteLayout.LayoutBounds="20,224,560,30" Style="{StaticResource contatoCampo}"
+                           MaxLength="100" Keyboard="Email"
+                           Text="{Binding BindingContext.Email, Source={x:Reference this}}">
+                        <Entry.Behaviors>
+                            <behavior:EmailValidatorBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+
+                    <!-- Switches (rótulo encostado à direita, junto do switch, como no iOS) -->
+                    <Label AbsoluteLayout.LayoutBounds="10,280,197,31" Style="{StaticResource contatoRotulo}" HorizontalTextAlignment="End"
+                           Text="{translator:Translate FormCadContatoLblRecebeCopiaBoleto}" />
+                    <Switch AbsoluteLayout.LayoutBounds="215,280,51,31"
+                            IsToggled="{Binding BindingContext.RecebeCopiaBoleto, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="300,280,223,31" Style="{StaticResource contatoRotulo}" HorizontalTextAlignment="End"
+                           Text="{translator:Translate FormCadContatoLblRecebeCopiaPedido}" />
+                    <Switch AbsoluteLayout.LayoutBounds="531,280,51,31"
+                            IsToggled="{Binding BindingContext.RecebeCopiaPedido, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="10,323,197,31" Style="{StaticResource contatoRotulo}" HorizontalTextAlignment="End"
+                           Text="{translator:Translate FormCadContatoLblAlertaPagamento}" />
+                    <Switch AbsoluteLayout.LayoutBounds="215,323,51,31"
+                            IsToggled="{Binding BindingContext.AlertaPagamento, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="300,328,223,31" Style="{StaticResource contatoRotulo}" HorizontalTextAlignment="End"
+                           Text="{translator:Translate FormCadContatoLblAlertaVencimento}" />
+                    <Switch AbsoluteLayout.LayoutBounds="531,328,51,31"
+                            IsToggled="{Binding BindingContext.AlertaVencimento, Source={x:Reference this}}" />
+
+                    <Label AbsoluteLayout.LayoutBounds="10,367,197,31" Style="{StaticResource contatoRotulo}" HorizontalTextAlignment="End"
+                           Text="{translator:Translate FormCadContatoLblRecebeMarketing}" />
+                    <Switch AbsoluteLayout.LayoutBounds="215,367,51,31"
+                            IsToggled="{Binding BindingContext.RecebeMarketing, Source={x:Reference this}}" />
+
+                </AbsoluteLayout>
+            </Frame>
+        </AbsoluteLayout>
+    </ContentView.Content>
+</ContentView>

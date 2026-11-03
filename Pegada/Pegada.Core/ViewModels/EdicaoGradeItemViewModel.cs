@@ -22,6 +22,8 @@ namespace Pegada.Core.ViewModels
 
         public string CodDerivacao { get; set; }
         public string Descricao { get; set; }
+        // Tamanho mostrado no cabeçalho: cliente de outro país vê o do país (grade EX), os demais o BR (Descricao).
+        public string DescricaoExibicao { get; set; }
         public int Qtd { get => _qtd; set => SetProperty(ref _qtd, value); }
 
         public ICommand MaisCommand { get; set; }
@@ -117,10 +119,21 @@ namespace Pegada.Core.ViewModels
             TamanhosVisivel = _tamanhosPossiveis.Count > 0;
             Tamanhos = "Tamanhos: " + string.Join("-", _tamanhosPossiveis);
 
+            // Cliente estrangeiro: cabeçalho com o tamanho do país, como a linha EX da grade do carrinho.
+            var tamanhosPais = await _repositorio.BuscarTamanhosPais(carrinho.CodPessoaCliente, derivacoesPrimeiro.Select(d => d.CodDerivacao));
+
             Linhas.Clear();
             foreach (var d in derivacoesPrimeiro)
             {
-                var linha = new GradeItemLinha { CodDerivacao = d.CodDerivacao, Descricao = d.Descricao, Qtd = (int)d.Qtd };
+                string tamanhoPais = null;
+                tamanhosPais?.TryGetValue(d.CodDerivacao, out tamanhoPais);
+                var linha = new GradeItemLinha
+                {
+                    CodDerivacao = d.CodDerivacao,
+                    Descricao = d.Descricao,
+                    DescricaoExibicao = tamanhoPais ?? d.Descricao,
+                    Qtd = (int)d.Qtd
+                };
                 linha.MaisCommand = new Command(() => Alterar(linha, +1));
                 linha.MenosCommand = new Command(() => Alterar(linha, -1));
                 Linhas.Add(linha);

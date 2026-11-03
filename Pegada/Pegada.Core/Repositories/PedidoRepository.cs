@@ -72,8 +72,10 @@ namespace Pegada.Core.Repositories
                 }
 
                 // PegadaIOS (ItemPedido itensForPedido + carregaDescontoItemPedido): descontos do item = PerDs1..PerDs5 do
-                // ITEM_PEDIDO (o PRO_ITEM_PEDIDO_GET do MobiliVendas.Core só traz PerDs1) e total = soma simples deles.
-                // São o bloco "Descontos" do PDF e os PERCENTUALDESCONTO1..5 do Excel.
+                // ITEM_PEDIDO (o PRO_ITEM_PEDIDO_GET do MobiliVendas.Core só traz PerDs1). São o bloco "Descontos" do PDF e os
+                // PERCENTUALDESCONTO1..5 do Excel. % Total = desconto composto 1 - (1-d1)...(1-d5), igual ao carregaDescontoItemCarrinho
+                // (carrinho e PE): a soma simples do carregaDescontoItemPedido dava 1,5 + 10 = 11,5 em vez de 11,35, e no iOS ela nem
+                // chega ao PDF (o retorno é descartado). DescontoTotalUI preenchido também marca o item integrado no PrintService.
                 if (ped.Origem != "C" && itensPedido.Count > 0)
                 {
                     var descontos = (await _sqlAsyncConnection.QueryAsync<DescontoItemPedidoRow>(
@@ -90,8 +92,10 @@ namespace Pegada.Core.Repositories
                         item.PercDesc3 = d.PerDs3 ?? 0;
                         item.PercDesc4 = d.PerDs4 ?? 0;
                         item.PercDesc5 = d.PerDs5 ?? 0;
-                        item.DescontoTotalUI = (item.PercDesc1 + item.PercDesc2 + item.PercDesc3 + item.PercDesc4 + item.PercDesc5)
-                            .ToString("0.##########", CultureInfo.InvariantCulture);
+                        decimal multiplicador = 1m;
+                        foreach (var perc in new[] { item.PercDesc1, item.PercDesc2, item.PercDesc3, item.PercDesc4, item.PercDesc5 })
+                            multiplicador *= 1m - perc / 100m;
+                        item.DescontoTotalUI = ((1m - multiplicador) * 100m).ToString("N2", new CultureInfo("pt-BR"));
                     }
                 }
 

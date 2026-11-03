@@ -181,26 +181,26 @@
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="1"
-                            Text="{translator:Translate CarrinhoBtnCancelar}"
+                            Text="{translator:Translate CarrinhoBtnCancelar, PrimeiraMaiuscula=True}"
                             ClickedCommand="{Binding CancelarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="2"
-                            Text="{translator:Translate CarrinhoBtnImprimir}"
+                            Text="{translator:Translate CarrinhoBtnImprimir, PrimeiraMaiuscula=True}"
                             ClickedCommand="{Binding ImprimirCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <!-- Enviar por E-mail (CarrinhoMenuOptionEnviarEmail do PegadaIOS): compositor de e-mail com o PDF anexo -->
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="3"
-                            Text="{translator:Translate PedidoTela_Global_EnviarPEmail}"
+                            Text="{translator:Translate PedidoTela_Global_EnviarPEmail, PrimeiraMaiuscula=True}"
                             ClickedCommand="{Binding EnviarEmailCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="4"
-                            Text="{translator:Translate CarrinhoBtnCopiar}"
+                            Text="{translator:Translate CarrinhoBtnCopiar, PrimeiraMaiuscula=True}"
                             ClickedCommand="{Binding CopiarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
@@ -218,13 +218,13 @@
 
                 <controls:FlexButton
                             Grid.Row="0" Grid.Column="5"
-                            Text="{translator:Translate CarrinhoBtnFechamento}"
+                            Text="{translator:Translate CarrinhoBtnFechamento, PrimeiraMaiuscula=True}"
                             ClickedCommand="{Binding EditarCommand}"
                             Style="{StaticResource flexButtonAction}"/>
 
                 <controls:FlexButton
                                 Grid.Row="0" Grid.Column="6"
-                                Text="{translator:Translate CarrinhoBtnTransmitir}"
+                                Text="{translator:Translate CarrinhoBtnTransmitir, PrimeiraMaiuscula=True}"
                                 ClickedCommand="{Binding TransmitirCommand}"
                                 Style="{StaticResource flexButtonAction}"/>
 
@@ -535,6 +535,10 @@
                         </BindableLayout.ItemTemplate>
                     </StackLayout>
 
+
+                    <!-- Divisória branca entre a linha BR e a linha EX (GRID_SPACING do ItemCarrinhoTableViewController do PegadaIOS) -->
+                    <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HeightRequest="1" VerticalOptions="Start"
+                             Color="White" IsVisible="{Binding GradeEstrangeira}"/>
 
                     <!-- LINHA INFERIOR (QUANTIDADES) -->
                     <StackLayout Grid.Row="2" Grid.Column="1"

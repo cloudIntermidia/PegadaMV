@@ -144,31 +144,11 @@ namespace Pegada.Core.ViewModels
             await AbrirCadastro(ContatoSelecionado);
         }
 
-        // CadastroContatoViewController (modal por cima desta tela): aqui como popup, pois esta tela também é um popup.
+        // CadastroContatoViewController em formSheet por cima desta tela (segues EditaContatoModal/idContatoModal do PegadaIOS):
+        // o mesmo popup do Cadastro de Clientes.
         private async Task AbrirCadastro(ContatoCommandResult contato)
         {
-            var form = new FormCadastroContatoView();
-            form.SetContexto(_codPessoaCliente, contato, emPopup: true);
-
-            var conteudo = form.Content;
-            form.Content = null;
-
-            var popup = new PopupPage
-            {
-                Content = new Frame
-                {
-                    WidthRequest = 720,
-                    HeightRequest = 640,
-                    Padding = 0,
-                    CornerRadius = 10,
-                    HasShadow = true,
-                    IsClippedToBounds = true,
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center,
-                    Content = conteudo
-                }
-            };
-            await PopupNavigation.Instance.PushAsync(popup);
+            await Views.Negocio.CadastroContatoPopupView.AbrirAsync(_codPessoaCliente, contato);
         }
     
         private static string T(string chave) => new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage(chave);

@@ -236,7 +236,7 @@ namespace Pegada.Core.ViewModels
 
         ~CarrinhoPageViewModel()
         {
-            MessagingCenter.Unsubscribe<object>(this, "ExibirImpressao");
+            MessagingCenter.Unsubscribe<ICarrinhoImpressaoViewModel, string>(this, "ExibirImpressao");
             MessagingCenter.Unsubscribe<object>(this, "LoadCarrinho");
             MessagingCenter.Unsubscribe<object>(this, "ClienteSelecionado");
             MessagingCenter.Unsubscribe<object>(this, "CarrinhoAlterado");
@@ -963,7 +963,7 @@ namespace Pegada.Core.ViewModels
                     await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarUmPedidoImprimir"), AppName, "OK");
                     return;
                 }
-                await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupImpressao(Pedidos.Where(x => x.CarrinhoChecado).ToList()));
+                await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupImpressao(Pedidos.Where(x => x.CarrinhoChecado).ToList(), false, out _popupImpressaoViewModel));
             }
             catch (Exception ex)
             {
@@ -2158,9 +2158,17 @@ namespace Pegada.Core.ViewModels
             }
         }
 
+        // Popup de impressão aberto por esta tela (só ele pode pedir a exibição do PDF aqui).
+        private ICarrinhoImpressaoViewModel _popupImpressaoViewModel;
+
         //Recebe o path do PDF pelo popup(atraves do message center)
         private async void ExibirImpressao(ICarrinhoImpressaoViewModel sender, string path)
         {
+            // A mensagem chega a todas as telas inscritas (o Imprimir da tela de Pedido também abria o PDF aqui).
+            if (sender == null || !ReferenceEquals(sender, _popupImpressaoViewModel))
+                return;
+            _popupImpressaoViewModel = null;
+
             if (!string.IsNullOrEmpty(path))
                 _printService.OpenPdf(path);
         }
