@@ -508,16 +508,16 @@
                         <ffimageloading:CachedImage Margin="8,83,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="24" HeightRequest="24" DownsampleToViewSize="False" Aspect="AspectFit"
                             Source="{Binding ExibeNew, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',new.png'}" />
 
-                        <!-- btnFavorito (8,120,25,25) -->
-                        <ffimageloading:CachedImage Margin="8,120,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="25" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
+                        <!-- btnFavorito (8,120,25,25) - preso ao rodapé (184-120-25 = 39): em célula mais alta não fica mais acima da descrição -->
+                        <ffimageloading:CachedImage Margin="8,0,0,39" behaviors:EscalaCelula.Modo="MantemBaixo" HorizontalOptions="Start" VerticalOptions="End" WidthRequest="25" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
                             Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='wish_unchecked.png,wish_checked.png'}">
                             <ffimageloading:CachedImage.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" CommandParameter="{Binding .}"/>
                             </ffimageloading:CachedImage.GestureRecognizers>
                         </ffimageloading:CachedImage>
 
-                        <!-- siglaLbl (4,148,40,17) -->
-                        <Label IsVisible="{Binding MostraSigla}" Margin="4,148,0,0" HorizontalOptions="Start" VerticalOptions="Start" WidthRequest="40" HeightRequest="17" Text="{Binding Sigla}" FontSize="12" FontFamily="{StaticResource RobotoNormalFont}" />
+                        <!-- siglaLbl (4,148,40,17) - preso ao rodapé (184-148-17 = 19), logo acima da descrição; a fonte não escala, então o tamanho também não -->
+                        <Label IsVisible="{Binding MostraSigla}" Margin="4,0,0,19" behaviors:EscalaCelula.Modo="Nenhum" HorizontalOptions="Start" VerticalOptions="End" WidthRequest="40" HeightRequest="17" Text="{Binding Sigla}" FontSize="12" FontFamily="{StaticResource RobotoNormalFont}" />
 
                         <!-- precoDe (80,6,76,16) - botão de preço (cifrão) desligado esconde o "De" mesmo em promoção -->
                         <Label Margin="0,6,99,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center"
@@ -597,8 +597,8 @@
                                IsVisible="{Binding ExibeCaixaAzul, Converter={StaticResource IntToBoolConverter}}"
                                Text="{Binding EstoqueFuturo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
 
-                        <!-- iconInativo (219,136,35,25) = fora de linha -->
-                        <ffimageloading:CachedImage Margin="0,136,1,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="35" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
+                        <!-- iconInativo (219,136,35,25) = fora de linha - preso ao rodapé (184-136-25 = 23), como a estrela e a sigla -->
+                        <ffimageloading:CachedImage Margin="0,0,1,23" behaviors:EscalaCelula.Modo="MantemBaixo" HorizontalOptions="End" VerticalOptions="End" WidthRequest="35" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
                             Source="{Binding ExibeForaLinha, Converter={StaticResource BoleanoParaImagem}, ConverterParameter=',fora_linha.png'}" />
 
                         <!-- "SOMENTE ESTOQUE" = descLabel (16,148,236,20) do PegadaIOS: entre a foto e a descLabelCompl, presa ao rodapé.

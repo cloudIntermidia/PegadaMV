@@ -1,11 +1,13 @@
 SELECT '-1' AS Codigo,
        '(TODOS)' AS Descricao,
-       0 AS Ordem
+       0 AS Ordem,
+       0 AS OrdemCodigo
 UNION
 SELECT DISTINCT
        PES.CodPessoa AS Codigo,
        PES.CodPessoa || ' - ' || PES.Nome AS Descricao,
-       1 AS Ordem
+       1 AS Ordem,
+       CAST(SUBSTR(PES.CodPessoa, 2) AS INTEGER) AS OrdemCodigo
   FROM TBT_PESSOA PES
  WHERE PES.CodTipoPessoa = '3'
    AND EXISTS (
@@ -28,4 +30,4 @@ SELECT DISTINCT
                          AND MC.CodMarca = '1'
                   )
        )
- ORDER BY Ordem, Descricao
+ ORDER BY Ordem, OrdemCodigo, Codigo

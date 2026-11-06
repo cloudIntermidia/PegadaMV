@@ -449,11 +449,13 @@ namespace Pegada.Core.ViewModels
                                               "PercentualDesconto1", "PercentualDesconto2", "PercentualDesconto3",
                                               "PercentualDesconto4", "PercentualDesconto5",
                                               "DataEntrega", "AceitaFaturamentoAntecipado", "CodCondicaoPagamento",
-                                               "PrazoMedio", "Observacoes","OrdemCompra"},
+                                               "PrazoMedio", "Observacoes","OrdemCompra", "CodSemana"},
                         new List<string>() { "CodCarrinho" },
                         new
                         {
                             CodCarrinho = codCarrinhoNovo,
+                            //PegadaIOS (Atendimento.addProdutoToCarrinho ... andCarrinhoOrigem): a cópia herda o codSemana do carrinho de origem.
+                            CodSemana = PedidoSelecionado.CodSemana,
                             Observacoes = PedidoSelecionado.Observacoes,
                             OrdemCompra = PedidoSelecionado.OrdemCompra,
                             CodDeposito = PedidoSelecionado.CodDeposito,
