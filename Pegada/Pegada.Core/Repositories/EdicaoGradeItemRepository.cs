@@ -92,7 +92,8 @@ namespace Pegada.Core.Repositories
         }
 
         // +editarGradeFromItemCarrinho: + -atualizaCarrinho (iOS): grava a grade do item, zera "sem grade", recalcula os totais.
-        public async Task SalvarGrade(string codCarrinho, decimal codItemCarrinho, IList<KeyValuePair<string, int>> quantidades)
+        // qtdCaixa: só no encaixotamento (1ª caixa grava a quantidade de caixas da linha); null mantém a do item.
+        public async Task SalvarGrade(string codCarrinho, decimal codItemCarrinho, IList<KeyValuePair<string, int>> quantidades, int? qtdCaixa = null)
         {
             int codItem = (int)codItemCarrinho;
             int total = quantidades.Sum(q => q.Value);
@@ -127,7 +128,82 @@ namespace Pegada.Core.Repositories
                 conn.Execute(
                     "UPDATE TBT_ITEM_CARRINHO SET QtdTotal = ?, ItemSemGrade = 0 WHERE CodCarrinho = ? AND CodItemCarrinho = ?",
                     total, codCarrinho, codItem);
+
+                if (qtdCaixa.HasValue)
+                    conn.Execute(
+                        "UPDATE TBT_ITEM_CARRINHO SET QtdCaixa = ? WHERE CodCarrinho = ? AND CodItemCarrinho = ?",
+                        qtdCaixa.Value, codCarrinho, codItem);
             });
+        }
+
+        private class ColunaTabela
+        {
+            public string name { get; set; }
+        }
+
+        // Encaixotamento na edição (EncaixotamentoViewController -salvaPedido, PegadaIOS): cada caixa além da 1ª vira um item
+        // novo no mesmo carrinho (addProdutoDesmembradoToCarrinho). Aqui o item novo é uma cópia do item editado (mesmo preço,
+        // descontos e loja) com a grade e a quantidade de caixas da linha. Retorna o CodItemCarrinho criado.
+        public async Task<int> IncluirItemCaixa(string codCarrinho, decimal codItemOrigem, IList<KeyValuePair<string, int>> quantidades, int qtdCaixa)
+        {
+            int codOrigem = (int)codItemOrigem;
+            int total = quantidades.Sum(q => q.Value);
+
+            var colunasItem = (await _sqlAsyncConnection.QueryAsync<ColunaTabela>("PRAGMA table_info(TBT_ITEM_CARRINHO);"))
+                .Select(c => c.name).ToList();
+            var colunasDesc = (await _sqlAsyncConnection.QueryAsync<ColunaTabela>("PRAGMA table_info(TBT_ITEM_CARRINHO_DESC);"))
+                .Select(c => c.name).ToList();
+
+            int codNovo = 0;
+
+            await _sqlAsyncConnection.RunInTransactionAsync(conn =>
+            {
+                codNovo = conn.ExecuteScalar<int>(
+                    "SELECT IFNULL(MAX(CodItemCarrinho), 0) + 1 FROM TBT_ITEM_CARRINHO WHERE CodCarrinho = ?", codCarrinho);
+
+                string Valor(string coluna)
+                {
+                    if (string.Equals(coluna, "CodItemCarrinho", StringComparison.OrdinalIgnoreCase)) return codNovo.ToString();
+                    if (string.Equals(coluna, "QtdCaixa", StringComparison.OrdinalIgnoreCase)) return qtdCaixa.ToString();
+                    if (string.Equals(coluna, "QtdTotal", StringComparison.OrdinalIgnoreCase)) return total.ToString();
+                    if (string.Equals(coluna, "ItemSemGrade", StringComparison.OrdinalIgnoreCase)) return "0";
+                    return "[" + coluna + "]";
+                }
+
+                conn.Execute(
+                    "INSERT INTO TBT_ITEM_CARRINHO (" + string.Join(",", colunasItem.Select(c => "[" + c + "]")) + ") " +
+                    "SELECT " + string.Join(",", colunasItem.Select(Valor)) + " FROM TBT_ITEM_CARRINHO " +
+                    "WHERE CodCarrinho = ? AND CodItemCarrinho = ?",
+                    codCarrinho, codOrigem);
+
+                if (colunasDesc.Count > 0)
+                {
+                    conn.Execute(
+                        "INSERT INTO TBT_ITEM_CARRINHO_DESC (" + string.Join(",", colunasDesc.Select(c => "[" + c + "]")) + ") " +
+                        "SELECT " + string.Join(",", colunasDesc.Select(c =>
+                            string.Equals(c, "SeqItemPedido", StringComparison.OrdinalIgnoreCase) ? codNovo.ToString() : "[" + c + "]")) +
+                        " FROM TBT_ITEM_CARRINHO_DESC WHERE CodCarrinho = ? AND SeqItemPedido = ?",
+                        codCarrinho, codOrigem);
+                }
+
+                int codGradeItem = 1;
+                foreach (var q in quantidades.Where(q => q.Value > 0))
+                {
+                    conn.Execute(
+                        "INSERT INTO TBT_GRADE_ITEM_CARRINHO (CodCarrinho, CodItemCarrinho, CodGradeItemCarrinho, CodDerivacao, Qtd, QtdNaGrade, CtrlDataOperacao) " +
+                        "VALUES (?, ?, ?, ?, ?, 0, ?)",
+                        codCarrinho, codNovo, codGradeItem++, q.Key, q.Value, DateTime.Now);
+                }
+            });
+
+            return codNovo;
+        }
+
+        // Modelo do produto (o encaixotamento busca os tamanhos de corrugado pelo CodModelo da grade).
+        public async Task<string> BuscarCodModelo(string codProduto)
+        {
+            return await _sqlAsyncConnection.ExecuteScalarAsync<string>(
+                "SELECT CodModelo FROM TBT_PRODUTO WHERE CodProduto = ? LIMIT 1", codProduto);
         }
 
         // -atualizaCarrinho (iOS): só quantidade e valores do cabeçalho; não mexe em preço líquido nem em descontos dos itens.

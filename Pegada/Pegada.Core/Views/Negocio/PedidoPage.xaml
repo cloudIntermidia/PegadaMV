@@ -9,6 +9,7 @@
              xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              xmlns:conv="clr-namespace:Pegada.Core.Converters"
              xmlns:beh="clr-namespace:Pegada.Core.Behaviors"
+             xmlns:escala="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
              x:Name="this"
              x:Class="Pegada.Core.Views.Negocio.PedidoPage">
 
@@ -115,7 +116,9 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <AbsoluteLayout>
+    <!-- EscalaTela: no iPad 11"/13" a tela inteira cresce na proporção da largura (base 9,7" = 1024), mantendo o
+         aspecto do 9,7"; células das listas e da grade se escalam pelo EscalaTela.Celula. -->
+    <AbsoluteLayout escala:EscalaTela.LarguraBase="1024">
 
         <Grid AbsoluteLayout.LayoutBounds="0,0,1,1"
               AbsoluteLayout.LayoutFlags="All"
@@ -272,7 +275,7 @@
                     <syncfusion:SfListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid ColumnSpacing="0" RowSpacing="0" HeightRequest="50" BackgroundColor="Transparent">
+                                <Grid ColumnSpacing="0" RowSpacing="0" HeightRequest="50" BackgroundColor="Transparent" escala:EscalaTela.Celula="True">
                                     <!-- Cor da linha por situação (colorForStatus): 7 vermelho, 8 verde, 9 amarelo -->
                                     <Grid.Triggers>
                                         <DataTrigger TargetType="Grid" Binding="{Binding CodSituacaoPedido}" Value="7">
@@ -419,7 +422,7 @@
                     <Label.Triggers>
                         <DataTrigger TargetType="Label" Value="True"
                                      Binding="{Binding BindingContext.TotaisFiltradosVisiveis, Source={x:Reference this}}">
-                            <Setter Property="Margin" Value="73,0,0,0" />
+                            <Setter Property="escala:EscalaTela.Recuo" Value="73" />
                         </DataTrigger>
                     </Label.Triggers>
                 </Label>
@@ -431,7 +434,7 @@
                     <Label.Triggers>
                         <DataTrigger TargetType="Label" Value="True"
                                      Binding="{Binding BindingContext.TotaisFiltradosVisiveis, Source={x:Reference this}}">
-                            <Setter Property="Margin" Value="105,0,0,0" />
+                            <Setter Property="escala:EscalaTela.Recuo" Value="105" />
                         </DataTrigger>
                     </Label.Triggers>
                 </Label>
@@ -515,7 +518,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid ColumnSpacing="0" RowSpacing="0" HeightRequest="30">
+                                <Grid ColumnSpacing="0" RowSpacing="0" HeightRequest="30" escala:EscalaTela.Celula="True">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="34*" />
                                         <ColumnDefinition Width="60*" />
@@ -589,7 +592,7 @@
                                          BindableLayout.ItemsSource="{Binding BindingContext.ItemSelecionado.Grades, Source={x:Reference this}}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
-                                        <StackLayout Spacing="1" WidthRequest="31.5">
+                                        <StackLayout Spacing="1" WidthRequest="31.5" escala:EscalaTela.Celula="True">
                                             <Label Style="{StaticResource pedGradeCabecalho}" FontAttributes="None"
                                                    Text="{Binding DescricaoOriginal}"
                                                    IsVisible="{Binding BindingContext.GradeEstrangeira, Source={x:Reference this}}" />

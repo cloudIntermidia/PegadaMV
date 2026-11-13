@@ -629,7 +629,12 @@ namespace Pegada.Core.ViewModels
 
             UfSelecionada = obj as GenericComboResult;
 
+            // Equivalente a -setUfSelecionado: + -atualizaCidade: (EdicaoAtendimentoViewController, PegadaIOS):
+            // a lista de cidades passa a ser só a da UF escolhida, a cidade volta para "Todos" (a anterior
+            // pode ser de outra UF) e a lista de clientes é recarregada já com o filtro de UF.
             await CarregaCidadePorUF(UfSelecionada);
+
+            PesquisarCliente();
 
             RaisePropertyChanged("PrepostoSelecionado");
             await PopupNavigation.Instance.PopAsync();
@@ -710,7 +715,17 @@ namespace Pegada.Core.ViewModels
 
         private async Task CarregaCidadePorUF(GenericComboResult ufSelecionada) {
 
+            // UF "Todos": sem UF não há lista de cidades (o combo Cidade pede para escolher uma UF antes),
+            // em vez de abrir todos os municípios do banco.
+            if (ufSelecionada == null || string.IsNullOrEmpty(ufSelecionada.Codigo) || ufSelecionada.Codigo == "-1")
+            {
+                ListaCidade = null;
+                CidadeSelecionada = null;
+                return;
+            }
+
             ListaCidade = await _clienteRepository.BuscarMunicipios(ufSelecionada.Codigo);
+            CidadeSelecionada = ListaCidade?.FirstOrDefault(x => x.Codigo == "-1");
         }
         //####################################################
 
@@ -951,8 +966,8 @@ namespace Pegada.Core.ViewModels
 
                 var resultado = await ServiceUtility.AtualizarSituacaoComercialClientes(_parametroSincronizacaRepository, codigosClientes);
 
-                bool sucesso = resultado != null && resultado.Any(item =>
-                    item.TryGetValue("SUCCESS", out var valor) && string.Equals(valor?.ToString(), "TRUE", StringComparison.OrdinalIgnoreCase));
+                // null = SUCCESS diferente de TRUE no retorno do UpdateCliente.
+                bool sucesso = resultado != null;
 
                 UserDialogs.Instance.HideLoading();
 
@@ -963,13 +978,11 @@ namespace Pegada.Core.ViewModels
                         if (!item.TryGetValue("CODPESSOACLIENTE", out var codObj) || codObj == null)
                             continue;
 
-                        int.TryParse(item.TryGetValue("CREDITOLIBERADO", out var cred) ? cred?.ToString() : null, out int creditoLiberado);
-                        int.TryParse(item.TryGetValue("INDATIVO", out var ativo) ? ativo?.ToString() : null, out int indAtivo);
-                        int.TryParse(item.TryGetValue("USACLASSERISCO", out var usa) ? usa?.ToString() : null, out int usaClasseRisco);
-                        string codSituacaoCliente = item.TryGetValue("CODSITUACAOCLIENTE", out var sit) ? sit?.ToString() : null;
-                        string codClasseRisco = item.TryGetValue("CODCLASSERISCO", out var classe) ? classe?.ToString() : null;
+                        string Valor(string chave) => item.TryGetValue(chave, out var v) ? v?.ToString() : null;
 
-                        await _clienteRepository.AtualizarSituacaoComercialCliente(codObj.ToString(), codSituacaoCliente, creditoLiberado, indAtivo, codClasseRisco, usaClasseRisco);
+                        await _clienteRepository.AtualizarSituacaoComercialCliente(codObj.ToString(),
+                            Valor("CODSITUACAOCLIENTE"), Valor("CREDITOLIBERADO"), Valor("INDATIVO"),
+                            Valor("CODCLASSERISCO"), Valor("USACLASSERISCO"), Valor("ULTIMAATUALIZACAO"));
                     }
 
                     await UserDialogs.Instance.AlertAsync("Atualização realizada com sucesso.", "Atualização de situação comercial");

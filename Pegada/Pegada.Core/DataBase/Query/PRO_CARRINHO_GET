@@ -44,6 +44,7 @@
 	CLI.Email AS Email,
 	MARCA.Descricao as Marca,
 	GRUPO.Descricao AS GrupoCliente,
+	C.CodGrupoCliente,
 	C.CodDeposito AS CodDeposito,
 	C.IndPedidoMae,
 	C.PedidoMae,

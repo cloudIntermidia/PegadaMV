@@ -1,4 +1,5 @@
 using System;
+using MobiliVendas.Core.Utils.Behaviors;
 using Xamarin.Forms;
 
 namespace Pegada.Core.Behaviors
@@ -21,6 +22,22 @@ namespace Pegada.Core.Behaviors
             BindableProperty.CreateAttached("FonteMaxima", typeof(double), typeof(AjusteFonte), 0d);
 
         public static bool GetAtivo(BindableObject view) => (bool)view.GetValue(AtivoProperty);
+
+        // EscalaTela (iPad 11"/13", MobiliVendas.Core): fonte original = a máxima guardada aqui; ao escalar, troca a
+        // máxima pela escalada e recalcula.
+        static AjusteFonte()
+        {
+            EscalaTela.FonteOriginalLabel = label => (double)label.GetValue(FonteMaximaProperty);
+            EscalaTela.DefinirFonteLabel = (label, fonte) =>
+            {
+                if (!GetAtivo(label))
+                    return false;
+                label.SetValue(FonteMaximaProperty, fonte);
+                label.FontSize = fonte;
+                Ajustar(label);
+                return true;
+            };
+        }
 
         public static void SetAtivo(BindableObject view, bool value) => view.SetValue(AtivoProperty, value);
 

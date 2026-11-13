@@ -47,7 +47,23 @@ namespace Pegada.Core.ViewModels
         public CarrinhoCommandResult PedidoSelecionado
         {
             get { return _pedidoSelecionado; }
-            set { SetProperty(ref _pedidoSelecionado, value); _itemTocado = false; AtualizarAcoesItem(); }
+            set { SetProperty(ref _pedidoSelecionado, value); _itemTocado = false; LinhaItemDestacada = null; AtualizarAcoesItem(); }
+        }
+
+        // Linhas em cinza (SelectedItem das listas): acompanham o toque na linha e o último check marcado. Ficam separadas
+        // de PedidoSelecionado/ItemSelecionado porque estes são preenchidos ao carregar, sem nenhuma linha ter sido escolhida.
+        private CarrinhoCommandResult _linhaCarrinhoDestacada;
+        public CarrinhoCommandResult LinhaCarrinhoDestacada
+        {
+            get { return _linhaCarrinhoDestacada; }
+            set { SetProperty(ref _linhaCarrinhoDestacada, value); }
+        }
+
+        private ItemCommandResult _linhaItemDestacada;
+        public ItemCommandResult LinhaItemDestacada
+        {
+            get { return _linhaItemDestacada; }
+            set { SetProperty(ref _linhaItemDestacada, value); }
         }
 
         // longPressItemCarrinho (ItemCarrinhoTableViewController, PegadaIOS): o menu só abre sobre um item e as opções
@@ -97,11 +113,17 @@ namespace Pegada.Core.ViewModels
             {
                 SetProperty(ref _itemSelecionado, value);
                 RaisePropertyChanged(nameof(GradeEstrangeira));
+                RaisePropertyChanged(nameof(GradesBR));
             }
         }
 
         // Cliente de outro país: grade com a linha BR (original) em cima da linha EX, como no PegadaIOS.
         public bool GradeEstrangeira => ItemSelecionado?.Grades?.Any(g => !string.IsNullOrEmpty(g.DescricaoOriginal)) == true;
+
+        // Fonte da linha BR. A linha não usa IsVisible: o Load passa por um item vazio (GradeEstrangeira false -> true)
+        // e, no iOS, o StackLayout que volta a ficar visível com os filhos recriados enquanto oculto não é medido de novo
+        // (a linha BR ficava vazia depois de salvar a "Alteração de Grade"). Lista vazia = linha sem tamanho, como cliente BR.
+        public System.Collections.IEnumerable GradesBR => GradeEstrangeira ? ItemSelecionado.Grades : null;
 
         private bool _todosItensChecados;
         public bool TodosItensChecados
@@ -290,6 +312,15 @@ namespace Pegada.Core.ViewModels
         private void MarcarCarrinho(CarrinhoCommandResult obj)
         {
             obj.CarrinhoChecado = !obj.CarrinhoChecado;
+            if (!obj.CarrinhoChecado) return;
+
+            // Marcar equivale a selecionar a linha: fica cinza e os itens abaixo passam a ser os dela.
+            LinhaCarrinhoDestacada = obj;
+            if (PedidoSelecionado != obj)
+            {
+                PedidoSelecionado = obj;
+                ItemSelecionado = PedidoSelecionado.Itens.FirstOrDefault();
+            }
         }
 
         private async void DesmembrarItem(ItemCommandResult obj)
@@ -323,6 +354,60 @@ namespace Pegada.Core.ViewModels
             catch (Exception ex)
             {
                 await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
+            }
+        }
+
+        // gradesForItemCarrinho (ItemCarrinhoTableViewController, PegadaIOS): cada item leva a própria grade, com o código da
+        // derivação gravado no banco. A consulta da tela (PRO_GRADE_ITEM_CARRINHO_GET) devolve em CodDerivacao a descrição do
+        // tamanho ("37" em vez do código 5): gravada assim, a grade do carrinho novo não aparecia e a da origem não era zerada.
+        // Trabalha em cópias para a grade da tela não mudar se o desmembramento falhar.
+        private async Task<List<ItemCommandResult>> ItensParaDesmembrar()
+        {
+            var itens = new List<ItemCommandResult>();
+            foreach (var item in PedidoSelecionado.Itens.Where(x => x.ItemChecado))
+            {
+                var copia = (ItemCommandResult)item.Clone();
+                var grades = new ObservableCollection<DerivacaoGradeResult>();
+                foreach (var grade in item.Grades)
+                {
+                    var codDerivacao = await _dataBaseRepository.GetString("TBT_GRADE_ITEM_CARRINHO", "CodDerivacao",
+                        $"CodCarrinho = '{item.CodCarrinho}' AND CodItemCarrinho = {(int)item.CodItemCarrinho} AND CodGradeItemCarrinho = {(int)grade.CodGradeItemCarrinho}");
+                    if (string.IsNullOrEmpty(codDerivacao))
+                        throw new Exception($"{T("CarrinhoPageVMMenssageErroAoDesmembrar")} {item.CodProduto}");
+
+                    var gradeCopia = grade.Copiar();
+                    gradeCopia.CodDerivacao = codDerivacao;
+                    grades.Add(gradeCopia);
+                }
+                copia.Grades = grades;
+                itens.Add(copia);
+            }
+            return itens;
+        }
+
+        // addCarrinho:...andCarrinhoOrigem: (Atendimento.m, PegadaIOS): o carrinho novo do desmembramento nasce com a condição
+        // de pagamento, a tabela e o faturamento antecipado/parcial do carrinho de origem (o que foi gravado no Fechamento),
+        // não com os do atendimento. Depois recalcula os valores (o % financeiro depende da condição) e reconta o badge do
+        // Carrinho, que não mudava com o carrinho novo.
+        private async Task FinalizarDesmembramento(object retorno, string codCarrinhoDestino, string codCarrinhoOrigem)
+        {
+            var codCarrinhoNovo = string.IsNullOrEmpty(codCarrinhoDestino) ? (retorno as HandlerResult)?.Result : null;
+            if (!string.IsNullOrEmpty(codCarrinhoNovo) && !string.IsNullOrEmpty(codCarrinhoOrigem))
+            {
+                await _dataBaseRepository.ExecutaUpdateWithScript($@"
+                    UPDATE TBT_CARRINHO SET
+                        CodCondicaoPagamento = (SELECT O.CodCondicaoPagamento FROM TBT_CARRINHO O WHERE O.CodCarrinho = '{codCarrinhoOrigem}'),
+                        CodTabelaPreco = (SELECT O.CodTabelaPreco FROM TBT_CARRINHO O WHERE O.CodCarrinho = '{codCarrinhoOrigem}'),
+                        AceitaFaturamentoAntecipado = (SELECT O.AceitaFaturamentoAntecipado FROM TBT_CARRINHO O WHERE O.CodCarrinho = '{codCarrinhoOrigem}'),
+                        AceitaFaturamentoParcial = (SELECT O.AceitaFaturamentoParcial FROM TBT_CARRINHO O WHERE O.CodCarrinho = '{codCarrinhoOrigem}')
+                    WHERE CodCarrinho = '{codCarrinhoNovo}'");
+                await _carrinhoRepository.AtualizaQtdCarrinho(codCarrinhoNovo);
+            }
+
+            if (Session.ATENDIMENTO_ATUAL != null)
+            {
+                var carrinhosAbertos = await _atendimentoRepository.BuscarCarrinhosAbertos(Session.ATENDIMENTO_ATUAL.CodAtendimento);
+                Session.QtdCar = carrinhosAbertos?.Count ?? 0;
             }
         }
 
@@ -366,8 +451,7 @@ namespace Pegada.Core.ViewModels
                 return;
             else
             {
-                var itens = PedidoSelecionado.Itens.Where(x => x.ItemChecado).ToList();
-                itens.ForEach(x => x.Grades = PedidoSelecionado.Itens.Where(o => o.CodProduto == x.CodProduto).FirstOrDefault().Grades);
+                var itens = await ItensParaDesmembrar();
 
                 DesmembrarCarrinhoCommand command = new DesmembrarCarrinhoCommand(
                     string.IsNullOrEmpty(opcaoSelecionada) || opcaoSelecionada == new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoDesmembrarNovoCarrinho") ? string.Empty : opcaoSelecionada,
@@ -394,6 +478,7 @@ namespace Pegada.Core.ViewModels
                     var result = await _carrinhoHandler.Handle(excluirCommand) as HandlerResult;
                     if (result.Sucesso)
                     {
+                        await FinalizarDesmembramento(retorno, command.CodCarrinho, PedidoSelecionado.CodCarrinho);
                         await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageDesmembramentoSucesso"), AppName, "OK");
                         await Load();
                     }
@@ -446,8 +531,7 @@ namespace Pegada.Core.ViewModels
                 return;
             else
             {
-                var itens = PedidoSelecionado.Itens.Where(x => x.ItemChecado).ToList();
-                itens.ForEach(x => x.Grades = PedidoSelecionado.Itens.Where(o => o.CodProduto == x.CodProduto).FirstOrDefault().Grades);
+                var itens = await ItensParaDesmembrar();
 
                 DesmembrarCarrinhoCommand command = new DesmembrarCarrinhoCommand(
                     string.IsNullOrEmpty(opcaoSelecionada) || opcaoSelecionada == new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage("CarrinhoDesmembrarNovoCarrinho") ? string.Empty : opcaoSelecionada,
@@ -474,6 +558,7 @@ namespace Pegada.Core.ViewModels
                     var result = await _carrinhoHandler.Handle(excluirCommand) as HandlerResult;
                     if (result.Sucesso)
                     {
+                        await FinalizarDesmembramento(retorno, command.CodCarrinho, PedidoSelecionado.CodCarrinho);
                         await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageDesmembramentoSucesso"), AppName, "OK");
                         await Load();
                     }
@@ -820,6 +905,14 @@ namespace Pegada.Core.ViewModels
             {
                 obj.ItemChecado = !obj.ItemChecado;
             }
+
+            // Marcar equivale a selecionar a linha: fica cinza e a grade abaixo passa a ser a dela.
+            if (obj.ItemChecado)
+            {
+                LinhaItemDestacada = obj;
+                ItemTapped(obj);
+                return;
+            }
             AtualizarAcoesItem();
         }
 
@@ -832,8 +925,12 @@ namespace Pegada.Core.ViewModels
 
             try
             {
+                // loadCarrinhos (iOS): os carrinhos marcados continuam marcados depois de recarregar a lista.
+                var codigosMarcados = Pedidos.Where(x => x.CarrinhoChecado).Select(x => x.CodCarrinho).ToList();
+
                 Pedidos.Clear();
                  Pedidos.Clear();
+                LinhaCarrinhoDestacada = null;
                 if (PedidoSelecionado != null)
                 {
                     PedidoSelecionado = new CarrinhoCommandResult();
@@ -854,6 +951,7 @@ namespace Pegada.Core.ViewModels
 
                         foreach (var item in listCarrinhos)
                         {
+                            item.CarrinhoChecado = codigosMarcados.Contains(item.CodCarrinho);
                             Pedidos.Add(item);
                         }
                         PedidoSelecionado = Pedidos.FirstOrDefault();
@@ -877,7 +975,6 @@ namespace Pegada.Core.ViewModels
             if (Item == null) return;
 
             PedidoSelecionado = Item as CarrinhoCommandResult;
-            PedidoSelecionado.CarrinhoChecado = !PedidoSelecionado.CarrinhoChecado;
             ItemSelecionado = PedidoSelecionado.Itens.FirstOrDefault();
         }
 
@@ -1065,20 +1162,80 @@ namespace Pegada.Core.ViewModels
                 }
 
 
-                if (Pedidos.Where(x => x.CarrinhoChecado).Count() != 1)
+                var marcados = Pedidos.Where(x => x.CarrinhoChecado).ToList();
+                if (marcados.Count == 0)
                 {
                     await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarUmPedidoPEditar"), AppName, "OK");
                     return;
                 }
 
-                PedidoSelecionado = Pedidos.Where(x => x.CarrinhoChecado).FirstOrDefault();
-                await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupFechamento(PedidoSelecionado));
+                if (!await PodeEditarCarrinhos(marcados))
+                    return;
+
+                // iOS: a tela carrega os dados do carrinho em destaque; aqui ele só vale se também estiver marcado.
+                if (!marcados.Contains(PedidoSelecionado))
+                    PedidoSelecionado = marcados[0];
+
+                var view = ServiceLocator.Current.GetInstance<ICarrinhoFechamentoView>();
+                var viewModel = (CarrinhoFechamentoViewModel)ServiceLocator.Current.GetInstance<ICarrinhoFechamentoViewModel>();
+                view.SetBindingContext(viewModel);
+                viewModel.SetCarrinhoFechamento(PedidoSelecionado);
+                viewModel.SetCarrinhosFechamento(marcados);
+                viewModel.Init();
+
+                await PopupNavigation.Instance.PushAsync(new PopupPage { Content = view.GetContent() });
 
             }
             catch (Exception ex)
             {
                 await UserDialogs.Instance.AlertAsync(ex.Message, AppName);
             }
+        }
+
+        // CarrinhoMenuOptionFinalizar (CarrinhoViewController, PegadaIOS): nenhum item sem grade e, com mais de um carrinho,
+        // mesmo tipo de pedido e mesmo grupo. Carrinho sem grupo exige que todos sejam do mesmo cliente.
+        private async Task<bool> PodeEditarCarrinhos(List<CarrinhoCommandResult> marcados)
+        {
+            var primeiro = marcados[0];
+            bool clienteValidado = false;
+
+            foreach (var carrinho in marcados)
+            {
+                var itensSemGrade = await _dataBaseRepository.GetString("TBT_ITEM_CARRINHO", "COUNT(*)", $"CodCarrinho = '{carrinho.CodCarrinho}' AND ItemSemGrade = 1");
+                if (int.TryParse(itensSemGrade, out int qtdSemGrade) && qtdSemGrade > 0)
+                {
+                    string mensagem = $"{T("FechamentoMsgItensSemGrade")} {T("FechamentoMsgPreenchaGrade")}";
+                    await UserDialogs.Instance.AlertAsync(marcados.Count > 1 ? $"{carrinho.CodCarrinho}: {mensagem}" : mensagem, T("GlobalTituloAtencao"));
+                    return false;
+                }
+
+                if (marcados.Count == 1)
+                    break;
+
+                if (carrinho.CodTipoPedido != primeiro.CodTipoPedido)
+                {
+                    await UserDialogs.Instance.AlertAsync(T("FechamentoMsgFecharTipoPedido"), T("GlobalTituloAtencao"));
+                    return false;
+                }
+
+                bool semGrupo = string.IsNullOrEmpty(carrinho.CodGrupoCliente);
+                if (semGrupo)
+                {
+                    if (!clienteValidado && marcados.Any(x => x.CodPessoaCliente != primeiro.CodPessoaCliente))
+                    {
+                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgFecharMesmoCliente"), T("GlobalTituloAtencao"));
+                        return false;
+                    }
+                    clienteValidado = true;
+                }
+                else if (carrinho.CodGrupoCliente != primeiro.CodGrupoCliente)
+                {
+                    await UserDialogs.Instance.AlertAsync(T("FechamentoMsgFecharMesmoGrupoCliente"), T("GlobalTituloAtencao"));
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private async void ImportarPlanilha(CarrinhoCommandResult obj)

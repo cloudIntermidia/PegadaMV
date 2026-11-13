@@ -129,6 +129,23 @@ namespace Pegada.Core.ViewModels
             set { SetProperty(ref _ordemCompra, value); }
         }
 
+        // _txtDiasBonificacao, _txtPedidoClienteOC e _flagPreco (EdicaoCarrinhoViewController, PegadaIOS): o que é digitado fica
+        // só na tela e o carrinho só muda depois de passar pelas validações do Salvar. Ligado direto no carrinho, o valor
+        // recusado ou cancelado seguia no PDF ao voltar.
+        private string _diasBonificacao;
+        public string DiasBonificacao
+        {
+            get { return _diasBonificacao; }
+            set { SetProperty(ref _diasBonificacao, value); }
+        }
+
+        private bool _isPrecoLiquido;
+        public bool IsPrecoLiquido
+        {
+            get { return _isPrecoLiquido; }
+            set { SetProperty(ref _isPrecoLiquido, value); }
+        }
+
         private GenericComboResult _condicaoPagamento;
         public GenericComboResult CondicaoPagamento
         {
@@ -412,6 +429,24 @@ namespace Pegada.Core.ViewModels
         public void SetCarrinhoFechamento(CarrinhoCommandResult pedidoSelecionado)
         {
             PedidoSelecionado = pedidoSelecionado;
+            DiasBonificacao = pedidoSelecionado?.DiasBonificacao;
+            OrdemCompra = pedidoSelecionado?.OrdemCompra;
+            IsPrecoLiquido = pedidoSelecionado?.IndPrecoLiquido == 1;
+            RaisePropertyChanged(nameof(CodigosCarrinhos));
+        }
+
+        // _carrinhoChecados (EdicaoCarrinhoViewController, PegadaIOS): o que for salvo vale para todos os carrinhos da lista;
+        // a tela mostra os dados do PedidoSelecionado.
+        private List<CarrinhoCommandResult> _carrinhosFechamento;
+        private List<CarrinhoCommandResult> CarrinhosFechamento =>
+            _carrinhosFechamento?.Count > 0 ? _carrinhosFechamento : new List<CarrinhoCommandResult> { PedidoSelecionado };
+
+        public string CodigosCarrinhos => string.Join(", ", CarrinhosFechamento.Where(x => x != null).Select(x => x.CodCarrinho));
+
+        public void SetCarrinhosFechamento(List<CarrinhoCommandResult> carrinhos)
+        {
+            _carrinhosFechamento = carrinhos;
+            RaisePropertyChanged(nameof(CodigosCarrinhos));
         }
 
         public async void Init()
@@ -892,12 +927,21 @@ namespace Pegada.Core.ViewModels
                 }
 
 
+                var carrinhos = CarrinhosFechamento;
+
+                // Com mais de um carrinho, o aviso diz qual deles não passou.
+                string AvisoDoCarrinho(CarrinhoCommandResult carrinho, string mensagem) =>
+                    carrinhos.Count > 1 ? $"{carrinho.CodCarrinho}: {mensagem}" : mensagem;
+
                 // imputValues (iOS): itens sem grade impedem o fechamento.
-                var itensSemGrade = await _dataBaseRepository.GetString("TBT_ITEM_CARRINHO", "COUNT(*)", $"CodCarrinho = '{PedidoSelecionado.CodCarrinho}' AND ItemSemGrade = 1");
-                if (int.TryParse(itensSemGrade, out int qtdSemGrade) && qtdSemGrade > 0)
+                foreach (var carrinho in carrinhos)
                 {
-                    await UserDialogs.Instance.AlertAsync($"{T("FechamentoMsgItensSemGrade")} {T("FechamentoMsgPreenchaGrade")}", T("GlobalTituloAtencao"));
-                    return;
+                    var itensSemGrade = await _dataBaseRepository.GetString("TBT_ITEM_CARRINHO", "COUNT(*)", $"CodCarrinho = '{carrinho.CodCarrinho}' AND ItemSemGrade = 1");
+                    if (int.TryParse(itensSemGrade, out int qtdSemGrade) && qtdSemGrade > 0)
+                    {
+                        await UserDialogs.Instance.AlertAsync(AvisoDoCarrinho(carrinho, $"{T("FechamentoMsgItensSemGrade")} {T("FechamentoMsgPreenchaGrade")}"), T("GlobalTituloAtencao"));
+                        return;
+                    }
                 }
 
                 if (CondicaoPagamento == null)
@@ -931,81 +975,89 @@ namespace Pegada.Core.ViewModels
                 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
                 int qtdMinimaParcela = CondicaoPagamento.QtdParcela;
-
-                //Solicitação #17523 Agrupar por famila de Vendas
-                //[...]"Ver a possibilidade tirar a validade de valor mínimo nesse tipo de cliente também."
-                //if ([[Cliente paisForCliente:_carrinhoSelecionado.codPessoaCliente] intValue] == 1)
-                if (PedidoSelecionado.CodTipoPedido != "23")
-                {
-                    var valorDuplicata = qtdMinimaParcela > 0 ? PedidoSelecionado.ValorTotalLiquido / qtdMinimaParcela : PedidoSelecionado.ValorTotalLiquido;
-
-                    var valorMinimoParcela = await _parametroRepository.BuscarMinimoParcelaPorTipoPedido(PedidoSelecionado.CodTipoPedido);
-
-                    if (valorDuplicata < valorMinimoParcela)
-                    {
-                        await UserDialogs.Instance.AlertAsync($"{T("FechamentoMsgMinimoDuplicata")}{valorMinimoParcela:0.00}!", T("GlobalTituloAtencao"));
-                        return;
-                    }
-                }
-
-                //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-                // Dias de bonificação: vazio ou "0" não valida; senão o prazo precisa existir e abate a comissão do representante.
-                // Sem dias de bonificação a comissão do carrinho segue como está.
-                decimal? percentualComissao = PedidoSelecionado.PercentualComissaoRep;
-                string diasBonificacao = PedidoSelecionado.DiasBonificacao?.Trim();
-                if (!string.IsNullOrEmpty(diasBonificacao) && diasBonificacao != "0")
-                {
-                    var prazoAdicional = await _prazoAdicionalRepository.BuscaPrazoAdicional(new BuscarPrazoAdicionalCommand(PedidoSelecionado.CodTipoPedido, diasBonificacao));
-                    if (prazoAdicional == null)
-                    {
-                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgPrazoExtraNaoPermitido"), T("GlobalTituloAtencao"));
-                        return;
-                    }
-
-                    decimal comissaoRep = 0;
-                    var comissaoTexto = await _dataBaseRepository.GetString("TBT_PESSOA", "Comissao", $"CodPessoa = '{PedidoSelecionado.CodPessoaRepresentante}'");
-                    if (!string.IsNullOrEmpty(comissaoTexto))
-                        decimal.TryParse(comissaoTexto.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out comissaoRep);
-
-                    percentualComissao = prazoAdicional.AbatimentoComissao - comissaoRep;
-                    PercentualComissaoRep = percentualComissao.Value;
-                }
-
+                string diasBonificacao = DiasBonificacao?.Trim();
+                var comissoes = new Dictionary<string, decimal?>();
                 int diasFatAntecipado = 0;
-                if (IsFatAntecipado)
+
+                // Valida todos os carrinhos antes de gravar: se um não passar, nenhum é alterado.
+                foreach (var carrinho in carrinhos)
                 {
-                    if (string.IsNullOrWhiteSpace(DiasFatAntecipadoTexto))
+                    //Solicitação #17523 Agrupar por famila de Vendas
+                    //[...]"Ver a possibilidade tirar a validade de valor mínimo nesse tipo de cliente também."
+                    //if ([[Cliente paisForCliente:_carrinhoSelecionado.codPessoaCliente] intValue] == 1)
+                    if (carrinho.CodTipoPedido != "23")
                     {
-                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgDiasFatAntecipadoPreencher"), T("GlobalTituloAtencao"));
-                        return;
+                        var valorDuplicata = qtdMinimaParcela > 0 ? carrinho.ValorTotalLiquido / qtdMinimaParcela : carrinho.ValorTotalLiquido;
+
+                        var valorMinimoParcela = await _parametroRepository.BuscarMinimoParcelaPorTipoPedido(carrinho.CodTipoPedido);
+
+                        if (valorDuplicata < valorMinimoParcela)
+                        {
+                            await UserDialogs.Instance.AlertAsync(AvisoDoCarrinho(carrinho, $"{T("FechamentoMsgMinimoDuplicata")}{valorMinimoParcela:0.00}!"), T("GlobalTituloAtencao"));
+                            return;
+                        }
                     }
 
-                    diasFatAntecipado = int.Parse(DiasFatAntecipadoTexto);
+                    //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-                    // O prazo informado não pode passar do permitido no cadastro do cliente.
-                    if (PedidoSelecionado.DiasFatAntecipadoCliente < diasFatAntecipado)
+                    // Dias de bonificação: vazio ou "0" não valida; senão o prazo precisa existir e abate a comissão do representante.
+                    // Sem dias de bonificação a comissão do carrinho segue como está.
+                    decimal? percentualComissao = carrinho.PercentualComissaoRep;
+                    if (!string.IsNullOrEmpty(diasBonificacao) && diasBonificacao != "0")
                     {
-                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgPrazoDiasFatMaiorPermitido"), T("GlobalTituloAtencao"));
-                        return;
+                        var prazoAdicional = await _prazoAdicionalRepository.BuscaPrazoAdicional(new BuscarPrazoAdicionalCommand(carrinho.CodTipoPedido, diasBonificacao));
+                        if (prazoAdicional == null)
+                        {
+                            await UserDialogs.Instance.AlertAsync(T("FechamentoMsgPrazoExtraNaoPermitido"), T("GlobalTituloAtencao"));
+                            return;
+                        }
+
+                        decimal comissaoRep = 0;
+                        var comissaoTexto = await _dataBaseRepository.GetString("TBT_PESSOA", "Comissao", $"CodPessoa = '{carrinho.CodPessoaRepresentante}'");
+                        if (!string.IsNullOrEmpty(comissaoTexto))
+                            decimal.TryParse(comissaoTexto.Replace(",", "."), NumberStyles.Any, CultureInfo.InvariantCulture, out comissaoRep);
+
+                        percentualComissao = prazoAdicional.AbatimentoComissao - comissaoRep;
+                    }
+                    comissoes[carrinho.CodCarrinho] = percentualComissao;
+
+                    if (IsFatAntecipado)
+                    {
+                        if (string.IsNullOrWhiteSpace(DiasFatAntecipadoTexto))
+                        {
+                            await UserDialogs.Instance.AlertAsync(T("FechamentoMsgDiasFatAntecipadoPreencher"), T("GlobalTituloAtencao"));
+                            return;
+                        }
+
+                        diasFatAntecipado = int.Parse(DiasFatAntecipadoTexto);
+
+                        // O prazo informado não pode passar do permitido no cadastro do cliente.
+                        if (carrinho.DiasFatAntecipadoCliente < diasFatAntecipado)
+                        {
+                            await UserDialogs.Instance.AlertAsync(AvisoDoCarrinho(carrinho, T("FechamentoMsgPrazoDiasFatMaiorPermitido")), T("GlobalTituloAtencao"));
+                            return;
+                        }
+
+                        // Dia de faturamento menos os dias antecipados precisa ser posterior a hoje.
+                        if (DataEntrega.Value.Date.AddDays(-diasFatAntecipado) <= DateTime.Today)
+                        {
+                            await UserDialogs.Instance.AlertAsync(T("FechamentoMsgPrazoDiasFatInvalido"), T("GlobalTituloAtencao"));
+                            return;
+                        }
                     }
 
-                    // Dia de faturamento menos os dias antecipados precisa ser posterior a hoje.
-                    if (DataEntrega.Value.Date.AddDays(-diasFatAntecipado) <= DateTime.Today)
+                    var quantidadeMinima = await _parametroRepository.BuscarParametroPorTipoPedido(carrinho.CodTipoPedido, "4");
+                    if (carrinho.QtdTotal < quantidadeMinima)
                     {
-                        await UserDialogs.Instance.AlertAsync(T("FechamentoMsgPrazoDiasFatInvalido"), T("GlobalTituloAtencao"));
+                        await UserDialogs.Instance.AlertAsync(AvisoDoCarrinho(carrinho, $"{T("FechamentoMsgQtdMinima")} {quantidadeMinima:0.##}. "), T("GlobalTituloAtencao"));
                         return;
                     }
                 }
 
-                var quantidadeMinima = await _parametroRepository.BuscarParametroPorTipoPedido(PedidoSelecionado.CodTipoPedido, "4");
-                if (PedidoSelecionado.QtdTotal < quantidadeMinima)
-                {
-                    await UserDialogs.Instance.AlertAsync($"{T("FechamentoMsgQtdMinima")} {quantidadeMinima:0.##}. ", T("GlobalTituloAtencao"));
-                    return;
-                }
+                if (comissoes.TryGetValue(PedidoSelecionado.CodCarrinho, out decimal? comissaoSelecionado) && comissaoSelecionado.HasValue)
+                    PercentualComissaoRep = comissaoSelecionado.Value;
 
-                if (CondicaoPagamento.Codigo != PedidoSelecionado.CodCondicaoPagamento && PedidoSelecionado.IndPrecoLiquido == 1) {
+                if (CondicaoPagamento.Codigo != PedidoSelecionado.CodCondicaoPagamento && IsPrecoLiquido) {
 
                     var confirm = await UserDialogs.Instance.ConfirmAsync(T("FechamentoMsgPrecosEditados"), T("GlobalTituloAtencao"), T("PegCadClienteBtnSim"), T("PegCadClienteBtnNao"));
                     if (!confirm)
@@ -1014,7 +1066,7 @@ namespace Pegada.Core.ViewModels
                     }
                 }
 
-                await AtualizarCarrinho(percentualComissao, diasFatAntecipado);
+                await AtualizarCarrinhos(carrinhos, comissoes, diasFatAntecipado);
 
             }
             catch (Exception ex)
@@ -1023,39 +1075,43 @@ namespace Pegada.Core.ViewModels
             }
         }
 
-        private async Task AtualizarCarrinho(decimal? percentualComissao, int diasFatAntecipado) {
+        private async Task AtualizarCarrinhos(List<CarrinhoCommandResult> carrinhos, Dictionary<string, decimal?> comissoes, int diasFatAntecipado) {
 
-            // No carrinho "2" = sim e "1" = não (iOS: aceitaFatParcial / aceitaFaturamentoAntecipado).
-            var model = new
+            foreach (var carrinho in carrinhos)
             {
-                CodCarrinho = PedidoSelecionado.CodCarrinho,
-                CodCondicaoPagamento = CondicaoPagamento?.Codigo,
-                DataEntrega = DataEntrega.HasValue ? DataEntrega.Value.ToString("yyyy-MM-ddTHH:mm:ss") : null,
-                CifFob = "F",
-                CodTransportadora = Transportadora?.Codigo,
-                AceitaFaturamentoAntecipado = IsFatAntecipado ? "2" : "1",
-                AceitaFaturamentoParcial = IsFatParcial ? "2" : "1",
-                CodSemana = SemanaSelecionada?.CodSemana,
-                PercentualComissaoRep = percentualComissao,
-                DiasBonificacao = PedidoSelecionado.DiasBonificacao,
-                OrdemCompra = PedidoSelecionado.OrdemCompra,
-                DiasFatAntecipado = IsFatAntecipado ? diasFatAntecipado : 0,
-                IndPrecoLiquido = PedidoSelecionado.IndPrecoLiquido,
-                CodClienteEntrega = ClienteEntregaSelecionado?.Codigo
-            };
+                // No carrinho "2" = sim e "1" = não (iOS: aceitaFatParcial / aceitaFaturamentoAntecipado).
+                var model = new
+                {
+                    CodCarrinho = carrinho.CodCarrinho,
+                    CodCondicaoPagamento = CondicaoPagamento?.Codigo,
+                    DataEntrega = DataEntrega.HasValue ? DataEntrega.Value.ToString("yyyy-MM-ddTHH:mm:ss") : null,
+                    CifFob = "F",
+                    CodTransportadora = Transportadora?.Codigo,
+                    AceitaFaturamentoAntecipado = IsFatAntecipado ? "2" : "1",
+                    AceitaFaturamentoParcial = IsFatParcial ? "2" : "1",
+                    CodSemana = SemanaSelecionada?.CodSemana,
+                    PercentualComissaoRep = comissoes[carrinho.CodCarrinho],
+                    DiasBonificacao = DiasBonificacao,
+                    OrdemCompra = OrdemCompra,
+                    DiasFatAntecipado = IsFatAntecipado ? diasFatAntecipado : 0,
+                    // iOS: preço líquido ligado vale para todos; desligado, cada carrinho mantém o seu.
+                    // Exceção do MV: o carrinho exibido na tela pode ser desmarcado (no iOS ele continuaria em 1).
+                    IndPrecoLiquido = IsPrecoLiquido ? 1 : (carrinho.CodCarrinho == PedidoSelecionado.CodCarrinho ? 0 : carrinho.IndPrecoLiquido),
+                    CodClienteEntrega = ClienteEntregaSelecionado?.Codigo
+                };
 
-            var columnsName = model.GetType().GetRuntimeProperties().Select(x => x.Name).ToList();
-            int rows = await _dataBaseRepository.ExecutaUpdate("TBT_CARRINHO", columnsName, new List<string>() { "CodCarrinho" }, model);
-            var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(PedidoSelecionado.CodCarrinho);
+                var columnsName = model.GetType().GetRuntimeProperties().Select(x => x.Name).ToList();
+                int rows = await _dataBaseRepository.ExecutaUpdate("TBT_CARRINHO", columnsName, new List<string>() { "CodCarrinho" }, model);
+                var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(carrinho.CodCarrinho);
 
-
-            if (rows > 0 && atualizouCarrinho)
-                await UserDialogs.Instance.AlertAsync(T("FechamentoMsgSalvoSucesso"), T("GlobalTituloAtencao"));
-            else
-            {
-                await UserDialogs.Instance.AlertAsync(T("FechamentoMsgErroPersistir"), AppName);
-                return;
+                if (rows <= 0 || !atualizouCarrinho)
+                {
+                    await UserDialogs.Instance.AlertAsync(T("FechamentoMsgErroPersistir"), AppName);
+                    return;
+                }
             }
+
+            await UserDialogs.Instance.AlertAsync(T("FechamentoMsgSalvoSucesso"), T("GlobalTituloAtencao"));
 
             MessagingCenter.Send<object>(this, "LoadCarrinho");
             await PopupNavigation.Instance.PopAsync();

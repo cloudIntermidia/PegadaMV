@@ -1,5 +1,6 @@
 using Acr.UserDialogs;
 using MobiliVendas.Core.Domain.Commands.Results;
+using MobiliVendas.Core.Utils;
 using MobiliVendas.Core.ViewModels;
 using Pegada.Core.Repositories;
 using Prism.Mvvm;
@@ -163,6 +164,101 @@ namespace Pegada.Core.ViewModels
             await PopupNavigation.Instance.PopAsync();
         }
 
+        // Quantidades da grade editada levadas para cada item marcado pela descrição da numeração.
+        private async Task<List<KeyValuePair<string, int>>> QuantidadesDoItem(ItemCommandResult item, Func<string, int> qtdPorDescricao)
+        {
+            var derivacoes = await CarregarDerivacoes(item);
+            return derivacoes
+                .Select(d => new KeyValuePair<string, int>(d.CodDerivacao, qtdPorDescricao(d.Descricao)))
+                .ToList();
+        }
+
+        // enviaToEncaixotamento (ItemCarrinhoTableViewController, iOS): fecha a edição e abre o encaixotamento com a grade digitada.
+        private async Task AbrirEncaixotamento()
+        {
+            var primeiro = _itens[0];
+            string codModelo = await _repositorio.BuscarCodModelo(primeiro.CodProduto);
+
+            var grades = new ObservableCollection<DerivacaoGradeResult>(Linhas.Select((l, i) => new DerivacaoGradeResult
+            {
+                Ordem = i,
+                CodGrade = primeiro.CodGrade,
+                CodDerivacao = l.CodDerivacao,
+                CodModelo = codModelo,
+                Descricao = l.DescricaoExibicao ?? l.Descricao,
+                Qtd = l.Qtd
+            }));
+
+            // Descrição BR de cada coluna (a grade do encaixotamento mostra a do país para cliente estrangeiro).
+            var descricoes = Linhas.Select(l => l.Descricao).ToList();
+
+            await PopupNavigation.Instance.PopAsync();
+            await PopupNavigation.Instance.PushAsync(
+                await RgPopupUtility.GerarPopupEncaixotamentoAsync(grades, caixas => SalvarEncaixotamento(caixas, descricoes)));
+        }
+
+        // EncaixotamentoViewController -salvaPedido (_isEdicaoItemCarrinho, iOS): em cada item marcado a 1ª caixa substitui a
+        // grade do item e as demais entram como itens novos no mesmo carrinho. Desvio: o iOS grava na 1ª caixa
+        // qtdCaixa = tamanho do corrugado; aqui vai a quantidade de caixas da linha (o que as demais caixas também gravam).
+        private async void SalvarEncaixotamento(ObservableCollection<CaixaResult> caixas, List<string> descricoes)
+        {
+            try
+            {
+                var linhas = caixas?.Where(c => c.Grades.Any()).ToList();
+                if (linhas == null || linhas.Count == 0)
+                    return;
+
+                int qtdItensNovos = 0;
+                var carrinhosNovos = new List<string>();
+
+                foreach (var item in _itens)
+                {
+                    for (int i = 0; i < linhas.Count; i++)
+                    {
+                        var caixa = linhas[i];
+                        int qtdCaixa = caixa.QtdCorrugados > 0 ? caixa.QtdCorrugados : 1;
+
+                        var quantidades = await QuantidadesDoItem(item, descricao =>
+                        {
+                            int coluna = descricoes.IndexOf(descricao);
+                            return coluna >= 0 && coluna < caixa.Grades.Count ? (int)caixa.Grades[coluna].Qtd : 0;
+                        });
+
+                        if (i == 0)
+                        {
+                            await _repositorio.SalvarGrade(item.CodCarrinho, item.CodItemCarrinho, quantidades, qtdCaixa);
+                        }
+                        else
+                        {
+                            await _repositorio.IncluirItemCaixa(item.CodCarrinho, item.CodItemCarrinho, quantidades, qtdCaixa);
+                            qtdItensNovos++;
+                            if (!carrinhosNovos.Contains(item.CodCarrinho))
+                                carrinhosNovos.Add(item.CodCarrinho);
+                        }
+                    }
+                }
+
+                foreach (var codCarrinho in _itens.Select(i => i.CodCarrinho).Distinct())
+                    await _repositorio.AtualizarTotaisCarrinho(codCarrinho);
+
+                MessagingCenter.Send<object>(this, "LoadCarrinho");
+
+                string mensagem;
+                if (qtdItensNovos > 1)
+                    mensagem = $"Foram incluído(s) {qtdItensNovos} item(s) nos respectivo(s) carrinho(s): {string.Join(", ", carrinhosNovos)}";
+                else if (qtdItensNovos == 1)
+                    mensagem = $"Item incluído no carrinho: {carrinhosNovos[0]}";
+                else
+                    mensagem = "Item atualizado com sucesso!";
+
+                await UserDialogs.Instance.AlertAsync(mensagem, "Atendimento");
+            }
+            catch (Exception ex)
+            {
+                await UserDialogs.Instance.AlertAsync($"{ex.Message}", "Erro");
+            }
+        }
+
         // aBtnSalvar
         private async void Salvar()
         {
@@ -175,13 +271,11 @@ namespace Pegada.Core.ViewModels
                     return;
                 }
 
-                // iOS: a soma da grade precisa ser um dos tamanhos de corrugado do modelo (senão abre o encaixotamento).
-                if (_tamanhosPossiveis.Count > 0 && !_tamanhosPossiveis.Contains(qtdGrade)
-                    && await _repositorio.TipoPedidoExigeCorrugado(_carrinho.CodTipoPedido))
+                // aBtnSalvar (iOS): soma da grade fora dos tamanhos de corrugado do modelo abre o encaixotamento (sem olhar o
+                // tipo de pedido). Modelo sem tamanhos cadastrados salva direto (no iOS abriria um encaixotamento sem corrugados).
+                if (_tamanhosPossiveis.Count > 0 && !_tamanhosPossiveis.Contains(qtdGrade))
                 {
-                    await UserDialogs.Instance.AlertAsync(
-                        $"A quantidade da grade ({qtdGrade}) precisa ser um dos tamanhos de corrugado do modelo: {string.Join("-", _tamanhosPossiveis)}.",
-                        "Atenção");
+                    await AbrirEncaixotamento();
                     return;
                 }
 

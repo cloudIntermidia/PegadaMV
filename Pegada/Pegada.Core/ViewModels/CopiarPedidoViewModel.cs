@@ -560,15 +560,23 @@ namespace Pegada.Core.ViewModels
                 List<DerivacaoGradeResult> grades = null;
                 if (item.CodCarrinho != PedidoSelecionado.CodCarrinho && _pedidoRepository is Pegada.Core.Repositories.PedidoRepository pedidoRepositoryPegada)
                     grades = await pedidoRepositoryPegada.BuscarGradesItemPedidoCopia(item.CodCarrinho, item.CodItemPedido);
-                if (grades == null || grades.Count == 0)
+                bool gradesDoCarrinho = grades == null || grades.Count == 0;
+                if (gradesDoCarrinho)
                     grades = await _carrinhoRepository.BuscarGradesDoItem(new BuscarGradesItemCommand(PedidoSelecionado.CodCarrinho, item.CodItemCarrinho));
                 foreach (var grade in grades)
                 {
+                    //A consulta do carrinho devolve em CodDerivacao a descrição do tamanho ("37" em vez do código 5).
+                    //Gravada assim, a grade do carrinho copiado não aparecia e era transmitida com o tamanho errado.
+                    if (gradesDoCarrinho)
+                        grade.CodDerivacao = await _databaseRepository.GetString("TBT_GRADE_ITEM_CARRINHO", "CodDerivacao",
+                            $"CodCarrinho = '{PedidoSelecionado.CodCarrinho}' AND CodItemCarrinho = {(int)item.CodItemCarrinho} AND CodGradeItemCarrinho = {(int)grade.CodGradeItemCarrinho}");
+
                     //Regra do Objective-C (CopiaCarrinhoViewController): ao copiar, a grade do item copiado
                     //sempre recebe o codGrade fixo "999", independente da grade de origem.
                     grade.CodGrade = "999";
                     item.Grades.Add(grade);
                 }
+                item.CodGrade = await BuscarCodGradeDaCopia(item, gradesDoCarrinho);
                 itensUI.Add(item);
             }
 
@@ -614,6 +622,25 @@ namespace Pegada.Core.ViewModels
             {
                 await UserDialogs.Instance.AlertAsync(ex.Message, AppName, "OK");
             }
+        }
+
+        // Desvio do iOS, que grava CodGrade "999" no item copiado: a consulta da grade do MV só traz derivações ativas na grade
+        // do item, e a 999 só tem os tamanhos 33 a 46. Por isso o item fica com a grade real: a do item de origem ou, em pedido
+        // (TBT_ITEM_PEDIDO vem sem CodGrade), a grade do modelo (TBT_MODELO.CodGrade) que contém a derivação. A 999 fica como último recurso.
+        private async Task<string> BuscarCodGradeDaCopia(ItemCommandResult item, bool itemDoCarrinho)
+        {
+            if (itemDoCarrinho)
+            {
+                var codGrade = await _databaseRepository.GetString("TBT_ITEM_CARRINHO", "CodGrade",
+                    $"CodCarrinho = '{PedidoSelecionado.CodCarrinho}' AND CodItemCarrinho = {(int)item.CodItemCarrinho}");
+                if (!string.IsNullOrEmpty(codGrade))
+                    return codGrade;
+            }
+
+            var codDerivacao = item.Grades.FirstOrDefault()?.CodDerivacao;
+            var codGradeModelo = await _databaseRepository.GetString("TBT_MODELO M INNER JOIN TBT_PRODUTO P ON P.CodModelo = M.CodModelo AND P.CodMarca = M.CodMarca", "M.CodGrade",
+                $"P.CodProduto = '{item.CodProduto}' AND M.CodGrade IN (SELECT CodGrade FROM TBT_DERIVACAO_GRADE WHERE CodDerivacao = '{codDerivacao}' AND IndAtivo = 1) LIMIT 1");
+            return string.IsNullOrEmpty(codGradeModelo) ? "999" : codGradeModelo;
         }
 
         public void SetTodos(bool value)

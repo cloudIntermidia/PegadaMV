@@ -576,7 +576,8 @@ namespace Pegada.Core.Repositories
             {
                 decimal? markupCarrinho = decimal.TryParse(item.MarkupCliente, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal valor) ? valor : (decimal?)null;
                 item.MarkupCliente = markupCarrinho.HasValue ? FormatarMarkupTela(markupCarrinho.Value) : string.Empty;
-                item.MarkupAplicado = FormatarMarkupTela(item.Markup);
+                // Markup Aplicado arredondado para duas casas (2,227 -> 2,23); ajuste pedido para a tela, difere do toUIString do iOS.
+                item.MarkupAplicado = item.Markup.ToString("N2", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"));
             }
             else
             {

@@ -7,6 +7,7 @@
              xmlns:conv="clr-namespace:Pegada.Core.Converters"
              xmlns:shared="clr-namespace:Pegada.Core.Views.Shared"
              xmlns:ext="clr-namespace:MobiliVendas.Core.CustomView;assembly=MobiliVendas.Core"
+             xmlns:escala="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
              x:Class="Pegada.Core.Views.Negocio.TitulosPage">
 
     <!--
@@ -77,9 +78,12 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <!-- AbsoluteLayout 0,0,1,1 (como a TitulosPage/PedidoPage): na aba da NegociosPage a lista ocupa o resto da altura -->
+    <!-- AbsoluteLayout 0,0,1,1 (como a TitulosPage/PedidoPage): na aba da NegociosPage a lista ocupa o resto da altura.
+         EscalaTela: no iPad 11"/13" filtros, cabeçalho e totais crescem na proporção da largura (base 9,7" = 1024),
+         mantendo o aspecto do 9,7"; a lista fica como está. -->
     <AbsoluteLayout VerticalOptions="FillAndExpand">
-    <Grid AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" BackgroundColor="White" RowSpacing="0" ColumnSpacing="0">
+    <Grid AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" BackgroundColor="White" RowSpacing="0" ColumnSpacing="0"
+          escala:EscalaTela.LarguraBase="1024">
         <Grid.RowDefinitions>
             <RowDefinition Height="99" />
             <RowDefinition Height="1" />
@@ -221,6 +225,7 @@
 
         <!-- ============ LISTA (owr-uU-cCy / TituloTableViewCell, linhas de 38, system 12 preto) ============ -->
         <ListView Grid.Row="4"
+                  escala:EscalaTela.Ignorar="True"
                   RowHeight="38"
                   SeparatorVisibility="Default"
                   ItemsSource="{Binding Titulos}">

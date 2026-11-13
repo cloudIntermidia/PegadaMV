@@ -9,15 +9,19 @@
              xmlns:session="clr-namespace:MobiliVendas.Core;assembly=MobiliVendas.Core"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
+             xmlns:efeitos="clr-namespace:MobiliVendas.Core.Utils.Effects;assembly=MobiliVendas.Core"
+             xmlns:escala="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="Pegada.Core.Views.Carrinho.CarrinhoPage"
              x:Name="this">
-    <AbsoluteLayout BackgroundColor="White">
+    <!-- EscalaTela: no iPad 11"/13" listas, botões e grade crescem na proporção da largura (base 9,7" = 1024),
+         como na tela de Pedido; cabeçalho do app e barra de navegação ficam como estão. -->
+    <AbsoluteLayout BackgroundColor="White" escala:EscalaTela.LarguraBase="1024">
 
         <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,0.9"
                 AbsoluteLayout.LayoutFlags="All">
 
-            <shared:CabecalhoView x:Name="cabecalho"/>
+            <shared:CabecalhoView x:Name="cabecalho" escala:EscalaTela.Ignorar="True"/>
 
             <!--INICIO Grid de Pedidos -->
             <Grid ColumnSpacing="1" 
@@ -80,7 +84,8 @@
                           Grid.ColumnSpan="11"
                           HeightRequest="350"
                           SeparatorVisibility="Default"
-                          ItemsSource="{Binding Pedidos}">
+                          ItemsSource="{Binding Pedidos}"
+                          SelectedItem="{Binding LinhaCarrinhoDestacada, Mode=TwoWay}">
 
                     <ListView.Behaviors>
                         <behaviors:EventToCommandBehavior EventName="ItemTapped" 
@@ -95,7 +100,8 @@
                                      inteiro, igual à lista de itens. -->
                                 <Grid BackgroundColor="{Binding IndBloqueado, Converter={StaticResource BoleanoParaCor},ConverterParameter='Red,Transparent'}"
                                       VerticalOptions="Center"
-                                      HeightRequest="30">
+                                      HeightRequest="30"
+                                      escala:EscalaTela.Celula="True">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="40" />
                                     </Grid.RowDefinitions>
@@ -134,17 +140,14 @@
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CodCarrinho}" Grid.Row="0" Grid.Column="1" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding Preposto}"  Grid.Row="0" Grid.Column="2"/>
                                     <Label Style="{StaticResource labelGridItem}" FontSize="10"
-                                           Grid.Row="0" Grid.Column="3">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding RazaoSocial}" />
-                                                <Span Text=" - " />
-                                                <Span Text="{Binding CNPJ}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                           Text="{Binding ClienteUI}"
+                                           Grid.Row="0" Grid.Column="3" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding CondicaoPagamento}"  Grid.Row="0" Grid.Column="4"/>
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding TipoPedido}" Grid.Row="0" Grid.Column="5" />
+                                    <!-- Tipo de pedido: até 2 linhas e a fonte encolhe (até 60%) quando o texto não cabe na largura da coluna,
+                                         como no PegadaIOS. Sem isso, no iPad de 9,7" a coluna estreita quebrava em 3 linhas e cortava o texto. -->
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding TipoPedido}" Grid.Row="0" Grid.Column="5"
+                                           MaxLines="2" LineBreakMode="TailTruncation"
+                                           efeitos:FonteAjustavelEffect.EscalaMinima="0.6" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}" Grid.Row="0" Grid.Column="6" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="7" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="8" />
@@ -299,7 +302,8 @@
                           Grid.ColumnSpan="15"
                           HeightRequest="350"
                           SeparatorVisibility="Default"
-                          ItemsSource="{Binding PedidoSelecionado.Itens}">
+                          ItemsSource="{Binding PedidoSelecionado.Itens}"
+                          SelectedItem="{Binding LinhaItemDestacada, Mode=TwoWay}">
 
                     <ListView.Behaviors>
                         <behaviors:EventToCommandBehavior EventName="ItemTapped" 
@@ -310,7 +314,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid VerticalOptions="Center" Padding="1">
+                                <Grid VerticalOptions="Center" Padding="1" escala:EscalaTela.Celula="True">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
@@ -472,19 +476,20 @@
                     <BoxView Grid.Row="2" Grid.Column="0" WidthRequest="50" HeightRequest="30" Color="Transparent"
                              IsVisible="{Binding GradeEstrangeira}"/>
 
-                    <!-- LINHA BR (TAMANHO ORIGINAL, só cliente estrangeiro) -->
+                    <!-- LINHA BR (TAMANHO ORIGINAL, só cliente estrangeiro). Sem IsVisible de propósito: GradesBR vem vazia
+                         para cliente BR; ocultar/reexibir o StackLayout deixava a linha em branco no iOS após recarregar. -->
                     <StackLayout Grid.Row="0" Grid.Column="1"
                                  Orientation="Horizontal"
                                  HorizontalOptions="End"
                                  Spacing="0"
-                                 IsVisible="{Binding GradeEstrangeira}"
-                                 BindableLayout.ItemsSource="{Binding ItemSelecionado.Grades}">
+                                 BindableLayout.ItemsSource="{Binding GradesBR}">
 
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
                                 <Grid WidthRequest="50"
                                       HeightRequest="30"
-                                      BackgroundColor="#8E8E8E">
+                                      BackgroundColor="#8E8E8E"
+                                      escala:EscalaTela.Celula="True">
 
                                     <BoxView BackgroundColor="White"
                                              WidthRequest="1"
@@ -510,7 +515,8 @@
                             <DataTemplate>
                                 <Grid WidthRequest="50"
                                       HeightRequest="30"
-                                      BackgroundColor="#8E8E8E">
+                                      BackgroundColor="#8E8E8E"
+                                      escala:EscalaTela.Celula="True">
 
                                     <BoxView BackgroundColor="White"
                                              WidthRequest="1"
@@ -551,7 +557,8 @@
                             <DataTemplate>
                                 <Grid WidthRequest="50"
                                       HeightRequest="30"
-                                      BackgroundColor="#F0F0F0">
+                                      BackgroundColor="#F0F0F0"
+                                      escala:EscalaTela.Celula="True">
 
                                     <BoxView BackgroundColor="#D0D0D0"
                                              WidthRequest="1"
@@ -586,7 +593,7 @@
         </StackLayout>
 
 
-        <shared:NavegacaoBottomView x:Name="navegacao" PageValue="CARRINHO" AbsoluteLayout.LayoutBounds="0,1,1,0.08" AbsoluteLayout.LayoutFlags="All"/>
+        <shared:NavegacaoBottomView x:Name="navegacao" escala:EscalaTela.Ignorar="True" PageValue="CARRINHO" AbsoluteLayout.LayoutBounds="0,1,1,0.08" AbsoluteLayout.LayoutFlags="All"/>
 
     </AbsoluteLayout>
 </ContentPage>

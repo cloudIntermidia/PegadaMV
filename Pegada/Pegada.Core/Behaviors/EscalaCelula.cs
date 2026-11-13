@@ -5,7 +5,8 @@ namespace Pegada.Core.Behaviors
 {
     // Células desenhadas com posições fixas (frames do PegadaIOS, pensadas pro iPad de 9,7"): quando a célula fica
     // maior que o tamanho base (iPad de 11"/13"), aumenta tamanho e posição dos filhos na mesma proporção. Nunca
-    // diminui: no iPad de 9,7" (ou célula menor) fica exatamente como no XAML. A fonte dos Labels não muda.
+    // diminui: no iPad de 9,7" (ou célula menor) fica exatamente como no XAML. A fonte dos Labels só muda nos
+    // filhos com EscalaFonte="True" (pode vir de binding, ex.: só nas Combinações).
     // Uso: no Grid da célula, EscalaCelula.LarguraBase/AlturaBase; nos filhos, EscalaCelula.Modo quando não for "Tudo".
     public static class EscalaCelula
     {
@@ -28,6 +29,9 @@ namespace Pegada.Core.Behaviors
         public static readonly BindableProperty ModoProperty =
             BindableProperty.CreateAttached("Modo", typeof(ModoEscala), typeof(EscalaCelula), ModoEscala.Tudo);
 
+        public static readonly BindableProperty EscalaFonteProperty =
+            BindableProperty.CreateAttached("EscalaFonte", typeof(bool), typeof(EscalaCelula), false, propertyChanged: OnEscalaFonteChanged);
+
         private static readonly BindableProperty FatorAtualProperty =
             BindableProperty.CreateAttached("FatorAtual", typeof(double), typeof(EscalaCelula), 1d);
 
@@ -42,6 +46,10 @@ namespace Pegada.Core.Behaviors
 
         public static void SetAlturaBase(BindableObject view, double value) => view.SetValue(AlturaBaseProperty, value);
 
+        public static bool GetEscalaFonte(BindableObject view) => (bool)view.GetValue(EscalaFonteProperty);
+
+        public static void SetEscalaFonte(BindableObject view, bool value) => view.SetValue(EscalaFonteProperty, value);
+
         public static ModoEscala GetModo(BindableObject view) => (ModoEscala)view.GetValue(ModoProperty);
 
         public static void SetModo(BindableObject view, ModoEscala value) => view.SetValue(ModoProperty, value);
@@ -51,6 +59,30 @@ namespace Pegada.Core.Behaviors
             public Thickness Margem;
             public double Largura;
             public double Altura;
+            public double Fonte;
+        }
+
+        // Célula reaproveitada / binding chegando depois do layout: reaplica a fonte com o fator atual do Grid.
+        private static void OnEscalaFonteChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is Label label && label.Parent is Layout<View> layout)
+                AplicarFonte(label, (double)layout.GetValue(FatorAtualProperty));
+        }
+
+        private static void AplicarFonte(Label label, double fator)
+        {
+            var original = (TamanhoOriginal)label.GetValue(OriginalProperty);
+            if (original == null)
+            {
+                original = new TamanhoOriginal { Margem = label.Margin, Largura = label.WidthRequest, Altura = label.HeightRequest };
+                label.SetValue(OriginalProperty, original);
+            }
+            if (original.Fonte <= 0)
+                original.Fonte = label.FontSize;
+
+            var fonte = GetEscalaFonte(label) ? Math.Round(original.Fonte * fator, 1) : original.Fonte;
+            if (Math.Abs(label.FontSize - fonte) > 0.01)
+                label.FontSize = fonte;
         }
 
         private static void OnBaseChanged(BindableObject bindable, object oldValue, object newValue)
@@ -83,6 +115,9 @@ namespace Pegada.Core.Behaviors
 
             foreach (var filho in layout.Children)
             {
+                if (filho is Label label && (GetEscalaFonte(label) || label.GetValue(OriginalProperty) is TamanhoOriginal o && o.Fonte > 0))
+                    AplicarFonte(label, fator);
+
                 var modo = GetModo(filho);
                 if (modo == ModoEscala.Nenhum)
                     continue;

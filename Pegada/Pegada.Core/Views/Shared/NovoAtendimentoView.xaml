@@ -82,14 +82,14 @@
                                    LineBreakMode="TailTruncation"
                                    FontFamily="{StaticResource RobotoNormalFont}"
                                    Text="{Binding NomeFantasia}"
-                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='#666666,Red'}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="12"/>
 
                             <Label Grid.Row="1" Grid.Column="2"
                                    LineBreakMode="NoWrap"
                                    FontFamily="{StaticResource RobotoNormalFont}"
                                    Text="{Binding Localidade}"
-                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='#666666,Red'}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="12"
                                    HorizontalTextAlignment="End"
                                    HorizontalOptions="Fill"/>
@@ -100,7 +100,7 @@
                                    LineBreakMode="TailTruncation"
                                    FontFamily="{StaticResource RobotoNormalFont}"
                                    Text="{Binding EnderecoPrincipalCompleto}"
-                                   TextColor="Gray"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="11"/>
 
                         </Grid>
@@ -145,7 +145,7 @@
                                    FontFamily="{StaticResource RobotoNormalFont}"
                                    Text="{Binding TituloGrupo}"
                                    TextColor="{Binding PossuiBloqueados, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Red,Black'}"
-                                   FontSize="14"/>
+                                   FontSize="17"/>
 
                             <Label Grid.Column="2"
                                    VerticalOptions="Center"
@@ -153,7 +153,7 @@
                                    FontFamily="{StaticResource RobotoNormalFont}"
                                    Text="{Binding CodGrupoCliente}"
                                    TextColor="{Binding PossuiBloqueados, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Red,Black'}"
-                                   FontSize="14"
+                                   FontSize="17"
                                    HorizontalTextAlignment="End"
                                    HorizontalOptions="Fill"/>
                         </Grid>
@@ -331,7 +331,6 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
                         <Frame CornerRadius="5"
@@ -473,19 +472,6 @@
                             </Frame.GestureRecognizers>
 
                         </Frame>
-
-                         <ffimageloading:CachedImage Grid.Column="5" BackgroundColor="Transparent"
-                                            Source="pesquisa_icone_preco.png" 
-                                            HorizontalOptions="End"
-                                            VerticalOptions="Center"
-                                            WidthRequest="30"
-                                            HeightRequest="30"
-                                            Margin="0,0,0,0"
-                                            Aspect="AspectFit">
-                        <ffimageloading:CachedImage.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding BindingContext.PesquisarClienteCommand, Source={x:Reference this}}"/>
-                        </ffimageloading:CachedImage.GestureRecognizers>
-                    </ffimageloading:CachedImage>
 
                     </Grid>
 

@@ -520,7 +520,9 @@
                         <Label IsVisible="{Binding MostraSigla}" Margin="4,0,0,19" behaviors:EscalaCelula.Modo="Nenhum" HorizontalOptions="Start" VerticalOptions="End" WidthRequest="40" HeightRequest="17" Text="{Binding Sigla}" FontSize="12" FontFamily="{StaticResource RobotoNormalFont}" />
 
                         <!-- precoDe (80,6,76,16) - botão de preço (cifrão) desligado esconde o "De" mesmo em promoção -->
+                        <!-- Fonte dos preços e da descrição cresce com a célula no iPad 11"/13" (EscalaFonte), em Modelos e Combinações -->
                         <Label Margin="0,6,99,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center"
+                               behaviors:EscalaCelula.EscalaFonte="True"
                                IsVisible="{Binding IndPromocional}" Text="{Binding PrecoDeUI, StringFormat='De: {0}'}"
                                FontSize="10" FontFamily="{StaticResource RobotoBoldFont}" TextColor="LightGray" TextDecorations="Strikethrough">
                             <Label.Triggers>
@@ -532,6 +534,7 @@
 
                         <!-- priceLabel (164,0,80,16) - preço Por (promocional) ou preço normal -->
                         <Label Margin="0,0,11,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center" HorizontalTextAlignment="End"
+                               behaviors:EscalaCelula.EscalaFonte="True"
                                IsVisible="{Binding IsMostraPreco}" Text="{Binding PrecoPorUI}" FontSize="11">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label" Binding="{Binding IndPromocional}" Value="1">
@@ -548,6 +551,7 @@
 
                         <!-- precoPVL (164,12,80,16) -->
                         <Label Margin="0,12,11,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center" HorizontalTextAlignment="End"
+                               behaviors:EscalaCelula.EscalaFonte="True"
                                IsVisible="{Binding IsMostraPreco}" Text="{Binding PrecoPVL, Converter={StaticResource ValorPVLParaMoeda}}"
                                FontSize="11" FontFamily="{StaticResource RobotoNormalFont}" />
 
@@ -603,7 +607,7 @@
 
                         <!-- "SOMENTE ESTOQUE" = descLabel (16,148,236,20) do PegadaIOS: entre a foto e a descLabelCompl, presa ao rodapé.
                              Só na grade de Modelos (_isModelo no iOS); nas Combinações o iOS não mostra. -->
-                        <Label Margin="16,0,3,20" behaviors:EscalaCelula.Modo="Nenhum" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                        <Label Margin="16,0,3,20" behaviors:EscalaCelula.EscalaFonte="True" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                                Text="SOMENTE ESTOQUE" IsVisible="{Binding IsSoPE}"
                                TextColor="Black" FontSize="12" FontFamily="{StaticResource RobotoBoldFont}">
                             <Label.Triggers>
@@ -614,7 +618,7 @@
                         </Label>
 
                         <!-- descLabelCompl (16,164,236,20) -->
-                        <Label Margin="16,0,3,0" behaviors:EscalaCelula.Modo="Nenhum" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                        <Label Margin="16,0,3,0" behaviors:EscalaCelula.EscalaFonte="True" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                                IsVisible="{Binding IsCelulaCombinacao, Converter={StaticResource InverterValoresParaBoleano}}"
                                Text="{Binding Descricao}" FontSize="12" TextColor="#555555" FontFamily="{StaticResource RobotoNormalFont}" />
 
@@ -622,7 +626,8 @@
                              produto, negrito 12, preto, até 2 linhas. Aqui a DescricaoCor do TBT_PRODUTO vem vazia e o mesmo texto
                              ("131221-01 ANILINA PINHAO 24L N:37 A 44") está na DescricaoCompleta. Negrito com a fonte do sistema
                              (o iOS não tem Roboto-Bold no bundle). -->
-                        <Label Margin="9,0,8,0" behaviors:EscalaCelula.Modo="Nenhum" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="31" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                        <!-- Fonte e altura crescem com a célula no iPad 11"/13" (2 linhas continuam cabendo) -->
+                        <Label Margin="9,0,8,0" behaviors:EscalaCelula.EscalaFonte="True" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="31" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                                IsVisible="{Binding IsCelulaCombinacao}" MaxLines="2" LineBreakMode="WordWrap"
                                Text="{Binding DescricaoCompleta}" FontSize="12" FontAttributes="Bold" TextColor="Black" />
 
@@ -746,18 +751,21 @@
                             <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                                 <Label 
                                    Text="{Binding RazaoSocial}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="14"
                                    LineBreakMode="TailTruncation"
                                    FontAttributes="Bold"/>
 
                                 <Label 
                                    Text="-"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="14"
                                    LineBreakMode="TailTruncation"
                                    FontAttributes="Bold"/>
 
                                 <Label 
                                    Text="{Binding CNPJ}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="14"
                                    LineBreakMode="TailTruncation"
                                    FontAttributes="Bold"/>
@@ -766,6 +774,7 @@
 
                             <Label Grid.Row="0" Grid.Column="1"
                                    Text="{Binding CodPessoaCliente}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="13"
                                    HorizontalOptions="End"/>
 
@@ -785,6 +794,7 @@
                               <!-- LINHA 2 -->
                               <Label Grid.Row="1" Grid.Column="0"
                                    Text="{Binding NomeFantasia}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="14"
                                    LineBreakMode="TailTruncation"
                                    FontAttributes="Bold"/>
@@ -793,16 +803,19 @@
                             <!-- LINHA 3 -->
                             <Label Grid.Row="2" Grid.Column="0"
                                    Text="{Binding EnderecoPrincipalCompleto}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="12"
                                    LineBreakMode="TailTruncation"/>
 
                             <Label Grid.Row="2" Grid.Column="1"
                                    Text="{Binding Cidade}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="12"
                                    HorizontalOptions="End"/>
 
                             <Label Grid.Row="2" Grid.Column="2"
                                    Text="{Binding UF}"
+                                   TextColor="{Binding ClienteLiberadoParaVenda, Converter={StaticResource BoleanoParaCor}, ConverterParameter='Black,Red'}"
                                    FontSize="12"
                                    HorizontalOptions="End"/>
                         </Grid>

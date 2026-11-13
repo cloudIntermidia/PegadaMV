@@ -76,7 +76,7 @@
                                    TextColor="Red"
                                    HorizontalTextAlignment="Center"/>
 
-                            <Label Text="{Binding BindingContext.PedidoSelecionado.CodCarrinho, Source={x:Reference this}}"
+                            <Label Text="{Binding BindingContext.CodigosCarrinhos, Source={x:Reference this}}"
                                    TextColor="Red"
                                    FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"/>
@@ -99,7 +99,7 @@
                                 <StackLayout Grid.Column="1">
                                     <Label Text="{translator:Translate FechamentoLblDiasBonificacao}"/>
                                     <Entry Keyboard="Numeric"
-                                           Text="{Binding BindingContext.PedidoSelecionado.DiasBonificacao, Source={x:Reference this}}"/>
+                                           Text="{Binding BindingContext.DiasBonificacao, Source={x:Reference this}}"/>
                                 </StackLayout>
 
                                 <custom:BotaoComVisualDropView
@@ -126,7 +126,7 @@
 
                                 <StackLayout Grid.Column="1">
                                     <Label Text="{translator:Translate FechamentoLblPedidoCliente}"/>
-                                    <Entry Text="{Binding BindingContext.PedidoSelecionado.OrdemCompra, Source={x:Reference this}}" MaxLength="29"/>
+                                    <Entry Text="{Binding BindingContext.OrdemCompra, Source={x:Reference this}}" MaxLength="29"/>
                                 </StackLayout>
 
                             </Grid>
@@ -210,7 +210,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <CheckBox Scale="1.3" IsChecked="{Binding BindingContext.PedidoSelecionado.IndPrecoLiquido,Source={x:Reference this}}" />
+                                    <CheckBox Scale="1.3" IsChecked="{Binding BindingContext.IsPrecoLiquido,Source={x:Reference this}}" />
                                     <Label
                                         
                                         Grid.Column="1"

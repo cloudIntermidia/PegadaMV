@@ -27,7 +27,19 @@ namespace Pegada.Core.ViewModels
         public ObservableCollection<ContatoCommandResult> Contatos { get => _contatos; set => SetProperty(ref _contatos, value); }
 
         private ContatoCommandResult _contatoSelecionado;
-        public ContatoCommandResult ContatoSelecionado { get => _contatoSelecionado; set => SetProperty(ref _contatoSelecionado, value); }
+        public ContatoCommandResult ContatoSelecionado
+        {
+            get => _contatoSelecionado;
+            set
+            {
+                // Destaca só a linha selecionada (fundo cinza, como as demais seleções do app).
+                if (_contatoSelecionado != null && _contatoSelecionado != value)
+                    _contatoSelecionado.Selecionado = false;
+                SetProperty(ref _contatoSelecionado, value);
+                if (value != null)
+                    value.Selecionado = true;
+            }
+        }
 
         private string _emailCliente;
         public string EmailCliente { get => _emailCliente; set => SetProperty(ref _emailCliente, value); }
