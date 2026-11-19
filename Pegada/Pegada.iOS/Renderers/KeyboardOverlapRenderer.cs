@@ -27,7 +27,8 @@ namespace Pegada.iOS.Renderers
             base.ViewWillAppear(animated);
 
             var page = Element as ContentPage;
-            if (page == null || page.Content is ScrollView)
+            // LoginPage sobe o próprio quadro de login ao focar os campos (LoginPage.xaml.cs).
+            if (page == null || page.Content is ScrollView || page is MobiliVendas.Core.Views.Tablet.Acesso.LoginPage)
                 return;
 
             RegisterForKeyboardNotifications();

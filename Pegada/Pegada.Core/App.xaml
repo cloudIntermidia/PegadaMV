@@ -39,7 +39,7 @@
             
             
             <Color x:Key="corBackGroundButtonLogin">#835324</Color>
-            <Color x:Key="corBackGroundLogin">#E31837</Color>
+            <Color x:Key="corBackGroundLogin">#164194</Color> <!-- mesmo azul do LoginPadrao.png / FundoCatalogo2.png -->
             <Color x:Key="corPrimaria">#FFFFFF</Color>
             <Color x:Key="corNavegacaoBottom">#FFFFFF</Color>
             <Color x:Key="corPrimariaClara">#CC0000</Color>
@@ -480,8 +480,9 @@
                           behaviors:EscalaCelula.LarguraBase="255"
                           behaviors:EscalaCelula.AlturaBase="184">
 
-                        <!-- imageView (28,23,188,121) - declarada primeiro pra ficar por baixo dos ícones -->
-                        <ffimageloading:CachedImage Margin="28,23,39,40" behaviors:EscalaCelula.Modo="MantemBaixo" InputTransparent="True" HorizontalOptions="Fill" VerticalOptions="Fill" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding ImagemStream}"
+                        <!-- imageView (28,23,188,121) - declarada primeiro pra ficar por baixo dos ícones.
+                             Reduzida a pedido (começa em 38, depois da estrela de favorito em 8..33, que a foto cobria). -->
+                        <ffimageloading:CachedImage Margin="38,25,44,42" behaviors:EscalaCelula.Modo="MantemBaixo" InputTransparent="True" HorizontalOptions="Fill" VerticalOptions="Fill" DownsampleHeight="170" DownsampleUseDipUnits="True" Source="{Binding ImagemStream}"
                             CacheKeyFactory="{StaticResource FotoCatalogoCacheKey}" LoadingPlaceholder="NaoDisp.png" ErrorPlaceholder="NaoDisp.png" Aspect="AspectFit" />
 
                         <!-- iconPromo (8,2,26,26) -->

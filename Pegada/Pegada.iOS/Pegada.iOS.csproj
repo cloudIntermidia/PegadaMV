@@ -136,6 +136,7 @@
     <BundleResource Include="Resources\factory.png" />
     <BundleResource Include="Resources\factory2.png" />
     <BundleResource Include="Resources\FundoCatalogo2.png" />
+    <BundleResource Include="Resources\LogoLoginPegada.png" />
     <BundleResource Include="Resources\iconComu2.png" />
     <BundleResource Include="Resources\btn_sync.png" />
     <BundleResource Include="Resources\btn_logoff.png" />

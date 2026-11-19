@@ -89,6 +89,9 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.CatalogoCombinacoesLinhas = 3;
             // Mesmo azul do fundo do FundoCatalogo2.png (RGB 22,65,148): sem sobra branca em volta da imagem.
             MobiliVendas.Core.Session.CorFundoCatalogo = "#164194";
+            // Login: fundo só na cor corBackGroundLogin (azul) e a logo PEGADA (LogoLoginPegada.png) desenhada
+            // acima do quadro de login, em vez do LoginPadrao.png com a logo embaixo.
+            MobiliVendas.Core.Session.UsaApenasCorFundoLogin = true;
             MobiliVendas.Core.ConfiguracaoVisual.IsCaixaUnica = true;
             MobiliVendas.Core.Session.DATATEMPLATES_CONFIG = new List<MobiliVendas.Core.Models.DataTemplateConfiguracao>()
             {
