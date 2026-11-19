@@ -95,4 +95,5 @@ WHERE ('@CodCarrinho' = '-1' OR C.CodCarrinho = '@CodCarrinho' )
 AND  ('@CodUsuario' = 0 OR C.CodUsuario = '@CodUsuario' OR C.CodPessoaRepresentante = '@CodPessoa')
 AND ('@CodAtendimento' = '-1' OR C.CodAtendimento = '@CodAtendimento' ) 
 AND ('@CodSituacaoPedido' = '-1' OR C.CodSituacaoPedido IN (FUNCTION_SPLIT('@CodSituacaoPedido'))) 
+AND NOT ('@CodSituacaoPedido' <> '-1' AND C.CodSituacaoPedido = '99' AND EXISTS (SELECT 1 FROM TBT_PEDIDO PED WHERE PED.CodPedido = C.CodCarrinho))
 AND ('@CodMarca' = '-1' OR C.CodMarca = '@CodMarca'  );

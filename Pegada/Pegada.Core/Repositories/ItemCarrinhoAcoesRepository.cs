@@ -123,5 +123,51 @@ namespace Pegada.Core.Repositories
                 "UPDATE TBT_ITEM_CARRINHO SET NomeLoja = ? WHERE CodCarrinho = ? AND CodItemCarrinho = ?",
                 nomeLoja, codCarrinho, (int)codItemCarrinho);
         }
+
+        // ItemCarrinho valorTotalLiquidoMinimoForCarrinho (PegadaIOS), query literal: a soma é multiplicada pelas
+        // quantidades de uma linha qualquer do carrinho (coluna fora do agregado, como no iOS).
+        public async Task<decimal?> BuscarValorTotalLiquidoMinimo(string codCarrinho)
+        {
+            var result = await _sqlAsyncConnection.QueryAsync<ValorCarrinhoResult>(
+                "SELECT SUM(ic.ValorUnitarioLiquidoOriginal) * (QtdCaixa * QtdTotal) AS Valor " +
+                "FROM TBT_ITEM_CARRINHO ic WHERE CodCarrinho = ?", codCarrinho ?? "0");
+            return result.FirstOrDefault()?.Valor;
+        }
+
+        // ItemCarrinho valorTotalLiquidoForCarrinho (PegadaIOS), query literal.
+        public async Task<decimal?> BuscarValorTotalLiquido(string codCarrinho)
+        {
+            var result = await _sqlAsyncConnection.QueryAsync<ValorCarrinhoResult>(
+                "SELECT SUM(ic.ValorUnitarioLiquido) * (QtdCaixa * QtdTotal) AS Valor " +
+                "FROM TBT_ITEM_CARRINHO ic WHERE CodCarrinho = ?", codCarrinho ?? "0");
+            return result.FirstOrDefault()?.Valor;
+        }
+
+        // ItemCarrinho itensForCarrinho (PegadaIOS): só as colunas usadas na validação de desconto da transmissão.
+        public async Task<List<PrecoItemCarrinhoResult>> BuscarPrecosItensCarrinho(string codCarrinho)
+        {
+            return await _sqlAsyncConnection.QueryAsync<PrecoItemCarrinhoResult>(
+                "SELECT ic.ValorUnitarioLiquido, ic.ValorUnitarioLiquidoOriginal " +
+                "FROM TBT_ITEM_CARRINHO ic " +
+                "INNER JOIN TBT_PRODUTO p ON p.CodProduto = ic.CodProduto " +
+                "INNER JOIN TBT_MARCA M ON M.CodMarca = P.CodMarca " +
+                "WHERE ic.CodCarrinho = ? " +
+                "AND CAST(ic.CodItemCarrinho AS TEXT) NOT LIKE '%.%'", codCarrinho ?? "0");
+        }
+
+        // Cliente clienteWithCodCliente (percentualAjustePrecoItem) / Parametro descontoPrecoLiquidoItem (PegadaIOS):
+        // CLIENTE.PercentualAjustePrecoitem, nulo quando não informado.
+        public async Task<string> BuscarPercentualAjustePrecoItem(string codPessoaCliente)
+        {
+            var result = await _sqlAsyncConnection.QueryAsync<PrecoItemCarrinhoResult>(
+                "SELECT CAST(PercentualAjustePrecoItem AS TEXT) AS PercentualAjustePrecoItem FROM TBT_CLIENTE WHERE CodPessoaCliente = ?",
+                codPessoaCliente);
+            return result.FirstOrDefault()?.PercentualAjustePrecoItem;
+        }
+    }
+
+    public class ValorCarrinhoResult
+    {
+        public decimal? Valor { get; set; }
     }
 }

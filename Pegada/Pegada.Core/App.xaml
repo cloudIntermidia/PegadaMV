@@ -524,26 +524,21 @@
                         <!-- Fonte dos preços e da descrição cresce com a célula no iPad 11"/13" (EscalaFonte), em Modelos e Combinações -->
                         <Label Margin="0,6,99,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center"
                                behaviors:EscalaCelula.EscalaFonte="True"
-                               IsVisible="{Binding IndPromocional}" Text="{Binding PrecoDeUI, StringFormat='De: {0}'}"
-                               FontSize="10" FontFamily="{StaticResource RobotoBoldFont}" TextColor="LightGray" TextDecorations="Strikethrough">
-                            <Label.Triggers>
-                                <DataTrigger TargetType="Label" Binding="{Binding IsMostraPreco}" Value="False">
-                                    <Setter Property="IsVisible" Value="False"/>
-                                </DataTrigger>
-                            </Label.Triggers>
-                        </Label>
+                               WidthRequest="140" HorizontalTextAlignment="End" InputTransparent="True"
+                               IsVisible="{Binding ExibePrecoDe}" Text="{Binding PrecoDeUI, StringFormat='De: {0}'}" LineBreakMode="NoWrap"
+                               FontSize="10" FontFamily="{StaticResource RobotoBoldFont}" TextColor="LightGray" TextDecorations="Strikethrough" />
 
                         <!-- priceLabel (164,0,80,16) - preço Por (promocional) ou preço normal -->
                         <Label Margin="0,0,11,0" HorizontalOptions="End" VerticalOptions="Start" HeightRequest="16" VerticalTextAlignment="Center" HorizontalTextAlignment="End"
                                behaviors:EscalaCelula.EscalaFonte="True"
                                IsVisible="{Binding IsMostraPreco}" Text="{Binding PrecoPorUI}" FontSize="11">
                             <Label.Triggers>
-                                <DataTrigger TargetType="Label" Binding="{Binding IndPromocional}" Value="1">
+                                <DataTrigger TargetType="Label" Binding="{Binding EhPromocional}" Value="True">
                                     <Setter Property="Text" Value="{Binding PrecoPorUI, StringFormat='Por: {0}'}"/>
                                     <Setter Property="TextColor" Value="#006633"/>
                                     <Setter Property="FontFamily" Value="{StaticResource RobotoBoldFont}"/>
                                 </DataTrigger>
-                                <DataTrigger TargetType="Label" Binding="{Binding IndPromocional}" Value="0">
+                                <DataTrigger TargetType="Label" Binding="{Binding EhPromocional}" Value="False">
                                     <Setter Property="TextColor" Value="Black"/>
                                     <Setter Property="FontFamily" Value="{StaticResource RobotoNormalFont}"/>
                                 </DataTrigger>

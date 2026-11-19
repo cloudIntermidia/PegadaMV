@@ -939,7 +939,7 @@ namespace Pegada.Core.ViewModels
 
                 if (Session.ATENDIMENTO_ATUAL != null)
                 {
-                    var listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1", null, null, null, Session.USUARIO_LOGADO.CodPessoa));
+                    var listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1,99", null, null, null, Session.USUARIO_LOGADO.CodPessoa));
                     if (listCarrinhos?.Count > 0)
                     {
                         foreach (var atualizaCarrinhos in listCarrinhos)
@@ -947,7 +947,7 @@ namespace Pegada.Core.ViewModels
                             var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(atualizaCarrinhos.CodCarrinho);
                         }
 
-                        listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1", null, null, null, Session.USUARIO_LOGADO.CodPessoa));
+                        listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1,99", null, null, null, Session.USUARIO_LOGADO.CodPessoa));
 
                         foreach (var item in listCarrinhos)
                         {
@@ -1294,9 +1294,24 @@ namespace Pegada.Core.ViewModels
                     return;
                 }
 
+                // transmitirCarrinhosChecados (CarrinhoViewController, PegadaIOS): antes de transmitir qualquer carrinho,
+                // valida todos os marcados; a primeira falha interrompe a transmissão de todos.
+                foreach (var pedido in Pedidos.Where(x => x.CarrinhoChecado))
+                {
+                    string erroValidacao = await ValidarTransmissaoIOS(pedido);
+                    if (erroValidacao != null)
+                    {
+                        TransmissaoLogger.Log($"Transmitir: pedido {pedido.CodCarrinho} bloqueado na validação: {erroValidacao}");
+                        await UserDialogs.Instance.AlertAsync(erroValidacao, T("CarrinhoTituloTransmissao"), "OK");
+                        return;
+                    }
+                }
+
                 List<string> lstPedidosComErros = new List<string>();
                 List<string> lstPedidosComErrosTransmissao = new List<string>();
                 List<string> lstPedidosSemErros = new List<string>();
+                // Carrinhos processados com crítica (situação 99), com as críticas de cada um.
+                List<string> lstPedidosCriticados = new List<string>();
                 List<string> itensPoliticaEscolar = new List<string>();
                 List<string> itensSemPoliticaEscolar = new List<string>();
                 List<WcfModelResult> lstPedidosModel = new List<WcfModelResult>();
@@ -1393,30 +1408,57 @@ namespace Pegada.Core.ViewModels
 
 
 
-                    // transmitirCarrinhosChecados (CarrinhoViewController, PegadaIOS): carrinho com item de Estoque Futuro
-                    // não pode ter entrega antes da maior data de disponibilidade dos itens.
-                    var dataMinimaEstoqueFuturo = await _carrinhoRepository.BuscarDataMinimaEstoqueFuturo(pedido.CodCarrinho);
-                    if (dataMinimaEstoqueFuturo.HasValue && (pedido.DataEntrega == null || dataMinimaEstoqueFuturo.Value > pedido.DataEntrega.Value.Date))
+                    TransmissaoLogger.Log($"Transmitir: iniciando transmissão do pedido {pedido.CodCarrinho}.");
+                    UserDialogs.Instance.ShowLoading($"{T("CarrinhoPageVMMessageTransmitindoPedido")} {pedido.CodCarrinho}");
+                    var resultEnvio = await ServiceUtility.TransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
+                    TransmissaoLogger.Log($"Transmitir: TransmitirPedido {pedido.CodCarrinho} retornou SUCCESS={resultEnvio?.SUCCESS} CODMENSAGEM={resultEnvio?.CODMENSAGEM} SITUACAO={resultEnvio?.SITUACAO} CODIGO={resultEnvio?.CODIGO} EXCEPTION={resultEnvio?.EXCEPTION}");
+
+                    // iOS (WebservicePedidoHelper transmitirPedido): o resultado que vale é o da confirmação (CheckPedido).
+                    var resultTransmissao = await ServiceUtility.ValidaTransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
+                    TransmissaoLogger.Log($"Transmitir: ValidaTransmitirPedido {pedido.CodCarrinho} retornou SUCCESS={resultTransmissao?.SUCCESS} CODMENSAGEM={resultTransmissao?.CODMENSAGEM} SITUACAO={resultTransmissao?.SITUACAO} CODIGO={resultTransmissao?.CODIGO} EXCEPTION={resultTransmissao?.EXCEPTION}");
+
+                    UserDialogs.Instance.HideLoading();
+
+                    string sucessoRetorno = resultTransmissao?.SUCCESS?.ToString().ToUpper();
+                    string codMensagemRetorno = resultTransmissao?.CODMENSAGEM?.ToString();
+                    string situacaoRetorno = resultTransmissao?.SITUACAO?.ToString();
+                    string codigoRetorno = resultTransmissao?.CODIGO?.ToString();
+                    string excecaoRetorno = resultTransmissao?.EXCEPTION?.ToString();
+
+                    // transmitirCarrinhosChecados (PegadaIOS): sucesso com situação 99 = pedido processado com crítica;
+                    // as críticas vêm no EXCEPTION separadas por "|" e o carrinho volta para a lista como criticado.
+                    if (sucessoRetorno == "TRUE" && situacaoRetorno == "99")
                     {
-                        TransmissaoLogger.Log($"Transmitir: pedido {pedido.CodCarrinho} com entrega antes da data mínima do Estoque Futuro {dataMinimaEstoqueFuturo.Value:dd/MM/yyyy}.");
-                        lstPedidosComErros.Add($"Data de entrega {pedido.DataEntrega?.ToString("dd/MM/yyyy")} do carrinho {pedido.CodCarrinho}, é menor que a data mínima {dataMinimaEstoqueFuturo.Value:dd/MM/yyyy} disponivel para o carrinho!");
+                        var criticas = (excecaoRetorno ?? string.Empty).Split('|').ToList();
+                        await RegistrarCriticaTransmissao(pedido.CodCarrinho, codigoRetorno, criticas, lstPedidosCriticados);
                         continue;
                     }
 
-                    TransmissaoLogger.Log($"Transmitir: iniciando transmissão do pedido {pedido.CodCarrinho}.");
-                    UserDialogs.Instance.ShowLoading($"{T("CarrinhoPageVMMessageTransmitindoPedido")} {pedido.CodCarrinho}");
-                    var resultTransmissao = await ServiceUtility.TransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
-                    TransmissaoLogger.Log($"Transmitir: TransmitirPedido {pedido.CodCarrinho} retornou SUCCESS={resultTransmissao?.SUCCESS} CODIGO={resultTransmissao?.CODIGO} EXCEPTION={resultTransmissao?.EXCEPTION}");
-
-                    resultTransmissao = await ServiceUtility.ValidaTransmitirPedido(_carrinhoRepository, _parametroSincronizacaRepository, pedido.CodCarrinho);
-                    TransmissaoLogger.Log($"Transmitir: ValidaTransmitirPedido {pedido.CodCarrinho} retornou SUCCESS={resultTransmissao?.SUCCESS} CODIGO={resultTransmissao?.CODIGO} EXCEPTION={resultTransmissao?.EXCEPTION}");
-
-                    UserDialogs.Instance.HideLoading();
-                    if (resultTransmissao.SUCCESS.ToString().ToUpper() == "FALSE")
+                    if (sucessoRetorno != "TRUE")
                     {
-                        TransmissaoLogger.Log($"Transmitir: pedido {pedido.CodCarrinho} com erro na transmissão: {resultTransmissao.EXCEPTION}");
+                        // iOS: ITM003 = pedido incompleto; ITM004 = crítica no EXCEPTION. Ambos gravam o carrinho como criticado (99).
+                        if (codMensagemRetorno == "ITM003")
+                        {
+                            await RegistrarCriticaTransmissao(pedido.CodCarrinho, codigoRetorno, new List<string> { T("TransmissaoMsgPedidoIncompleto") }, lstPedidosCriticados);
+                            continue;
+                        }
+
+                        if (codMensagemRetorno == "ITM004")
+                        {
+                            await RegistrarCriticaTransmissao(pedido.CodCarrinho, codigoRetorno, new List<string> { excecaoRetorno }, lstPedidosCriticados);
+                            continue;
+                        }
+
+                        // Demais falhas: o iOS só lista o carrinho. Aqui mostra também o motivo que o servidor mandou,
+                        // da confirmação ou, se ela veio vazia, do envio (PutPedido), além do código da mensagem.
+                        string motivo = !string.IsNullOrWhiteSpace(excecaoRetorno) ? excecaoRetorno : resultEnvio?.EXCEPTION?.ToString();
+                        if (string.IsNullOrWhiteSpace(motivo) && !string.IsNullOrWhiteSpace(codMensagemRetorno))
+                            motivo = codMensagemRetorno;
+
+                        TransmissaoLogger.Log($"Transmitir: pedido {pedido.CodCarrinho} com erro na transmissão: {motivo}");
                         lstPedidosComErrosTransmissao.Add(pedido.CodCarrinho);
-                        lstPedidosComErrosTransmissao.Add(resultTransmissao.EXCEPTION.ToString());
+                        if (!string.IsNullOrWhiteSpace(motivo))
+                            lstPedidosComErrosTransmissao.Add(motivo);
                     }
                     else
                     {
@@ -1454,7 +1496,17 @@ namespace Pegada.Core.ViewModels
                         string message = string.Join("\n", lstPedidosComErrosTransmissao);
                         await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessagePedidoComErroTransmissao") + "\n" + message, T("CarrinhoTituloTransmissao"), "OK");
                     });
-                    
+
+                }
+
+                if (lstPedidosCriticados.Count > 0)
+                {
+                    string message = string.Join("\n", lstPedidosCriticados);
+                    await UserDialogs.Instance.AlertAsync(T("TransmissaoMsgCarrinhoCriticado") + "\n" + message, T("CarrinhoTituloTransmissao"), "OK");
+
+                    // Sem pedido transmitido o Load abaixo não roda; recarrega para o carrinho aparecer como criticado.
+                    if (lstPedidosSemErros.Count == 0)
+                        await Load();
                 }
 
                 if (lstPedidosSemErros.Count() > 0)
@@ -2002,7 +2054,7 @@ namespace Pegada.Core.ViewModels
 
         private async void ModificarCarrinhoAlterado(ICarrinhoFechamentoViewModel sender, CarrinhoFechamentoCommandResult parameter)
         {
-            var listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1", null, parameter.CodCarrinho));
+            var listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1,99", null, parameter.CodCarrinho));
             if (listCarrinhos?.Count > 0)
             {
                 var pedido = listCarrinhos.Where(x => x.CodCarrinho == parameter.CodCarrinho).FirstOrDefault();
@@ -2332,5 +2384,149 @@ namespace Pegada.Core.ViewModels
         #endregion
 
         private static string T(string chave) => new MobiliVendas.Core.Helpers.TranslateExtension().GetMessage(chave);
+
+        // transmitirCarrinhosChecados (CarrinhoViewController.m, PegadaIOS): se o total líquido mínimo (soma dos
+        // ValorUnitarioLiquidoOriginal) passa do total líquido, cada item é comparado com o mínimo permitido pelo
+        // PercentualAjustePrecoItem do cliente. Retorna a mensagem do iOS ou null quando o carrinho pode seguir.
+        private static async Task<string> ValidarDescontoMaximoTransmissao(CarrinhoCommandResult carrinho)
+        {
+            // Carrinhos sendo cancelados (situação 7/77) não passam pela validação.
+            if (carrinho.CodSituacaoPedido == "7" || carrinho.CodSituacaoPedido == "77")
+                return null;
+
+            var repositorio = ServiceLocator.Current.GetInstance<Pegada.Core.Repositories.ItemCarrinhoAcoesRepository>();
+
+            decimal? totalMinimo = await repositorio.BuscarValorTotalLiquidoMinimo(carrinho.CodCarrinho);
+            decimal? total = await repositorio.BuscarValorTotalLiquido(carrinho.CodCarrinho);
+            if (!totalMinimo.HasValue || !total.HasValue || totalMinimo.Value <= total.Value)
+                return null;
+
+            string percentualCliente = await repositorio.BuscarPercentualAjustePrecoItem(carrinho.CodPessoaCliente);
+            if (percentualCliente == null)
+                return T("CarrinhoMsgDescontoMaximoExcedidoPedido");
+
+            decimal percentual = LerDecimalIOS(percentualCliente);
+            foreach (var item in await repositorio.BuscarPrecosItensCarrinho(carrinho.CodCarrinho))
+            {
+                decimal original = item.ValorUnitarioLiquidoOriginal ?? 0;
+                decimal minimo = original - (percentual * original / 100);
+                decimal liquido = item.ValorUnitarioLiquido ?? 0;
+
+                if (minimo > liquido)
+                {
+                    // "%.2f" do iOS convertido de volta em NSDecimalNumber: duas casas, sem zeros à direita, ponto decimal.
+                    decimal percentualAlterado = Math.Round((minimo - liquido) / minimo * 100, 2, MidpointRounding.AwayFromZero);
+                    var invariante = System.Globalization.CultureInfo.InvariantCulture;
+                    return $"{T("EdicaoPrecoItemMsgDescontoMaximo")} ({LerDecimalIOS(percentualCliente).ToString("0.##########", invariante)}%)\n" +
+                           $" {T("EdicaoPrecoItemMsgPercentualAlterado")} ({percentualAlterado.ToString("0.##", invariante)}%)";
+                }
+            }
+
+            return null;
+        }
+
+        // transmitirCarrinhosChecados (CarrinhoViewController.m, PegadaIOS): validações feitas antes de transmitir, na ordem
+        // do iOS. Retorna a mensagem da primeira falha ou null quando o carrinho pode seguir.
+        private async Task<string> ValidarTransmissaoIOS(CarrinhoCommandResult c)
+        {
+            // Carrinhos sendo cancelados (situação 7/77) não passam pela validação.
+            if (c.CodSituacaoPedido == "7" || c.CodSituacaoPedido == "77")
+                return null;
+
+            var itensSemGrade = await _dataBaseRepository.GetString("TBT_ITEM_CARRINHO", "COUNT(*)", $"CodCarrinho = '{c.CodCarrinho}' AND ItemSemGrade = 1");
+            if (int.TryParse(itensSemGrade, out int qtdSemGrade) && qtdSemGrade > 0)
+                return $"{T("TransmissaoMsgItensSemGrade")}{T("TransmissaoMsgPreenchaGradeFechamento")}";
+
+            // Descontos 2 a 5 do item precisam ter o registro na TBT_ITEM_CARRINHO_DESC (DescontoCliente validaDesconto).
+            var errosDesconto = await _carrinhoRepository.ValidacoesDoCarrinho(c.CodCarrinho);
+            if (errosDesconto?.Count > 0)
+                return errosDesconto[0];
+
+            string erroDescontoMaximo = await ValidarDescontoMaximoTransmissao(c);
+            if (erroDescontoMaximo != null)
+                return erroDescontoMaximo;
+
+            if (c.DataEntrega == null)
+                return $"{T("TransmissaoMsgDataEntrega")} '{c.CodCarrinho}'!";
+
+            // Carrinho com item de Estoque Futuro não pode ter entrega antes da maior data de disponibilidade dos itens.
+            var dataMinimaEstoqueFuturo = await _carrinhoRepository.BuscarDataMinimaEstoqueFuturo(c.CodCarrinho);
+            if (dataMinimaEstoqueFuturo.HasValue && dataMinimaEstoqueFuturo.Value > c.DataEntrega.Value.Date)
+                return $"Data de entrega {c.DataEntrega.Value:dd/MM/yyyy} do carrinho {c.CodCarrinho}, é menor que a data mínima {dataMinimaEstoqueFuturo.Value:dd/MM/yyyy} disponivel para o carrinho!";
+
+            if (string.IsNullOrEmpty(c.CodCondicaoPagamento))
+                return $"{T("TransmissaoMsgCondPgto")} '{c.CodCarrinho}'!";
+
+            if (string.IsNullOrEmpty(c.CifFob))
+                return $"{T("TransmissaoMsgTipoFrete")} '{c.CodCarrinho}'!";
+
+            var invariante = System.Globalization.CultureInfo.InvariantCulture;
+
+            // Solicitação #17523 (iOS): tipo 23 não valida o mínimo por duplicata.
+            if (c.CodTipoPedido != "23")
+            {
+                decimal valorMinimoParcela = await _parametroRepository.BuscarParametroPorTipoPedido(c.CodTipoPedido, "2");
+                // iOS divide em float: sem parcelas o resultado é infinito e a validação passa.
+                if (c.qtdParcela > 0 && c.ValorTotalLiquido / c.qtdParcela < valorMinimoParcela)
+                    return $"{T("TransmissaoMsgNaoPossivelTransmissao")} {c.CodCarrinho} {T("TransmissaoMsgMinimoDuplicata")} ({valorMinimoParcela.ToString("0.00", invariante)})!";
+            }
+
+            decimal valorMinimoPedido = await _parametroRepository.BuscarParametroPorTipoPedido(c.CodTipoPedido, "20");
+            if (c.ValorTotalLiquido < valorMinimoPedido)
+                return $"{T("TransmissaoMsgMinimoPedido")} {c.ValorTotalLiquido.ToString("0.##########", invariante)}{T("TransmissaoMsgMinimoPedido2")} {valorMinimoPedido.ToString("0.##########", invariante)}{T("TransmissaoMsgMinimoPedido3")}";
+
+            decimal quantidadeMinima = await _parametroRepository.BuscarParametroPorTipoPedido(c.CodTipoPedido, "4");
+            if (c.QtdTotal < quantidadeMinima)
+                return $"{T("TransmissaoMsgQtdMinima")} {quantidadeMinima.ToString("0.##########", invariante)}. ";
+
+            if (c.DataEntrega.Value.Date < DateTime.Today)
+                return $"{T("TransmissaoMsgDataValida")} '{c.CodCarrinho}' {T("TransmissaoMsgDataValida2")}";
+
+            // Tipo de pedido que valida prazo: todo produto precisa ter semana de venda disponível.
+            if (c.IndValidaPrazo > 0)
+            {
+                // Semanas dataMinimaForLinha; sem data pela linha, hoje + dias do parâmetro 1 do tipo de pedido.
+                // GetDataMinimaPorPedido lança exceção quando o tipo de pedido não tem o parâmetro 1.
+                DateTime? dataMinima = null;
+                try { dataMinima = await _carrinhoRepository.GetDataMinimaPorPedido(c.CodCarrinho, c.CodTipoPedido); }
+                catch (Exception ex) { TransmissaoLogger.Log($"Transmitir: data mínima do carrinho {c.CodCarrinho} não encontrada: {ex.Message}"); }
+                if (!dataMinima.HasValue)
+                    dataMinima = DateTime.Today.AddDays((double)await _parametroRepository.BuscarParametroPorTipoPedido(c.CodTipoPedido, "1"));
+
+                var semanaFabricas = (await _carrinhoRepository.BuscarFabricasPorCarrinho(c.CodCarrinho))
+                    .Select(f => new SemanaResult { CodLinha = f.CodLinha, CodFabrica = f.CodFabrica, Descricao = f.Descricao })
+                    .ToList();
+
+                var itens = await _carrinhoRepository.BuscarItensCarrinho(new BuscarItensCarrinhoCommand() { CodCarrinho = c.CodCarrinho });
+                foreach (var ic in itens)
+                {
+                    var commandFabrica = new FabricaCommand(semanaFabricas, dataMinima, DateTime.Now, c.IndValidaPrazo, ic.CodProduto, c.CodTabelaPreco, null);
+                    var semanas = await _semanaRepository.BuscarSemanasPorFabrica(commandFabrica);
+                    if (semanas == null || semanas.Count == 0)
+                        return $"Produto {ic.CodProduto} está fora do período de venda";
+                }
+            }
+
+            return null;
+        }
+
+        // Carrinho criticado no retorno da transmissão: grava situação 99 + críticas (iOS updateSituacao) e guarda para o aviso.
+        private async Task RegistrarCriticaTransmissao(string codCarrinho, string codPedido, List<string> criticas, List<string> lstPedidosCriticados)
+        {
+            TransmissaoLogger.Log($"Transmitir: pedido {codCarrinho} processado com crítica: {string.Join(" | ", criticas)}");
+
+            var repositorio = ServiceLocator.Current.GetInstance<Pegada.Core.Repositories.CriticaCarrinhoRepository>();
+            await repositorio.GravarCriticas(codCarrinho, "99", codPedido, criticas);
+
+            lstPedidosCriticados.Add(codCarrinho);
+            lstPedidosCriticados.AddRange(criticas.Where(x => !string.IsNullOrWhiteSpace(x)));
+        }
+
+        // NSDecimalNumber decimalNumberWithString: lê com ponto decimal; texto inválido vira 0.
+        private static decimal LerDecimalIOS(string texto)
+        {
+            return decimal.TryParse((texto ?? string.Empty).Trim(), System.Globalization.NumberStyles.Number,
+                System.Globalization.CultureInfo.InvariantCulture, out decimal valor) ? valor : 0;
+        }
     }
 }
