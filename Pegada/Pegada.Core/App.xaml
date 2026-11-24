@@ -511,6 +511,17 @@
 
                         <!-- btnFavorito (8,120,25,25) - preso ao rodapé (184-120-25 = 39): em célula mais alta não fica mais acima da descrição -->
                         <ffimageloading:CachedImage Margin="8,0,0,39" behaviors:EscalaCelula.Modo="MantemBaixo" HorizontalOptions="Start" VerticalOptions="End" WidthRequest="25" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
+                            IsVisible="{Binding IsCelulaCombinacao, Converter={StaticResource InverterValoresParaBoleano}}"
+                            Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='wish_unchecked.png,wish_checked.png'}">
+                            <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" CommandParameter="{Binding .}"/>
+                            </ffimageloading:CachedImage.GestureRecognizers>
+                        </ffimageloading:CachedImage>
+
+                        <!-- Combinações: a descrição (2 linhas, 31 de altura) cresce com a célula, então a estrela sobe junto (margem baixo
+                             escala, sem MantemBaixo) e fica mais afastada dela (44 em vez de 39), a pedido do cliente -->
+                        <ffimageloading:CachedImage Margin="8,0,0,44" HorizontalOptions="Start" VerticalOptions="End" WidthRequest="25" HeightRequest="25" DownsampleToViewSize="False" Aspect="AspectFit"
+                            IsVisible="{Binding IsCelulaCombinacao}"
                             Source="{Binding ItemChecado, Converter={StaticResource BoleanoParaImagem}, ConverterParameter='wish_unchecked.png,wish_checked.png'}">
                             <ffimageloading:CachedImage.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AdicionarItemCommand}" CommandParameter="{Binding .}"/>

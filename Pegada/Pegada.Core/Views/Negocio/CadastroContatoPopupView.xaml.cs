@@ -30,18 +30,5 @@ namespace Pegada.Core.Views.Negocio
                 Content = new CadastroContatoPopupView { BindingContext = viewModel }
             });
         }
-
-        // Novo Cliente / Editar Cadastro: o contato vai para a lista temporária do formulário (gravada junto com o cliente).
-        // Salvar adiciona e limpa a tela para o próximo contato; Voltar fecha.
-        public static async Task AbrirTemporarioAsync(ObservableCollection<ContatoCommandResult> contatosTemporarios)
-        {
-            var viewModel = ServiceLocator.Current.GetInstance<FormCadastroContatoViewModel>();
-            viewModel.SetContextoTemporario(contatosTemporarios, emPopup: true);
-
-            await PopupNavigation.Instance.PushAsync(new PopupPage
-            {
-                Content = new CadastroContatoPopupView { BindingContext = viewModel }
-            });
-        }
     }
 }

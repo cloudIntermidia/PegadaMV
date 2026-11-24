@@ -56,7 +56,7 @@
             </Style>
 
             <Style x:Key="titCelula" TargetType="Label">
-                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="TextColor" Value="Black" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
@@ -223,10 +223,10 @@
             <Label Grid.Column="11" Style="{StaticResource titCabecalho}" Text="{translator:Translate TitulosHeaderPortador}" />
         </Grid>
 
-        <!-- ============ LISTA (owr-uU-cCy / TituloTableViewCell, linhas de 38, system 12 preto) ============ -->
+        <!-- ============ LISTA (owr-uU-cCy / TituloTableViewCell, linhas de 44, system 14 preto — maior que o iOS a pedido) ============ -->
         <ListView Grid.Row="4"
                   escala:EscalaTela.Ignorar="True"
-                  RowHeight="38"
+                  RowHeight="44"
                   SeparatorVisibility="Default"
                   ItemsSource="{Binding Titulos}">
             <ListView.ItemTemplate>

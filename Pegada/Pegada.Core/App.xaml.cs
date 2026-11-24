@@ -72,8 +72,8 @@ namespace Pegada.Core
             MobiliVendas.Core.Session.DetalheTipoPedidoUsaRegrasIOS = true;
             // Aba Títulos com o layout do TituloViewController do PegadaIOS.
             MobiliVendas.Core.Session.CriarTitulosPage = () => new Pegada.Core.Views.Negocio.TitulosPage();
-            // Contato do Novo Cliente / Editar Cadastro em popup (formSheet do CadastroContatoViewController do PegadaIOS).
-            MobiliVendas.Core.Session.AbrirCadastroContatoTemporario = Pegada.Core.Views.Negocio.CadastroContatoPopupView.AbrirTemporarioAsync;
+            // Contato do Novo Cliente / Editar Cadastro em tela cheia (cena MY2-8w-kpa do CadastroContatoViewController do PegadaIOS).
+            MobiliVendas.Core.Session.AbrirCadastroContatoTemporario = Pegada.Core.Views.Negocio.CadastroContatoClientePage.AbrirAsync;
             MobiliVendas.Core.Session.NegocioUsaSelecaoClienteCompleta = true;
             // Aba Notas com o layout do NotaFiscalViewController do PegadaIOS.
             MobiliVendas.Core.Session.CriarNotasPage = () => new Pegada.Core.Views.Negocio.NotasPage();

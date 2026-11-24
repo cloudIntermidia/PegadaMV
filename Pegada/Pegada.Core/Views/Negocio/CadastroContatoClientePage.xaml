@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:translator="clr-namespace:MobiliVendas.Core.Helpers;assembly=MobiliVendas.Core"
+             xmlns:behavior="clr-namespace:MobiliVendas.Core.Utils.Behaviors;assembly=MobiliVendas.Core"
+             xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+             x:Class="Pegada.Core.Views.Negocio.CadastroContatoClientePage"
+             ios:Page.UseSafeArea="True"
+             BackgroundColor="#F7F7F7"
+             x:Name="this">
+
+    <!--
+        Espelha a cena MY2-8w-kpa (CadastroContatoViewController, segue CadastroContatoModal) do PegadaIOS, aberta em tela
+        cheia pelo "Cadastrar Contato" do formulário de cliente (Novo Cliente / Editar Cadastro): cena de 1024 x 550 com
+        frames absolutos; no iPad grande o iOS amplia a cena inteira, aqui o code-behind multiplica os frames (ver Raiz_SizeChanged).
+    -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="contatoRotulo" TargetType="Label">
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="LineBreakMode" Value="NoWrap" />
+            </Style>
+            <Style x:Key="contatoCampo" TargetType="Entry">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="BackgroundColor" Value="White" />
+            </Style>
+            <Style x:Key="cabecalho" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#7F7F7F" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="celula" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- Fundo da página = cor da barra: a faixa da barra de status fica da cor da barra, como no iOS. -->
+    <!-- Bloco preso em Y = 0. Os frames abaixo são os do iOS (cena de 1024); no iPad grande o code-behind multiplica
+         posições, tamanhos e fontes pelo fator (sem Scale/Translation, que deslocavam a tela para baixo). -->
+    <AbsoluteLayout x:Name="Raiz" BackgroundColor="White" SizeChanged="Raiz_SizeChanged">
+        <AbsoluteLayout x:Name="Bloco" AbsoluteLayout.LayoutBounds="0,0,1024,550"
+                        BackgroundColor="White">
+
+            <!-- Barra de navegação (Sff-iJ-Nbv) -->
+            <BoxView AbsoluteLayout.LayoutBounds="0,0,1024,44" BackgroundColor="#F7F7F7" />
+            <BoxView AbsoluteLayout.LayoutBounds="0,44,1024,0.5" BackgroundColor="#C8C7CC" />
+            <Label AbsoluteLayout.LayoutBounds="20,7,150,30" Text="{translator:Translate PedidoTela_Global_Voltar}"
+                   FontSize="17" TextColor="#007AFF" VerticalTextAlignment="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding FecharCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Label AbsoluteLayout.LayoutBounds="262,7,500,30" Text="{Binding LblTitulo}"
+                   FontSize="17" TextColor="Black" FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+            <Label AbsoluteLayout.LayoutBounds="854,7,150,30" Text="{translator:Translate GlobalBtnSalvar}"
+                   FontSize="17" TextColor="#007AFF" HorizontalTextAlignment="End" VerticalTextAlignment="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SalvarCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <!-- Nome -->
+            <Label AbsoluteLayout.LayoutBounds="46,61,300,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblNome}" />
+            <Entry AbsoluteLayout.LayoutBounds="46,90,560,30" Style="{StaticResource contatoCampo}" MaxLength="79"
+                   Text="{Binding Nome}">
+                <Entry.Behaviors>
+                    <behavior:StringValidatorBehavior />
+                </Entry.Behaviors>
+            </Entry>
+
+            <!-- Data Nascimento: campo vazio até o OK do seletor, como no iOS -->
+            <Label AbsoluteLayout.LayoutBounds="46,128,200,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblDataNasc}" />
+            <Frame AbsoluteLayout.LayoutBounds="46,157,136,30" Padding="7,0" HasShadow="False" CornerRadius="5"
+                   BorderColor="#CCCCCC" BackgroundColor="White">
+                <Label Text="{Binding DataNascimentoUI}" FontSize="14" TextColor="Black" VerticalTextAlignment="Center" />
+            </Frame>
+            <DatePicker x:Name="SeletorDataNascimento" AbsoluteLayout.LayoutBounds="46,157,136,30" Format="dd/MM/yyyy"
+                        Opacity="0.02" TextColor="Transparent" BackgroundColor="Transparent"
+                        Date="{Binding DataNascimento}" Unfocused="SeletorDataNascimento_Unfocused" />
+
+            <!-- IMComboButton "Cargo" (jLJ-Bd-b2w): título centralizado, sem borda; mostra o cargo escolhido. -->
+            <Label AbsoluteLayout.LayoutBounds="190,156,197,30" FontSize="17" TextColor="Black"
+                   HorizontalTextAlignment="Center" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"
+                   Text="{Binding CargoSelecionado.Descricao,
+                          FallbackValue={translator:Translate FormCadContatoLblCargo},
+                          TargetNullValue={translator:Translate FormCadContatoLblCargo}}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding CargoSelecionado}" Value="{x:Null}">
+                        <Setter Property="TextColor" Value="#AAAAAA" />
+                    </DataTrigger>
+                </Label.Triggers>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelecionarCargoCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <!-- DDD / Telefone -->
+            <Label AbsoluteLayout.LayoutBounds="395,128,60,21" Style="{StaticResource contatoRotulo}" Text="DDD" />
+            <Entry AbsoluteLayout.LayoutBounds="395,157,59,30" Style="{StaticResource contatoCampo}"
+                   MaxLength="2" Keyboard="Numeric" Text="{Binding Ddd}" />
+
+            <Label AbsoluteLayout.LayoutBounds="462,128,144,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblTelefone}" />
+            <Entry AbsoluteLayout.LayoutBounds="462,157,144,30" Style="{StaticResource contatoCampo}"
+                   MaxLength="10" Keyboard="Numeric" Text="{Binding Telefone}" />
+
+            <!-- E-mail -->
+            <Label AbsoluteLayout.LayoutBounds="46,195,200,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblEmail}" />
+            <Entry AbsoluteLayout.LayoutBounds="46,224,560,30" Style="{StaticResource contatoCampo}"
+                   MaxLength="100" Keyboard="Email" Text="{Binding Email}">
+                <Entry.Behaviors>
+                    <behavior:EmailValidatorBehavior />
+                </Entry.Behaviors>
+            </Entry>
+
+            <!-- Switches empilhados à direita, frames do storyboard (rótulo começa no x do iOS e vai até o switch) -->
+            <Label AbsoluteLayout.LayoutBounds="696,84,192,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblRecebeCopiaBoleto}" />
+            <Switch AbsoluteLayout.LayoutBounds="891,84,51,31" IsToggled="{Binding RecebeCopiaBoleto}" />
+
+            <Label AbsoluteLayout.LayoutBounds="746,127,142,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblAlertaPagamento}" />
+            <Switch AbsoluteLayout.LayoutBounds="891,127,51,31" IsToggled="{Binding AlertaPagamento}" />
+
+            <Label AbsoluteLayout.LayoutBounds="746,171,142,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblRecebeMarketing}" />
+            <Switch AbsoluteLayout.LayoutBounds="891,171,51,31" IsToggled="{Binding RecebeMarketing}" />
+
+            <Label AbsoluteLayout.LayoutBounds="722,216,166,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblRecebeCopiaPedido}" />
+            <Switch AbsoluteLayout.LayoutBounds="891,216,51,31" IsToggled="{Binding RecebeCopiaPedido}" />
+
+            <Label AbsoluteLayout.LayoutBounds="746,264,142,21" Style="{StaticResource contatoRotulo}"
+                   Text="{translator:Translate FormCadContatoLblAlertaVencimento}" />
+            <Switch AbsoluteLayout.LayoutBounds="891,264,51,31" IsToggled="{Binding AlertaVencimento}" />
+
+            <!-- Tabela de contatos (gkg-Ol-SPD): cabeçalho cinza + ContatosTableView com linhas de 20 -->
+            <AbsoluteLayout AbsoluteLayout.LayoutBounds="36,342,950,172" BackgroundColor="White">
+                <Label AbsoluteLayout.LayoutBounds="0,1,220,21" Style="{StaticResource cabecalho}" Text="{translator:Translate PegCadClienteHeaderNome}" />
+                <Label AbsoluteLayout.LayoutBounds="221,1,240,21" Style="{StaticResource cabecalho}" Text="{translator:Translate CatalogoImpressaoEmail}" />
+                <Label AbsoluteLayout.LayoutBounds="462,1,99,21" Style="{StaticResource cabecalho}" Text="{translator:Translate FormCadContatoLblTelefone}" />
+                <Label AbsoluteLayout.LayoutBounds="562,1,184,21" Style="{StaticResource cabecalho}" Text="{translator:Translate PegCadClienteHeaderCargo}" />
+                <Label AbsoluteLayout.LayoutBounds="747,1,87,21" Style="{StaticResource cabecalho}" Text="{translator:Translate PegCadClienteHeaderDataNasc}" />
+                <Label AbsoluteLayout.LayoutBounds="835,1,115,21" Style="{StaticResource cabecalho}" Text="{translator:Translate SelecaoClienteHeaderStatus}" />
+
+                <syncfusion:SfListView AbsoluteLayout.LayoutBounds="0,22,950,150" BackgroundColor="White"
+                                       ItemSize="20" ItemSpacing="0" SelectionMode="None"
+                                       ItemsSource="{Binding Contatos}">
+                    <syncfusion:SfListView.ItemTemplate>
+                        <DataTemplate>
+                            <!-- Colunas nas proporções da célula do iOS (950 de largura); fonte acompanha a escala da tela. -->
+                            <Grid BackgroundColor="White" ColumnSpacing="0" RowSpacing="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="220*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="240*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="98*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="182*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="86*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="115*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="0.5" />
+                                </Grid.RowDefinitions>
+                                <Label Grid.Column="0" Style="{StaticResource celula}" FontSize="{Binding FonteCelula, Source={x:Reference this}}" Text="{Binding Nome}" />
+                                <Label Grid.Column="2" Style="{StaticResource celula}" FontSize="{Binding FonteCelula, Source={x:Reference this}}" Text="{Binding Email}" />
+                                <Label Grid.Column="4" Style="{StaticResource celula}" FontSize="{Binding FonteCelula, Source={x:Reference this}}" HorizontalTextAlignment="Center" Text="{Binding TelefoneCadastroUI}" />
+                                <Label Grid.Column="6" Style="{StaticResource celula}" FontSize="{Binding FonteCelula, Source={x:Reference this}}" HorizontalTextAlignment="Center" Text="{Binding Cargo}" />
+                                <Label Grid.Column="8" Style="{StaticResource celula}" FontSize="{Binding FonteCelula, Source={x:Reference this}}" HorizontalTextAlignment="Center" Text="{Binding DataNascimento, StringFormat='{0:dd/MM/yyyy}'}" />
+                                <Label Grid.Column="10" Style="{StaticResource celula}" FontSize="{Binding FonteCelula, Source={x:Reference this}}" HorizontalTextAlignment="Center" Text="{Binding Status}" />
+                                <BoxView Grid.Row="1" Grid.ColumnSpan="11" BackgroundColor="#C8C7CC" />
+                            </Grid>
+                        </DataTemplate>
+                    </syncfusion:SfListView.ItemTemplate>
+                </syncfusion:SfListView>
+            </AbsoluteLayout>
+
+        </AbsoluteLayout>
+    </AbsoluteLayout>
+</ContentPage>
