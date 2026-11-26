@@ -4,7 +4,9 @@ AND QTD = 0;
 
 DELETE FROM TBT_ITEM_CARRINHO
 WHERE CodCarrinho = '@CodCarrinho'
-AND QtdTotal = 0;
+AND QtdTotal = 0
+-- Item sem grade (ItemSemGrade = 1, PegadaIOS #15268) fica no carrinho com quantidade 0 até a grade ser editada.
+AND IFNULL(ItemSemGrade, 0) = 0;
 
 
 UPDATE TBT_CARRINHO

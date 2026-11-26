@@ -59,6 +59,8 @@
 	CASE WHEN C.IndPedidoMae = 1 THEN 'S' ELSE 'N' END AS IndPedidoMaeUI,
     T.IndValidaPrazo,
     C.CodSemana,
+    -- naoPossuiGrade (carrinhosForUsuario, PegadaIOS): com item sem grade a coluna Qtd vira o ícone sem_grade.
+    (SELECT MAX(IFNULL(ISG.ItemSemGrade, 0)) FROM TBT_ITEM_CARRINHO ISG WHERE ISG.CodCarrinho = C.CodCarrinho) AS NaoPossuiGrade,
     C.CodFabrica,
     CLI.PermiteAlterarCondicao AS ClientePermiteAlterarCondi,
 	C.OrdemCompra,

@@ -14,6 +14,17 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="Pegada.Core.Views.Carrinho.CarrinhoPage"
              x:Name="this">
+    <ContentPage.Resources>
+        <!-- Item incluído sem grade (ItemSemGrade = 1, PegadaIOS #15268): ItemCarrinhoTableViewController pinta todos os
+             textos da linha de vermelho. -->
+        <Style x:Key="labelGridItemCarrinho" TargetType="Label" BasedOn="{StaticResource labelGridItem}">
+            <Style.Triggers>
+                <DataTrigger TargetType="Label" Binding="{Binding ItemSemGrade}" Value="1">
+                    <Setter Property="TextColor" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ContentPage.Resources>
     <!-- EscalaTela: no iPad 11"/13" listas, botões e grade crescem na proporção da largura (base 9,7" = 1024),
          como na tela de Pedido; cabeçalho do app e barra de navegação ficam como estão. -->
     <AbsoluteLayout BackgroundColor="White" escala:EscalaTela.LarguraBase="1024">
@@ -150,7 +161,22 @@
                                            efeitos:FonteAjustavelEffect.EscalaMinima="0.6" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding Situacao}" Grid.Row="0" Grid.Column="6" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding DataEntrega, StringFormat='{0:dd/MM/yyyy}'}" Grid.Row="0" Grid.Column="7" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="8" />
+                                    <!-- Carrinho com item sem grade (naoPossuiGrade, CarrinhoViewController do PegadaIOS): esconde a Qtd e
+                                         mostra o ícone sem_grade; o toque explica o motivo. -->
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotal}" Grid.Row="0" Grid.Column="8">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding PossuiItemSemGrade}" Value="True">
+                                                <Setter Property="Text" Value=""/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <Image Source="sem_grade.png" Aspect="AspectFit" HeightRequest="26"
+                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                           IsVisible="{Binding PossuiItemSemGrade}" Grid.Row="0" Grid.Column="8">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.AvisoSemGradeCommand, Source={x:Reference Name=this}}"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}" Grid.Row="0" Grid.Column="9" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}" Grid.Row="0" Grid.Column="10" />
 
@@ -354,27 +380,27 @@
                                         </forms:CachedImage>
                                     </StackLayout>
 
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodItemCarrinho}"                                                   Grid.Row="0" Grid.Column="1" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding CodModelo}"                                                   Grid.Row="0" Grid.Column="2" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding Categoria}"                                                   Grid.Row="0" Grid.Column="3" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding CodItemCarrinho}"                                                   Grid.Row="0" Grid.Column="1" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding CodModelo}"                                                   Grid.Row="0" Grid.Column="2" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding Categoria}"                                                   Grid.Row="0" Grid.Column="3" />
 
                                     <StackLayout                                                                                                                      Grid.Row="0" Grid.Column="4" >
-                                        <Label Style="{StaticResource labelGridItem}" HorizontalTextAlignment="Start"  Text="{Binding Descricao}"/>
+                                        <Label Style="{StaticResource labelGridItemCarrinho}" HorizontalTextAlignment="Start"  Text="{Binding Descricao}"/>
                                     </StackLayout>
 
                                     <!-- Dt. Disponivel: sempre em 1 linha (DISPONIVEL quebrava em "DISPONIVE/L"); a fonte encolhe (até 50%) para caber. -->
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataDisponivel}" Grid.Row="0" Grid.Column="5"
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding DataDisponivel}" Grid.Row="0" Grid.Column="5"
                                            MaxLines="1" LineBreakMode="TailTruncation"
                                            efeitos:FonteAjustavelEffect.EscalaMinima="0.5" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdCaixa}"                                                          Grid.Row="0" Grid.Column="6" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotalNaCaixa}"                                                          Grid.Row="0" Grid.Column="7" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupCliente}"                                                          Grid.Row="0" Grid.Column="8" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupAplicado}"                                                          Grid.Row="0" Grid.Column="9" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCusto,  Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="10" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DescontoUI}"                                                          Grid.Row="0" Grid.Column="11" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding PrecoCustoComDesconto, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"  Grid.Row="0" Grid.Column="12" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="13" />
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="14" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding QtdCaixa}"                                                          Grid.Row="0" Grid.Column="6" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding QtdTotalNaCaixa}"                                                          Grid.Row="0" Grid.Column="7" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding MarkupCliente}"                                                          Grid.Row="0" Grid.Column="8" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding MarkupAplicado}"                                                          Grid.Row="0" Grid.Column="9" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding PrecoCusto,  Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="10" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding DescontoUI}"                                                          Grid.Row="0" Grid.Column="11" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding PrecoCustoComDesconto, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"  Grid.Row="0" Grid.Column="12" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding ValorTotal, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="13" />
+                                    <Label Style="{StaticResource labelGridItemCarrinho}" Text="{Binding ValorTotalLiquido, Converter={StaticResource ValorParaMoeda}, ConverterParameter=SemSimbolo}"             Grid.Row="0" Grid.Column="14" />
 
                                 </Grid>
                             </ViewCell>

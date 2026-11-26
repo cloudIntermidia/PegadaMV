@@ -194,6 +194,8 @@ namespace Pegada.Core.ViewModels
         public ICommand CancelarCommand { get; set; }
         public ICommand ImprimirCommand { get; set; }
         public ICommand EnviarEmailCommand { get; set; }
+        // Ícone sem_grade na coluna Qtd (btnSemGradeTapped, CarrinhoTableViewCell do PegadaIOS).
+        public ICommand AvisoSemGradeCommand { get; set; }
         public ICommand MarcarCarrinhoCommand { get; set; }
         public ICommand TrocarClienteCommand { get; set; }
         public ICommand AgruparCommand { get; set; }
@@ -256,6 +258,7 @@ namespace Pegada.Core.ViewModels
             CancelarCommand = new Command(Cancelar);
             ImprimirCommand = new Command<CarrinhoCommandResult>(Imprimir);
             EnviarEmailCommand = new Command(EnviarEmail);
+            AvisoSemGradeCommand = new Command(async () => await UserDialogs.Instance.AlertAsync(T("CarrinhoMsgPossuiProdutosSemGrade"), T("GlobalTituloAtencao")));
             MarcarCarrinhoCommand = new Command<CarrinhoCommandResult>(MarcarCarrinho);
             TrocarClienteCommand = new Command(TrocarClienteDoCarrinho);
             BloquearCommand = new Command(Bloquear);

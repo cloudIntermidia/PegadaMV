@@ -61,6 +61,8 @@
     I.Estabelecimento,
     I.Localizacao,
     I.Markup,
+    -- Item incluído sem grade (PegadaIOS #15268): texto em vermelho na lista e bloqueio no fechamento/transmissão.
+    IFNULL(I.ItemSemGrade, 0) AS ItemSemGrade,
     -- Markup Cliente (ItemCarrinhoTableViewController, PegadaIOS: carrinho.markup); formatado no CarrinhoRepository.
     -- iOS: carrinho.markup = cliente.markup (nulo vira 0) só quando o carrinho aplica markup.
     CASE WHEN C.IsAplicaMarkup = 1 THEN CAST(IFNULL(C.Markup, 0) AS TEXT) END AS MarkupCliente,
