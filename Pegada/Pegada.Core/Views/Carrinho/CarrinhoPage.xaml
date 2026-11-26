@@ -362,7 +362,10 @@
                                         <Label Style="{StaticResource labelGridItem}" HorizontalTextAlignment="Start"  Text="{Binding Descricao}"/>
                                     </StackLayout>
 
-                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataDisponivel}"                                                          Grid.Row="0" Grid.Column="5" />
+                                    <!-- Dt. Disponivel: sempre em 1 linha (DISPONIVEL quebrava em "DISPONIVE/L"); a fonte encolhe (até 50%) para caber. -->
+                                    <Label Style="{StaticResource labelGridItem}" Text="{Binding DataDisponivel}" Grid.Row="0" Grid.Column="5"
+                                           MaxLines="1" LineBreakMode="TailTruncation"
+                                           efeitos:FonteAjustavelEffect.EscalaMinima="0.5" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdCaixa}"                                                          Grid.Row="0" Grid.Column="6" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding QtdTotalNaCaixa}"                                                          Grid.Row="0" Grid.Column="7" />
                                     <Label Style="{StaticResource labelGridItem}" Text="{Binding MarkupCliente}"                                                          Grid.Row="0" Grid.Column="8" />

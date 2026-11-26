@@ -27,35 +27,12 @@ namespace Pegada.Core
         {
             try
             {
-                bool tabelaExiste, campoExiste, parametroExiste;
-
                 await base.AtualizacoesCore();
 
-                tabelaExiste = await TabelaExiste("TBT_PESSOA_DEPOSITO_FATURAMENTO");
-                if (!tabelaExiste)
-                    await ExecutarAlteracoes("CREATE_TBT_PESSOA_DEPOSITO_FATURAMENTO");
-
-                campoExiste = await CampoExiste("MinimoFobClienteNovo", "TBT_MUNICIPIO");
-                if (!campoExiste)
-                    await ExecutarAlteracoes("ALTER_TBT_MUNICIPIO_CAMPOS_MINIMO");
-
-                campoExiste = await CampoExiste("DataLimite", "TBT_CARRINHO");
-                if (!campoExiste)
-                    await ExecutarAlteracoes("ALTER_TBT_CARRINHO_CAMPOS_INTEGRACAO");
-
-                campoExiste = await CampoExiste("IndBloqueioPedido", "TBT_CLIENTE");
-                if (!campoExiste)
-                    await ExecutarAlteracoes("ALTER_TBT_CLIENTE_CAMPOS_BLOQUEIO");
-
-                tabelaExiste = await TabelaExiste("TBT_HISTORICO_CARRINHO");
-                if (!tabelaExiste)
-                    await ExecutarAlteracoes("CREATE_TBT_HISTORICO_CARRINHO");
-
-                //Índices que faltavam para as tabelas de carrinho/pedido (CodCarrinho, CodPedido etc.
-                //não tinham nenhum índice), causando full table scan na query de cópia de pedido
-                //(PRO_ITEM_PEDIDO_COPIA_GET) e em outras consultas que filtram por essas colunas.
-                //Usa "CREATE INDEX IF NOT EXISTS", então é seguro/barato rodar em toda atualização.
-                await ExecutarAlteracoes("CREATE_INDEXES_COPIA_PEDIDO");
+                // Tabelas/colunas/índices do Pegada que eram criados aqui (TBT_PESSOA_DEPOSITO_FATURAMENTO,
+                // TBT_HISTORICO_CARRINHO, campos de TBT_MUNICIPIO/TBT_CARRINHO/TBT_CLIENTE e CREATE_INDEXES_COPIA_PEDIDO)
+                // foram incorporados aos scripts de instalação (DDL/INIT e DDL/INDEX do MobiliVendas.Core.DataBase).
+                // Alterações novas seguem o exemplo comentado em InicializacaoBanco.AtualizacoesCore.
 
                 await ExecutarAlteracoes("ATUALIZA_VERSAO");
             }

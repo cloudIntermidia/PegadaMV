@@ -114,7 +114,32 @@ namespace Pegada.Core.ViewModels
                 SetProperty(ref _itemSelecionado, value);
                 RaisePropertyChanged(nameof(GradeEstrangeira));
                 RaisePropertyChanged(nameof(GradesBR));
+                CarregarFotoItem(value);
             }
+        }
+
+        // O Load traz os itens sem foto (GetCarrinhosSemFoto): a foto do item é buscada quando ele é selecionado.
+        private async void CarregarFotoItem(ItemCommandResult item)
+        {
+            if (item == null || item.Imagem != null || string.IsNullOrEmpty(item.CodProduto))
+                return;
+            if (!(_carrinhoRepository is Pegada.Core.Repositories.CarrinhoRepository repositorio))
+                return;
+            try
+            {
+                await repositorio.PreencherFotosItens(new[] { item });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CarrinhoPage foto do item: {ex.Message}");
+            }
+        }
+
+        // Impressão (PDF com foto) usa os carrinhos da tela: completa as fotos que ainda não foram buscadas.
+        private async Task PreencherFotosCarrinhos(IEnumerable<CarrinhoCommandResult> carrinhos)
+        {
+            if (_carrinhoRepository is Pegada.Core.Repositories.CarrinhoRepository repositorio)
+                await repositorio.PreencherFotosItens(carrinhos.Where(c => c.Itens != null).SelectMany(c => c.Itens).ToList());
         }
 
         // Cliente de outro país: grade com a linha BR (original) em cima da linha EX, como no PegadaIOS.
@@ -916,12 +941,25 @@ namespace Pegada.Core.ViewModels
             AtualizarAcoesItem();
         }
 
+        // Ligado pela CarrinhoPage (OnAppearing/OnDisappearing). Com a tela escondida a troca de atendimento não
+        // recarrega: o OnAppearing já chama Load() quando o Carrinho volta a aparecer.
+        public bool TelaVisivel { get; set; }
+
+        // Pedido de recarga que chegou com um Load() em andamento (ex.: troca de atendimento no meio da leitura):
+        // antes era descartado e a lista podia ficar com os carrinhos do atendimento anterior.
+        private bool _recarregarAposLoad;
+
         public async Task Load()
         {
 
-            if (IsLoading) return;
+            if (IsLoading)
+            {
+                _recarregarAposLoad = true;
+                return;
+            }
 
             IsLoading = true;
+            _recarregarAposLoad = false;
 
             try
             {
@@ -939,15 +977,21 @@ namespace Pegada.Core.ViewModels
 
                 if (Session.ATENDIMENTO_ATUAL != null)
                 {
-                    var listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1,99", null, null, null, Session.USUARIO_LOGADO.CodPessoa));
-                    if (listCarrinhos?.Count > 0)
+                    // A 1ª leitura só serve para recalcular as quantidades: basta o código de cada carrinho. Antes era um
+                    // GetCarrinhos completo (itens, grades e a foto de cada item) jogado fora logo em seguida.
+                    var codigosCarrinhos = await _carrinhoRepository.BuscarCodigosCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1,99", null, null, null, Session.USUARIO_LOGADO.CodPessoa));
+                    if (codigosCarrinhos?.Count > 0)
                     {
-                        foreach (var atualizaCarrinhos in listCarrinhos)
+                        foreach (var codCarrinho in codigosCarrinhos)
                         {
-                            var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(atualizaCarrinhos.CodCarrinho);
+                            var atualizouCarrinho = await _carrinhoRepository.AtualizaQtdCarrinho(codCarrinho);
                         }
 
-                        listCarrinhos = await _carrinhoRepository.GetCarrinhos(new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1,99", null, null, null, Session.USUARIO_LOGADO.CodPessoa));
+                        var comandoCarrinhos = new BuscarCarrinhoCommand(Session.ATENDIMENTO_ATUAL, Session.USUARIO_LOGADO, "1,99", null, null, null, Session.USUARIO_LOGADO.CodPessoa);
+                        // Sem a foto de cada item: a tela mostra só a do item selecionado (CarregarFotoItem).
+                        var listCarrinhos = _carrinhoRepository is Pegada.Core.Repositories.CarrinhoRepository repositorioPegada
+                            ? await repositorioPegada.GetCarrinhosSemFoto(comandoCarrinhos)
+                            : await _carrinhoRepository.GetCarrinhos(comandoCarrinhos);
 
                         foreach (var item in listCarrinhos)
                         {
@@ -968,6 +1012,11 @@ namespace Pegada.Core.ViewModels
                 IsLoading = false;
             }
 
+            if (_recarregarAposLoad)
+            {
+                _recarregarAposLoad = false;
+                await Load();
+            }
         }
 
         private void PedidoTapped(object Item)
@@ -1060,7 +1109,17 @@ namespace Pegada.Core.ViewModels
                     await UserDialogs.Instance.AlertAsync(T("CarrinhoPageVMMessageSelecionarUmPedidoImprimir"), AppName, "OK");
                     return;
                 }
-                await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupImpressao(Pedidos.Where(x => x.CarrinhoChecado).ToList(), false, out _popupImpressaoViewModel));
+                var marcados = Pedidos.Where(x => x.CarrinhoChecado).ToList();
+                UserDialogs.Instance.ShowLoading();
+                try
+                {
+                    await PreencherFotosCarrinhos(marcados);
+                }
+                finally
+                {
+                    UserDialogs.Instance.HideLoading();
+                }
+                await PopupNavigation.Instance.PushAsync(RgPopupUtility.GerarPopupImpressao(marcados, false, out _popupImpressaoViewModel));
             }
             catch (Exception ex)
             {
@@ -2044,6 +2103,8 @@ namespace Pegada.Core.ViewModels
 
         public async void TrocarAtendimento(object obj)
         {
+            if (!TelaVisivel)
+                return;
             await Load();
         }
 

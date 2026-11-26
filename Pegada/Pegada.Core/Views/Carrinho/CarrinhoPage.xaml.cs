@@ -20,12 +20,16 @@ namespace Pegada.Core.Views.Carrinho
 
         protected override async void OnAppearing()
         {
+            if (BindingContext is Pegada.Core.ViewModels.CarrinhoPageViewModel vm)
+                vm.TelaVisivel = true;
             await viewModel.Load();
             base.OnAppearing();
         }
 
         protected override void OnDisappearing()
         {
+            if (BindingContext is Pegada.Core.ViewModels.CarrinhoPageViewModel vm)
+                vm.TelaVisivel = false;
             base.OnDisappearing();
         }
     }

@@ -23,7 +23,38 @@ namespace Pegada.Core.Repositories
         {
         }
 
-        public override async Task<List<CarrinhoCommandResult>> GetCarrinhos(BuscarCarrinhoCommand command)
+        public override Task<List<CarrinhoCommandResult>> GetCarrinhos(BuscarCarrinhoCommand command)
+            => GetCarrinhos(command, true);
+
+        // Tela do Carrinho: itens sem a foto (base64 de cada item, ~75-170 KB). A tela só mostra a do item selecionado,
+        // buscada depois por PreencherFotosItens; impressão/PDF continuam usando GetCarrinhos com foto.
+        public Task<List<CarrinhoCommandResult>> GetCarrinhosSemFoto(BuscarCarrinhoCommand command)
+            => GetCarrinhos(command, false);
+
+        // Mesma subconsulta do PRO_ITEM_CARRINHO_GET, só para os itens ainda sem foto (cada produto uma vez).
+        public async Task PreencherFotosItens(IEnumerable<ItemCommandResult> itens)
+        {
+            if (itens == null)
+                return;
+            var porProduto = itens.Where(i => i != null && i.Imagem == null && !string.IsNullOrEmpty(i.CodProduto))
+                                  .GroupBy(i => i.CodProduto).ToList();
+            foreach (var grupo in porProduto)
+            {
+                string imagem = await _sqlAsyncConnection.ExecuteScalarAsync<string>(
+                    "SELECT FP.Imagem FROM TBT_FOTO_PRODUTO FP " +
+                    "INNER JOIN TBT_PRODUTO P ON FP.CodProdutoFoto = P.CodProdutoFoto AND P.CodProduto = ? LIMIT 1", grupo.Key);
+                if (imagem == null)
+                    continue;
+                foreach (var item in grupo)
+                    item.Imagem = imagem;
+            }
+        }
+
+        private static readonly System.Text.RegularExpressions.Regex SubconsultaFotoItem = new System.Text.RegularExpressions.Regex(
+            @"\(\s*SELECT\s+FP\.Imagem\s+FROM\s+TBT_FOTO_PRODUTO\s+FP\b.*?LIMIT\s+1\s*\)\s*AS\s+Imagem\b",
+            System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        private async Task<List<CarrinhoCommandResult>> GetCarrinhos(BuscarCarrinhoCommand command, bool comFoto)
         {
             //command.CodPessoaCliente = command.CodPessoaCliente.Replace(".", "").Replace("/", "").Replace("-", "");
             //string sql = ManagerQuery.MakeSql("PRO_CARRINHO_GET", "Query", command);
@@ -47,7 +78,7 @@ namespace Pegada.Core.Repositories
             {
                 foreach (var car in carrinhosAtualizado)
                 {
-                    car.Itens = await BuscarItensCarrinho(new BuscarItensCarrinhoCommand(car.CodCarrinho, car.CodTabelaPreco));
+                    car.Itens = await BuscarItensCarrinho(new BuscarItensCarrinhoCommand(car.CodCarrinho, car.CodTabelaPreco), comFoto);
                     var tamanhosPais = await BuscarTamanhosPaisCliente(car.CodCarrinho, car.CodPessoaCliente);
 
                     foreach (var item in car.Itens)
@@ -527,9 +558,15 @@ namespace Pegada.Core.Repositories
 
         // Atenção: "virtual" (não override) — esconde o da base. Quem chama via ICarrinhoRepository cai no
         // PRO_ITEM_CARRINHO_GET do MobiliVendas.Core (sem PVL). Ver PedidoRepository.GetItensPedidos do Pegada.
-        public virtual async Task<ObservableCollection<ItemCommandResult>> BuscarItensCarrinho(BuscarItensCarrinhoCommand command)
+        public virtual Task<ObservableCollection<ItemCommandResult>> BuscarItensCarrinho(BuscarItensCarrinhoCommand command)
+            => BuscarItensCarrinho(command, true);
+
+        private async Task<ObservableCollection<ItemCommandResult>> BuscarItensCarrinho(BuscarItensCarrinhoCommand command, bool comFoto)
         {
             string sql = ManagerQuery.MakeSql("PRO_ITEM_CARRINHO_GET", "Query", command);
+            // Sem a subconsulta (se a consulta mudar e o padrão não casar, segue com foto - só fica mais lento).
+            if (!comFoto)
+                sql = SubconsultaFotoItem.Replace(sql, "NULL AS Imagem", 1);
             var itens = await _sqlAsyncConnection.QueryAsync<ItemCommandResult>(sql);
             foreach (var item in itens)
                 PreencherMarkupsTela(item);
