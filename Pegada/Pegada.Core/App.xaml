@@ -591,9 +591,15 @@
                                 <TapGestureRecognizer Command="{Binding DirecionarProntaEntregaCommand}" CommandParameter="{Binding .}"/>
                             </ffimageloading:CachedImage.GestureRecognizers>
                         </ffimageloading:CachedImage>
+                        <!-- PegadaIOS (ItemCatalogoCollectionViewController): o estoqueLbl embaixo do btnSoPe é o item.estoque
+                             (VEP.Quantidade = pronta entrega disponível) e só aparece com isPE; o estoque futuro fica só na caixa azul.
+                             Sem PE disponível (Estoque = 0) o caminhão aparece sem número, como no iOS. -->
                         <ContentView Margin="0,56,5,0" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="35" HeightRequest="19" InputTransparent="True"
                                      IsVisible="{Binding IsSoPE}">
-                            <Label IsVisible="{Binding MostraQtdEstoque}" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Text="{Binding EstoqueFuturo}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
+                            <!-- Sem DataTrigger: na célula reaproveitada o Setter não devolvia o IsVisible e o número sumia. -->
+                            <ContentView IsVisible="{Binding Estoque, Converter={StaticResource IntToBoolConverter}}">
+                                <Label IsVisible="{Binding MostraQtdEstoque}" HorizontalTextAlignment="End" VerticalTextAlignment="Center" Text="{Binding Estoque}" FontSize="9" FontFamily="{StaticResource RobotoNormalFont}" />
+                            </ContentView>
                         </ContentView>
 
                         <!-- iconEstoqueFuturo (225,78,25,25) + estoqueFutLbl (215,104,35,19) - touchEstoqueFuturo do PegadaIOS -->
